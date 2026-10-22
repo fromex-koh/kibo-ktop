@@ -21,14 +21,17 @@ const TECHNOLOGY_LIFECYCLE_OPTIONS = [
     {value: 'decline', label: '쇠퇴기'},
 ]
 
+// 수익창출역량 보기가 줄어드는 수명주기(성숙기 · 쇠퇴기) — 아래 optionExclusions 참고.
+const LATE_LIFECYCLE = ['mature', 'decline']
+
 // 수익창출역량(택1) — 현행 서비스 select 의 보기. 숙련기술은 ②③⑤만 노출된다.
 const REVENUE_OPTION = {
     competitive:
-        '① 신청기술은 경쟁사가 기술적 차별화 또는 기술격차로 인해 안정적인 거래처를 확보할 수 있고 영업적 리스크가 낮다.',
+        '① 신청기술은 경쟁사간 기술적 차별화 또는 기술격차로 인해 안정적인 거래처를 확보할 수 있고 영업적 리스크가 낮다.',
     steady: '② 신청기술에 의한 제품(서비스)은 유사 제품(서비스)과의 경쟁이 요구되나, 시장의 수요가 꾸준히 발생하여 일정 수준의 수요 창출이 가능하다.',
     marketing:
-        '③ 신청기술에 의한 제품(서비스)은 경쟁사간 기술적 차별성이 유사한 편으로 영업 기반 위한 마케팅이 상당히 중요한 사업분야이다.',
-    unproven: '④ 신청기술에 의한 제품(서비스)은 아직 시장에서 검증받지 못한 분야로 새로운 시장 형성할 수 있다.',
+        '③ 신청기술에 의한 제품(서비스)은 경쟁사간 기술적 차별성이 유사한 편으로 영업 기반을 위한 마케팅이 상당히 중요한 사업분야이다.',
+    unproven: '④ 신청기술에 의한 제품(서비스)은 아직 시장에서 검증받지 못한 분야로 새로운 시장을 형성할 수 있다.',
     none: '⑤ 해당 없음',
 }
 
@@ -281,7 +284,7 @@ const buildChecklist = (sector: IndustrySector): ChecklistData => ({
             type: 'select',
             header: {
                 title: '아래 중 동사에 해당하는 항목을 선택해 주세요. (택1)',
-                description: '기술구분(전문/숙련)·[10]·[11] 응답에 따라 위 보기가 자동으로 달라집니다.',
+                description: '기술 구분과 위 기술의 차별성 · 기술 수명주기 응답에 따라 아래 보기가 달라집니다.',
             },
             name: 'revenueCapability',
             label: '수익창출역량 선택',
@@ -300,6 +303,18 @@ const buildChecklist = (sector: IndustrySector): ChecklistData => ({
                     {value: '5', label: REVENUE_OPTION.none},
                 ],
             },
+            // 전문기술 + 기술 수명주기 성숙기 · 쇠퇴기 — ④(새로운 시장 형성)를 빼고,
+            // 기술의 차별성 문항(q10)을 체크하지 않았으면 ①(기술적 차별화로 영업 리스크 낮음)도 뺀다.
+            //   q10 체크 ①②③⑤ · q10 미체크 ②③⑤ · 그 밖의 수명주기는 ①~⑤ 그대로.
+            optionExclusions: [
+                {branch: 'expert', select: {name: 'technologyLifecycle', values: LATE_LIFECYCLE}, exclude: ['4']},
+                {
+                    branch: 'expert',
+                    select: {name: 'technologyLifecycle', values: LATE_LIFECYCLE},
+                    check: {name: 'q10', checked: false},
+                    exclude: ['1'],
+                },
+            ],
             requiredMessage: '해당하는 항목을 선택해 주세요.',
         },
         {

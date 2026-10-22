@@ -28,7 +28,9 @@ import {cn} from '@/lib/utils'
 // 한다 — 연동하면 같은 모양의 응답을 그대로 넣으면 된다.
 //
 // 가운데 문항은 기술 구분(전문기술·숙련기술) 선택에 따라 갈리고, 그 앞뒤 문항은 두 갈래가 함께 쓴다.
-// 수익창출역량처럼 보기까지 갈리는 선택 상자는 데이터의 optionsByBranch 로 갈래별 보기를 받는다.
+// 수익창출역량처럼 보기까지 갈리는 선택 상자는 데이터의 optionsByBranch 로 갈래별 보기를 받고,
+// 다른 문항 응답에 따라 보기를 더 빼야 하면 optionExclusions(조건 → 뺄 보기)를 둔다.
+// 보기에서 빠진 값은 그 순간 비운다 — 화면은 빈칸인데 이전 값이 검사를 통과하고 제출에 실리지 않게.
 //
 // 화면에는 문항 번호를 찍지 않는다(시안) — 순서는 목록 마크업(ol)이 갖는다. 보기 표기 "(1)"·"(2)" 는
 // 문항 글에 포함돼 있다. 체크박스의 이름도 번호가 아니라 문항 글 자체다[7.4.1].
@@ -113,9 +115,20 @@ type ChecklistItem = ChecklistItemBase &
               placeholder: string
               options?: ChecklistOption[]
               optionsByBranch?: Record<string, ChecklistOption[]>
+              // 다른 문항 응답에 따라 보기를 뺀다 — 조건이 모두 맞는 규칙의 exclude 를 모아 뺀다.
+              optionExclusions?: ChecklistOptionExclusion[]
               requiredMessage: string
           }
     )
+
+// 보기 빼기 규칙 — branch(기술 구분) · select(선택 상자 값 중 하나) · check(체크 여부)가 모두 맞으면 exclude 의 보기를 뺀다.
+// 데이터가 서버 화면에서 내려오므로 함수가 아닌 값으로 적는다.
+type ChecklistOptionExclusion = {
+    branch?: string
+    select?: {name: string; values: string[]}
+    check?: {name: string; checked: boolean}
+    exclude: string[]
+}
 
 // 기술 구분 — 이 값에 따라 가운데 문항과 일부 보기가 갈린다.
 type ChecklistBranch = {
@@ -163,8 +176,25 @@ const renderGuide = (guide: ChecklistGuide) => {
 }
 
 // 문항 체크박스 — 접근 가능한 이름은 문항 글 그대로다(화면에 번호가 없어 "n번 문항"으로 부를 수 없다).
-const QuestionCheckbox = ({name, label}: {name: string; label: string}) => (
-    <Checkbox name={name} value="yes" aria-label={label} />
+// 체크 여부는 폼(ChecklistForm)이 들고 있다 — 기술 구분을 바꿔 갈래 문항이 사라졌다 돌아와도 체크가 남는다.
+const QuestionCheckbox = ({
+    name,
+    label,
+    checked,
+    onCheckedChange,
+}: {
+    name: string
+    label: string
+    checked: boolean
+    onCheckedChange: (name: string, checked: boolean) => void
+}) => (
+    <Checkbox
+        name={name}
+        value="yes"
+        aria-label={label}
+        checked={checked}
+        onCheckedChange={(next) => onCheckedChange(name, next === true)}
+    />
 )
 
 // 체크하면 아래에 보기 칩이 나오는 문항. 체크 여부는 이 문항 안에서만 쓰는 값이라 여기서 들고 있는다
@@ -218,6 +248,26 @@ const ChecklistGroupHeaderBlock = ({header, className}: {header: ChecklistGroupH
     </QuestionGroupHeader>
 )
 
+// 선택 상자의 지금 보기 — 갈래별 보기에서 조건이 맞는 규칙(optionExclusions)의 보기를 뺀다.
+const getSelectOptions = (
+    item: Extract<ChecklistItem, {type: 'select'}>,
+    branchValue: string,
+    values: Readonly<Record<string, string>>,
+    checks: Readonly<Record<string, boolean>>,
+) => {
+    const options = item.optionsByBranch?.[branchValue] ?? item.options ?? []
+    const excluded = (item.optionExclusions ?? [])
+        .filter(
+            (rule) =>
+                (rule.branch === undefined || rule.branch === branchValue) &&
+                (rule.select === undefined || rule.select.values.includes(values[rule.select.name] ?? '')) &&
+                (rule.check === undefined || (checks[rule.check.name] ?? false) === rule.check.checked),
+        )
+        .flatMap((rule) => rule.exclude)
+
+    return options.filter((option) => !excluded.includes(option.value))
+}
+
 // 문항 하나 — 종류에 따라 그리는 모양만 다르고, 값과 오류는 모두 바깥에서 받는다.
 const ChecklistQuestion = ({
     item,
@@ -225,12 +275,20 @@ const ChecklistQuestion = ({
     value,
     error,
     onValueChange,
+    values,
+    checks,
+    onCheckChange,
 }: {
     item: ChecklistItem
     branchValue: string
     value: string
     error?: string
     onValueChange: (next: string) => void
+    /** 선택 상자 문항의 값(name → 값) — 보기 빼기 규칙을 계산할 때 쓴다. */
+    values: Readonly<Record<string, string>>
+    /** 체크박스 문항의 체크 여부(name → 체크). */
+    checks: Readonly<Record<string, boolean>>
+    onCheckChange: (name: string, checked: boolean) => void
 }) => {
     const errorId = useId()
 
@@ -239,7 +297,14 @@ const ChecklistQuestion = ({
             <QuestionItem
                 description={item.note}
                 helper={undefined}
-                control={<QuestionCheckbox name={item.name} label={item.text} />}
+                control={
+                    <QuestionCheckbox
+                        name={item.name}
+                        label={item.text}
+                        checked={checks[item.name] ?? false}
+                        onCheckedChange={onCheckChange}
+                    />
+                }
             >
                 {item.mark ? (
                     // 별표는 아래 보조 문구가 무엇을 풀어 쓴 것인지 가리키는 표식이라 시안대로 붉은색이고,
@@ -270,7 +335,14 @@ const ChecklistQuestion = ({
                     {item.options.map((option) => (
                         <QuestionOption
                             key={option.name}
-                            control={<QuestionCheckbox name={option.name} label={option.text} />}
+                            control={
+                                <QuestionCheckbox
+                                    name={option.name}
+                                    label={option.text}
+                                    checked={checks[option.name] ?? false}
+                                    onCheckedChange={onCheckChange}
+                                />
+                            }
                         >
                             {/* 안내 버튼이 붙는 줄은 문장과 버튼이 한 줄로 흐르고, 좁으면 아래로 접힌다. */}
                             {option.guide ? (
@@ -333,7 +405,7 @@ const ChecklistQuestion = ({
         )
     }
 
-    const options = item.optionsByBranch?.[branchValue] ?? item.options ?? []
+    const options = getSelectOptions(item, branchValue, values, checks)
 
     return (
         <QuestionItem align="control" contentClassName="w-full">
@@ -413,6 +485,9 @@ const ChecklistForm = ({data, id, formId, completeHref}: ChecklistFormProps) => 
     // 기술 구분만 데이터의 기본값으로 시작하고, 나머지 선택 상자는 비어 있다.
     const [branchValue, setBranchValue] = useState(data.branch.defaultValue)
     const [values, setValues] = useState<Record<string, string>>({})
+    // 체크박스 문항의 체크 여부 — 갈래 문항이 화면에서 빠져도 값을 잃지 않게 폼이 들고 있다.
+    // 제출 값은 지금 화면에 있는 체크박스만 폼 요소(name)로 모은다 — 숨은 갈래의 체크는 넘어가지 않는다.
+    const [checks, setChecks] = useState<Record<string, boolean>>({})
     // 제출을 눌러 검사가 한 번 돈 뒤부터 안내 문구를 보여 준다 — 화면에 들어오자마자 빨간 글씨를 띄우지 않는다.
     const [isSubmitted, setIsSubmitted] = useState(false)
     // 검사를 통과하면 바로 넘어가지 않고 최종 확인 모달을 먼저 띄운다.
@@ -452,6 +527,35 @@ const ChecklistForm = ({data, id, formId, completeHref}: ChecklistFormProps) => 
         setIsConfirmOpen(true)
     }
 
+    // 보기에서 빠진 값 비우기 — 기술 구분 · 다른 문항 응답이 바뀌어 선택 상자(수익창출역량)의 보기에서 빠진 값은 지운다.
+    // 비우지 않으면 화면은 빈칸인데 이전 값이 검사를 통과하고 제출에도 실린다. 보기에 남아 있는 값은 그대로 둔다.
+    const dropUnavailable = (
+        nextBranch: string,
+        nextValues: Record<string, string>,
+        nextChecks: Readonly<Record<string, boolean>>,
+    ) =>
+        Object.fromEntries(
+            Object.entries(nextValues).filter(([name, value]) => {
+                const item = data.common.find((entry) => entry.type === 'select' && entry.name === name)
+                if (item?.type !== 'select') return true
+                return getSelectOptions(item, nextBranch, nextValues, nextChecks).some(
+                    (option) => option.value === value,
+                )
+            }),
+        )
+
+    const changeBranch = (nextBranch: string) => {
+        setBranchValue(nextBranch)
+        setValues((current) => dropUnavailable(nextBranch, current, checks))
+    }
+    const changeValue = (name: string, next: string) =>
+        setValues((current) => dropUnavailable(branchValue, {...current, [name]: next}, checks))
+    const changeCheck = (name: string, checked: boolean) => {
+        const nextChecks = {...checks, [name]: checked}
+        setChecks(nextChecks)
+        setValues((current) => dropUnavailable(branchValue, current, nextChecks))
+    }
+
     const branchError = isSubmitted && missingBranch ? data.branch.requiredMessage : undefined
     const errorOf = (item: ChecklistItem) => {
         const field = getRequiredField(item)
@@ -472,8 +576,11 @@ const ChecklistForm = ({data, id, formId, completeHref}: ChecklistFormProps) => 
                             error={errorOf(item)}
                             onValueChange={(next) => {
                                 const field = getRequiredField(item)
-                                if (field) setValues((current) => ({...current, [field.name]: next}))
+                                if (field) changeValue(field.name, next)
                             }}
+                            values={values}
+                            checks={checks}
+                            onCheckChange={changeCheck}
                         />
                     ))}
                 </QuestionList>
@@ -493,7 +600,7 @@ const ChecklistForm = ({data, id, formId, completeHref}: ChecklistFormProps) => 
                     <ChipRadioGroup
                         name={data.branch.name}
                         value={branchValue}
-                        onValueChange={setBranchValue}
+                        onValueChange={changeBranch}
                         aria-label={data.branch.label}
                         aria-invalid={branchError ? true : undefined}
                         aria-describedby={branchError ? `${data.branch.name}-error` : undefined}
@@ -530,6 +637,7 @@ export {ChecklistForm}
 export type {
     ChecklistData,
     ChecklistBranch,
+    ChecklistOptionExclusion,
     ChecklistFormProps,
     ChecklistGroupHeader,
     ChecklistGuide,
