@@ -3,7 +3,7 @@ import {cn} from '@/lib/utils'
 
 // 값 막대(ValueColumnChart) — 항목마다 막대 하나를 세우고 막대 위에 값을, 바닥선 아래에 항목 이름을 적는다.
 // 세로축 · 눈금 없이 값 글자로 읽는다. 강조 항목(isHighlighted — 예: 신청기업)은 색 · 글자를 달리한다.
-// K-BIGx 보고서 인쇄본 Tech-Index "기업 유형별 Tech-Index 비교"(wide) · "4대 혁신역량 점수" 카드(compact) ·
+// K-BIGx 보고서 인쇄본 Tech-Index "기업 유형별 Tech-Index 비교"(wide) · "4대 혁신역량 부분별 비교" 카드(compact) ·
 // 진단브리핑 "인당 매출액"(narrow).
 // (세로축 · 툴팁이 있는 웹 화면용 막대는 ColumnChart.)
 //
