@@ -1698,6 +1698,15 @@
                             "iaRow": 125
                         },
                         {
+                            "label": "마케팅 정보 수신 동의",
+                            "screenId": null,
+                            "status": "완료",
+                            "application2Status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-marketing-consent",
+                            "iaRow": 125
+                        },
+                        {
                             "label": "본인확인",
                             "screenId": null,
                             "status": "완료",

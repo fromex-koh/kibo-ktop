@@ -1033,6 +1033,13 @@
             "name": "저장 전 최종 확인"
         },
         {
+            "key": "corp-mypage-profile-marketing-consent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/profile/marketing-consent",
+            "name": "마케팅 정보 수신 동의"
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
             "screenId": "SB-FOTA-CP2-0009",
             "userType": "기업",

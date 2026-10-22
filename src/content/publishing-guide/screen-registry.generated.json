@@ -947,6 +947,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-mypage-profile-marketing-consent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
