@@ -9,9 +9,10 @@ import {
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
+import {Badge} from '@/components/ui/badge'
 import {EvaluationMethodForm} from './evaluation-method-form'
 
-export const metadata: Metadata = {title: '평가진행방식 선택'}
+export const metadata: Metadata = {title: '평가진행방식 선택 (신속표준모형)'}
 
 // 시안 "알려드려요" 안내 문구.
 const NOTICES = [
@@ -22,8 +23,8 @@ const NOTICES = [
 
 const METHODS_TITLE_ID = 'evaluation-methods-title'
 
-// 기관 개별평가 평가진행방식 선택(평가검증 진행확인) — Figma "개별평가_평가진행방식 선택".
-// 화면 구성은 기존 컴포넌트 조합이다: PageTitleBar(+Breadcrumb) · RadioCard · InfoBox · StepNavigation.
+// 기관 개별평가 평가진행방식 선택(신속표준모형) — Figma "개별평가_평가진행방식 선택".
+// 화면 구성은 기존 컴포넌트 조합이다: PageTitleBar(+Badge · Breadcrumb) · RadioCard · InfoBox · StepNavigation.
 // 카드는 링크가 아니라 라디오이고, 고르는 것과 이동은 EvaluationMethodForm 이 갖는다
 // (Tech-Index 평가모형 선택 화면과 같은 구성).
 const OrgVerificationProgressPage = () => (
@@ -32,8 +33,14 @@ const OrgVerificationProgressPage = () => (
         {/* 콘텐츠 폭은 공통 grid-layout을 따른다. 하단 여백은 StepNavigation 이 담당한다. */}
         <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
             <div className="flex flex-col gap-2">
+                {/* 제목 · 배지 · 브레드크럼은 KTRS-FM 단계 화면(ktrs-fm/customer-consent)과 같다. */}
                 <PageTitleBar
-                    title="평가진행방식 선택"
+                    title="신속표준모형"
+                    badge={
+                        <Badge variant="solid" color="info" shape="round">
+                            KTRS-FM
+                        </Badge>
+                    }
                     breadcrumb={
                         <Breadcrumb>
                             <BreadcrumbList>
@@ -42,7 +49,11 @@ const OrgVerificationProgressPage = () => (
                                 </BreadcrumbItem>
                                 <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>개별평가</BreadcrumbPage>
+                                    <span>개별평가</span>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
