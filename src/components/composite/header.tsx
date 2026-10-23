@@ -28,7 +28,12 @@ import {
 } from '@/components/ui/dialog'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
-import {DEFAULT_HEADER_NAVIGATION, MENU_SERVICE_GROUPS, UTILITY_LINKS} from '@/constants/header-navigation'
+import {
+    DEFAULT_HEADER_NAVIGATION,
+    MENU_SERVICE_GROUPS,
+    MYPAGE_HOME_HREF,
+    UTILITY_LINKS,
+} from '@/constants/header-navigation'
 import type {HeaderNavLink, HeaderNavigationByUserType, UserType} from '@/constants/header-navigation'
 import {
     headerHiddenWhenMenuOpenClassName,
@@ -55,6 +60,9 @@ const USER_TYPE_BADGE = {
 export type HeaderUser = {
     name: string
     sessionRemaining: string
+    /** 이름을 눌렀을 때 갈 마이페이지 경로. 없으면 MYPAGE_HOME_HREF[userType].
+     *  [프론트엔드 연동] 기관은 로그인 회원 유형의 내 정보 경로를 넣는다(협약·비협약 은행/기관·하위계정). */
+    mypageHref?: string
 }
 
 // 전체 메뉴 닫힘 애니메이션과 헤더 상태를 동기화하는 시간.
@@ -605,15 +613,21 @@ const HeaderContent = ({
                         // [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
                         // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
                         <div className="flex min-w-0 flex-wrap items-center justify-end gap-4">
-                            <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
+                            {/* [배지+이름]은 마이페이지(내 정보)로 가는 링크다. 이름이 잘려 보여도 링크 이름에는 전체가
+                                들어가고, 어디로 가는지는 숨김 글자로 덧붙인다[6.4.3]. */}
+                            <Link
+                                href={user.mypageHref ?? MYPAGE_HOME_HREF[userType]}
+                                className="group/user-name focus-visible:ring-ring rounded-2xs grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                            >
                                 <UserTypeBadge userType={userType} />
-                                <p className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
-                                    <span className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46">
+                                <span className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
+                                    <span className="block w-max max-w-full min-w-0 shrink truncate group-hover/user-name:underline sm:max-w-46">
                                         {user.name}
                                     </span>
                                     <span className="ml-1 shrink-0 whitespace-nowrap">님</span>
-                                </p>
-                            </div>
+                                    <span className="sr-only"> 마이페이지로 이동</span>
+                                </span>
+                            </Link>
                             <SessionTimer
                                 remaining={user.sessionRemaining}
                                 showExtensionAction={!isSessionExtensionPage}
