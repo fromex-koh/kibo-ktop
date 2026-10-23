@@ -8,7 +8,7 @@ type GaugeToneCase = {
     label: string
     /** 둘째 열(예: 점수 구간 · 등급명). */
     detail: string
-    /** tokens.json 의 gauge-<name>-from/-to 에서 <name>(excellent · good · normal · poor · low · weak). */
+    /** tokens.json 의 <tokenPrefix>-<name>-from/-to 에서 <name>(gauge: excellent ~ weak · credit-gauge: prime ~ hold). */
     name: string
 }
 
@@ -23,11 +23,11 @@ const ColorCell = ({token}: {token: string}) => (
     </span>
 )
 
-const GradientCell = ({name}: {name: string}) => (
+const GradientCell = ({token}: {token: string}) => (
     <span
         aria-hidden="true"
         className="block h-4 w-full min-w-32 rounded-full"
-        style={{backgroundImage: `linear-gradient(to right, var(--ds-gauge-${name}-from), var(--ds-gauge-${name}-to))`}}
+        style={{backgroundImage: `linear-gradient(to right, var(--ds-${token}-from), var(--ds-${token}-to))`}}
     />
 )
 
@@ -36,11 +36,14 @@ const GaugeToneTable = ({
     labelHeader,
     detailHeader,
     cases,
+    tokenPrefix = 'gauge',
 }: {
     caption: string
     labelHeader: string
     detailHeader: string
     cases: readonly GaugeToneCase[]
+    /** 토큰 이름 앞부분 — 점수 게이지 등 'gauge'(기본), 기업신용등급 게이지 'credit-gauge'. */
+    tokenPrefix?: string
 }) => (
     <Table
         caption={caption}
@@ -57,9 +60,9 @@ const GaugeToneTable = ({
             cells: [
                 item.label,
                 item.detail,
-                <ColorCell key="from" token={`gauge-${item.name}-from`} />,
-                <ColorCell key="to" token={`gauge-${item.name}-to`} />,
-                <GradientCell key="preview" name={item.name} />,
+                <ColorCell key="from" token={`${tokenPrefix}-${item.name}-from`} />,
+                <ColorCell key="to" token={`${tokenPrefix}-${item.name}-to`} />,
+                <GradientCell key="preview" token={`${tokenPrefix}-${item.name}`} />,
             ],
         }))}
     />

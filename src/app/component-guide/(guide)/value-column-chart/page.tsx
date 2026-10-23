@@ -154,13 +154,24 @@ const PRINT_CODE = `// K-BIGx 인쇄본 — 색만 kbx 변수로 넘깁니다(kb
 <ValueColumnChart
   {...chartProps}
   colors={{
-    bar: 'var(--kbx-color-blue)',
-    highlight: 'var(--kbx-color-purple)',
+    bar: 'var(--kbx-color-chart-general)',
+    highlight: 'var(--kbx-color-chart-subject)',            // 신청기업 막대 — 진남
+    highlightLabel: 'var(--kbx-color-chart-subject-label)', // 신청기업 값 · 이름 — 남색
     baseline: 'var(--kbx-color-foreground)',
     value: 'var(--kbx-color-foreground)',
     category: 'var(--kbx-color-foreground)',
   }}
 />`
+
+// 인쇄본 색 — kbigx-print-tech-index.tsx 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
+const PRINT_COLORS = {
+    bar: 'var(--kbx-color-chart-general)',
+    highlight: 'var(--kbx-color-chart-subject)',
+    highlightLabel: 'var(--kbx-color-chart-subject-label)',
+    baseline: 'var(--kbx-color-foreground)',
+    value: 'var(--kbx-color-foreground)',
+    category: 'var(--kbx-color-foreground)',
+} as const
 
 const PROPS_ITEMS = [
     ['ValueColumnChart', 'data', '항목 목록입니다. 화면에 그릴 순서로 넘깁니다.', '-', 'readonly ValueColumnItem[]'],
@@ -179,6 +190,13 @@ const PROPS_ITEMS = [
         '막대 · 강조 · 바닥선 · 점선 · 값 글자(진하게 · 옅게) · 이름 색입니다. 넘기지 않은 항목은 웹 색입니다.',
         '웹 시맨틱 색',
         'Partial<ValueColumnColors>',
+    ],
+    [
+        'ValueColumnColors',
+        'highlightLabel',
+        'wide 의 강조 글자(값 · 이름) 색입니다.',
+        'highlight(막대와 같은 색)',
+        'string',
     ],
     ['ValueColumnChart', 'formatValue', '값 글자 형식입니다.', '소수 첫째 자리(46.0)', '(value: number) => string'],
     ['ValueColumnItem', 'id · label · value', '항목 식별자 · 이름 · 값입니다.', '-', 'string · number'],
@@ -240,7 +258,7 @@ const ValueColumnChartGuidePage = () => (
                 </SectionHeading>
                 <Example
                     title="템플릿 데이터"
-                    description="막대는 모두 같은 폭(64)이고 가장 큰 값(인쇄본은 max 100)이 높이 260 입니다. 신청기업(강조)은 보라 막대 · 굵은 보라 글자."
+                    description="막대는 모두 같은 폭(64)이고 가장 큰 값(인쇄본은 max 100)이 높이 260 입니다. 웹 기본 색 — 신청기업(강조)은 보라 막대 · 굵은 보라 글자(인쇄본 색은 5절)."
                 >
                     <ValueColumnChart data={TYPE_DATA} ariaLabel="기업 유형별 Tech-Index 비교 예시" />
                 </Example>
@@ -350,6 +368,30 @@ const ValueColumnChartGuidePage = () => (
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        신청기업 막대는 진남(chart-subject), 나머지 유형은 파랑(chart-general) — 명도 차가 커서 흑백
+                        인쇄에서도 강조가 남습니다.
+                    </li>
+                    <li>
+                        신청기업 값 · 이름 글자는 막대와 다른 남색(<code>highlightLabel</code> =
+                        chart-subject-label)입니다.
+                    </li>
+                    <li>4대 혁신역량 부분별 비교 카드(compact)는 역량마다 등급 색 · 전체기업 회색 그대로입니다.</li>
+                </ul>
+                <Example
+                    title="인쇄본 색"
+                    description="kbx 색을 넘긴 모습입니다(.kbigx-print 안 · 다크에서도 흰 바탕)."
+                >
+                    <div className="kbigx-print bg-kbx-paper rounded-sm p-4">
+                        <ValueColumnChart
+                            data={TYPE_DATA}
+                            max={100}
+                            colors={PRINT_COLORS}
+                            ariaLabel="기업 유형별 Tech-Index 비교 인쇄본 색 예시"
+                        />
+                    </div>
+                </Example>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>

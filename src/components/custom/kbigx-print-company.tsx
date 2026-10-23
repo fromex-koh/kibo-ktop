@@ -87,6 +87,20 @@ const AFFILIATE_COLUMNS = [
 
 // 인증 카드 — 높이 80(h-20). 테두리 색은 인증 여부에 따라 사용처에서 붙인다.
 const CERT_BOX_CLASS = 'kbx-border-regular flex h-20 items-center justify-between px-6'
+// 특허 및 인증현황 — 건수 4칸 · 인증 4칸 고정. 받은 목록에서 같은 id 로 찾고, 없거나 값이 없으면
+// 건수 칸은 라벨 아래 '-'(단위 없음), 인증 칸은 상자 안에 '-' 만 적는다(인증 · 미인증 대신).
+const IP_ITEMS = [
+    {id: 'patent', label: '특허'},
+    {id: 'utility-model', label: '실용신안'},
+    {id: 'design', label: '디자인'},
+    {id: 'trademark', label: '상표권'},
+] as const
+const CERTIFICATION_ITEMS = [
+    {id: 'venture', label: '벤처'},
+    {id: 'innobiz', label: '이노비즈'},
+    {id: 'mainbiz', label: '메인비즈'},
+    {id: 'research-lab', label: '연구소'},
+] as const
 
 // 관계기업 현황 · 특허 및 인증현황 — 기업현황 첫 쪽(company-1) 아래 두 블록.
 const CompanyAffiliateBlocks = ({
@@ -121,47 +135,58 @@ const CompanyAffiliateBlocks = ({
             {/* 건수 카드 · 인증 카드 각 4칸. 카드 높이(80)는 첫 쪽 높이 어림(COMPANY_FIRST_PAGE.baseBottom)에 포함돼 있다. */}
             <div className="flex flex-col gap-4">
                 <div className="gap-kbx-14 grid grid-cols-4">
-                    {status.intellectualProperty.map((item) => (
-                        <KbxStatCard
-                            key={item.id}
-                            size="xl"
-                            label={item.label}
-                            value={formatKbxNumber(item.count)}
-                            unit={COUNT_UNIT}
-                        />
-                    ))}
+                    {IP_ITEMS.map(({id, label}) => {
+                        const count = status.intellectualProperty.find((item) => item.id === id)?.count
+                        const hasCount = typeof count === 'number' && Number.isFinite(count)
+                        return (
+                            <KbxStatCard
+                                key={id}
+                                size="xl"
+                                label={label}
+                                value={formatKbxNumber(count)}
+                                unit={hasCount ? COUNT_UNIT : undefined}
+                            />
+                        )
+                    })}
                 </div>
                 {/* 인증은 남색 실선 · 미인증은 옅은 점선 — 색과 함께 글자(인증 · 미인증)와 아이콘으로도 구분한다[5.3.1]. */}
                 <ul className="gap-kbx-14 grid grid-cols-4">
-                    {status.certifications.map((item) => (
-                        <li
-                            key={item.id}
-                            className={cn(
-                                CERT_BOX_CLASS,
-                                item.isCertified ? 'border-kbx-primary' : 'border-kbx-border-muted border-dashed',
-                            )}
-                        >
-                            <span
+                    {CERTIFICATION_ITEMS.map(({id, label}) => {
+                        const isCertified = status.certifications.find((item) => item.id === id)?.isCertified
+                        return (
+                            <li
+                                key={id}
                                 className={cn(
-                                    'kbx-text-26 font-kbx-bold',
-                                    !item.isCertified && 'text-kbx-foreground-subtle',
+                                    CERT_BOX_CLASS,
+                                    isCertified ? 'border-kbx-primary' : 'border-kbx-border-muted border-dashed',
                                 )}
                             >
-                                {item.label}
-                            </span>
-                            {item.isCertified ? (
-                                <span className="text-kbx-primary kbx-text-34 font-kbx-extrabold flex items-center gap-2 whitespace-nowrap">
-                                    <Check aria-hidden="true" strokeWidth={3} className="size-7.5" />
-                                    {CERTIFIED_LABEL}
+                                <span
+                                    className={cn(
+                                        'kbx-text-26 font-kbx-bold',
+                                        !isCertified && 'text-kbx-foreground-subtle',
+                                    )}
+                                >
+                                    {label}
                                 </span>
-                            ) : (
-                                <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold flex items-center gap-2 whitespace-nowrap">
-                                    <Minus aria-hidden="true" strokeWidth={3} className="size-6.5" />
-                                    {NOT_CERTIFIED_LABEL}
-                                </span>
-                            )}
-                        </li>
-                    ))}
+                                {isCertified === undefined ? (
+                                    <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold">
+                                        {KBX_EMPTY_VALUE}
+                                    </span>
+                                ) : isCertified ? (
+                                    <span className="text-kbx-primary kbx-text-34 font-kbx-extrabold flex items-center gap-2 whitespace-nowrap">
+                                        <Check aria-hidden="true" strokeWidth={3} className="size-7.5" />
+                                        {CERTIFIED_LABEL}
+                                    </span>
+                                ) : (
+                                    <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold flex items-center gap-2 whitespace-nowrap">
+                                        <Minus aria-hidden="true" strokeWidth={3} className="size-6.5" />
+                                        {NOT_CERTIFIED_LABEL}
+                                    </span>
+                                )}
+                            </li>
+                        )
+                    })}
                 </ul>
             </div>
         </KbxBlock>
@@ -269,6 +294,8 @@ const FINANCE_ROW_LABELS = {
 } as const
 type FinanceRowLabels = (typeof FINANCE_ROW_LABELS)[keyof typeof FINANCE_ROW_LABELS]
 
+// 연도를 하나도 받지 못하면 연도 열 3칸을 머리 '-' 로 둔다 — 행 이름은 고정이라 표 모양은 그대로, 값은 모두 '-'.
+const FINANCE_FALLBACK_YEAR_COUNT = 3
 // 재무 표 props(구분 + 연도 열). values[i] 가 years[i] 의 값. 구분 열 폭은 행 이름 길이에 맞춰 사용처가 정한다.
 const financeTableProps = (
     years: readonly string[],
@@ -280,7 +307,12 @@ const financeTableProps = (
     density: 'snug' as const,
     columns: [
         {key: 'label', header: '구분', isRowHeader: true, className: labelClassName},
-        ...years.map((year) => ({key: year, header: year})),
+        ...(years.length
+            ? years.map((year) => ({key: year, header: year}))
+            : Array.from({length: FINANCE_FALLBACK_YEAR_COUNT}, (_, index) => ({
+                  key: `empty-year-${index}`,
+                  header: KBX_EMPTY_VALUE,
+              }))),
     ],
     rows: labels.map((item) => {
         const values = rows.find((row) => row.key === item.key)?.values
@@ -288,10 +320,12 @@ const financeTableProps = (
             key: item.key,
             cells: [
                 item.label,
-                ...years.map((_, index) => {
-                    const value = values?.[index]
-                    return isKbxNumber(value) ? format(value) : KBX_EMPTY_VALUE
-                }),
+                ...(years.length
+                    ? years.map((_, index) => {
+                          const value = values?.[index]
+                          return isKbxNumber(value) ? format(value) : KBX_EMPTY_VALUE
+                      })
+                    : Array<string>(FINANCE_FALLBACK_YEAR_COUNT).fill(KBX_EMPTY_VALUE)),
             ],
         }
     }),
@@ -382,7 +416,12 @@ const NestedFinance = ({
                         />
                     </KbxChartBox>
                 </>
-            ) : null}
+            ) : (
+                // 행을 하나도 받지 못하면 범례 없이 그래프 자리에 빈 상태.
+                <KbxChartBox isEmpty emptyClassName="h-88">
+                    {null}
+                </KbxChartBox>
+            )}
         </KbxSubBlock>
     )
 }

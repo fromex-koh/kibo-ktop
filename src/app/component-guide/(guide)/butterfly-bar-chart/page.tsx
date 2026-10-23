@@ -165,8 +165,14 @@ const PROPS_ITEMS = [
     ],
     ['ButterflyBarItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['ButterflyBarItem', 'label', '가운데 칸에 쓰는 항목 이름입니다.', '-', 'string'],
-    ['ButterflyBarItem', 'left', '왼쪽 값입니다.', '-', 'number'],
-    ['ButterflyBarItem', 'right', '오른쪽 값입니다.', '-', 'number'],
+    [
+        'ButterflyBarItem',
+        'left',
+        "왼쪽 값입니다. 숫자가 아니면(NaN) 막대 없이 '-'(숨김 표도 '-'), 0 은 '0'.",
+        '-',
+        'number',
+    ],
+    ['ButterflyBarItem', 'right', '오른쪽 값입니다. 값 없음 처리는 left 와 같습니다.', '-', 'number'],
     [
         'ButterflyBarChartSkeleton',
         'label',

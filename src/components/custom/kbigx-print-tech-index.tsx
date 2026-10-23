@@ -39,10 +39,12 @@ const formatScore = (value: number) => (isKbxNumber(value) ? kbxFixed1Format.for
 const toChartScore = (value: number) => (isKbxNumber(value) ? value : 0)
 const missingText = (value: number) => (isKbxNumber(value) ? undefined : KBX_EMPTY_VALUE)
 
-// 막대 색 — 신청기업 보라 · 유형 파랑. 4대 혁신역량 카드의 신청기업 막대는 역량마다 고정 색, 전체기업은 회색.
+// 막대 색 — 신청기업 진남 · 유형 파랑(흑백 인쇄에서도 명도로 갈린다), 신청기업 글자는 남색. 4대 혁신역량 카드의
+// 신청기업 막대는 역량마다 고정 색(등급 색), 전체기업은 회색.
 // [프론트엔드 연동] capabilities[].id 는 infra · input · activity · output(화면 보고서와 같다) — 다른 id 면 파랑.
-const SUBJECT_COLOR = 'var(--kbx-color-purple)'
-const TYPE_COLOR = 'var(--kbx-color-blue)'
+const SUBJECT_COLOR = 'var(--kbx-color-chart-subject)'
+const SUBJECT_LABEL_COLOR = 'var(--kbx-color-chart-subject-label)'
+const TYPE_COLOR = 'var(--kbx-color-chart-general)'
 const AVERAGE_COLOR = 'var(--kbx-color-gray)'
 const CAPABILITY_COLORS: Record<string, string> = {
     infra: 'var(--kbx-color-mint)',
@@ -51,16 +53,16 @@ const CAPABILITY_COLORS: Record<string, string> = {
     output: 'var(--kbx-color-red)',
 }
 
-// 기업 유형별 4대 혁신역량 막대 목록 공통 props — 0~100 눈금, 신청기업 행(tone: 'subject')은 보라 · 가장 굵게.
+// 기업 유형별 4대 혁신역량 막대 목록 공통 props — 0~100 눈금, 신청기업 행(tone: 'subject')은 진남 막대 · 남색 글자 · 가장 굵게.
 const CAPABILITY_LIST_PROPS = {
     titleAs: 'h4',
     max: SCORE_MAX,
     formatValue: formatScore,
-    colors: {bar: TYPE_COLOR, subjectBar: SUBJECT_COLOR, track: 'var(--kbx-color-surface)'},
+    colors: {bar: TYPE_COLOR, subjectBar: SUBJECT_COLOR, track: 'var(--kbx-color-chart-track)'},
     listClassName: 'kbx-text-20 text-kbx-foreground border-kbx-foreground kbx-border-t-regular',
     titleClassName: 'kbx-text-22 font-kbx-bold pt-kbx-14 pb-1.5',
     rowClassName: 'gap-3 py-1.5',
-    subjectRowClassName: 'text-kbx-purple font-kbx-extrabold',
+    subjectRowClassName: 'text-kbx-chart-subject-label font-kbx-extrabold',
     nameClassName: 'w-24',
     barClassName: 'h-5',
     valueClassName: 'w-14',
@@ -277,7 +279,7 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
         <>
             <KbxBlock title="혁신성장역량지수 비교">
                 <KbxSubBlock title="기업 유형별 Tech-Index 비교">
-                    {/* 0~100 눈금, isSubject 인 유형(신청기업)은 보라. 빈 상태 높이(h-84)는 그래프 높이와 같게 둔다. */}
+                    {/* 0~100 눈금, isSubject 인 유형(신청기업)은 진남 막대 · 남색 글자. 빈 상태 높이(h-84)는 그래프 높이와 같게 둔다. */}
                     <KbxChartBox isEmpty={!companyTypes.length} emptyClassName="h-84">
                         <ValueColumnChart
                             ariaLabel="기업 유형별 Tech-Index 비교"
@@ -292,6 +294,7 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                             colors={{
                                 bar: TYPE_COLOR,
                                 highlight: SUBJECT_COLOR,
+                                highlightLabel: SUBJECT_LABEL_COLOR,
                                 baseline: 'var(--kbx-color-foreground)',
                                 value: 'var(--kbx-color-foreground)',
                                 category: 'var(--kbx-color-foreground)',

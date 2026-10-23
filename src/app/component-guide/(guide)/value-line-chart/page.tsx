@@ -85,7 +85,7 @@ const EDGE_CASES = [
         key: 'missing',
         title: '값 없음',
         description:
-            '값이 없는 분기에서 선 · 면을 끊고 점 · 값 글자를 그리지 않습니다. 기간 이름 · 점선은 그대로입니다.',
+            "값이 없는 분기에서 선 · 면을 끊고 점을 그리지 않으며, 값 글자 자리(바닥선 위)에 '-' 를 적습니다. 기간 이름 · 점선은 그대로입니다.",
         data: MISSING_DATA,
     },
     {
@@ -165,7 +165,13 @@ const PROPS_ITEMS = [
         "'default' | 'medium' | 'compact' | 'narrow'",
     ],
     ['ValueLineItem', 'id · label', '점 식별자와 기간 이름(아래 글자)입니다.', '-', 'string'],
-    ['ValueLineItem', 'value', '값입니다. 없으면(undefined) 그 자리에서 선을 끊습니다.', '-', 'number | undefined'],
+    [
+        'ValueLineItem',
+        'value',
+        "값입니다. 없으면(undefined · 숫자 아님) 그 자리에서 선을 끊고 바닥선 위에 '-' 를 적습니다.",
+        '-',
+        'number | undefined',
+    ],
     [
         'ValueLineChartSkeleton',
         'label',

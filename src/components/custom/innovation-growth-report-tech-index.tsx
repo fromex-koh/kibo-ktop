@@ -25,6 +25,7 @@ import {
 
 // 점수가 없을 때 요약 문장.
 const NO_SCORE_TEXT = '평가 점수가 없습니다.'
+const EMPTY_VALUE = '-'
 
 // 막대 색 — 신청기업(isSubject) · 비교 유형 · 4대 역량 카드의 전체기업 막대. 계열은 report-series-*, 전체기업은 구조색 muted.
 const SUBJECT_BAR_COLOR = 'var(--ds-report-series-3)'
@@ -167,13 +168,17 @@ const InnovationGrowthReportTechIndex = ({
                                 score={score}
                                 statusLabel={grade.label}
                                 tone={grade.tone}
-                                ariaLabel={`Tech-Index ${scoreText}, ${grade.label}`}
+                                ariaLabel={
+                                    Number.isFinite(score)
+                                        ? `Tech-Index ${scoreText}, ${grade.label}`
+                                        : `Tech-Index ${NO_SCORE_TEXT}`
+                                }
                                 className="w-80"
                             />
                             <dl className="flex flex-wrap items-center justify-center gap-x-2">
                                 <dt className="typo-body-xl-regular text-foreground-subtle">평가일자</dt>
                                 <dd className="typo-body-xl-medium text-label-foreground m-0 tabular-nums">
-                                    {evaluationDate}
+                                    {evaluationDate || EMPTY_VALUE}
                                 </dd>
                             </dl>
                         </div>

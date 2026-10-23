@@ -48,6 +48,21 @@ const INNOVATION_ISSUE_COLORS = [
     'var(--ds-report-series-3)',
     'var(--ds-blue-800)',
 ] as const
+// R&D 이슈 워드클라우드 아래 안내 — 웹 보고서 진단브리핑 · 인쇄본 진단브리핑이 함께 쓴다.
+const INNOVATION_ISSUE_NOTE = '* 글자 크기는 키워드 중요도에 비례합니다.'
+// 매출 규모별 기업 및 특허 현황 — 5행 고정(웹 보고서 · 인쇄본 공용). 받은 rows 에서 같은 label 로 찾고, 없는 행 · 값은
+// 숫자 아님(NaN)으로 두어 화면이 '-' 로 적는다(0 은 0). 데이터가 하나도 없어도 5행을 모두 '-' 로 보인다.
+const MARKET_SCALE_LABELS = ['10억원 이하', '30억원 이하', '100억원 이하', '300억원 이하', '300억원 초과'] as const
+const toMarketScaleRows = (rows: InnovationTechDetail['marketScale']['rows']) =>
+    MARKET_SCALE_LABELS.map((label) => {
+        const row = rows.find((item) => item.label === label)
+        return {
+            id: row?.id ?? label,
+            label,
+            companies: row?.companies ?? Number.NaN,
+            patents: row?.patents ?? Number.NaN,
+        }
+    })
 
 const INNOVATION_REPORT_BADGE = 'K-BIGx - 기업혁신성장 보고서'
 const INNOVATION_REPORT_PRINT_LABEL = '보고서 출력'
@@ -333,7 +348,7 @@ type InnovationGrowthReport = {
         comparison: readonly {label: string; company: number; industry: number}[]
         years: readonly string[]
         /**
-         * 최근 3개년 재무 현황 — values 는 years 와 같은 순서(백만원). 값이 없거나 0 이면 화면이 '-' 로 적는다.
+         * 최근 3개년 재무 현황 — values 는 years 와 같은 순서(백만원). 0 은 '0' 으로 적고, 값이 없으면(숫자 아님 · 연도 칸 없음) 화면이 '-' 로 적는다.
          * [프론트엔드 연동] 6항목 고정(총자산 · 자본총계 · 부채총계 · 매출액 · 영업이익 · 순이익). 인쇄본은 이 여섯 이름을
          * 고정 문구로 늘 그리고 label 로 값을 찾는다 — 없는 항목 · 없는 연도 값은 '-'.
          */
@@ -373,12 +388,14 @@ type InnovationCompanyStatus = {
     overview: readonly LabelValue[]
     /**
      * 경영진 현황 — 목록 수는 기업마다 다르다(가변).
-     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
+     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
      */
     executives: readonly {role: string; name: string; birthDate: string}[]
     /**
      * 주주 현황 — 지분율 높은 순으로 보낸다.
-     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
+     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
      */
     shareholders: readonly {name: string; shares: number; ratio: number; relation: string}[]
     /** 관계기업 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). */
@@ -1452,14 +1469,14 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '대표기술분야', value: '무선·이동통신 서비스'},
             {label: '주요제품', value: '5G통신 및 IoT 관련 서비스'},
         ],
-        // 경영진 현황 — 목업은 4건. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
+        // 경영진 현황 — 목업은 4건. 실제 연동 시 웹 5줄 · 인쇄본 최대 10행(타입 주석 참고).
         executives: [
             {role: '대표이사', name: '홍길동', birthDate: '71.02.03'},
             {role: '사내이사', name: '김이사', birthDate: '74.05.12'},
             {role: '감사', name: '이감사', birthDate: '69.11.28'},
             {role: '사외이사', name: '박이사', birthDate: '77.08.09'},
         ],
-        // 주주 현황 — 목업은 컨펌 화면이 깔끔하게 보이도록 4건만 둔다. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
+        // 주주 현황 — 목업은 컨펌 화면이 깔끔하게 보이도록 4건만 둔다. 실제 연동 시 웹 5줄 · 인쇄본 최대 10행(타입 주석 참고).
         shareholders: [
             {name: '홍길동', shares: 10000, ratio: 25, relation: '본인'},
             {name: '김이사', shares: 6000, ratio: 15, relation: '가족'},
@@ -1565,17 +1582,17 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             years: ['2022년', '2023년', '2024년'],
             balance: [
                 {key: 'total-assets', label: '총자산', values: [10000, 16761, 18981]},
-                {key: 'liabilities', label: '부채총계', values: [4200, 7300, 8100]},
+                {key: 'liabilities', label: '부채총계', values: [4200, Number.NaN, 8100]},
                 {key: 'equity', label: '자본총계', values: [5800, 9461, 10881]},
             ],
             income: [
-                {key: 'sales', label: '매출액', values: [12500, 14200, 16100]},
+                {key: 'sales', label: '매출액', values: [Number.NaN, 14200, 16100]},
                 {key: 'operating-profit', label: '영업이익', values: [980, 1210, 1350]},
-                {key: 'net-income', label: '당기순이익', values: [610, -240, 820]},
+                {key: 'net-income', label: '당기순이익', values: [610, -240, Number.NaN]},
             ],
             ratios: [
                 {key: 'operating-margin', label: '영업이익률', values: [7.84, 8.52, 8.39]},
-                {key: 'debt-ratio', label: '부채비율', values: [72.41, 77.16, 74.44]},
+                {key: 'debt-ratio', label: '부채비율', values: [72.41, Number.NaN, 74.44]},
                 {key: 'receivables-turnover', label: '매출채권회전율', values: [5.12, 4.87, 5.33]},
                 {key: 'sales-growth', label: '매출액증가율', values: [9.35, 13.6, 13.38]},
                 {key: 'asset-growth', label: '총자산증가율', values: [11.2, 67.61, 13.25]},
@@ -1584,7 +1601,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {key: 'operating', label: '영업활동후 현금흐름', values: [1520, 2130, 1980]},
                 {key: 'financing', label: '재무활동후 현금흐름', values: [-420, 860, -310]},
                 {key: 'investing', label: '투자활동후 현금흐름', values: [-980, -1640, -1120]},
-                {key: 'net-change', label: '순현금변화', values: [120, 1350, 550]},
+                {key: 'net-change', label: '순현금변화', values: [120, 1350, Number.NaN]},
                 {key: 'cash-vs-income', label: '영업활동 현금흐름과 순이익 차이', values: [910, 2370, 1160]},
             ],
         },
@@ -1701,6 +1718,7 @@ const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthRe
 // ── 목업 끝 ──
 
 export {
+    toMarketScaleRows,
     getHumanResourceYearRows,
     getRecentYears,
     isSameYear,
@@ -1722,6 +1740,7 @@ export {
     INNOVATION_REPORT_PC_VIEW,
     INNOVATION_REPORT_VIEW_QUERY,
     INNOVATION_ISSUE_COLORS,
+    INNOVATION_ISSUE_NOTE,
     INNOVATION_REPORT_ID_QUERY,
     INNOVATION_REPORT_CREATED_TOAST,
     INNOVATION_REPORT_PRINT_LABEL,

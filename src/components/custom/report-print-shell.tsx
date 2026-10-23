@@ -66,17 +66,29 @@ const useSheetScale = () => {
 // Safari 전용 — 인쇄 직전에만 용지를 A4 한 쪽으로 접는다(styles/report-print.css 의 data-print-fit).
 // Safari 는 쪽을 나눌 때 화면 레이아웃을 보므로 화면에서도 A4 여야 하는데, 처음부터 접어 두면
 // 차트가 줄어든 폭을 재서 작게 그려진다. 차트가 다 그려진 뒤인 인쇄 직전에 접으면 둘 다 맞는다.
+const PRINT_FIT_ATTRIBUTE = 'data-print-fit'
+const fitForPrint = () => document.documentElement.setAttribute(PRINT_FIT_ATTRIBUTE, '')
+const unfitAfterPrint = () => document.documentElement.removeAttribute(PRINT_FIT_ATTRIBUTE)
+
+// beforeprint 만으로는 늦을 수 있다 — Safari 는 beforeprint 에서 바꾼 배치가 그려지기 전에 첫 쪽 나눔을 하는 경우가 있어,
+// 접히기 전 높이(1924px)로 나뉜 쪽 사이사이에 빈 쪽이 낀다. 인쇄 설정을 바꿔 다시 나누면 그때는 접힌 배치를 봐서 빈 쪽이
+// 사라진다. 그래서 대화상자를 여는 쪽(자동 인쇄 · [인쇄하기])은 글꼴이 다 받아지고 접힌 배치가 화면에 그려진 뒤(두 프레임)에
+// print() 를 부른다. 메뉴 · 단축키로 여는 인쇄는 아래 beforeprint 가 그대로 맡는다.
+const printWhenFitted = async () => {
+    await document.fonts.ready
+    fitForPrint()
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    window.print()
+}
+
 const usePrintFit = () => {
     useEffect(() => {
-        const fit = () => document.documentElement.setAttribute('data-print-fit', '')
-        const unfit = () => document.documentElement.removeAttribute('data-print-fit')
-
-        window.addEventListener('beforeprint', fit)
-        window.addEventListener('afterprint', unfit)
+        window.addEventListener('beforeprint', fitForPrint)
+        window.addEventListener('afterprint', unfitAfterPrint)
 
         return () => {
-            window.removeEventListener('beforeprint', fit)
-            window.removeEventListener('afterprint', unfit)
+            window.removeEventListener('beforeprint', fitForPrint)
+            window.removeEventListener('afterprint', unfitAfterPrint)
         }
     }, [])
 }
@@ -98,7 +110,7 @@ const useAutoPrint = () => {
             // 새 탭으로 열린 문서(openReportPrintTab)는 인쇄가 끝나거나 취소되면 스스로 닫는다. 숨긴 프레임 · 직접 연 주소는
             // 여는 창(opener)이 없어 그대로 둔다.
             if (window.opener) window.addEventListener('afterprint', () => window.close(), {once: true})
-            window.print()
+            void printWhenFitted()
         }, PRINT_READY_INTERVAL_MS)
 
         return () => window.clearInterval(timer)
@@ -128,7 +140,7 @@ const ReportPrintShell = ({title, children, notice = DEFAULT_TEMPLATE_NOTICE}: R
                     <div className="typo-body-xl-bold text-foreground min-w-0 truncate">{title}</div>
                     {/* [인쇄하기]가 이 화면의 주된 행동이라 primary 로 둔다. [닫기]는 보조라 tertiary 다. */}
                     <div className="flex shrink-0 items-center gap-2">
-                        <Button type="button" size="md" className="gap-1" onClick={() => window.print()}>
+                        <Button type="button" size="md" className="gap-1" onClick={() => void printWhenFitted()}>
                             <Printer aria-hidden="true" />
                             {PRINT_LABEL}
                         </Button>

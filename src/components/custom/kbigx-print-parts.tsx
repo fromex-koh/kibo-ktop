@@ -13,6 +13,7 @@ import {cn} from '@/lib/utils'
 import {PRIVATE_CARD_LABEL} from '@/components/composite/private-content'
 import {isKbxNumber, KBX_EMPTY_VALUE, kbxFixed1Format} from '@/components/custom/kbigx-print-format'
 import {estimateTextEm} from '@/content/service/k-bigx-print-measure'
+import type {CriGradeBand} from '@/content/service/cri-grades'
 
 // K-BIGx 보고서 인쇄본 — 쪽 공통 부품. 모든 쪽이 이 부품을 조합해 그린다.
 // 치수 · 색은 kbx 토큰(tokens.json kbigxPrint)이라 .kbigx-print 안에서만 값이 있다.
@@ -406,6 +407,21 @@ const KBX_CASH_FLOW_TAG_CLASS: Record<number, string> = {
     3: 'bg-kbx-orange border-kbx-orange text-kbx-ink',
     2: 'bg-kbx-green border-kbx-green text-kbx-paper',
     1: 'bg-kbx-blue border-kbx-blue text-kbx-paper',
+}
+
+// 기업신용등급 알약 색 — 등급 단계(cri-grades.ts getCriGradeBand, 웹 게이지와 같은 9단계)별 kbx credit-tag 색.
+// 진단브리핑 · 신용/재무정보 기업신용등급이 같이 쓴다. 바탕 + 흰 글자(대비 5.4:1 이상), 평가제외는 흰 바탕 + 점선 테두리.
+// 표에 없는 코드(단계 없음)는 알약 기본 모양(남색 테두리)을 쓴다.
+const KBX_CREDIT_TAG_CLASS: Record<CriGradeBand, string> = {
+    prime: 'bg-kbx-credit-tag-prime border-kbx-credit-tag-prime text-kbx-paper',
+    good: 'bg-kbx-credit-tag-good border-kbx-credit-tag-good text-kbx-paper',
+    fair: 'bg-kbx-credit-tag-fair border-kbx-credit-tag-fair text-kbx-paper',
+    subfair: 'bg-kbx-credit-tag-subfair border-kbx-credit-tag-subfair text-kbx-paper',
+    low: 'bg-kbx-credit-tag-low border-kbx-credit-tag-low text-kbx-paper',
+    verylow: 'bg-kbx-credit-tag-verylow border-kbx-credit-tag-verylow text-kbx-paper',
+    risk: 'bg-kbx-credit-tag-risk border-kbx-credit-tag-risk text-kbx-paper',
+    hold: 'bg-kbx-credit-tag-hold border-kbx-credit-tag-hold text-kbx-paper',
+    excluded: 'bg-kbx-paper border-kbx-credit-tag-excluded text-kbx-foreground-subtle border-dashed',
 }
 
 // 안내 문구 — 표 · 그래프 아래 작은 글(18px · 행간 1.5).
@@ -926,6 +942,7 @@ export {
     fitKbxText,
     getKbxIssueWords,
     KBX_CASH_FLOW_TAG_CLASS,
+    KBX_CREDIT_TAG_CLASS,
     KBX_CATEGORY_COLORS,
     KBX_CHART_EMPTY_CLASS,
     KBX_CHART_EMPTY_TEXT,

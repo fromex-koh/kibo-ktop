@@ -206,7 +206,13 @@ const PROPS_ITEMS = [
     ['ComboBarLineChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['ComboBarLineItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['ComboBarLineItem', 'label', '항목 이름입니다.', '-', 'string'],
-    ['ComboBarLineItem', 'value', '막대 값입니다.', '-', 'number'],
+    [
+        'ComboBarLineItem',
+        'value',
+        "막대 값입니다. 숫자가 아니면(NaN) 값 없음 — 막대 없이 바닥선 위에 '-'(숨김 표도 '-'). 0 은 '0'.",
+        '-',
+        'number',
+    ],
     ['ComboBarLineItem', 'lineValue', '선 값입니다. 없으면 null — 점을 비우고 선을 끊습니다.', '-', 'number | null'],
     [
         'ComboBarLineItem',

@@ -4,6 +4,7 @@ import {ComparisonRadarChart} from '@/components/custom/comparison-radar-chart'
 import {SECTOR_COMPARISON_RADAR_STYLE} from '@/components/custom/comparison-radar-style'
 import {
     KBX_CASH_FLOW_TAG_CLASS,
+    KBX_CREDIT_TAG_CLASS,
     kbxCategoryColor,
     KbxBlock,
     KbxChartBox,
@@ -23,10 +24,11 @@ import {ValueColumnChart} from '@/components/custom/value-column-chart'
 import {ValueLineChart} from '@/components/custom/value-line-chart'
 import {WordCloud} from '@/components/custom/word-cloud'
 import {cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
-import {getCriGradeTone, toCriRatingData} from '@/content/service/cri-grades'
+import {getCriGradeBand, toCriRatingData} from '@/content/service/cri-grades'
 import {
     getTechIndexGrade,
     INNOVATION_ISSUE_COLORS,
+    INNOVATION_ISSUE_NOTE,
     type InnovationGrowthReport,
 } from '@/content/service/k-bigx-innovation-report'
 import {COMPANY_OVERVIEW_FIT_LABELS} from '@/content/service/k-bigx-print-report'
@@ -46,7 +48,6 @@ const RND_MINISTRIES = ['중소벤처기업부', '과학기술정보통신부', 
 const RND_UNIT = '건'
 // 기업 정보 이름 — 6개 고정. report.company.rows 에서 같은 label 로 찾고, 없거나 비면 값은 '-'(KbxLabelValueGrid).
 const COMPANY_LABELS = ['기업명', '대표자', '기업유형/형태', '표준산업분류', '대표기술분야', '주요제품'] as const
-const WORD_CLOUD_NOTE = '* 글자 크기는 키워드 중요도에 비례합니다.'
 
 // 재무비율진단 단계 — rating-matrix.tsx 의 RATING_LEVELS 와 같은 순서 · 이름(바꾸면 함께 고친다).
 // 그 파일은 클라이언트 컴포넌트라 서버에서 그리는 인쇄본이 import 할 수 없어 따로 둔다.
@@ -213,7 +214,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
                                 />
                             </div>
                         </KbxChartBox>
-                        <KbxNote>{WORD_CLOUD_NOTE}</KbxNote>
+                        <KbxNote>{INNOVATION_ISSUE_NOTE}</KbxNote>
                     </KbxSubBlock>
                     <KbxSubBlock
                         title="정부 R&D사업 접수현황"
@@ -282,14 +283,30 @@ const KbxGradeBox = ({
 
 const KbigxPrintBriefingFinance = ({report}: PageProps) => {
     const {techIndex, creditFinance} = report
+    // 재무비율진단 — 5줄이 모두 '-'(등급 없음 · 다섯 단계 밖 값)이면 표 대신 빈 상태.
+    const hasRatios = RATIO_INDICATORS.some((label) =>
+        RATING_LEVELS.some((level) => level.id === creditFinance.ratios.find((row) => row.label === label)?.rating),
+    )
+    // 부문별 비교 — 재무비율진단 5지표 축 고정(같은 label 로 찾는다). 값이 하나도 없으면 빈 상태.
+    const comparisonRows = RATIO_INDICATORS.map((label) => {
+        const item = creditFinance.comparison.find((row) => row.label === label)
+        return {label, company: item?.company, industry: item?.industry}
+    })
+    const hasComparison = comparisonRows.some((row) => isKbxNumber(row.company) || isKbxNumber(row.industry))
+    // 최근 3개년 재무 현황 — 연도가 없거나 6항목 값이 하나도 없으면 빈 상태.
+    const hasStatements =
+        creditFinance.years.length > 0 &&
+        STATEMENT_ITEMS.some((label) =>
+            creditFinance.statements.find((row) => row.label === label)?.values.some((value) => isKbxNumber(value)),
+        )
     const grade = getTechIndexGrade(techIndex.score)
     // 점수가 없으면 '-' 이고 등급 알약을 빼며, 0점은 '0.0점 · 취약'.
     const hasScore = isKbxNumber(techIndex.score)
     const scoreText = hasScore ? kbxFixed1Format.format(techIndex.score) : KBX_EMPTY_VALUE
-    // 기업신용등급 — CRI 등급표(cri-grades.ts)로 코드를 등급명 · 단계 색으로 푼다.
-    // 등급표에 없는 코드는 '등급 코드 확인 필요', 유보 · 평가 제외 · 코드 오류는 남색 테두리 알약.
+    // 기업신용등급 — CRI 등급표(cri-grades.ts)로 코드를 등급명으로, 등급 단계(getCriGradeBand — 웹 게이지와 같은 9단계)로
+    // 알약 색(KBX_CREDIT_TAG_CLASS)을 정한다. 등급표에 없는 코드는 '등급 코드 확인 필요' + 남색 테두리 알약.
     const creditRating = toCriRatingData(creditFinance.rating.grade)
-    const creditTone = getCriGradeTone(creditFinance.rating.grade)
+    const creditBand = getCriGradeBand(creditFinance.rating.grade)
     // 현금흐름등급 — cash-flow-grades.ts 등급표 · KBX_CASH_FLOW_TAG_CLASS 색(신용/재무정보 장과 같다).
     const {cashFlow} = report.creditDetail
     const cashFlowGrade = findCashFlowGrade(cashFlow.grade)
@@ -357,7 +374,9 @@ const KbigxPrintBriefingFinance = ({report}: PageProps) => {
                             code={creditFinance.rating.grade ? creditRating.label : KBX_EMPTY_VALUE}
                             tag={
                                 creditFinance.rating.grade ? (
-                                    <KbxGradeTag tone={creditTone} className="shrink-0">
+                                    <KbxGradeTag
+                                        className={cn('shrink-0', creditBand && KBX_CREDIT_TAG_CLASS[creditBand])}
+                                    >
                                         {creditRating.description}
                                     </KbxGradeTag>
                                 ) : null
@@ -404,59 +423,63 @@ const KbigxPrintBriefingFinance = ({report}: PageProps) => {
                     className="mt-2"
                 >
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-14">
-                        <KbxTable
-                            caption="재무비율진단 항목별 수준"
-                            density="narrow"
-                            columns={[
-                                {
-                                    key: 'label',
-                                    header: '평가지표',
-                                    isRowHeader: true,
-                                    className: 'w-29',
-                                    headerClassName: 'whitespace-nowrap tracking-kbx-score',
-                                },
-                                ...RATING_LEVELS.map((level) => ({
-                                    key: level.id,
-                                    header: level.label,
-                                    headerClassName: 'kbx-text-18 whitespace-nowrap tracking-kbx-score',
-                                })),
-                            ]}
-                            rows={RATIO_INDICATORS.map((label) => {
-                                // 받은 등급이 다섯 단계 중 하나가 아니면(없음 · 정의 밖 값) 값 없음으로 보고 칸마다 '-'.
-                                const received = creditFinance.ratios.find((row) => row.label === label)?.rating
-                                const rating = RATING_LEVELS.find((level) => level.id === received)?.id
-                                return {
-                                    key: label,
-                                    cells: [
-                                        <span key="label" className="whitespace-nowrap">
-                                            {label}
-                                        </span>,
-                                        ...RATING_LEVELS.map((level) =>
-                                            !rating ? (
-                                                KBX_EMPTY_VALUE
-                                            ) : rating === level.id ? (
-                                                <span
-                                                    key={level.id}
-                                                    role="img"
-                                                    aria-label={level.label}
-                                                    className={cn(
-                                                        'size-kbx-22 inline-block rounded-full align-middle',
-                                                        GRADE_TONE_CLASS[level.id],
-                                                    )}
-                                                />
-                                            ) : null,
-                                        ),
-                                    ],
-                                }
-                            })}
-                        />
+                        {/* 표 높이 298(h-74.5) — 빈 상태도 같은 높이. */}
+                        <KbxChartBox isEmpty={!hasRatios} emptyClassName="h-74.5">
+                            <KbxTable
+                                caption="재무비율진단 항목별 수준"
+                                density="narrow"
+                                columns={[
+                                    {
+                                        key: 'label',
+                                        header: '평가지표',
+                                        isRowHeader: true,
+                                        className: 'w-29',
+                                        headerClassName: 'whitespace-nowrap tracking-kbx-score',
+                                    },
+                                    ...RATING_LEVELS.map((level) => ({
+                                        key: level.id,
+                                        header: level.label,
+                                        headerClassName: 'kbx-text-18 whitespace-nowrap tracking-kbx-score',
+                                    })),
+                                ]}
+                                rows={RATIO_INDICATORS.map((label) => {
+                                    // 받은 등급이 다섯 단계 중 하나가 아니면(없음 · 정의 밖 값) 값 없음으로 보고 칸마다 '-'.
+                                    const received = creditFinance.ratios.find((row) => row.label === label)?.rating
+                                    const rating = RATING_LEVELS.find((level) => level.id === received)?.id
+                                    return {
+                                        key: label,
+                                        cells: [
+                                            <span key="label" className="whitespace-nowrap">
+                                                {label}
+                                            </span>,
+                                            ...RATING_LEVELS.map((level) =>
+                                                !rating ? (
+                                                    KBX_EMPTY_VALUE
+                                                ) : rating === level.id ? (
+                                                    <span
+                                                        key={level.id}
+                                                        role="img"
+                                                        aria-label={level.label}
+                                                        className={cn(
+                                                            'size-kbx-22 inline-block rounded-full align-middle',
+                                                            GRADE_TONE_CLASS[level.id],
+                                                        )}
+                                                    />
+                                                ) : null,
+                                            ),
+                                        ],
+                                    }
+                                })}
+                            />
+                        </KbxChartBox>
                         <div className="w-105">
-                            <KbxChartBox isEmpty={!creditFinance.comparison.length} emptyClassName="h-78">
+                            {/* 축은 재무비율진단 5지표 고정(웹 보고서와 같다). 값이 하나도 없으면 빈 상태, 일부만 없으면 0 으로 그린다
+                                (레이더는 꼭짓점을 비울 수 없다). */}
+                            <KbxChartBox isEmpty={!hasComparison} emptyClassName="h-78">
                                 <ComparisonRadarChart
-                                    data={creditFinance.comparison.map((item) => ({
+                                    data={comparisonRows.map((item) => ({
                                         id: item.label,
                                         label: item.label,
-                                        // 값이 없으면 0 으로 그린다(레이더는 꼭짓점을 비울 수 없다).
                                         primaryValue: isKbxNumber(item.company) ? item.company : 0,
                                         comparisonValue: isKbxNumber(item.industry) ? item.industry : 0,
                                     }))}
@@ -474,24 +497,27 @@ const KbigxPrintBriefingFinance = ({report}: PageProps) => {
                 {/* 최근 3개년 재무 현황 — 열은 creditFinance.years 순서, values[i] 가 years[i] 의 값. */}
                 <KbxSubBlock title="최근 3개년 재무 현황" className="mt-2">
                     <KbxUnitBelow unit="단위: 백만원">
-                        <KbxTable
-                            caption="최근 3개년 재무 현황"
-                            density="dense"
-                            columns={[
-                                {key: 'label', header: '구분', isRowHeader: true, className: 'w-70'},
-                                ...creditFinance.years.map((year) => ({key: year, header: year})),
-                            ]}
-                            rows={STATEMENT_ITEMS.map((label) => {
-                                const values = creditFinance.statements.find((row) => row.label === label)?.values
-                                return {
-                                    key: label,
-                                    cells: [
-                                        label,
-                                        ...creditFinance.years.map((_, index) => formatKbxNumber(values?.[index])),
-                                    ],
-                                }
-                            })}
-                        />
+                        {/* 연도가 없거나 값이 하나도 없으면 빈 상태(표 높이 308 = h-77), 일부만 없으면 그 칸만 '-'. */}
+                        <KbxChartBox isEmpty={!hasStatements} emptyClassName="h-77">
+                            <KbxTable
+                                caption="최근 3개년 재무 현황"
+                                density="dense"
+                                columns={[
+                                    {key: 'label', header: '구분', isRowHeader: true, className: 'w-70'},
+                                    ...creditFinance.years.map((year) => ({key: year, header: year})),
+                                ]}
+                                rows={STATEMENT_ITEMS.map((label) => {
+                                    const values = creditFinance.statements.find((row) => row.label === label)?.values
+                                    return {
+                                        key: label,
+                                        cells: [
+                                            label,
+                                            ...creditFinance.years.map((_, index) => formatKbxNumber(values?.[index])),
+                                        ],
+                                    }
+                                })}
+                            />
+                        </KbxChartBox>
                     </KbxUnitBelow>
                 </KbxSubBlock>
             </KbxBlock>

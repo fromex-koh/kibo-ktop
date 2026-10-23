@@ -1,6 +1,7 @@
 'use client'
 
 import {ArrowDown, ArrowUp} from 'lucide-react'
+import {EmptyState} from '@/components/composite/empty-state'
 import {ColumnChart} from '@/components/custom/column-chart'
 import {
     Card,
@@ -105,6 +106,9 @@ type InnovationGrowthReportActivityProps = {
     salesPerEmployee: readonly {label: string; value: number}[]
 }
 
+// 값이 하나라도 숫자면 그래프, 모두 없으면 그래프 높이(226 = h-56.5)의 빈 상태.
+const hasFiniteValue = (items: readonly {value: number}[]) => items.some((item) => Number.isFinite(item.value))
+
 const InnovationGrowthReportActivity = ({detail, employees, salesPerEmployee}: InnovationGrowthReportActivityProps) => (
     <>
         {/* 인적자원 현황 */}
@@ -143,37 +147,49 @@ const InnovationGrowthReportActivity = ({detail, employees, salesPerEmployee}: I
                 <div className="grid grid-cols-[minmax(0,792fr)_minmax(0,384fr)] gap-6">
                     <Card title="분기별 종업원수" className="gap-0">
                         <WithUnit unit="단위 : 명">
-                            <LineChart
-                                data={employees.map((item) => ({
-                                    id: item.label,
-                                    label: item.label,
-                                    values: {employees: item.value},
-                                }))}
-                                series={[{key: 'employees', label: '종업원수', color: 'var(--ds-purple-600)'}]}
-                                variant="area"
-                                appearance="cells"
-                                showLegend={false}
-                                showValueLabels
-                                showTooltip={false}
-                                ariaLabel="분기별 종업원수 추이"
-                            />
+                            {hasFiniteValue(employees) ? (
+                                <LineChart
+                                    data={employees.map((item) => ({
+                                        id: item.label,
+                                        label: item.label,
+                                        values: {employees: item.value},
+                                    }))}
+                                    series={[{key: 'employees', label: '종업원수', color: 'var(--ds-purple-600)'}]}
+                                    variant="area"
+                                    appearance="cells"
+                                    showLegend={false}
+                                    showValueLabels
+                                    showTooltip={false}
+                                    ariaLabel="분기별 종업원수 추이"
+                                />
+                            ) : (
+                                <EmptyState className="min-h-56.5" />
+                            )}
                         </WithUnit>
                     </Card>
                     <Card title="인당 매출액" className="gap-0">
                         <WithUnit unit="단위 : 천원">
-                            <ColumnChart
-                                data={salesPerEmployee.map((item) => ({
-                                    id: item.label,
-                                    label: item.label,
-                                    value: item.value,
-                                }))}
-                                valueFractionDigits={1}
-                                barWidth={48}
-                                color="var(--ds-report-series-2)"
-                                variant="cells"
-                                showTooltip={false}
-                                ariaLabel="연도별 인당 매출액"
-                            />
+                            {hasFiniteValue(salesPerEmployee) ? (
+                                <ColumnChart
+                                    // 값이 없는 해는 빼고 넘긴다 — 막대 그래프는 숫자가 아닌 값을 받으면 오류가 난다
+                                    // (다른 화면도 쓰는 컴포넌트라 고치지 않는다).
+                                    data={salesPerEmployee
+                                        .filter((item) => Number.isFinite(item.value))
+                                        .map((item) => ({
+                                            id: item.label,
+                                            label: item.label,
+                                            value: item.value,
+                                        }))}
+                                    valueFractionDigits={1}
+                                    barWidth={48}
+                                    color="var(--ds-report-series-2)"
+                                    variant="cells"
+                                    showTooltip={false}
+                                    ariaLabel="연도별 인당 매출액"
+                                />
+                            ) : (
+                                <EmptyState className="min-h-56.5" />
+                            )}
                         </WithUnit>
                     </Card>
                 </div>

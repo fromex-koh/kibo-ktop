@@ -302,7 +302,13 @@ const PROPS_COLUMNS = [
 ] as const
 
 const PROPS_ITEMS = [
-    ['LineChart', 'data', '기간별 고유 id · 표시명과 series key 에 대응하는 값입니다.', '-', 'LineChartItem[]'],
+    [
+        'LineChart',
+        'data',
+        "기간별 고유 id · 표시명과 series key 에 대응하는 값입니다. 숫자가 아닌 값(NaN)은 값 없음 — 선을 끊고, 값 글자를 적는 cells 는 그 자리 바닥 위에 '-'(숨김 표도 '-').",
+        '-',
+        'LineChartItem[]',
+    ],
     [
         'LineChart',
         'series',

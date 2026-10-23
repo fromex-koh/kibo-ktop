@@ -14,6 +14,7 @@ import {DivergingRankChartSkeleton} from '@/components/composite/diverging-rank-
 import {showCheckToast} from '@/components/custom/check-toast'
 import {KbigxPrintOutputSelectionDialog} from '@/components/composite/k-bigx-print-output-selection-dialog'
 import {NewWindowLink} from '@/components/composite/new-window-link'
+import {EmptyState} from '@/components/composite/empty-state'
 import {InfoTable} from '@/components/composite/info-table'
 import {Button} from '@/components/ui/button'
 import {ScrollToTopButton} from '@/components/composite/scroll-to-top-button'
@@ -25,7 +26,7 @@ import {ComparisonRadarChart, ComparisonRadarLegend} from '@/components/custom/c
 import {SECTOR_COMPARISON_RADAR_STYLE} from '@/components/custom/comparison-radar-style'
 import {GroupedColumnChart} from '@/components/custom/grouped-column-chart'
 import {LineChart} from '@/components/custom/line-chart'
-import {RatingMatrix} from '@/components/custom/rating-matrix'
+import {RATING_LEVELS, RatingMatrix} from '@/components/custom/rating-matrix'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RankPyramidChart} from '@/components/custom/rank-pyramid-chart'
 import {ScoreGauge} from '@/components/custom/score-gauge'
@@ -48,12 +49,13 @@ import {
     INNOVATION_REPORT_TAB_QUERY,
     getTechIndexGrade,
     INNOVATION_CREDIT_VISIBILITY,
+    INNOVATION_ISSUE_NOTE,
     isReportTab,
     type InnovationGrowthReport,
     type InnovationReportSectionId,
     type InnovationStatId,
 } from '@/content/service/k-bigx-innovation-report'
-import {toCriRatingData} from '@/content/service/cri-grades'
+import {toCreditGaugeData} from '@/components/custom/credit-gauge-data'
 import {toPrintOutputSummary, type PrintOutputSectionId} from '@/content/service/k-bigx-print-output-selection'
 import {getKbigxPrintHref} from '@/content/service/k-bigx-print-report'
 import {openReportPrintTab} from '@/lib/open-report-print-tab'
@@ -94,11 +96,26 @@ import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 const numberFormatter = new Intl.NumberFormat('ko-KR')
 // 정보가 없는 값의 표시.
 const EMPTY_VALUE = '-'
+// 혁신성장역량지수 점수가 없을 때 요약 문장 · 게이지 이름(Tech-Index 탭 · 인쇄본과 같은 문구).
+const TECH_INDEX_NO_SCORE_TEXT = '평가 점수가 없습니다.'
 // 차감 알림 식별자 — 같은 알림이 겹쳐 뜨지 않게 한다(새로고침 · 다시 그리기).
 const INNOVATION_REPORT_CREATED_TOAST_ID = 'k-bigx-innovation-report-created'
 // [퍼블리싱 확인용] 토스트를 보려고 ?from=use 없이도 화면을 열면 차감 알림을 띄운다.
 // 연동할 때는 false 로 바꾸거나 이 상수를 지운다 — 그러면 [이용권 사용]을 거쳐 열렸을 때(?from=use)만 뜬다.
 const PUBLISHING_ALWAYS_SHOW_CREATED_TOAST = true
+// 재무비율진단 평가지표 — 5줄 고정(인쇄본과 같다). creditFinance.ratios 에서 같은 label 로 찾고, 없거나 다섯 단계 밖 값이면
+// 그 줄의 단계 칸마다 '-'. 부문별 비교 레이더 축도 같은 다섯 지표다(값이 없으면 0 으로 그린다 — 레이더는 꼭짓점을 비울 수 없다).
+const RATIO_INDICATORS = [
+    {id: 'sales-growth', label: '매출액증가율'},
+    {id: 'operating-margin', label: '영업이익률'},
+    {id: 'equity-ratio', label: '자기자본비율'},
+    {id: 'asset-turnover', label: '총자본회전율'},
+    {id: 'cash-flow', label: '현금흐름'},
+] as const
+// 최근 3개년 재무 현황 구분 — 6줄 고정(인쇄본과 같다). statements 에서 같은 label 로 찾고, 없는 칸은 '-'.
+const STATEMENT_ITEMS = ['총자산', '자본총계', '부채총계', '매출액', '영업이익', '순이익'] as const
+const isFiniteNumber = (value: number | null | undefined): value is number =>
+    typeof value === 'number' && Number.isFinite(value)
 // 최근 3개년 재무 현황 막대 색 — years 순서(오래된 해부터)대로 입힌다.
 const STATEMENT_YEAR_COLORS = [
     'var(--ds-report-series-1)',
@@ -168,17 +185,20 @@ const StatementTable = ({years, statements}: Pick<InnovationGrowthReport['credit
                         >
                             {row.label}
                         </th>
-                        {row.values.map((value, index) => (
-                            <td
-                                key={years[index]}
-                                className={cn(
-                                    STATEMENT_CELL_CLASS_NAME,
-                                    'typo-body-l-regular text-label-foreground tabular-nums',
-                                )}
-                            >
-                                {numberFormatter.format(value)}
-                            </td>
-                        ))}
+                        {years.map((year, index) => {
+                            const value = row.values[index]
+                            return (
+                                <td
+                                    key={year}
+                                    className={cn(
+                                        STATEMENT_CELL_CLASS_NAME,
+                                        'typo-body-l-regular text-label-foreground tabular-nums',
+                                    )}
+                                >
+                                    {isFiniteNumber(value) ? numberFormatter.format(value) : EMPTY_VALUE}
+                                </td>
+                            )
+                        })}
                     </tr>
                 ))}
             </tbody>
@@ -200,6 +220,14 @@ type InnovationGrowthReportDocumentProps = {
 const techIndexScoreFormatter = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 
 const ReportDocumentBody = ({report, isJustCreated = false, printPath}: InnovationGrowthReportDocumentProps) => {
+    // 기업 정보 — 값이 비면(빈 글자 · 공백) '-'. 모든 값이 비면 표 대신 같은 높이의 빈 상태를 보인다.
+    // [프론트엔드 연동] 받지 못한 값은 빈 글자로 보낸다('-' 로 보내도 빈 값으로 본다).
+    const companyRows = report.company.rows.map((row) => ({
+        key: row.label,
+        label: row.label,
+        value: row.value?.trim() || EMPTY_VALUE,
+    }))
+    const hasCompanyInfo = companyRows.some((row) => row.value !== EMPTY_VALUE)
     // [이용권 사용]을 거쳐 열렸을 때(?from=use) 차감 알림을 한 번 띄운다 — 확인 토스트(체크 표시 · 머리 아래 가운데 · 4초).
     // 이 문서의 effect 가 루트의 Toaster 보다 먼저 돌아 바로 부르면 아무도 받지 못하므로 한 틱 미룬다.
     // [프론트엔드 연동] 차감 성공 여부는 새 창을 여는 쪽(조회횟수 차감안내 모달)이 알고 있다 — 성공했을 때만 ?from=use 를 붙여 연다.
@@ -266,7 +294,12 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
     const isPcOnlyTab = activeTab !== INNOVATION_REPORT_SECTIONS[0].id
     // 혁신성장역량지수 게이지 색 · 상태 이름 · 요약 문장은 점수 하나로 정한다(Tech-Index 탭과 같은 점수 구간).
     const techIndexGrade = getTechIndexGrade(report.techIndex.score)
-    const techIndexScoreText = `${techIndexScoreFormatter.format(report.techIndex.score)}점`
+    // 점수 · 순위가 숫자가 아니면 값 없음 — 게이지 · 피라미드는 '-' 로 그리고, 요약 문장은 '평가 점수가 없습니다.'.
+    const hasTechIndexScore = Number.isFinite(report.techIndex.score)
+    const hasTechIndexPercentile = Number.isFinite(report.techIndex.industryPercentile)
+    const techIndexScoreText = hasTechIndexScore
+        ? `${techIndexScoreFormatter.format(report.techIndex.score)}점`
+        : TECH_INDEX_NO_SCORE_TEXT
     const activeSection =
         INNOVATION_REPORT_SECTIONS.find((section) => section.id === activeTab) ?? INNOVATION_REPORT_SECTIONS[0]
     // 탭을 바꾸면 주소의 ?tab= 만 바꾼다(뒤로 가기로 앞 탭에 돌아온다). Next 는 history.pushState 를 useSearchParams 와 맞춰 준다.
@@ -283,7 +316,34 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
         window.scrollTo(0, 0)
     }
     // 기업신용등급 — 등급 코드를 CRI 등급표로 풀어 게이지 데이터(등급명 · 채움 비율 · 색 단계)를 만든다(진단브리핑 · 신용/재무정보 탭 공용).
-    const creditRating = toCriRatingData(report.creditFinance.rating.grade, [...report.creditFinance.rating.details])
+    // 게이지 색은 등급 단계마다 다르다(우량 ~ 위험 · 유보). 유보(R)는 절반, 평가제외(NR)는 채우지 않는다(credit-gauge-data.ts).
+    const creditRating = toCreditGaugeData(report.creditFinance.rating.grade, [...report.creditFinance.rating.details])
+    // 신용/재무 현황 — 모두 비면 빈 상태(EmptyState), 일부만 비면 그 칸만 '-'.
+    const hasCreditRating =
+        Boolean(report.creditFinance.rating.grade.trim()) ||
+        report.creditFinance.rating.details.some((detail) => detail.value.trim())
+    const ratioRows = RATIO_INDICATORS.map((indicator) => ({
+        ...indicator,
+        rating: report.creditFinance.ratios.find((row) => row.label === indicator.label)?.rating ?? null,
+    }))
+    // 5줄이 모두 '-'(등급 없음)이면 표 대신 빈 상태.
+    const hasRatios = ratioRows.some((row) => RATING_LEVELS.some((level) => level.id === row.rating))
+    const comparisonRows = RATIO_INDICATORS.map((indicator) => {
+        const item = report.creditFinance.comparison.find((row) => row.label === indicator.label)
+        return {label: indicator.label, company: item?.company, industry: item?.industry}
+    })
+    const hasComparison = comparisonRows.some((row) => isFiniteNumber(row.company) || isFiniteNumber(row.industry))
+    const statementRows = STATEMENT_ITEMS.map((label) => ({
+        label,
+        values: report.creditFinance.statements.find((row) => row.label === label)?.values ?? [],
+    }))
+    const hasStatements =
+        report.creditFinance.years.length > 0 && statementRows.some((row) => row.values.some(isFiniteNumber))
+    // 값이 빠진 칸이 하나라도 있으면 그래프를 화면 낭독기에서 숨긴다 — 그래프의 숨김 표는 빈 칸을 '0' 으로 읽는다.
+    // 같은 값은 왼쪽 표가 '-' 로 정확히 읽어 준다(그래프 컴포넌트는 다른 화면도 써서 고치지 않는다).
+    const hasMissingStatement = statementRows.some((row) =>
+        report.creditFinance.years.some((_, index) => !isFiniteNumber(row.values[index])),
+    )
 
     return (
         // main 은 layout.tsx 가 하나만 그린다 — 문서 · 스켈레톤이 각자 main 을 그리면 스트리밍 HTML 한 벌에
@@ -441,10 +501,23 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                     <section aria-labelledby="ig-report-company" className="flex flex-col gap-4">
                                         <SectionTitle id="ig-report-company" title="기업 정보" />
                                         <Card>
-                                            <InfoTable
-                                                aria-label="기업 정보"
-                                                items={report.company.rows.map((row) => ({key: row.label, ...row}))}
-                                            />
+                                            {hasCompanyInfo ? (
+                                                <InfoTable aria-label="기업 정보" items={companyRows} />
+                                            ) : (
+                                                // 값이 하나도 없을 때 — 빈 상태를 표와 같은 높이로. '-' 로 채운 표를 보이지 않게 깔아 두고(같은 칸에 겹침)
+                                                // 그 위에 빈 상태를 둔다 — 화면 폭에 따라 표 높이가 바뀌어도(PC 2열 136 · 그 아래 1열 271) 늘 같다.
+                                                // 줄 자체가 없어도 PC 표 높이(min-h-34 = 136)는 지킨다.
+                                                <div className="grid">
+                                                    <div
+                                                        aria-hidden="true"
+                                                        inert
+                                                        className="invisible col-start-1 row-start-1"
+                                                    >
+                                                        <InfoTable items={companyRows} />
+                                                    </div>
+                                                    <EmptyState className="col-start-1 row-start-1 min-h-34" />
+                                                </div>
+                                            )}
                                         </Card>
                                     </section>
 
@@ -515,14 +588,26 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                 </dl>
                                             </Card>
                                             <Card title="R&D 이슈" className="gap-4">
-                                                <WordCloud
-                                                    words={[...report.innovation.issues]}
-                                                    colors={INNOVATION_ISSUE_COLORS}
-                                                    ariaLabel="최근 연구개발 이슈 키워드"
-                                                    // PC(xl)는 높이 고정. 그 아래(태블릿 2열)는 옆 카드(정부 R&D)가 더 높아 아래가 비므로
-                                                    // 같은 높이를 최소로 두고 카드 높이를 채운다. 단어 크기는 자리 높이에 맞춰 다시 그려진다.
-                                                    className="h-auto min-h-54 flex-1 xl:h-54 xl:flex-none"
-                                                />
+                                                {/* 워드클라우드와 아래 안내는 한 묶음으로 붙인다(정부 R&D 카드의 목록 · 안내와 같은 간격). */}
+                                                <div className="flex flex-1 flex-col gap-2 xl:flex-none">
+                                                    {/* 키워드가 없으면 WordCloud 대신 같은 자리 · 높이의 빈 상태 — 빈 목록을 넘기면
+                                                        WordCloud 가 스켈레톤을 계속 보인다. */}
+                                                    {report.innovation.issues.length ? (
+                                                        <WordCloud
+                                                            words={[...report.innovation.issues]}
+                                                            colors={INNOVATION_ISSUE_COLORS}
+                                                            ariaLabel="최근 연구개발 이슈 키워드"
+                                                            // PC(xl)는 높이 고정. 그 아래(태블릿 2열)는 옆 카드(정부 R&D)가 더 높아 아래가 비므로
+                                                            // 같은 높이를 최소로 두고 카드 높이를 채운다. 단어 크기는 자리 높이에 맞춰 다시 그려진다.
+                                                            className="h-auto min-h-54 flex-1 xl:h-54 xl:flex-none"
+                                                        />
+                                                    ) : (
+                                                        <EmptyState className="h-auto min-h-54 flex-1 xl:h-54 xl:flex-none" />
+                                                    )}
+                                                    <p className="typo-caption-regular text-foreground-subtle break-keep">
+                                                        {INNOVATION_ISSUE_NOTE}
+                                                    </p>
+                                                </div>
                                             </Card>
                                             <Card
                                                 title="정부 R&D사업 접수현황"
@@ -580,14 +665,18 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                             score={report.techIndex.score}
                                                             statusLabel={techIndexGrade.label}
                                                             tone={techIndexGrade.tone}
-                                                            ariaLabel={`혁신성장역량지수 ${techIndexScoreText}, ${techIndexGrade.label}`}
+                                                            ariaLabel={
+                                                                hasTechIndexScore
+                                                                    ? `혁신성장역량지수 ${techIndexScoreText}, ${techIndexGrade.label}`
+                                                                    : `혁신성장역량지수 ${TECH_INDEX_NO_SCORE_TEXT}`
+                                                            }
                                                         />
                                                         <dl className="flex flex-wrap items-center justify-center gap-x-2">
                                                             <dt className="typo-body-xl-regular text-foreground-subtle">
                                                                 평가일자
                                                             </dt>
                                                             <dd className="typo-body-xl-medium text-label-foreground m-0 tabular-nums">
-                                                                {report.techIndex.evaluationDate}
+                                                                {report.techIndex.evaluationDate || EMPTY_VALUE}
                                                             </dd>
                                                         </dl>
                                                     </div>
@@ -597,7 +686,11 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                     <RankPyramidChart
                                                         percentile={report.techIndex.industryPercentile}
                                                         groupLabel={report.techIndex.industryLabel}
-                                                        ariaLabel={`동일업종(${report.techIndex.industryLabel}) 기준 상위 ${report.techIndex.industryPercentile}%`}
+                                                        ariaLabel={
+                                                            hasTechIndexPercentile
+                                                                ? `동일업종(${report.techIndex.industryLabel}) 기준 상위 ${report.techIndex.industryPercentile}%`
+                                                                : '동일업종 기준 순위 정보가 없습니다.'
+                                                        }
                                                         className="pl-5 md:justify-center lg:justify-start"
                                                     />
                                                 </div>
@@ -606,10 +699,19 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                         {/* 요약 상자 — 문구 끝말(양호함 등)은 점수 구간(TECH_INDEX_GRADES.summaryLabel)에서 온다.
                                             모바일에서는 여러 줄로 접히므로 왼쪽 정렬, 태블릿 이상은 가운데 정렬. */}
                                         <p className="bg-navy-100 border-navy-200 text-navy-600 typo-body-xl-regular mt-2 rounded-sm border px-5 py-5 text-start break-keep md:text-center">
-                                            기술신용평가(TCB) 시 제출한 정보를 기반으로 평가한
-                                            혁신성장역량지수(Tech-Index)는{' '}
-                                            <strong className="typo-body-xl-bold">{techIndexScoreText}</strong>으로{' '}
-                                            <strong className="typo-body-xl-bold">{techIndexGrade.summaryLabel}</strong>
+                                            {hasTechIndexScore ? (
+                                                <>
+                                                    기술신용평가(TCB) 시 제출한 정보를 기반으로 평가한
+                                                    혁신성장역량지수(Tech-Index)는{' '}
+                                                    <strong className="typo-body-xl-bold">{techIndexScoreText}</strong>
+                                                    으로{' '}
+                                                    <strong className="typo-body-xl-bold">
+                                                        {techIndexGrade.summaryLabel}
+                                                    </strong>
+                                                </>
+                                            ) : (
+                                                TECH_INDEX_NO_SCORE_TEXT
+                                            )}
                                         </p>
                                     </section>
 
@@ -619,11 +721,19 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                         {/* 기업신용등급 카드 : 진단 카드 ≈ 1 : 2. xl(1280) 부터 나란히, 그 아래는 위아래로 쌓인다. */}
                                         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,384fr)_minmax(0,792fr)]">
                                             <Card title="기업신용등급" className="gap-4">
-                                                <SemicircleRatingGauge
-                                                    data={creditRating}
-                                                    title="기업신용등급"
-                                                    ariaLabel={`기업신용등급 ${creditRating.label}, ${creditRating.description}`}
-                                                />
+                                                {hasCreditRating ? (
+                                                    <SemicircleRatingGauge
+                                                        data={creditRating}
+                                                        title="기업신용등급"
+                                                        ariaLabel={
+                                                            report.creditFinance.rating.grade.trim()
+                                                                ? `기업신용등급 ${creditRating.label}, ${creditRating.description}`
+                                                                : '기업신용등급 정보가 없습니다.'
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <EmptyState className="min-h-59 flex-1" />
+                                                )}
                                             </Card>
                                             {/* 재무비율진단과 부문별 비교는 카드 하나를 반씩 나눠 쓴다(md 미만은 위아래). 각 칸의 제목 줄은 카드 제목과 같은 모양. */}
                                             <Card>
@@ -638,10 +748,14 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                         >
                                                             재무비율진단
                                                         </h4>
-                                                        <RatingMatrix
-                                                            ariaLabel="재무비율진단 — 항목별 수준"
-                                                            rows={report.creditFinance.ratios}
-                                                        />
+                                                        {hasRatios ? (
+                                                            <RatingMatrix
+                                                                ariaLabel="재무비율진단 — 항목별 수준"
+                                                                rows={ratioRows}
+                                                            />
+                                                        ) : (
+                                                            <EmptyState className="min-h-61" />
+                                                        )}
                                                     </section>
                                                     <section
                                                         aria-labelledby="ig-report-sector-comparison"
@@ -669,56 +783,70 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                                 className="ms-auto justify-end"
                                                             />
                                                         </div>
-                                                        <ComparisonRadarChart
-                                                            data={report.creditFinance.comparison.map((item) => ({
-                                                                id: item.label,
-                                                                label: item.label,
-                                                                primaryValue: item.company,
-                                                                comparisonValue: item.industry,
-                                                            }))}
-                                                            {...SECTOR_COMPARISON_RADAR_STYLE}
-                                                            primaryLabel="조회기업"
-                                                            comparisonLabel="업종평균"
-                                                            ariaLabel="부문별 비교 — 조회기업과 업종평균"
-                                                        />
+                                                        {hasComparison ? (
+                                                            <ComparisonRadarChart
+                                                                data={comparisonRows.map((item) => ({
+                                                                    id: item.label,
+                                                                    label: item.label,
+                                                                    primaryValue: isFiniteNumber(item.company)
+                                                                        ? item.company
+                                                                        : 0,
+                                                                    comparisonValue: isFiniteNumber(item.industry)
+                                                                        ? item.industry
+                                                                        : 0,
+                                                                }))}
+                                                                {...SECTOR_COMPARISON_RADAR_STYLE}
+                                                                primaryLabel="조회기업"
+                                                                comparisonLabel="업종평균"
+                                                                ariaLabel="부문별 비교 — 조회기업과 업종평균"
+                                                            />
+                                                        ) : (
+                                                            <EmptyState className="min-h-62" />
+                                                        )}
                                                     </section>
                                                 </div>
                                             </Card>
                                         </div>
                                         <Card title="최근 3개년 재무 현황" className="gap-0">
                                             {/* 표 : 그래프 ≈ 1 : 2. lg(1024) 부터 나란히, 그 아래는 표 위 · 그래프 아래로 쌓인다. */}
-                                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
-                                                <WithUnit unit="단위: 백만원">
-                                                    <StatementTable
-                                                        years={report.creditFinance.years}
-                                                        statements={report.creditFinance.statements}
+                                            {hasStatements ? (
+                                                <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
+                                                    <WithUnit unit="단위: 백만원">
+                                                        <StatementTable
+                                                            years={report.creditFinance.years}
+                                                            statements={statementRows}
+                                                        />
+                                                    </WithUnit>
+                                                    <GroupedColumnChart
+                                                        // 값이 없는 해는 빼고 넘긴다 — 막대 · 값 글자를 그리지 않는다(표는 '-').
+                                                        data={statementRows.map((row) => ({
+                                                            id: row.label,
+                                                            label: row.label,
+                                                            values: Object.fromEntries(
+                                                                report.creditFinance.years.flatMap((year, index) => {
+                                                                    const value = row.values[index]
+                                                                    return isFiniteNumber(value) ? [[year, value]] : []
+                                                                }),
+                                                            ),
+                                                        }))}
+                                                        series={report.creditFinance.years.map((year, index) => ({
+                                                            key: year,
+                                                            label: year,
+                                                            color: STATEMENT_YEAR_COLORS[
+                                                                index % STATEMENT_YEAR_COLORS.length
+                                                            ],
+                                                        }))}
+                                                        ariaLabel="최근 3개년 재무 현황 항목별 연도 비교"
+                                                        aria-hidden={hasMissingStatement || undefined}
+                                                        variant="cells"
+                                                        showValueLabels
+                                                        // 값이 막대 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
+                                                        showTooltip={false}
                                                     />
-                                                </WithUnit>
-                                                <GroupedColumnChart
-                                                    data={report.creditFinance.statements.map((row) => ({
-                                                        id: row.label,
-                                                        label: row.label,
-                                                        values: Object.fromEntries(
-                                                            report.creditFinance.years.map((year, index) => [
-                                                                year,
-                                                                row.values[index],
-                                                            ]),
-                                                        ),
-                                                    }))}
-                                                    series={report.creditFinance.years.map((year, index) => ({
-                                                        key: year,
-                                                        label: year,
-                                                        color: STATEMENT_YEAR_COLORS[
-                                                            index % STATEMENT_YEAR_COLORS.length
-                                                        ],
-                                                    }))}
-                                                    ariaLabel="최근 3개년 재무 현황 항목별 연도 비교"
-                                                    variant="cells"
-                                                    showValueLabels
-                                                    // 값이 막대 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
-                                                    showTooltip={false}
-                                                />
-                                            </div>
+                                                </div>
+                                            ) : (
+                                                <EmptyState className="min-h-85" />
+                                            )}
                                         </Card>
                                     </section>
 
@@ -729,44 +857,60 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
                                             <Card title="분기별 종업원수" className="gap-0">
                                                 <WithUnit unit="단위: 명">
-                                                    <LineChart
-                                                        data={report.activity.employees.map((item) => ({
-                                                            id: item.label,
-                                                            label: item.label,
-                                                            values: {employees: item.value},
-                                                        }))}
-                                                        series={[
-                                                            {
-                                                                key: 'employees',
-                                                                label: '종업원수',
-                                                                color: 'var(--ds-purple-600)',
-                                                            },
-                                                        ]}
-                                                        variant="area"
-                                                        appearance="cells"
-                                                        showLegend={false}
-                                                        showValueLabels
-                                                        // 값이 점 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
-                                                        showTooltip={false}
-                                                        ariaLabel="분기별 종업원수 추이"
-                                                    />
+                                                    {report.activity.employees.some((item) =>
+                                                        isFiniteNumber(item.value),
+                                                    ) ? (
+                                                        <LineChart
+                                                            data={report.activity.employees.map((item) => ({
+                                                                id: item.label,
+                                                                label: item.label,
+                                                                values: {employees: item.value},
+                                                            }))}
+                                                            series={[
+                                                                {
+                                                                    key: 'employees',
+                                                                    label: '종업원수',
+                                                                    color: 'var(--ds-purple-600)',
+                                                                },
+                                                            ]}
+                                                            variant="area"
+                                                            appearance="cells"
+                                                            showLegend={false}
+                                                            showValueLabels
+                                                            // 값이 점 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
+                                                            showTooltip={false}
+                                                            ariaLabel="분기별 종업원수 추이"
+                                                        />
+                                                    ) : (
+                                                        <EmptyState className="min-h-56.5" />
+                                                    )}
                                                 </WithUnit>
                                             </Card>
                                             <Card title="인당 매출액" className="gap-0">
                                                 <WithUnit unit="단위: 천원">
-                                                    <ColumnChart
-                                                        data={report.activity.salesPerEmployee.map((item) => ({
-                                                            id: item.label,
-                                                            label: item.label,
-                                                            value: item.value,
-                                                        }))}
-                                                        valueFractionDigits={1}
-                                                        barWidth={48}
-                                                        color="var(--ds-report-series-2)"
-                                                        variant="cells"
-                                                        showTooltip={false}
-                                                        ariaLabel="연도별 인당 매출액"
-                                                    />
+                                                    {report.activity.salesPerEmployee.some((item) =>
+                                                        isFiniteNumber(item.value),
+                                                    ) ? (
+                                                        <ColumnChart
+                                                            // 값이 없는 해는 빼고 넘긴다 — 막대 그래프는 숫자가 아닌 값을 받으면 오류가 난다
+                                                            // (다른 화면도 쓰는 컴포넌트라 고치지 않는다).
+                                                            data={report.activity.salesPerEmployee
+                                                                .filter((item) => isFiniteNumber(item.value))
+                                                                .map((item) => ({
+                                                                    id: item.label,
+                                                                    label: item.label,
+                                                                    value: item.value,
+                                                                }))}
+                                                            valueFractionDigits={1}
+                                                            barWidth={48}
+                                                            color="var(--ds-report-series-2)"
+                                                            variant="cells"
+                                                            showTooltip={false}
+                                                            ariaLabel="연도별 인당 매출액"
+                                                        />
+                                                    ) : (
+                                                        <EmptyState className="min-h-56.5" />
+                                                    )}
                                                 </WithUnit>
                                             </Card>
                                         </div>

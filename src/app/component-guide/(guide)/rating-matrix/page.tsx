@@ -24,6 +24,15 @@ const LONG_LABEL_ROWS: RatingMatrixRow[] = [
     {id: 'long-3', label: '이자보상배율(영업이익 기준)', rating: 'normal'},
 ]
 
+// 일부 항목만 등급이 없는 경우 — 줄 이름은 두고 단계 칸마다 '-'.
+const PARTIAL_ROWS: RatingMatrixRow[] = [
+    {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
+    {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
+    {id: 'equity-ratio', label: '자기자본비율', rating: 'good'},
+    {id: 'asset-turnover', label: '총자본회전율', rating: null},
+    {id: 'cash-flow', label: '현금흐름', rating: null},
+]
+
 const ALL_LEVEL_ROWS: RatingMatrixRow[] = [
     {id: 'all-weak', label: '취약', rating: 'weak'},
     {id: 'all-poor', label: '미흡', rating: 'poor'},
@@ -51,6 +60,16 @@ const rows: RatingMatrixRow[] = ratiosFromApi.map((item) => ({
   rating: RATING_BY_NAME[item.levelName],
 }))`
 
+const EMPTY_CODE = `// 항목 줄은 고정(K-BIGx 재무비율진단 5줄)으로 두고, 등급이 없는 줄은 rating: null — 단계 칸마다 '-'.
+const rows = RATIO_INDICATORS.map((item) => ({
+  ...item,
+  rating: ratios.find((row) => row.label === item.label)?.rating ?? null,
+}))
+// 모든 줄이 '-' 이면 표 대신 같은 높이의 빈 상태(사용처에서 분기).
+const hasRatios = rows.some((row) => row.rating !== null)
+
+{hasRatios ? <RatingMatrix ariaLabel="재무비율진단 — 항목별 수준" rows={rows} /> : <EmptyState className="min-h-61" />}`
+
 const LOADING_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
 <ChartSkeleton type="matrix" label="재무비율진단을 불러오는 중입니다." />`
@@ -70,9 +89,9 @@ const PROPS_ITEMS = [
     [
         'RatingMatrixRow',
         'rating',
-        '등급입니다. weak 취약 · poor 미흡 · normal 보통 · good 양호 · excellent 우수.',
+        "등급입니다. weak 취약 · poor 미흡 · normal 보통 · good 양호 · excellent 우수. 없으면 null — 단계 칸마다 '-'.",
         '-',
-        "'weak' | 'poor' | 'normal' | 'good' | 'excellent'",
+        "'weak' | 'poor' | 'normal' | 'good' | 'excellent' | null",
     ],
 ] as const
 
@@ -132,6 +151,16 @@ const RatingMatrixGuidePage = () => (
                             항목 칸은 모바일 폭에서 줄어들고 등급 칸이 나머지 폭을 똑같이 나눕니다.
                         </p>
                         <RatingMatrix ariaLabel="좁은 폭" rows={REPORT_ROWS} className="max-w-70" />
+                    </div>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">등급이 없을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            일부 항목만 없으면 줄 이름은 두고 단계 칸마다 &apos;-&apos; 입니다(<code>rating: null</code>
+                            ). 모든 줄이 &apos;-&apos; 면 표 대신 같은 높이의 빈 상태(EmptyState)를 둡니다 — 웹 보고서
+                            진단브리핑 · 인쇄본이 같은 규칙입니다.
+                        </p>
+                        <RatingMatrix ariaLabel="등급이 일부 없는 예" rows={PARTIAL_ROWS} className="max-w-96" />
+                        <CodeBlock code={EMPTY_CODE} language="tsx" copyLabel="빈 상태 코드 복사" />
                     </div>
                 </div>
             </section>

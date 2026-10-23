@@ -4,6 +4,7 @@ import {DualLineChart} from '@/components/custom/dual-line-chart'
 import {InsideLabelPieChart} from '@/components/custom/inside-label-pie-chart'
 import {
     KBX_CASH_FLOW_TAG_CLASS,
+    KBX_CREDIT_TAG_CLASS,
     KBX_CHART_EMPTY_CLASS,
     KBX_CHART_EMPTY_TEXT,
     KbxBlock,
@@ -18,7 +19,7 @@ import {MarkerLineChart, MarkerLineLegend} from '@/components/custom/marker-line
 import {RatingTrendChart} from '@/components/custom/rating-trend-chart'
 import {ValueLineChart} from '@/components/custom/value-line-chart'
 import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
-import {criGradePercentage, findCriGrade, getCriGradeTone} from '@/content/service/cri-grades'
+import {criGradePercentage, findCriGrade, getCriGradeBand} from '@/content/service/cri-grades'
 import {
     getRecentYears,
     INNOVATION_CREDIT_VISIBILITY,
@@ -58,14 +59,6 @@ const CASH_FLOW_DETAIL_LABELS = ['결산일자'] as const
 // [프론트엔드 연동] 이력은 평가일자 최근 것부터(화면과 같다). date 문자열 비교라 'YYYY-MM-DD' 처럼 자릿수가 고정된 형식이어야 한다.
 const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
 
-// 기업신용등급 알약 색 — getCriGradeTone 결과별 kbx grade-tag 색. tone 이 없으면 GradePill 기본(남색 테두리).
-const GRADE_TAG_CLASS = {
-    weak: 'bg-kbx-grade-tag-weak border-kbx-grade-tag-weak text-kbx-paper',
-    poor: 'bg-kbx-grade-tag-poor border-kbx-grade-tag-poor text-kbx-paper',
-    normal: 'bg-kbx-grade-tag-normal border-kbx-grade-tag-normal text-kbx-paper',
-    good: 'bg-kbx-grade-tag-good border-kbx-grade-tag-good text-kbx-paper',
-    excellent: 'bg-kbx-grade-tag-excellent border-kbx-grade-tag-excellent text-kbx-paper',
-} as const
 const GradePill = ({className, children}: {className?: string; children: string}) => (
     <span
         className={cn(
@@ -129,8 +122,10 @@ const GradeHeader = ({
     children: ReactNode
 }) => (
     <div className="flex items-center gap-14">
-        <div className="flex w-110 shrink-0 flex-col gap-4">
-            <div className="text-kbx-primary gap-kbx-18 flex items-baseline">
+        {/* 왼쪽 칸은 440 이 기본 — 코드 · 알약이 그보다 길면(예: CCC0 + 보통 이하) 줄바꿈 없이 칸만 넓어지고 설명 상자가 그만큼 좁아진다.
+            한 줄을 지켜 옆 설명 상자와의 세로 정렬이 흐트러지지 않는다. */}
+        <div className="flex min-w-110 shrink-0 flex-col gap-4">
+            <div className="text-kbx-primary gap-kbx-18 flex items-baseline whitespace-nowrap">
                 <span className="kbx-text-116 font-kbx-black leading-kbx-90 tracking-kbx-tight">{grade}</span>
                 {name ? <GradePill className={tagClassName}>{name}</GradePill> : null}
             </div>
@@ -192,7 +187,8 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
     const {rating} = report.creditFinance
     const {ratingHistory, cashFlow} = report.creditDetail
     const criGrade = findCriGrade(rating.grade)
-    const tone = getCriGradeTone(rating.grade)
+    // 알약 색 — 등급 단계(9단계)별 KBX_CREDIT_TAG_CLASS. 표에 없는 코드는 GradePill 기본(남색 테두리).
+    const band = getCriGradeBand(rating.grade)
     // 이력은 받은 순서와 관계없이 날짜로 정렬해 최근 3건만 쓴다(이전평가이력은 지금 등급 포함).
     const previousRatings = [...ratingHistory].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
     const cashFlowHistory = [...cashFlow.history].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
@@ -206,7 +202,7 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
                 <GradeHeader
                     grade={rating.grade || KBX_EMPTY_VALUE}
                     name={criGrade?.name}
-                    tagClassName={tone ? GRADE_TAG_CLASS[tone] : undefined}
+                    tagClassName={band ? KBX_CREDIT_TAG_CLASS[band] : undefined}
                     definition={rating.grade && !criGrade ? UNKNOWN_GRADE_TEXT : criGrade?.definition}
                 >
                     <GradeDetails details={rating.details} labels={RATING_DETAIL_LABELS} />

@@ -59,6 +59,7 @@ const leftSideClassName = 'flex min-w-0 items-center justify-end gap-1 pl-12'
 const rightSideClassName = 'flex min-w-0 items-center justify-start gap-1 pr-12'
 const valueClassName = 'typo-micro-regular text-foreground-subtle shrink-0 whitespace-nowrap'
 
+const EMPTY_VALUE = '-'
 const barRatio = (value: number, maximum: number) => (maximum > 0 ? Math.max(0, value) / maximum : 0)
 
 const ButterflyBarChart = ({
@@ -77,15 +78,18 @@ const ButterflyBarChart = ({
         maximumFractionDigits: fractionDigits,
     })
     const format = (value: number) => valueFormatter.format(value)
-    const leftMaximum = Math.max(0, ...data.map((item) => item.left))
-    const rightMaximum = Math.max(0, ...data.map((item) => item.right))
+    // 값이 없으면(숫자 아님) 막대 없이 '-'. 0 은 '0'. 끝 값 계산에서도 뺀다.
+    const hasValue = (value: number) => Number.isFinite(value)
+    const valueText = (value: number) => (hasValue(value) ? formatCellsValue(value, format) : EMPTY_VALUE)
+    const leftMaximum = Math.max(0, ...data.map((item) => item.left).filter(hasValue))
+    const rightMaximum = Math.max(0, ...data.map((item) => item.right).filter(hasValue))
 
     const animate = useChartAnimation()
     // 값 글자는 막대가 다 자란 뒤 나타난다(보이기 전에는 막대와 함께 숨는다 — data-chart-reveal).
     const valueRevealClassName = cn(valueClassName, animate && 'motion-safe:animate-chart-label')
     // 막대는 가운데 축에서 바깥으로 자란다 — 왼쪽 막대는 오른쪽에서 왼쪽으로, 오른쪽 막대는 왼쪽에서 오른쪽으로.
     const renderBar = (value: number, maximum: number, color: string, side: 'left' | 'right') => {
-        const ratio = barRatio(value, maximum)
+        const ratio = hasValue(value) ? barRatio(value, maximum) : 0
         if (!ratio) return null
         return (
             <span
@@ -115,7 +119,7 @@ const ButterflyBarChart = ({
                         <li key={item.id} className={rowClassName}>
                             <span className={leftSideClassName}>
                                 <span data-chart-reveal="" className={valueRevealClassName}>
-                                    {formatCellsValue(item.left, format)}
+                                    {valueText(item.left)}
                                 </span>
                                 {renderBar(item.left, leftMaximum, left.color, 'left')}
                             </span>
@@ -125,7 +129,7 @@ const ButterflyBarChart = ({
                             <span className={rightSideClassName}>
                                 {renderBar(item.right, rightMaximum, right.color, 'right')}
                                 <span data-chart-reveal="" className={valueRevealClassName}>
-                                    {formatCellsValue(item.right, format)}
+                                    {valueText(item.right)}
                                 </span>
                             </span>
                         </li>
@@ -148,8 +152,8 @@ const ButterflyBarChart = ({
                         {data.map((item) => (
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
-                                <td>{format(item.left)}</td>
-                                <td>{format(item.right)}</td>
+                                <td>{hasValue(item.left) ? format(item.left) : EMPTY_VALUE}</td>
+                                <td>{hasValue(item.right) ? format(item.right) : EMPTY_VALUE}</td>
                             </tr>
                         ))}
                     </tbody>

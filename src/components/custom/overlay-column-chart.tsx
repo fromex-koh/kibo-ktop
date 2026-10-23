@@ -70,6 +70,8 @@ const MIN_CELL_WIDTH = 120
 // 기준 값 글자와 세부 값 글자가 겹치지 않게 둘 세로 간격(글자 높이 11 + 여백).
 const LABEL_STACK_GAP = 14
 const LABEL_OFFSET = 4
+// 값이 없는 막대 · 숨김 표 칸.
+const EMPTY_VALUE = '-'
 const BASE_AXIS_ID = 'base'
 const SERIES_AXIS_ID = 'series'
 
@@ -98,12 +100,35 @@ const OverlayColumnChart = ({
         allSeries.map((item) => [item.key, {label: item.label, color: item.color}]),
     ) satisfies ChartConfig
     // id 는 숨김 표의 key 로만 쓴다 — 차트로 넘기면 그린 도형마다 같은 id 가 붙는다[8.1.1].
-    const chartData = data.map((item) => ({label: item.label, ...item.values}))
-    const values = data.flatMap((item) => allSeries.map(({key}) => item.values[key] ?? 0))
+    // 값이 없으면(숫자 아님) 막대 자리는 0 으로 남기고(보이지 않는 높이) 값 글자 자리에 '-' 를 적는다(renderMissingAware).
+    const hasValue = (value: number | undefined): value is number => typeof value === 'number' && Number.isFinite(value)
+    const chartData = data.map((item) => ({
+        label: item.label,
+        ...Object.fromEntries(allSeries.map(({key}) => [key, hasValue(item.values[key]) ? item.values[key] : 0])),
+    }))
+    const values = data.flatMap((item) => allSeries.map(({key}) => item.values[key]).filter(hasValue))
     const maximumValue = Math.max(0, ...values)
     const minimumValue = Math.min(0, ...values)
     const format = (value: number) => valueFormatter.format(value)
     const domain = cellsBarDomain(minimumValue, maximumValue)
+
+    // 값 없음 글자 — 막대 바닥(0 높이 막대 끝) 바로 위에 '-'.
+    const renderMissingLabel = ({viewBox}: LabelProps) => {
+        if (!viewBox || !('width' in viewBox)) return null
+        const {x, y, width} = viewBox
+        if (typeof x !== 'number' || typeof y !== 'number' || typeof width !== 'number') return null
+        return (
+            <text
+                x={x + width / 2}
+                y={y - LABEL_OFFSET}
+                textAnchor="middle"
+                fill={CELLS_LABEL_FILL}
+                fontSize={CELLS_LABEL_FONT_SIZE}
+            >
+                {EMPTY_VALUE}
+            </text>
+        )
+    }
 
     // 기준 값 글자 — 기본은 기준 막대 위. 세부 막대가 기준과 높이가 비슷하거나 더 높으면(부채가 자산을 넘는 등) 세부 값 글자와
     // 겹치거나 세부 막대 위에 얹히므로, 그때는 가장 높은 세부 값 글자 위로 올린다. 막대 높이(px)는 세로 범위와 그릴 자리
@@ -122,6 +147,7 @@ const OverlayColumnChart = ({
         ) {
             return null
         }
+        if (!hasValue(data[index]?.values[base.key])) return renderMissingLabel(labelProps)
         const numericValue = Number(value ?? 0)
         // 음수 기준 값은 공통 글자(막대 아래)로 그린다.
         if (numericValue < 0) return renderCellsBarValueLabel(labelProps, format)
@@ -129,7 +155,8 @@ const OverlayColumnChart = ({
         const zeroY = y + height
         const baseTop = y
         const seriesTops = series
-            .map(({key}) => data[index]?.values[key] ?? 0)
+            .map(({key}) => data[index]?.values[key])
+            .filter(hasValue)
             .filter((seriesValue) => seriesValue >= 0)
             .map((seriesValue) => zeroY - seriesValue * pixelsPerUnit)
         const highestSeriesTop = seriesTops.length ? Math.min(...seriesTops) : Infinity
@@ -252,7 +279,11 @@ const OverlayColumnChart = ({
                             >
                                 <LabelList
                                     dataKey={item.key}
-                                    content={(labelProps) => renderCellsBarValueLabel(labelProps, format)}
+                                    content={(labelProps) =>
+                                        hasValue(data[labelProps.index ?? 0]?.values[item.key])
+                                            ? renderCellsBarValueLabel(labelProps, format)
+                                            : renderMissingLabel(labelProps)
+                                    }
                                 />
                             </Bar>
                         ))}
@@ -280,7 +311,11 @@ const OverlayColumnChart = ({
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
                                 {allSeries.map(({key}) => (
-                                    <td key={key}>{valueFormatter.format(item.values[key] ?? 0)}</td>
+                                    <td key={key}>
+                                        {hasValue(item.values[key])
+                                            ? valueFormatter.format(item.values[key])
+                                            : EMPTY_VALUE}
+                                    </td>
                                 ))}
                             </tr>
                         ))}

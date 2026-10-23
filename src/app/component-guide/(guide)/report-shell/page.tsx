@@ -95,7 +95,7 @@ const KBX_KIND_ROWS = [
         cells: [
             '색',
             <code key="c">text-kbx-* · bg-kbx-* · border-kbx-*</code>,
-            `역할 ${KBX_COLOR_ENTRIES.length}개(아래 목록). 모두 primitive 참조(남보라 계열은 extra.*). 막대 채움처럼 옅은 등급 색은 두 색을 미리 섞은 불투명 색(grade-*-fill).`,
+            `역할 ${KBX_COLOR_ENTRIES.length}개(아래 목록). 모두 primitive 참조(Tailwind 팔레트에 없는 색은 extra.*). 막대 채움처럼 옅은 등급 색은 두 색을 미리 섞은 불투명 색(grade-*-fill).`,
         ],
     },
     {
@@ -281,7 +281,7 @@ const KBX_PART_ROWS = [
         key: 'tag',
         cells: [
             <code key="p">KbxGradeTag</code>,
-            '등급 알약. tone 을 주면 등급 색 바탕(getTechIndexGrade · getCriGradeTone), 현금흐름등급은 className 에 KBX_CASH_FLOW_TAG_CLASS.',
+            '등급 알약. tone 을 주면 등급 색 바탕(getTechIndexGrade), 기업신용등급은 className 에 KBX_CREDIT_TAG_CLASS(getCriGradeBand 9단계), 현금흐름등급은 KBX_CASH_FLOW_TAG_CLASS.',
         ],
     },
     {
@@ -696,6 +696,17 @@ const ReportShellGuidePage = () => (
                     rows={KBX_KIND_ROWS}
                     size="md"
                 />
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <code>chart-*</code> — 인쇄본 그래프 명도 3단계: subject(신청 · 조회기업, 진남) · general(일반 ·
+                        유형, 파랑) · average-base/line(평균, 옅은 바탕 + 사선) · series-1/2(주체 없는 2계열) · track ·
+                        trend(꺾은선, halo 흰 테두리).
+                    </li>
+                    <li>
+                        <code>credit-tag-*</code> — 기업신용등급 알약(<code>KBX_CREDIT_TAG_CLASS</code>, 등급 단계마다
+                        한 색).
+                    </li>
+                </ul>
                 <ul aria-label="K-BIGx 인쇄본 색 목록" className="kbigx-print grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                     {KBX_COLOR_ENTRIES.map(([name, value]) => (
                         <li key={name} className="flex items-center gap-3">

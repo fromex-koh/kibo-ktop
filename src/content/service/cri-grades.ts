@@ -113,24 +113,27 @@ const toCriRatingData = (grade: string, details: RatingGaugeDetail[] = []): Semi
     }
 }
 
-// 등급명 → 상태 단계(우수 · 양호 · 보통 · 미흡 · 취약) — 등급 뱃지 색을 혁신성장역량지수(TECH_INDEX_GRADES)와 같은
-// 5단계 색으로 맞출 때 쓴다(K-BIGx 인쇄본 진단브리핑 기업신용등급 뱃지). 웹 게이지는 등급과 관계없이 한 색이라 쓰지 않는다.
-// 유보 · 평가 제외 · 표에 없는 코드는 단계가 없다(undefined) — 사용처가 중립 모양으로 그린다.
-type CriGradeTone = 'excellent' | 'good' | 'normal' | 'poor' | 'weak'
-const CRI_GRADE_NAME_TONES: Record<string, CriGradeTone> = {
-    최우량: 'excellent',
-    우량: 'excellent',
+// 등급 → 색 단계(9단계) — 기업신용등급 색을 단계마다 바꿀 때 쓴다. 웹 보고서 게이지(tokens.json 의 credit-gauge-*) ·
+// K-BIGx 인쇄본 진단브리핑 · 신용/재무정보 알약(kbigxPrint credit-tag-*)이 같은 단계를 쓴다.
+//   우량 AAA+ ~ AA- · 양호 A+ ~ BBB- · 보통 BB+ ~ B- · 보통이하 CCC · 낮음 CC+ · 매우낮음 C+ · 위험 D · 유보 R · 평가제외 NR.
+// 표에 없는 코드는 undefined — 사용처가 기본 색으로 그린다.
+type CriGradeBand = 'prime' | 'good' | 'fair' | 'subfair' | 'low' | 'verylow' | 'risk' | 'hold' | 'excluded'
+const CRI_GRADE_NAME_BANDS: Record<string, CriGradeBand> = {
+    최우량: 'prime',
+    우량: 'prime',
     양호: 'good',
-    보통: 'normal',
-    '보통 이하': 'poor',
-    낮음: 'poor',
-    '매우 낮음': 'weak',
-    위험: 'weak',
+    보통: 'fair',
+    '보통 이하': 'subfair',
+    낮음: 'low',
+    '매우 낮음': 'verylow',
+    위험: 'risk',
+    유보: 'hold',
+    '평가 제외': 'excluded',
 }
-const getCriGradeTone = (grade: string): CriGradeTone | undefined => {
+const getCriGradeBand = (grade: string): CriGradeBand | undefined => {
     const item = findCriGrade(grade)
-    return item?.isRated ? CRI_GRADE_NAME_TONES[item.name] : undefined
+    return item ? CRI_GRADE_NAME_BANDS[item.name] : undefined
 }
 
-export {CRI_GRADES, CRI_UNKNOWN_GRADE_DESCRIPTION, criGradePercentage, findCriGrade, getCriGradeTone, toCriRatingData}
-export type {CriGrade, CriGradeTone}
+export {CRI_GRADES, CRI_UNKNOWN_GRADE_DESCRIPTION, criGradePercentage, findCriGrade, getCriGradeBand, toCriRatingData}
+export type {CriGrade, CriGradeBand}

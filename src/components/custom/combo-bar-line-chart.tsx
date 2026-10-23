@@ -160,12 +160,14 @@ const comboLineDomain = (values: readonly number[]): [number, number] => {
 }
 
 type LineDotProps = {cx?: number; cy?: number; index?: number}
-type TickProps = {x?: number | string; y?: number | string; payload?: {value?: unknown}}
+type TickProps = {x?: number | string; y?: number | string; payload?: {value?: unknown; index?: number}}
 
 // 항목 이름 한 글자 폭 어림(12px 한글) — 칸보다 긴 이름은 줄임표로 자르고 전체 이름은 title 로 남긴다.
 const TICK_CHAR_WIDTH = 12
 const TICK_SIDE_PADDING = 8
 const ELLIPSIS = '…'
+// 값이 없는 막대 · 숨김 표 칸.
+const EMPTY_VALUE = '-'
 
 const ComboBarLineChart = ({
     ariaLabel,
@@ -200,8 +202,14 @@ const ComboBarLineChart = ({
         lineValue: {label: lineLabel, color: LINE_COLOR},
     } satisfies ChartConfig
     // id 는 숨김 표의 key 로만 쓴다 — 차트로 넘기면 그린 도형마다 같은 id 가 붙는다[8.1.1].
-    const chartData = data.map((item) => ({label: item.label, value: item.value, lineValue: item.lineValue}))
-    const barValues = data.map((item) => item.value)
+    // 막대 값이 숫자가 아니면 값 없음 — 막대를 그리지 않고(null) 바닥선 위에 '-' 를 적는다(renderTick).
+    const hasBarValue = (value: number) => Number.isFinite(value)
+    const chartData = data.map((item) => ({
+        label: item.label,
+        value: hasBarValue(item.value) ? item.value : null,
+        lineValue: item.lineValue,
+    }))
+    const barValues = data.map((item) => item.value).filter(hasBarValue)
     const lineValues = data.flatMap((item) => (item.lineValue === null ? [] : [item.lineValue]))
     const barDomain = comboBarDomain(barValues.length ? barValues : [0], baseline, maxValueRatio)
     const lineDomain = comboLineDomain(lineValues)
@@ -222,7 +230,7 @@ const ComboBarLineChart = ({
         const item = data[index]
         if (!item || item.lineValue === null) return null
         const cy = toLineY(item.lineValue)
-        const barEndY = toBarY(item.value)
+        const barEndY = hasBarValue(item.value) ? toBarY(item.value) : barBottomY
         const barTop = Math.min(barEndY, barBottomY)
         const barBottom = Math.max(barEndY, barBottomY)
         const aboveBaseline = cy - DOT_OUTER_RADIUS - LINE_LABEL_GAP
@@ -303,18 +311,34 @@ const ComboBarLineChart = ({
         const text = String(payload?.value ?? '')
         const maxChars = Math.max(2, Math.floor((MIN_CELL_WIDTH - TICK_SIDE_PADDING) / TICK_CHAR_WIDTH))
         const isTruncated = text.length > maxChars
+        const item = typeof payload?.index === 'number' ? data[payload.index] : undefined
+        const isBarMissing = item !== undefined && !hasBarValue(item.value)
         return (
-            <text
-                x={Number(x ?? 0)}
-                y={Number(y ?? 0)}
-                dy="0.71em"
-                textAnchor="middle"
-                fill={CELLS_X_TICK.fill}
-                fontSize={CELLS_X_TICK.fontSize}
-            >
-                {isTruncated ? <title>{text}</title> : null}
-                {isTruncated ? `${text.slice(0, maxChars - 1)}${ELLIPSIS}` : text}
-            </text>
+            <g>
+                {/* 막대 값 없음 — 바닥선 바로 위에 '-'. */}
+                {isBarMissing ? (
+                    <text
+                        x={Number(x ?? 0)}
+                        y={Number(y ?? 0) - CELLS_X_TICK_MARGIN - BAR_LABEL_OFFSET}
+                        textAnchor="middle"
+                        fill={CELLS_LABEL_FILL}
+                        fontSize={CELLS_LABEL_FONT_SIZE}
+                    >
+                        {EMPTY_VALUE}
+                    </text>
+                ) : null}
+                <text
+                    x={Number(x ?? 0)}
+                    y={Number(y ?? 0)}
+                    dy="0.71em"
+                    textAnchor="middle"
+                    fill={CELLS_X_TICK.fill}
+                    fontSize={CELLS_X_TICK.fontSize}
+                >
+                    {isTruncated ? <title>{text}</title> : null}
+                    {isTruncated ? `${text.slice(0, maxChars - 1)}${ELLIPSIS}` : text}
+                </text>
+            </g>
         )
     }
 
@@ -419,7 +443,7 @@ const ComboBarLineChart = ({
                         {data.map((item) => (
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
-                                <td>{barFormatter.format(item.value)}</td>
+                                <td>{hasBarValue(item.value) ? barFormatter.format(item.value) : EMPTY_VALUE}</td>
                                 <td>{item.lineValue === null ? '값 없음' : lineFormatter.format(item.lineValue)}</td>
                             </tr>
                         ))}

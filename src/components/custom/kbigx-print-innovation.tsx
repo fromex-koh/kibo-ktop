@@ -25,7 +25,11 @@ import {
     getKbxIssueWords,
     KbxUnitBelow,
 } from '@/components/custom/kbigx-print-parts'
-import {INNOVATION_ISSUE_COLORS, type InnovationGrowthReport} from '@/content/service/k-bigx-innovation-report'
+import {
+    INNOVATION_ISSUE_COLORS,
+    toMarketScaleRows,
+    type InnovationGrowthReport,
+} from '@/content/service/k-bigx-innovation-report'
 import {
     getKbigxExcellentPatentRows,
     getKbigxPatentRows,
@@ -260,8 +264,18 @@ const SurfaceBox = ({label, className, children}: {label: string; className?: st
 
 // 기업수 · 특허수 막대 색(범례와 같다).
 const MARKET_SCALE_BARS = {
-    left: {title: '기업수', color: 'var(--kbx-color-purple)', swatchClassName: 'bg-kbx-purple', unit: '기업수(개)'},
-    right: {title: '특허수', color: 'var(--kbx-color-blue)', swatchClassName: 'bg-kbx-blue', unit: '특허수(건)'},
+    left: {
+        title: '기업수',
+        color: 'var(--kbx-color-chart-series-1)',
+        swatchClassName: 'bg-kbx-chart-series-1',
+        unit: '기업수(개)',
+    },
+    right: {
+        title: '특허수',
+        color: 'var(--kbx-color-chart-series-2)',
+        swatchClassName: 'bg-kbx-chart-series-2',
+        unit: '특허수(건)',
+    },
 } as const
 
 // 매출 규모 구간 색 — 작은 구간부터 남색 → 옅은 파랑 5단계(분류 색 첫 단계를 뺀 것). 구간이 더 많으면 마지막 색을 이어 쓴다.
@@ -342,7 +356,8 @@ const MarketScaleBlock = ({
                 categoryTitle="매출 규모"
                 left={MARKET_SCALE_BARS.left}
                 right={MARKET_SCALE_BARS.right}
-                data={marketScale.rows.map((row) => ({
+                // 5행 고정 — 값이 없으면 막대 없이 '-'(toMarketScaleRows).
+                data={toMarketScaleRows(marketScale.rows).map((row) => ({
                     id: row.id,
                     label: row.label,
                     left: row.companies,
@@ -465,19 +480,22 @@ const PatentAnalysisBlock = ({
 
 // ── 맞춤형 기술정보 · 경쟁기업 및 우수기업 ──
 
-// 경쟁기업 사업실적 — 막대(매출액) 파랑 · 조회기업 민트 · 평균 보라, 선(영업이익률) 남색.
+// 경쟁기업 사업실적 — 흑백 인쇄에서도 갈리게 명도 3단계: 조회기업 진남(가장 진함) · 경쟁기업 파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리.
+// 선(영업이익률)은 진남 + 흰 바깥 테두리 — 진남 막대 위에서도 끊겨 보이지 않게.
 const COMPETITOR_CHART_COLORS = {
-    bar: 'var(--kbx-color-blue)',
-    subjectBar: 'var(--kbx-color-mint)',
-    averageBar: 'var(--kbx-color-purple)',
-    line: 'var(--kbx-color-navy)',
+    bar: 'var(--kbx-color-chart-general)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
+    line: 'var(--kbx-color-chart-trend)',
+    lineHalo: 'var(--kbx-color-chart-trend-halo)',
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
     value: 'var(--kbx-color-label)',
     lineValue: 'var(--kbx-color-paper)',
     category: 'var(--kbx-color-foreground)',
-    subject: 'var(--kbx-color-primary)',
+    subject: 'var(--kbx-color-chart-subject-label)',
 } as const
 
 // 경쟁기업 그래프 · 성장률 우수기업 목록의 회사 이름은 한 줄 — 칸보다 길면 말줄임(…).
@@ -506,10 +524,12 @@ const RANK_LIST_PROPS = {
     formatValue: formatGrowthRate,
 } as const satisfies Partial<RankBarListProps>
 
-// 순위 막대 색 — 100억원 이하는 남색 · 초과는 파랑(인자 bar). 평균(진보라) · 조회기업(초록)은 두 목록이 같다.
+// 순위 막대 색 — 100억원 이하는 남색 · 초과는 파랑(인자 bar). 평균(옅은 바탕 + 사선 · 테두리 — 같은 쪽 경쟁기업 그래프와
+// 같은 표현) · 조회기업(초록)은 두 목록이 같다. 조회기업을 진남으로 두면 100억원 이하 막대(남색)와 겹쳐 초록을 유지한다.
 const rankColors = (bar: string) => ({
     bar,
-    averageBar: 'var(--kbx-color-purple-strong)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
     subjectBar: 'var(--kbx-color-green)',
 })
 

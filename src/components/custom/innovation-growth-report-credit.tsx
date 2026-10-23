@@ -14,6 +14,7 @@ import {
 import {LineChart} from '@/components/custom/line-chart'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
+import {EmptyState} from '@/components/composite/empty-state'
 import {PRIVATE_PLACEHOLDER, PRIVATE_SHORT_LABEL, PrivateContent} from '@/components/composite/private-content'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {cn} from '@/lib/utils'
@@ -426,19 +427,25 @@ const InnovationGrowthReportCredit = ({
                             scaleLabel="현금흐름 창출 능력"
                             ariaLabel={`현금흐름등급 ${cashFlow.grade}${cashFlowName ? `(${cashFlowName})` : ''}`}
                         />
-                        <ReportTable
-                            caption="현금흐름등급 평가이력"
-                            minWidthClassName="min-w-0"
-                            columns={[
-                                {key: 'grade', label: '현금흐름등급'},
-                                {key: 'date', label: '결산일자'},
-                            ]}
-                            rows={cashFlowHistory.map((item) => ({
-                                id: item.date,
-                                cells: {grade: item.grade, date: item.date},
-                            }))}
-                            emptyText={EMPTY_TABLE_TEXT}
-                        />
+                        {/* 이력이 없으면 머리글 아래에 빈 상태(경영진 · 주주 표와 같은 방식) — '해당사항 없음'은 기업신용정보 표의
+                            '해당없음' 상태 문구라 쓰지 않는다. 높이는 이력 3줄(min-h-34 = 136, 한 줄 약 45). */}
+                        <div className="flex flex-col">
+                            <ReportTable
+                                caption="현금흐름등급 평가이력"
+                                minWidthClassName="min-w-0"
+                                columns={[
+                                    {key: 'grade', label: '현금흐름등급'},
+                                    {key: 'date', label: '결산일자'},
+                                ]}
+                                rows={cashFlowHistory.map((item) => ({
+                                    id: item.date,
+                                    cells: {grade: item.grade, date: item.date},
+                                }))}
+                            />
+                            {cashFlowHistory.length ? null : (
+                                <EmptyState className="border-subtle-3 min-h-34 border-b" />
+                            )}
+                        </div>
                     </div>
                     {/* 등급 정의 — 등급 코드로 현금흐름등급표(cash-flow-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다. */}
                     {cashFlowDefinition ? <NoticeBox className="text-center">{cashFlowDefinition}</NoticeBox> : null}

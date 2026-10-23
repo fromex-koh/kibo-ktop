@@ -2,6 +2,7 @@
 
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
+import {EmptyState} from '@/components/composite/empty-state'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -141,11 +142,20 @@ const RULE_ROWS = [
     },
 ] as const
 
+const EMPTY_CODE = `import {EmptyState} from '@/components/composite/empty-state'
+
+// 키워드가 없으면 WordCloud 를 그리지 않고 같은 높이의 빈 상태를 둡니다(빈 목록을 넘기면 스켈레톤이 계속 남습니다).
+{issues.length ? (
+  <WordCloud words={issues} ariaLabel="최근 3년 등록특허의 R&D 이슈 키워드" className="h-54 w-full" />
+) : (
+  <EmptyState className="min-h-54" />
+)}`
+
 const PROPS_ITEMS = [
     [
         'WordCloud',
         'words',
-        '단어와 중요도(양수)입니다. 중요도순으로 정렬해 전부 넘깁니다. 같은 text 는 미리 합칩니다.',
+        '단어와 중요도(양수)입니다. 중요도순으로 정렬해 전부 넘깁니다. 같은 text 는 미리 합칩니다. 빈 목록은 넘기지 않습니다(3-5).',
         '-',
         'WordCloudItem[]',
     ],
@@ -304,6 +314,22 @@ const WordCloudGuidePage = () => (
                         </div>
                         <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="복사" />
                     </div>
+
+                    <div className={SUB_BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">3-5. 키워드가 없을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            빈 목록을 넘기면 그릴 단어가 없어 스켈레톤이 계속 남습니다. 사용처에서 키워드가 없으면{' '}
+                            <code>WordCloud</code> 대신 같은 높이의 <code>EmptyState</code> 를 둡니다 — 웹 보고서
+                            진단브리핑 · 기술혁신정보 탭과 인쇄본이 모두 이렇게 합니다.
+                        </p>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div className="flex flex-col gap-2">
+                                <p className="typo-body-m-bold text-foreground">키워드 없음</p>
+                                <EmptyState className="border-subtle-3 min-h-54 rounded-sm border" />
+                            </div>
+                        </div>
+                        <CodeBlock code={EMPTY_CODE} language="tsx" copyLabel="빈 상태 코드 복사" />
+                    </div>
                 </div>
             </section>
         </BaseCard>
@@ -320,6 +346,7 @@ const WordCloudGuidePage = () => (
                         </li>
                         <li>같은 키워드는 먼저 합쳐 색 · 숨김 목록이 중복되지 않게 합니다.</li>
                         <li>키워드는 자르지 말고 전부 넘깁니다. 컴포넌트가 모두 그립니다.</li>
+                        <li>키워드가 0개면 WordCloud 를 그리지 않고 빈 상태를 둡니다(3-5).</li>
                     </ul>
                 </div>
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="복사" />

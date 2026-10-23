@@ -36,9 +36,11 @@ import crownImage from '@public/images/rank-pyramid/crown.webp'
 //   다크에서 단계가 뒤집혀 어두운 면 위에서도 읽힌다.
 // 폭이 좁으면 글자 묶음이 위, 피라미드가 아래로 내려가고 피라미드는 폭에 맞춰 줄어든다(SVG viewBox).
 // 보고서 안에서는 카드가 보일 때 아래 단부터 차례로 떠오른다(chart-reveal.tsx · animate-chart-rise).
+// 상위 % 가 숫자가 아니면(NaN 등 — 순위 없음) '상위 %' 자리에 '-', 피라미드는 강조 단 없이(모두 옅은 면 · 보라 왕관) 둔다.
+//   집단 이름이 비면 그 줄을 두지 않는다.
 
 type RankPyramidChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    /** 상위 % (0~100). 이 값이 속한 단이 강조된다. */
+    /** 상위 % (0~100). 이 값이 속한 단이 강조된다. 숫자가 아니면 순위 없음('-' · 강조 없음). */
     percentile: number
     /** 글자 묶음 제목(기본 '동일업종 기준'). */
     title?: string
@@ -46,6 +48,8 @@ type RankPyramidChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
     groupLabel: string
     ariaLabel: string
 }
+
+const EMPTY_PERCENTILE = '-'
 
 const tierLabel = (index: number) => `${index * TIER_RANGE}~${(index + 1) * TIER_RANGE}%`
 
@@ -86,8 +90,10 @@ const RankPyramidChart = ({
     ...props
 }: RankPyramidChartProps) => {
     const animate = useChartAnimation()
+    const hasPercentile = Number.isFinite(percentile)
     const clamped = Math.min(100, Math.max(0, percentile))
-    const activeIndex = Math.min(TIER_COUNT - 1, Math.max(0, Math.ceil(clamped / TIER_RANGE) - 1))
+    // 순위가 없으면 어느 단도 강조하지 않는다(-1).
+    const activeIndex = hasPercentile ? Math.min(TIER_COUNT - 1, Math.max(0, Math.ceil(clamped / TIER_RANGE) - 1)) : -1
     // 맨 위 삼각형은 아래가 넓어 가운데가 아래로 치우친다 — 글자 · 왕관은 높이의 60% 지점.
     const labelY = (tier: (typeof TIERS)[number]) =>
         tier.isApex ? tier.top + (tier.bottom - tier.top) * 0.6 : (tier.top + tier.bottom) / 2
@@ -108,8 +114,12 @@ const RankPyramidChart = ({
             <div aria-hidden="true" className="flex shrink-0 flex-col pt-8">
                 {/* 글자 묶음은 제목이 아닌 그림 속 글자라 p 대신 div 를 쓴다 — 크고 굵은 p 는 접근성 검사기(WAVE)가 '제목일 수 있음'으로 잡는다. 값은 role="img" 이름으로 읽힌다. */}
                 <div className="typo-body-l-bold text-foreground">{title}</div>
-                <div className="typo-h1-bold text-foreground">상위 {clamped}%</div>
-                <div className="typo-body-l-regular text-foreground-subtle mt-3 break-keep">{groupLabel}</div>
+                <div className="typo-h1-bold text-foreground">
+                    {hasPercentile ? `상위 ${clamped}%` : EMPTY_PERCENTILE}
+                </div>
+                {groupLabel ? (
+                    <div className="typo-body-l-regular text-foreground-subtle mt-3 break-keep">{groupLabel}</div>
+                ) : null}
             </div>
             <svg
                 viewBox={`0 0 ${VIEW_WIDTH} ${PYRAMID_HEIGHT}`}

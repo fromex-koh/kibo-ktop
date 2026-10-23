@@ -117,8 +117,9 @@ const PRINT_CODE = `// K-BIGx 인쇄본 — 21px · 머리 줄 위아래 10 · �
 <DualBarTable
   caption="매출 규모별 기업수(개) · 특허수(건)"
   categoryTitle="매출 규모"
-  left={{title: '기업수', color: 'var(--kbx-color-purple)'}}
-  right={{title: '특허수', color: 'var(--kbx-color-blue)'}}
+  // 기업수 진남 · 특허수 파랑(범례 칩도 같은 토큰)
+  left={{title: '기업수', color: 'var(--kbx-color-chart-series-1)'}}
+  right={{title: '특허수', color: 'var(--kbx-color-chart-series-2)'}}
   data={rows}
   tableClassName="kbx-text-21 text-kbx-foreground border-kbx-primary kbx-border-t-strong"
   headClassName="bg-kbx-surface text-kbx-primary font-kbx-bold py-2.5"
@@ -128,6 +129,10 @@ const PRINT_CODE = `// K-BIGx 인쇄본 — 21px · 머리 줄 위아래 10 · �
   barClassName="h-4.5"
   valueClassName="w-22.5"
 />`
+
+// 인쇄본 색 — kbigx-print-innovation.tsx 의 MARKET_SCALE_BARS 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
+const PRINT_LEFT = {title: '기업수', color: 'var(--kbx-color-chart-series-1)'}
+const PRINT_RIGHT = {title: '특허수', color: 'var(--kbx-color-chart-series-2)'}
 
 const PROPS_ITEMS = [
     ['DualBarTable', 'caption', '표 이름입니다(화면에 보이지 않는 caption).', '-', 'string'],
@@ -157,7 +162,13 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['DualBarTableItem', 'id · label', '항목 식별자 · 이름입니다.', '-', 'string · ReactNode'],
-    ['DualBarTableItem', 'left · right', '두 열의 값입니다. 0 이하는 막대를 그리지 않습니다.', '-', 'number'],
+    [
+        'DualBarTableItem',
+        'left · right',
+        "두 열의 값입니다. 0 이하는 막대를 그리지 않습니다. 숫자가 아니면(NaN) 값 없음 — 막대 없이 '-'(0 은 '0'). K-BIGx 매출 규모 표는 5행 고정(toMarketScaleRows)이라 데이터가 없어도 5행 모두 '-'.",
+        '-',
+        'number',
+    ],
     ['DualBarTableSkeleton', 'rowCount', '값 줄 수입니다.', '5', 'number'],
     [
         'DualBarTableSkeleton',
@@ -299,6 +310,27 @@ const DualBarTableGuidePage = () => (
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        기업수는 진남(chart-series-1), 특허수는 파랑(chart-series-2) — 범례 순서와 명도 순서(진함 →
+                        중간)가 같아 흑백 인쇄에서도 두 계열이 갈립니다. 범례 칩(bg-kbx-chart-series-1 · 2)도 같은
+                        토큰입니다.
+                    </li>
+                </ul>
+                <Example
+                    title="인쇄본 색"
+                    description="kbx 색을 넘긴 모습입니다(.kbigx-print 안 · 다크에서도 흰 바탕)."
+                >
+                    <div className="kbigx-print bg-kbx-paper rounded-sm p-4">
+                        <DualBarTable
+                            caption="매출 규모별 기업수 · 특허수 인쇄본 색 예시"
+                            categoryTitle="매출 규모"
+                            left={PRINT_LEFT}
+                            right={PRINT_RIGHT}
+                            data={STANDARD_DATA}
+                        />
+                    </div>
+                </Example>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
