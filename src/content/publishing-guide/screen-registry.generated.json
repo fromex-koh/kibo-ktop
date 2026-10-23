@@ -1465,6 +1465,13 @@
             "isCurrent": false
         },
         {
+            "key": "org-individual-evaluation-verification-progress-service-unavailable",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1896,6 +1903,13 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-service-unavailable",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {

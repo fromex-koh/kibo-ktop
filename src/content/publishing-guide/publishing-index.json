@@ -2565,11 +2565,19 @@
             "userType": "기관",
             "children": [
                 {
-                    "label": "평가검증 진행확인",
+                    "label": "평가진행방식 선택 (신속표준모형)",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-individual-evaluation-verification-progress",
+                    "iaRow": 20
+                },
+                {
+                    "label": "기술평가 서비스 불가 안내",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "org-individual-evaluation-verification-progress-service-unavailable",
                     "iaRow": 20
                 },
                 {
@@ -3509,6 +3517,13 @@
             "name": "K-BIGx 보고서",
             "userType": "기관",
             "children": [
+                {
+                    "label": "K-BIGx 서비스 불가 안내",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "org-k-bigx-report-service-unavailable"
+                },
                 {
                     "label": "기업혁신성장보고서 조회",
                     "screen": {
