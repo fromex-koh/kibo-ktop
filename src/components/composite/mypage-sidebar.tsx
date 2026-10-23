@@ -26,10 +26,11 @@ import {
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {cn} from '@/lib/utils'
 
-// 기업 마이페이지 좌측 LNB — Figma "[마이페이지] 내 정보 > LNB".
-// 마이페이지의 모든 화면이 같은 사이드바를 쓰므로 메뉴 목록과 조합을 여기 한 벌만 둔다.
-// 카드·항목 스타일은 공통 StickySidebar 가 갖는다(카드 344·radius 16·px-6 py-10, 항목 56·rounded-sm,
-// 활성 면 primary-subtle) — 시안 값과 이미 같아 이 화면을 위해 고친 것은 없다.
+// 마이페이지 좌측 LNB(기업 · 기관) — 마이페이지의 모든 화면이 이 사이드바 하나를 쓴다.
+// 카드 · 항목 모양은 StickySidebar(sticky-sidebar.tsx)가 갖고, 여기는 메뉴 목록과 화면 폭별 배치만 갖는다.
+//
+// 쓰는 법: <MypageSidebar userType="corp" current="내 정보" companyName={…} />
+//   · current 는 MYPAGE_MENU 의 label 과 글자가 같아야 그 항목이 활성으로 보인다.
 //
 // 화면 폭에 따라 세 가지로 그린다 — 기업·기술정보 입력(FormTabs)의 탭이 좁은 화면에서 [현재 항목 줄 +
 // 목록 열기]로 바뀌는 것과 같은 방식이다. 메뉴 여섯 칸이 세로로 서 있으면 좁은 화면에서 본문보다
@@ -38,13 +39,13 @@ import {cn} from '@/lib/utils'
 //   md~xl   — 콘텐츠 열 안의 카드. 지금 메뉴 한 줄만 두고 누르면 아래로 목록이 열린다(고정하지 않음)
 //   md 미만 — 같은 줄을 화면 폭으로 넓혀 헤더 아래에 고정한다
 
-// 메뉴 — 아이콘·라벨·경로는 IA 그대로다. 기업과 기관이 다르다.
+// 메뉴 — 아이콘 · 라벨 · 경로는 IA 그대로다. 기업과 기관이 다르다.
+// 아이콘은 컴포넌트(함수)라 서버에서 넘길 수 없어 목록을 이 파일에 두고, 화면은 userType 만 넘긴다.
 //
-// 아이콘은 컴포넌트(함수)라 서버에서 클라이언트로 넘길 수 없다. 그래서 목록을 화면(page)이 아니라
-// 이 파일에 두고, 화면은 어느 쪽인지(userType)만 알려 준다.
-//
-// [프론트엔드 연동] 아직 만들지 않은 화면은 경로를 '#' 으로 둔다. 해당 page 가 생기면 그 경로로 바꾼다
-// (경로가 타입으로 검사되어 없는 주소를 미리 적어 둘 수 없다).
+// [프론트엔드 연동]
+//   · 메뉴를 더하거나 바꿀 때는 이 목록만 고친다 — 모든 마이페이지 화면에 함께 반영된다.
+//   · 경로는 실제 page 가 있어야 한다(경로가 타입으로 검사된다). 아직 없는 화면은 '#' 으로 둔다.
+//   · 기관 [내 정보] 경로는 회원 유형마다 다르다 — 로그인한 유형의 화면 경로로 바꿔 넣는다.
 type MypageMenuItem = {icon: LucideIcon; label: string; href: string}
 
 const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
@@ -57,7 +58,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         {icon: MessageCircleMore, label: '1:1 문의', href: '/corp/mypage/inquiry-history'},
     ],
     org: [
-        // 기관 [내 정보] 는 회원 유형별로 화면이 나뉜다 — 실제로는 로그인한 유형의 화면으로 간다.
+        // 기관 [내 정보] — 지금은 협약기관 화면. 회원 유형별 경로는 위 [프론트엔드 연동] 참고.
         {icon: User, label: '내 정보', href: '/org/mypage/profile-edit/partner-agency'},
         {icon: FileSearch, label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
         {icon: FolderSearch, label: '평가검증 신청 조회', href: '/org/mypage/verification-application'},
@@ -94,7 +95,7 @@ type MypageSidebarProps = {
     userType: 'corp' | 'org'
     // 지금 보고 있는 화면의 메뉴 라벨 — 그 항목이 활성으로 표시된다.
     current: string
-    // 기업명. 연동 시 회원정보 응답으로 바꾼다.
+    // 기업명. [프론트엔드 연동] 회원정보 응답의 기업명을 넣는다.
     companyName: ReactNode
 } & Omit<ComponentPropsWithoutRef<typeof StickySidebar>, 'children'>
 
