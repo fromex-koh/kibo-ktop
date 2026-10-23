@@ -122,7 +122,10 @@ const COMPOSITION = [
     {name: 'StickySidebar', desc: 'aside 카드 컨테이너입니다. sticky top-6(24px)이 기본입니다.'},
     {name: 'StickySidebarProfile', desc: '회원 배지와 이름입니다. 배지가 이름 위에 놓입니다.'},
     {name: 'StickySidebarNav', desc: '메뉴를 감싸는 nav 입니다. aria-label 을 지정합니다.'},
-    {name: 'StickySidebarNavItem', desc: '아이콘과 라벨로 된 메뉴 링크입니다. 높이는 56px 이상입니다.'},
+    {
+        name: 'StickySidebarNavItem',
+        desc: '아이콘과 라벨로 된 메뉴 링크입니다. 높이는 56px 이상이고, 항목 사이는 8px 입니다.',
+    },
     {name: 'StickySidebarDivider', desc: '고객센터 같은 선택 영역을 가르는 구분선입니다.'},
     {name: 'StickySidebarContact', desc: '고객센터 전화번호(tel 링크)와 상담시간입니다. 필요한 화면에서만 씁니다.'},
 ] as const
