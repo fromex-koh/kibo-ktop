@@ -1,7 +1,6 @@
 'use client'
 
 import {useId, useMemo, useRef, useState, type ReactNode} from 'react'
-import {ChevronRight} from 'lucide-react'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
 import {DateField} from '@/components/composite/date-field'
 import {EditCancelConfirmDialog} from '@/components/composite/edit-cancel-confirm-dialog'
@@ -53,10 +52,7 @@ import {
     MARKETING_CONSENT_AGREED,
     MARKETING_CONSENT_FIELD,
 } from '@/constants/mypage-profile'
-import {
-    MYPAGE_MARKETING_CONSENT_ACTIONS,
-    MYPAGE_MARKETING_CONSENT_TITLE,
-} from '@/content/service/k-bigx-marketing-consent'
+import {MYPAGE_MARKETING_CONSENT_TITLE} from '@/content/service/k-bigx-marketing-consent'
 import {cn} from '@/lib/utils'
 
 // 마이페이지 내 정보 입력 묶음 — Figma "[마이페이지] 내 정보".
@@ -283,11 +279,14 @@ const AddressField = () => {
 }
 
 // 마케팅 알림 수신 동의(선택) — 기업정보 카드의 주소 아래, 구분선 다음 줄.
-// 체크박스 · 이름 · (선택) · 오른쪽 [자세히] → 아래 설명 한 줄(이름과 같은 들여쓰기).
-// [자세히]는 마케팅 정보 수신 동의 모달(기술평가 서비스 제목)을 연다 — 모달의 [동의] · [비동의]가 체크를 켜고 끈다.
-// 값은 폼 값(MARKETING_CONSENT_FIELD)이라 [취소]로 되돌아가고 [저장] 때 함께 넘어간다.
+// 체크박스를 직접 누르거나, [자세히] 모달의 [동의 후 이용] · [동의안함]으로 켜고 끈다.
+//
+// [프론트엔드 연동]
+//   · 값은 폼 값 MARKETING_CONSENT_FIELD — 동의 'Y'(MARKETING_CONSENT_AGREED), 비동의 ''(빈 글자).
+//   · 처음 값은 회원정보 조회 응답(constants/mypage-profile.ts 의 MYPAGE_MEMBER_PROFILE)에서 온다.
+//   · 다른 칸과 같이 [취소]면 되돌아가고 [저장]이면 함께 넘어간다 — API 가 boolean 이면 저장할 때만 바꿔 보낸다.
 const MARKETING_CONSENT_LABEL = '마케팅 알림 수신 동의'
-const MARKETING_CONSENT_OPTIONAL = '(선택)'
+const MARKETING_CONSENT_OPTIONAL = '[선택]'
 const MARKETING_CONSENT_HINT = '동의하지 않아도 서비스 이용에는 제한이 없습니다.'
 
 const MarketingConsentField = () => {
@@ -299,41 +298,36 @@ const MarketingConsentField = () => {
     const setAgreed = (isAgreed: boolean) => setValue(MARKETING_CONSENT_FIELD, isAgreed ? MARKETING_CONSENT_AGREED : '')
 
     return (
-        // 구분선 위아래 32 — 주소 안내 문구와 붙지 않게 위에도 같은 간격을 둔다.
-        <div className="border-subtle-3 mt-8 flex flex-col gap-2 border-t pt-8">
-            {/* 좁은 화면에서 이름이 두 줄로 접히면 체크박스 · [자세히]는 첫 줄에 맞춘다(items-start). */}
-            <div className="flex items-start justify-between gap-3 sm:items-center sm:gap-4">
-                <div className="flex min-w-0 items-start gap-2 sm:items-center">
-                    {/* 체크박스는 radix 가 <button> 으로 그린다 — 이름은 aria-labelledby 로 글자에 잇는다[5.1.1]. */}
-                    <Checkbox
-                        id={MARKETING_CONSENT_FIELD}
-                        checked={value === MARKETING_CONSENT_AGREED}
-                        onCheckedChange={(checked) => setAgreed(checked === true)}
-                        aria-labelledby={labelId}
-                        aria-describedby={hintId}
-                    />
-                    <label id={labelId} htmlFor={MARKETING_CONSENT_FIELD} className="min-w-0 break-keep">
-                        <span className="typo-body-xl-bold text-foreground">{MARKETING_CONSENT_LABEL}</span>{' '}
-                        <span className="typo-body-l-medium text-foreground-subtle">{MARKETING_CONSENT_OPTIONAL}</span>
+        // 구분선 위아래 40 — 카드 안 덩어리 사이 간격과 같다.
+        <div className="border-subtle-3 mt-10 flex items-center gap-6 border-t pt-10">
+            <div className="flex min-w-0 flex-1 items-start gap-2">
+                {/* 체크박스는 radix 가 <button> 으로 그린다 — 이름은 aria-labelledby 로 글자에 잇는다[5.1.1]. */}
+                <Checkbox
+                    id={MARKETING_CONSENT_FIELD}
+                    checked={value === MARKETING_CONSENT_AGREED}
+                    onCheckedChange={(checked) => setAgreed(checked === true)}
+                    aria-labelledby={labelId}
+                    aria-describedby={hintId}
+                />
+                <div className="flex min-w-0 flex-col gap-1 break-keep">
+                    <label id={labelId} htmlFor={MARKETING_CONSENT_FIELD} className="typo-body-xl-bold text-foreground">
+                        {MARKETING_CONSENT_OPTIONAL} {MARKETING_CONSENT_LABEL}
                     </label>
+                    <p id={hintId} className="typo-body-xl-regular text-label-foreground">
+                        {MARKETING_CONSENT_HINT}
+                    </p>
                 </div>
-                <KbigxMarketingConsentDialog
-                    title={MYPAGE_MARKETING_CONSENT_TITLE}
-                    actions={MYPAGE_MARKETING_CONSENT_ACTIONS}
-                    onAgree={() => setAgreed(true)}
-                    onDecline={() => setAgreed(false)}
-                >
-                    <Button type="button" variant="text-underline" size="md" className="shrink-0 font-normal">
-                        자세히
-                        <span className="sr-only"> ({MARKETING_CONSENT_LABEL})</span>
-                        <ChevronRight aria-hidden="true" className="size-4" />
-                    </Button>
-                </KbigxMarketingConsentDialog>
             </div>
-            {/* 체크박스(20) + 간격(8)만큼 들여 이름과 같은 줄에서 시작한다. */}
-            <p id={hintId} className="typo-body-l-regular text-label-foreground pl-7 break-keep">
-                {MARKETING_CONSENT_HINT}
-            </p>
+            <KbigxMarketingConsentDialog
+                title={MYPAGE_MARKETING_CONSENT_TITLE}
+                onAgree={() => setAgreed(true)}
+                onDecline={() => setAgreed(false)}
+            >
+                <Button type="button" variant="text-underline" size="md" className="shrink-0">
+                    자세히
+                    <span className="sr-only"> ({MARKETING_CONSENT_LABEL})</span>
+                </Button>
+            </KbigxMarketingConsentDialog>
         </div>
     )
 }
