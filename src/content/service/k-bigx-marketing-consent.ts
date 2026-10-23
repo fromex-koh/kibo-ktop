@@ -1,5 +1,5 @@
-// 마케팅 정보 수신 동의 모달(KbigxMarketingConsentDialog)의 문구 — 시안
-// "K-BIGx 보고서_K-BIGx 이용약관 (필수)/마케팅 알림 수신 동의 (선택)"(40007590:12112) 그대로다.
+// 마케팅 정보 수신 동의 모달(KbigxMarketingConsentDialog)의 문구 — K-BIGx 이용약관 동의 · 마이페이지 내 정보가 함께 쓴다.
+// 시안 "K-BIGx 보고서_K-BIGx 이용약관 (필수)/마케팅 알림 수신 동의 (선택)"(40007590:12112) 그대로다.
 //
 // [프론트엔드 연동] 동의 문구를 CMS 등에서 받게 되면 이 파일의 값만 같은 모양으로 바꿔 넣는다.
 
@@ -39,13 +39,11 @@ const MARKETING_CONSENT_FOOTNOTES = [
     '※ 서비스 이용에 필요한 안내(보고서 발급, 결제, 약관 개정 등)는 본 동의 여부와 관계없이 전송됩니다.',
 ] as const
 
-// 버튼 문구 — K-BIGx 이용약관 동의 흐름(기본)
+// 버튼 문구 — 두 화면 공통.
 const MARKETING_CONSENT_ACTIONS = {decline: '동의안함', agree: '동의 후 이용'} as const
 
-// 마이페이지 내 정보의 [자세히]로 열 때 — 본문은 같고 제목 · 버튼 문구만 다르다.
-// 버튼 문구는 짧게 둔다 — 360 폭에서도 두 버튼이 나란히 들어간다.
+// 마이페이지 내 정보의 [자세히]로 열 때 — 본문 · 버튼은 같고 제목만 다르다.
 const MYPAGE_MARKETING_CONSENT_TITLE = '기술평가 서비스 마케팅 정보 수신 동의'
-const MYPAGE_MARKETING_CONSENT_ACTIONS = {decline: '비동의', agree: '동의'} as const
 
 export {
     MARKETING_CONSENT_ACTIONS,
@@ -53,6 +51,5 @@ export {
     MARKETING_CONSENT_NOTICE,
     MARKETING_CONSENT_SECTIONS,
     MARKETING_CONSENT_TITLE,
-    MYPAGE_MARKETING_CONSENT_ACTIONS,
     MYPAGE_MARKETING_CONSENT_TITLE,
 }
