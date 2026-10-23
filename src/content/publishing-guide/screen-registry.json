@@ -1548,7 +1548,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/verification-progress",
-            "name": "평가검증 진행확인"
+            "name": "평가진행방식 선택 (신속표준모형)"
+        },
+        {
+            "key": "org-individual-evaluation-verification-progress-service-unavailable",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/verification-progress/service-unavailable",
+            "name": "기술평가 서비스 불가 안내"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -1983,6 +1990,13 @@
             "userType": "기관",
             "path": "/org/patent-evaluation/patent-grade-list/patent-grade-result/report",
             "name": "보고서"
+        },
+        {
+            "key": "org-k-bigx-report-service-unavailable",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/service-unavailable",
+            "name": "K-BIGx 서비스 불가 안내"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report",

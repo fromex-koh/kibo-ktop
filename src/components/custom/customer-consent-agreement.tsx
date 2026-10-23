@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import {useRouter} from 'next/navigation'
-import {createContext, useContext, useRef, useState, type ReactNode, type SubmitEvent} from 'react'
+import {createContext, useCallback, useContext, useRef, useState, type ReactNode, type SubmitEvent} from 'react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
 import {ConsentTermsStepDialogContent} from '@/components/composite/consent-terms-dialog'
+import {EmailField} from '@/components/composite/email-field'
 import {ESignatureDialog} from '@/components/composite/e-signature-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
@@ -152,7 +153,9 @@ type CustomerConsentContextValue = {
     handleOptionalAgree: () => void
     handleDecline: () => void
     handleTermsOpenChange: (open: boolean) => void
-    // 필수 항목과 하단 확인 항목을 모두 동의했는지 여부.
+    // 필수 이메일(CustomerConsentNoticeEmail)이 화면에 있으면 그 칸이 올바르게 채워졌는지 알린다.
+    setNoticeEmailValid: (isValid: boolean | null) => void
+    // 필수 항목 · 하단 확인 항목을 모두 동의했고, 필수 이메일이 있으면 그것도 채웠는지 여부.
     isComplete: boolean
 }
 
@@ -178,6 +181,8 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
     const [answers, setAnswers] = useState<ConsentAnswers>({})
     // 하단 확인 항목의 체크 상태.
     const [confirmations, setConfirmations] = useState<Record<string, boolean>>({})
+    // 필수 이메일 칸의 상태 — null 은 그 칸이 없는 화면(마이페이지 대표자 이력 등)이라 검사하지 않는다.
+    const [isNoticeEmailValid, setNoticeEmailValid] = useState<boolean | null>(null)
 
     // 범위 선택 시 필수 동의 모달을 연다.
     // 카드 한 번 누르면 라벨(onClick)과 라디오 선택(onValueChange) 양쪽에서 알려 오므로, 이미 열려 있으면
@@ -238,7 +243,8 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
 
     const isComplete =
         REQUIRED_CONSENT_NAMES.every((name) => answers[name] === AGREE) &&
-        CONFIRMATIONS.every((confirmation) => confirmations[confirmation.name])
+        CONFIRMATIONS.every((confirmation) => confirmations[confirmation.name]) &&
+        isNoticeEmailValid !== false
 
     return (
         <CustomerConsentContext.Provider
@@ -256,6 +262,7 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
                 handleOptionalAgree,
                 handleDecline,
                 handleTermsOpenChange,
+                setNoticeEmailValid,
                 isComplete,
             }}
         >
@@ -464,7 +471,26 @@ const CustomerConsentForm = ({
     )
 }
 
-// 필수 항목과 확인 항목을 모두 동의한 경우에만 다음 단계로 이동할 수 있다.
+// 부분발송 이메일등록(필수) — 기업 기술평가 고객정보활용동의 4개 화면이 쓴다(마이페이지 대표자 이력은 쓰지 않음).
+// 이메일이 올바르게 채워져야 [동의 후 인증서명]이 열린다(필수 동의 · 확인 항목과 함께).
+// [프론트엔드 연동] 값은 폼 값 additionalNoticeEmail(합친 주소 하나)로 다른 동의 값과 함께 넘어간다.
+const CustomerConsentNoticeEmail = () => {
+    const {setNoticeEmailValid} = useCustomerConsent()
+    // EmailField 는 이 함수가 바뀌어도 다시 알리므로 useCallback 으로 고정한다.
+    const handleValueChange = useCallback(
+        ({isValid}: {isValid: boolean}) => setNoticeEmailValid(isValid),
+        [setNoticeEmailValid],
+    )
+
+    return (
+        <FormCard title="부분발송 이메일등록">
+            {/* 아이디·도메인을 분리 입력하고 제출 시 하나의 이메일 값으로 조합한다. */}
+            <EmailField name="additionalNoticeEmail" required onValueChange={handleValueChange} />
+        </FormCard>
+    )
+}
+
+// 필수 항목과 확인 항목을 모두 동의한 경우에만 다음 단계로 이동할 수 있다(필수 이메일이 있으면 그것까지).
 // 버튼이 폼 바깥(화면 맨 아래 CTA)에 있어 form 속성으로 위 폼과 잇는다 — HTML 표준 연결이다.
 //
 // [이전]은 앞 화면이 있는 흐름에서만 둔다 — prevHref 를 넘기면 링크 버튼으로 그리고, 생략하면 다음 버튼만
@@ -482,4 +508,10 @@ const CustomerConsentStepNavigation = ({formId, prevHref}: {formId: string; prev
     )
 }
 
-export {CustomerConsentAgreement, CustomerConsentForm, CustomerConsentProvider, CustomerConsentStepNavigation}
+export {
+    CustomerConsentAgreement,
+    CustomerConsentForm,
+    CustomerConsentNoticeEmail,
+    CustomerConsentProvider,
+    CustomerConsentStepNavigation,
+}

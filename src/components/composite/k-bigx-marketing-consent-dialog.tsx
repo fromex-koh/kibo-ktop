@@ -1,7 +1,6 @@
 'use client'
 
-// 'use client' — 서버 컴포넌트로 두면 DialogContent 에 넘긴 aria-describedby={undefined} 가 서버→클라이언트
-// 전달 중에 빠져 Radix 가 없는 설명 id 를 붙인다(WAVE "Broken ARIA reference"). 클라이언트에서 그려 값을 지킨다.
+// 'use client' — 서버에서 그리면 aria-describedby={undefined} 가 전달 중에 빠져 Radix 가 없는 설명 id 를 붙인다.
 import type {ReactNode} from 'react'
 import {ListMarker} from '@/components/custom/list-marker'
 import {Button} from '@/components/ui/button'
@@ -24,27 +23,30 @@ import {
 } from '@/content/service/k-bigx-marketing-consent'
 import {cn} from '@/lib/utils'
 
-// 마케팅 정보 수신 동의 — 시안 "K-BIGx 보고서_K-BIGx 이용약관 (필수)/마케팅 알림 수신 동의 (선택)"(40007590:12112).
-// [선택] 안내(회색 상자) → 1·2 항목(점 목록) → ※ 안내 → [동의안함] [동의 후 이용].
-// 내용이 화면보다 길면 본문 구획이 모달 안에서 스크롤된다.
+// 마케팅 정보 수신 동의 모달 — [선택] 안내 → 1 · 2 항목 → ※ 안내 → [동의안함] [동의 후 이용].
 //
-// 시안 규격: 폭 588 · 반경 24 · 좌우·위 여백 32(판매자 정보 모달과 같다) · 제목(24 Bold, 두 줄)과 내용 24 ·
-// 묶음 사이 24 · 묶음 제목(18 Bold)과 내용 8 · 목록 줄 사이 8 · 본문 16 · 안내 상자(gray.10 · 반경 8 · 여백 20 · 14) ·
-// ※ 안내 13 · 두 버튼 사이 8.
-// 좁은 화면(sm 미만)은 모든 모달이 쓰는 24 여백을 그대로 둔다.
+// 쓰는 곳 (본문 · 버튼은 같고 제목만 다르다)
+//   · K-BIGx 이용약관 동의 모달의 마케팅 항목 [자세히] — k-bigx-terms-agreement-dialog.tsx
+//   · 마이페이지 내 정보의 마케팅 알림 수신 동의 [자세히] — mypage-profile-form.tsx (title 로 제목만 바꾼다)
+//
+// [프론트엔드 연동]
+//   · 문구는 content/service/k-bigx-marketing-consent.ts 에만 있다 — 문구를 서버에서 받게 되면 그 파일만 바꾼다.
+//   · 두 버튼은 누르면 모달을 닫고 onAgree / onDecline 을 부른다. 동의 값 저장은 부르는 쪽이 맡는다.
+//   · X · Esc · 바깥 클릭으로 닫으면 아무것도 부르지 않는다 — 동의 값은 그대로다.
+//
+// 시안: "K-BIGx 보고서_K-BIGx 이용약관 (필수)/마케팅 알림 수신 동의 (선택)"(40007590:12112) — 폭 588 · 여백 32.
 
 type KbigxMarketingConsentDialogProps = {
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
-    /** [동의안함] · [동의 후 이용]을 눌렀을 때. [프론트엔드 연동] 동의 여부를 저장하고 다음 단계로 넘긴다. */
+    /** [동의안함]을 눌렀을 때. 모달은 스스로 닫힌다. */
     onDecline?: () => void
+    /** [동의 후 이용]을 눌렀을 때. 모달은 스스로 닫힌다. */
     onAgree?: () => void
     /** 제목 — 없으면 K-BIGx 서비스 문구. 마이페이지 내 정보는 MYPAGE_MARKETING_CONSENT_TITLE 을 넘긴다. */
     title?: string
-    /** 버튼 문구 — 없으면 [동의안함] · [동의 후 이용]. 마이페이지 내 정보는 MYPAGE_MARKETING_CONSENT_ACTIONS 를 넘긴다. */
-    actions?: {decline: string; agree: string}
 }
 
 const KbigxMarketingConsentDialog = ({
@@ -53,7 +55,6 @@ const KbigxMarketingConsentDialog = ({
     onDecline,
     onAgree,
     title = MARKETING_CONSENT_TITLE,
-    actions = MARKETING_CONSENT_ACTIONS,
 }: KbigxMarketingConsentDialogProps) => (
     <Dialog defaultOpen={defaultOpen}>
         {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
@@ -103,12 +104,12 @@ const KbigxMarketingConsentDialog = ({
             <DialogFooter className="sm:gap-2 sm:px-8">
                 <DialogClose asChild>
                     <Button type="button" variant="tertiary" size="xl" onClick={onDecline}>
-                        {actions.decline}
+                        {MARKETING_CONSENT_ACTIONS.decline}
                     </Button>
                 </DialogClose>
                 <DialogClose asChild>
                     <Button type="button" size="xl" onClick={onAgree}>
-                        {actions.agree}
+                        {MARKETING_CONSENT_ACTIONS.agree}
                     </Button>
                 </DialogClose>
             </DialogFooter>

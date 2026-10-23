@@ -25,12 +25,33 @@ export const CORP_PREVIEW_USER = {
 
 // 기관은 회원 유형이 셋이고 화면도 유형별로 나뉜다 — 헤더에 보이는 이름이 곧 그 유형의 표시다.
 // 유형별 화면(마이페이지 내 정보)은 각자 이 값을 헤더에 넣는다.
+// mypageHref — 헤더의 이름을 누르면 가는 그 유형의 마이페이지 내 정보 화면.
 export const ORG_PREVIEW_USERS = {
-    partnerBank: {name: '부산은행 서면지점', sessionRemaining: '30:00'},
-    nonPartnerBank: {name: '광주은행 상무지점', sessionRemaining: '30:00'},
-    partnerAgency: {name: '서울산업진흥원', sessionRemaining: '30:00'},
-    nonPartnerAgency: {name: '경기테크노파크', sessionRemaining: '30:00'},
-    subAccount: {name: '서울산업진흥원 창업지원팀', sessionRemaining: '30:00'},
+    partnerBank: {
+        name: '부산은행 서면지점',
+        sessionRemaining: '30:00',
+        mypageHref: '/org/mypage/profile-edit/partner-bank',
+    },
+    nonPartnerBank: {
+        name: '광주은행 상무지점',
+        sessionRemaining: '30:00',
+        mypageHref: '/org/mypage/profile-edit/non-partner-bank',
+    },
+    partnerAgency: {
+        name: '서울산업진흥원',
+        sessionRemaining: '30:00',
+        mypageHref: '/org/mypage/profile-edit/partner-agency',
+    },
+    nonPartnerAgency: {
+        name: '경기테크노파크',
+        sessionRemaining: '30:00',
+        mypageHref: '/org/mypage/profile-edit/non-partner-agency',
+    },
+    subAccount: {
+        name: '서울산업진흥원 창업지원팀',
+        sessionRemaining: '30:00',
+        mypageHref: '/org/mypage/profile-edit/sub-account',
+    },
 } as const
 
 // 유형이 정해지지 않은 기관 화면(그 밖의 모든 로그인 화면)이 쓰는 기본 회원.

@@ -7,13 +7,12 @@ import {
     BreadcrumbPage,
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
-import {EmailField} from '@/components/composite/email-field'
-import {FormCard} from '@/components/composite/form-card'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {StepHeader} from '@/components/composite/step-header'
 import {
     CustomerConsentAgreement,
     CustomerConsentForm,
+    CustomerConsentNoticeEmail,
     CustomerConsentProvider,
     CustomerConsentStepNavigation,
 } from '@/components/custom/customer-consent-agreement'
@@ -67,10 +66,7 @@ const CorpInvestmentModelCustomerConsentPage = () => (
 
                     <CustomerConsentAgreement />
 
-                    <FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해주세요.">
-                        {/* 아이디·도메인을 분리 입력하고 제출 시 하나의 이메일 값으로 조합한다. */}
-                        <EmailField name="additionalNoticeEmail" />
-                    </FormCard>
+                    <CustomerConsentNoticeEmail />
                 </div>
             </CustomerConsentForm>
 

@@ -41,6 +41,9 @@ type EmailFieldProps = {
     defaultDomain?: string
     required?: boolean
     className?: string
+    /** 합친 주소와 형식이 맞는지가 바뀔 때마다 알린다 — 값이 있어야 열리는 버튼 등에 쓴다.
+     *  함수가 바뀔 때도 다시 불리므로 useCallback 등으로 고정해 넘긴다. */
+    onValueChange?: (value: {email: string; isValid: boolean}) => void
 }
 
 const EmailField = ({
@@ -50,6 +53,7 @@ const EmailField = ({
     defaultDomain = '',
     required,
     className,
+    onValueChange,
 }: EmailFieldProps) => {
     const fieldId = useId()
     const fieldRef = useRef<HTMLDivElement>(null)
@@ -80,6 +84,11 @@ const EmailField = ({
         : ''
     const validationError = localPartError || domainError
     const errorId = `${fieldId}-error`
+    const isValid = Boolean(email) && !validationError
+
+    useEffect(() => {
+        onValueChange?.({email, isValid})
+    }, [email, isValid, onValueChange])
 
     useEffect(() => {
         const localPartInput = localPartRef.current

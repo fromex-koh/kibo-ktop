@@ -107,21 +107,28 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     ],
 }
 
+// 마이페이지 첫 화면(내 정보) — 헤더의 회원 이름 · 전체 메뉴의 "내 정보"가 여기로 간다.
+// 기관은 회원 유형마다 내 정보 화면이 달라 대표로 협약은행 화면을 둔다.
+// [프론트엔드 연동] 기관은 HeaderUser.mypageHref 로 로그인 회원 유형의 경로를 넘긴다(이 값은 기본값).
+export const MYPAGE_HOME_HREF: Record<UserType, string> = {
+    corp: '/corp/mypage/profile',
+    org: '/org/mypage/profile-edit/partner-bank',
+}
+
 // 화면이 있는 항목은 경로를 걸고, 아직 없는 항목은 이름만 둔다(경로 없이 '#').
 const MY_PAGE_ITEMS: Record<UserType, readonly MenuServiceItem[]> = {
     // 기업은 여섯 항목 모두 화면이 있어 경로를 건다. 유료 서비스 관리는 결제내역이 첫 화면이다.
     corp: [
-        {label: '내 정보', href: '/corp/mypage/profile'},
+        {label: '내 정보', href: MYPAGE_HOME_HREF.corp},
         {label: '대표자 이력', href: '/corp/mypage/representative-history'},
         {label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
         {label: 'K-BIGx 보고서 이력', href: '/corp/mypage/k-bigx-report-history'},
         {label: '유료 서비스 관리', href: '/corp/mypage/paid-services/payment-history'},
         {label: '1:1문의', href: '/corp/mypage/inquiry-history'},
     ],
-    // 기관 "내 정보"는 회원 유형(협약·비협약 은행/기관·하위계정)마다 화면이 갈리므로 대표로 협약은행
-    // 화면을 건다 — 서비스에서는 로그인한 회원의 유형에 맞는 화면으로 바꿔 연결한다.
+    // 기관 "내 정보"는 회원 유형마다 화면이 갈린다 — MYPAGE_HOME_HREF 설명 참고.
     org: [
-        {label: '내 정보', href: '/org/mypage/profile-edit/partner-bank'},
+        {label: '내 정보', href: MYPAGE_HOME_HREF.org},
         {label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
         {label: '평가검증 신청 조회', href: '/org/mypage/verification-application'},
         {label: '하위 계정 현황', href: '/org/mypage/sub-account-progress'},

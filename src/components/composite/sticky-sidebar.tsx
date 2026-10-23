@@ -4,22 +4,17 @@ import {ChevronRight, type LucideIcon} from 'lucide-react'
 import {Separator} from '@/components/ui/separator'
 import {cn} from '@/lib/utils'
 
-// 스티키 사이드바(StickySidebar) — 마이페이지 좌측에 고정(sticky)되는 프로필 + 메뉴 카드.
-// Figma 마이페이지 "LNB"(40006629:24978) 반영. 스크롤해도 상단에 붙어 따라오는 사이드 내비게이션이다.
+// 스티키 사이드바(StickySidebar) — 스크롤해도 위에 붙어 따라오는 프로필 + 메뉴 카드(마이페이지 LNB).
+// 마이페이지는 이 조각을 조합한 MypageSidebar(mypage-sidebar.tsx)를 쓴다 — 메뉴를 바꿀 때는 그 파일을 고친다.
 //
-// 복합(compound) API — 이 프로젝트 표준(ReviewList·InfoBox 등)대로 컨테이너와 섹션 컴포넌트를 나눈다:
-//   · StickySidebar         — 흰 카드(border·rounded-lg) + sticky 컨테이너
-//   · StickySidebarProfile  — 회원 배지 + 기업명(좌측 정렬, 배지가 위)
-//   · StickySidebarNav      — 메뉴 <nav> 랜드마크
-//   · StickySidebarNavItem  — 아이콘 + 라벨 링크. 현재 항목은 active(옅은 파랑 면 + chevron)
-//   · StickySidebarContact  — 고객센터 전화·상담시간 (최신 LNB 시안에는 없는 선택 섹션)
+// 조각
+//   · StickySidebar         — 카드 + sticky 컨테이너. 폭 · top 은 쓰는 쪽 className 으로 준다.
+//   · StickySidebarProfile  — 회원 배지 + 이름(헤딩)
+//   · StickySidebarNav      — 메뉴 <nav>. aria-label 을 꼭 준다(예: "마이페이지 메뉴").
+//   · StickySidebarNavItem  — 아이콘 + 라벨 링크. 현재 화면 항목에 active.
+//   · StickySidebarContact  — 고객센터 전화 · 상담시간(선택 — 지금 LNB 시안에는 없다)
 //
-// 색·타이포(Figma): 기업명 = title-l-bold(20)·foreground, 메뉴 = body-xl-medium(16)(활성 foreground /
-// 비활성 label-foreground), 활성 면 = primary-subtle(blue.50), 배지 강조색 = purple.600(#5a5fd2).
-// 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
-// 규격(Figma): 카드 폭 344(w-86 — 사용처 레이아웃에서 지정), radius 16(rounded-lg), 패딩 px-6 py-10,
-// 프로필↔메뉴 gap-8(32), 배지↔기업명 gap-1(4), 메뉴 항목 min-h-14(한 줄 56, 긴 라벨은 줄바꿈)·
-// rounded-sm(8)·px-6, 아이콘 20·아이콘↔라벨 gap-2(8).
+// 규격: 카드 344 · 여백 위아래 40 / 좌우 24 · 프로필↔메뉴 32 · 메뉴 항목 56 · 항목 사이 8.
 
 const StickySidebar = ({className, children, ...props}: ComponentPropsWithoutRef<'aside'>) => (
     <aside
@@ -60,8 +55,9 @@ const StickySidebarProfile = ({name, headingLevel = 2, badge, className, ...prop
     )
 }
 
+// 항목 사이 8(gap-2) — 시안 LNB 의 항목 간격.
 const StickySidebarNav = ({className, children, ...props}: ComponentPropsWithoutRef<'nav'>) => (
-    <nav data-slot="sticky-sidebar-nav" className={cn('flex flex-col', className)} {...props}>
+    <nav data-slot="sticky-sidebar-nav" className={cn('flex flex-col gap-2', className)} {...props}>
         {children}
     </nav>
 )
