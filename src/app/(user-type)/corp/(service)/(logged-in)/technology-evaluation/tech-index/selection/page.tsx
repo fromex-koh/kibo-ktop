@@ -41,7 +41,11 @@ const CorpTechIndexSelectionPage = () => (
                                 </BreadcrumbItem>
                                 <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>기술평가</BreadcrumbPage>
+                                    <span>기술평가</span>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>Tech-Index</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

@@ -45,7 +45,11 @@ const OrgTechIndexSelectionPage = () => (
                                 </BreadcrumbItem>
                                 <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>개별평가</BreadcrumbPage>
+                                    <span>개별평가</span>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>Tech-Index</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
