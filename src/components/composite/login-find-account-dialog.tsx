@@ -1,7 +1,7 @@
 'use client'
 
 // 'use client' — Radix Dialog 가 열고 닫는 상태를 들고 있어 클라이언트에서 그린다.
-import type {ReactNode} from 'react'
+import {Fragment, type ReactNode} from 'react'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -13,10 +13,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
-import {FIND_ACCOUNT_MESSAGE, FIND_ACCOUNT_TITLE, LOGIN_DIALOG_CLOSE_LABEL} from '@/content/service/login'
+import {
+    FIND_ACCOUNT_CONTACT_LABEL,
+    FIND_ACCOUNT_CONTACTS,
+    FIND_ACCOUNT_MESSAGE,
+    FIND_ACCOUNT_TITLE,
+    LOGIN_DIALOG_CLOSE_LABEL,
+} from '@/content/service/login'
 
 // 아이디 · 비밀번호 찾기 — 기관회원 로그인에서 연다. 기관회원 계정은 담당자가 발급하므로 찾기 절차 대신
-// 담당자 연락처만 알린다. 제목 아래 안내 한 줄과 풀폭 [닫기] 뿐이다.
+// 서비스별 담당자 연락처만 알린다. 제목 아래 안내 두 줄과 풀폭 [닫기] 뿐이다.
 
 type LoginFindAccountDialogProps = {
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
@@ -31,10 +37,21 @@ const LoginFindAccountDialog = ({children, defaultOpen}: LoginFindAccountDialogP
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>{FIND_ACCOUNT_TITLE}</DialogTitle>
-                {/* 안내 한 줄은 모달의 설명 자리에 둔다 — 다른 확인 모달과 같은 글자(16 Regular)다.
+                {/* 안내 두 줄은 모달의 설명 자리에 둔다 — 다른 확인 모달과 같은 글자(16 Regular)다.
                     굵은 20 한 줄로 두면 검사 도구가 제목으로 오인한다(WAVE '가능한 제목'). */}
                 <DialogDescription className="typo-body-xl-regular text-foreground-subtle text-center break-keep">
                     {FIND_ACCOUNT_MESSAGE}
+                    <br />
+                    {/* 좁은 화면에서 줄이 넘치면 서비스 단위로 접는다 — 번호 중간에서 끊기지 않게. */}
+                    {FIND_ACCOUNT_CONTACT_LABEL}{' '}
+                    {FIND_ACCOUNT_CONTACTS.map(({service, number}, index) => (
+                        <Fragment key={service}>
+                            {index > 0 ? ', ' : null}
+                            <span className="whitespace-nowrap">
+                                {service} : {number}
+                            </span>
+                        </Fragment>
+                    ))}
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter>
