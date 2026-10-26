@@ -172,3 +172,49 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 탄소: 로그인 아래 '선도기업 신청 보완요청 팝업' 행 추가(UIUX · 응용2 완료, 탄소 FO 인덱스와 맞춤)
     - 행 삭제: 기업 결제 완료(쓰지 않는 화면)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/158d17ecb098a19f4ecc7c48b09f7529437b0be7)
+
+# 작업: 로그인 — 아이디 · 비밀번호 찾기 문구 · 기관 회원가입 모달 · 가입 대상 표
+
+## [Diff 확인]
+
+### [컴포넌트] 아이디 · 비밀번호 찾기 모달 — 서비스별 담당자 연락처로 문구 교체
+
+- 대상: src/content/service/login.ts
+    - src/components/composite/login-find-account-dialog.tsx
+- 변경:
+    - AS-IS: "아이디 비밀번호는 담당자 (111-111-1111)으로 문의하여주세요." 한 줄
+    - TO-BE: "아이디·비밀번호 찾기는 담당자에게 문의 해주세요." / "담당자 기술평가 : 051-606-7398, K-BIGx 보고서 : 051-606-7596" 두 줄
+    - login.ts: FIND_ACCOUNT_MESSAGE(안내 문장) · FIND_ACCOUNT_CONTACT_LABEL · FIND_ACCOUNT_CONTACTS(서비스 · 번호) 로 나눔
+    - 좁은 화면: 연락처가 서비스 단위로 줄바꿈(번호 중간에서 끊기지 않음)
+    - 기관회원 가입 안내의 임시 번호(111-111-1111)는 그대로
+    - 주석: 임시 번호(LOGIN_CONTACT_NUMBER)와 확정 번호(FIND_ACCOUNT_CONTACTS)를 [프론트엔드 연동]에서 구분
+- 결과: 아이디 · 비밀번호 찾기 모달에 기술평가 · K-BIGx 보고서 담당자 번호가 보임
+- 영향 화면: [기관 로그인](/org/auth)
+    - [기업 아이디 · 비밀번호 찾기](/corp/auth/find-account)
+    - [기관 아이디 · 비밀번호 찾기](/org/auth/find-account)
+- 함께 작업: 두 파일 한 번에 적용(새 상수를 가져다 씀)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f0223b55c09cfb61dd70df0cfbecb51e6ec85672)
+
+### [컴포넌트] 로그인 화면 — 기관회원 [회원가입]이 가입 안내 모달을 열도록 수정
+
+- 대상: src/components/custom/login-screen.tsx
+- 변경:
+    - AS-IS: 모달 열기가 문단 전체에 걸려 있어 [회원가입]을 눌러도 모달이 열리지 않음
+    - TO-BE: SignUpNotice 에 wrapButton 추가 — 모달이 [회원가입] 버튼만 감쌈
+    - 주석: [프론트엔드 연동]을 현재 동작에 맞게 갱신 — 기업 회원가입 주소만 임시값, 기관 [회원가입] · [찾기]는 모달이라 연동 없음
+- 결과: 기관회원 탭의 [회원가입]을 누르면 기관회원 가입 안내 모달이 열림
+- 영향 화면: [기관 로그인](/org/auth)
+    - [기업 로그인](/corp/auth)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6086dccf6320b4c1f8c3d570ebdb7e870ae10624)
+
+### [컴포넌트] 기관회원 가입 안내 모달 — 가입 대상 표만 가로 스크롤
+
+- 대상: src/components/composite/login-agency-signup-guide-dialog.tsx
+- 변경:
+    - AS-IS: 모바일에서 표가 모달 폭에 눌려 칸이 글자 단위로 깨짐
+    - TO-BE: 표 최소 폭 500(dialogTableClassName) · 표 상자만 가로 스크롤
+    - 표 상자: 키보드로 밀 수 있게 포커스를 받고 "기관회원 가입 대상 표"로 읽힘
+- 결과: 모바일은 표만 좌우로 밀어 확인 · 태블릿 · PC 는 표가 다 들어가 스크롤 없음
+- 영향 화면: [기관 로그인](/org/auth)
+    - [기관회원 가입 안내](/org/auth/agency-signup-guide)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/66e34eb99c052b8d53e45197a11e9a8288c8bc38)
