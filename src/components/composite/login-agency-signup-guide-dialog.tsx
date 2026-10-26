@@ -9,6 +9,7 @@ import {Button} from '@/components/ui/button'
 import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {DialogTrigger} from '@/components/ui/dialog'
 import {dialogInfoBodyClassName} from '@/components/theme/dialog.variants'
+import {dialogTableClassName} from '@/components/theme/dialog-table.variants'
 import {
     AGENCY_SIGN_UP_ALERT,
     AGENCY_SIGN_UP_NOTICE,
@@ -27,12 +28,21 @@ import {cn} from '@/lib/utils'
 // 내용이 길어 본문 구획이 모달 안에서 스크롤된다. 여백은 모달 공통 32 를 따른다.
 
 // 가입 대상 표 — 첫 칸(기관회원)이 두 줄을 세로로 묶는다. 칸 색은 시안대로 머리 칸만 옅은 파랑이다.
+// 표는 넓은 화면과 같은 최소 폭(500)을 유지하고, 모달이 그보다 좁으면(모바일) 표 상자만 좌우로 스크롤된다
+// — 열이 글자 단위로 찌그러지지 않는다. 태블릿 · PC 는 모달 본문이 표보다 넓어 스크롤이 생기지 않는다.
+// 스크롤 상자는 키보드로도 밀 수 있게 포커스를 받고(tabIndex 0), 이름(region)을 가진다[6.1.1].
 const TABLE_CELL_CLASS_NAME = 'border-subtle-3 typo-body-l-regular text-label-foreground border px-4 py-3 align-middle'
 const TABLE_HEAD_CLASS_NAME = 'border-subtle-3 bg-primary-subtle text-foreground border px-4 py-3 text-center'
 
 const AgencySignUpTargetTable = () => (
-    <div className="border-t-foreground-subtle border-t">
-        <table className="w-full table-fixed border-collapse">
+    <div
+        role="region"
+        aria-label={`${AGENCY_SIGN_UP_TARGET_HEADER} 가입 대상 표`}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 스크롤 상자의 키보드 접근
+        tabIndex={0}
+        className="border-t-foreground-subtle outline-ring overflow-x-auto overscroll-x-contain border-t focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
+    >
+        <table className={cn('w-full table-fixed border-collapse', dialogTableClassName)}>
             <caption className="sr-only">{`${AGENCY_SIGN_UP_TARGET_HEADER} 가입 대상`}</caption>
             {/* 열 수를 실제 셀 수(3)와 맞춘다 — 선언한 열보다 셀이 많으면 마크업 오류가 된다[8.1.1]. */}
             <colgroup>
