@@ -14,7 +14,7 @@ const OrgKbigxPassPurchaseGuidePage = () => (
                 보유 이용권 없이 다른 기업의 보고서를 조회하려 할 때 호출되는 화면
             </PopupPreviewNote>
         </main>
-        <KbigxPassPurchaseGuideDialog purchaseHref="/org/pricing" defaultOpen />
+        <KbigxPassPurchaseGuideDialog purchaseHref="/org/pricing?tab=kbigx" defaultOpen />
     </>
 )
 
