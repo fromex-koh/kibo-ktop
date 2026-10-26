@@ -1,6 +1,479 @@
 {
     "releases": [
         {
+            "version": "v3.4.4",
+            "releasedAt": "2026-10-26",
+            "changes": [
+                "카드는 위에서부터 작업할 순서대로 나열했습니다. '한 번에 적용'이 적힌 카드는 함께 넣어야 빌드됩니다.",
+                {"type": "group", "title": "약정서 전자서명 — 번호 입력 · 인증서 선택 · 인증 결과"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] 인증서 선택 모달(CertificateSelectDialog)",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/certificate-select-dialog.tsx"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "약정서 전자서명의 [인증서로 인증하기]를 누르면 위에 겹쳐 뜨는 모달\n안내 문단 → 지금 하는 인증 안내 한 줄(target) → [공동인증서 로그인] · [금융인증서 로그인]\n항목을 누르는 것이 곧 선택(아래 버튼 없음) · 마우스를 올리거나 누르면 파란 테두리 · 옅은 파랑 면\n전자서명 모달 안에서 쓸 때는 따로 연결할 것 없음(인증 연동은 아래 카드의 onCertify)"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[인증서 선택](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certificate-select)"
+                        },
+                        {"label": "함께 작업", "value": "아래 두 카드보다 먼저 추가"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6680b1bf0bc3ba6ac5f64d80798d370b3bb724b7)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 약정서 전자서명 모달(ESignatureDialog) — 번호 입력 · 인증 결과 · 제출",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/e-signature-dialog.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: 안내 문구 + [법인인증] · [개인인증] 버튼 두 개(onCorporate · onPersonal)\nTO-BE: [법인인증] · [개인인증] 칩 → 사업자등록번호(읽기 전용) + 법인등록번호 / 대표자 주민등록번호(앞 6 · 뒤 7, 주민번호 뒷자리 가림) → [인증서로 인증하기]\n사업자 유형: businessType — 'corporation'(법인기업, 기본) 법인 · 개인 2건 / 'individual'(개인기업) 개인 1건\n[인증서로 인증하기]: 번호 두 칸을 다 채워야 열림 · 누르면 인증서 선택 모달\n성공: 칩에 [인증완료] 배지 · \"공동인증서로 인증했습니다.\" 안내 · 번호 칸 잠금(읽기 전용) · 남은 인증 칩으로 자동 전환\n실패: 번호 칸 빨간 테두리 + 오류 문구(번호를 고치면 지워짐)\n모두 마치면 버튼이 [제출하기]로 바뀜(onSubmit)\n칩을 오가거나 모달을 닫았다 열어도 입력값 · 결과 유지, 다시 열면 남은 인증 칩으로 열림\n결과가 나오면 그 자리로 자동 스크롤 · 포커스(모바일 · 태블릿 포함)\nprops 삭제: onCorporate · onPersonal → 추가: businessType · businessNumber · onCertify · onSubmit\n주석: 연결할 props 와 이미 구현된 동작을 [프론트엔드 연동]으로 정리"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "고객정보활용동의의 [동의 후 인증서명]에서 번호 입력 → 인증서 선택 → 결과 확인 → 제출까지 이어짐"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[KTRS-FM 고객정보활용동의](/corp/technology-evaluation/ktrs-fm/customer-consent)\n[투자모형](/corp/technology-evaluation/investment-model/customer-consent)\n[Tech-Index(일반)](/corp/technology-evaluation/tech-index/general/customer-consent)\n[Tech-Index(창업)](/corp/technology-evaluation/tech-index/startup/customer-consent)\n[마이페이지 대표자 이력 고객정보활용동의](/corp/mypage/representative-history/customer-consent)"
+                        },
+                        {
+                            "label": "함께 작업",
+                            "value": "위 · 아래 카드와 한 번에 적용(props 삭제라 함께 넣어야 빌드됨)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b7a9a8ceea4fa1cba3b90d4c3ecd501efcd15690)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 고객정보활용동의 — 전자서명 모달 연결 변경",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/customer-consent-agreement.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "ESignatureDialog 에 onCorporate · onPersonal 대신 onSubmit 연결\n주석: 이 자리에서 businessType · businessNumber · onCertify 를 넘기도록 [프론트엔드 연동] 갱신"
+                        },
+                        {"label": "결과", "value": "인증을 모두 마치고 [제출하기]를 누르면 다음 단계로 이동"},
+                        {"label": "영향 화면", "value": "위 카드와 같음"},
+                        {"label": "함께 작업", "value": "위 두 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0528409ec1ce21fa03f5e3891a21ba53bedf835a)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 전자서명 (법인기업) 확인 화면 — 제목 · 설명 변경",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/e-signature/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "제목: 전자서명 → 전자서명 (법인기업)\n설명: 확인용으로 공동인증서는 성공 · 금융인증서는 실패로 보인다는 안내 추가"
+                        },
+                        {"label": "결과", "value": "확인 화면에서 성공 · 실패 흐름을 직접 눌러 볼 수 있음"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[전자서명 (법인기업)](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8bac090669914550f779b96f001e0751499e86ed)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 전자서명 확인 화면 4종 — 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/e-signature/individual/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/e-signature/certificate-select/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/e-signature/certified/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/e-signature/certify-error/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/customer-consent/e-signature/individual/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/customer-consent/e-signature/certificate-select/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/customer-consent/e-signature/certified/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/customer-consent/e-signature/certify-error/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/customer-consent/e-signature/individual/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/customer-consent/e-signature/certificate-select/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/customer-consent/e-signature/certified/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/customer-consent/e-signature/certify-error/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/customer-consent/e-signature/individual/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/customer-consent/e-signature/certificate-select/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/customer-consent/e-signature/certified/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/customer-consent/e-signature/certify-error/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "모달만 열어 두고 확인하는 화면 16개(4종 × 4개 모형) · 투자모형 · Tech-Index 는 KTRS-FM 화면을 재수출"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[전자서명 (개인기업)](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/individual)\n[인증서 선택](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certificate-select)\n[전자서명 (인증 완료)](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certified)\n[전자서명 (인증 실패)](/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certify-error)"
+                        },
+                        {"label": "함께 작업", "value": "위 카드들 다음에 추가"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6de2f4f807bfc9952ef801b164a7e86ade09777e)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "K-BIGx 기업혁신성장보고서 조회 — 본인확인 모달"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 본인 확인 모달(IdentityVerificationDialog) — 가입 정보 목록 선택으로",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/identity-verification-dialog.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "items: 필수 → 선택 — 넘기지 않으면 가입 정보 목록 없이 비밀번호 칸만\n주석: 쓰는 곳 두 가지(마이페이지 내 정보 · K-BIGx 보고서 조회) 정리"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "마이페이지 내 정보는 그대로 · K-BIGx 보고서 조회는 비밀번호 칸만 보임"
+                        },
+                        {"label": "영향 화면", "value": "[기업 내 정보](/corp/mypage/profile) (모양 그대로)"},
+                        {"label": "함께 작업", "value": "아래 카드보다 먼저 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/1b0b96849872c36bed6186f6cc916abcd5a16447)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 본인확인(인증번호) 확인 화면 — 기업 · 기관",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/k-bigx-report/innovation-growth-report/identity-verification/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/innovation-growth-report/identity-verification/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "모달만 열어 두고 확인하는 화면 — 설명 \"기업혁신성장보고서 조회 화면 진입시 노출되는 모달\""
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 본인확인(인증번호)](/corp/k-bigx-report/innovation-growth-report/identity-verification)\n[기관 본인확인(인증번호)](/org/k-bigx-report/innovation-growth-report/identity-verification)"
+                        },
+                        {"label": "함께 작업", "value": "위 카드 다음에 추가"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/057858ae2cc0c580d5fe62448b70c00aafd1476e)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "문서"},
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 퍼블리싱 인덱스 — 전자서명 · 본인확인 · 탄소 보완요청 팝업 행 추가 · 결제 완료 행 삭제",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "기술평가 4개 모형: 전자서명 → 전자서명 (법인기업) 이름 변경 · 아래에 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패 4행 추가\nK-BIGx 보고서(기업 · 기관): 기업혁신성장보고서 조회 아래 '본인확인(인증번호)' 행 추가\n탄소: 로그인 아래 '선도기업 신청 보완요청 팝업' 행 추가(UIUX · 응용2 완료, 탄소 FO 인덱스와 맞춤)\n행 삭제: 기업 결제 완료(쓰지 않는 화면)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/158d17ecb098a19f4ecc7c48b09f7529437b0be7)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "로그인 — 아이디 · 비밀번호 찾기 문구 · 기관 회원가입 모달 · 가입 대상 표"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 아이디 · 비밀번호 찾기 모달 — 서비스별 담당자 연락처로 문구 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/login.ts\nsrc/components/composite/login-find-account-dialog.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: \"아이디 비밀번호는 담당자 (111-111-1111)으로 문의하여주세요.\" 한 줄\nTO-BE: \"아이디·비밀번호 찾기는 담당자에게 문의 해주세요.\" / \"담당자 기술평가 : 051-606-7398, K-BIGx 보고서 : 051-606-7596\" 두 줄\nlogin.ts: FIND_ACCOUNT_MESSAGE(안내 문장) · FIND_ACCOUNT_CONTACT_LABEL · FIND_ACCOUNT_CONTACTS(서비스 · 번호) 로 나눔\n좁은 화면: 연락처가 서비스 단위로 줄바꿈(번호 중간에서 끊기지 않음)\n기관회원 가입 안내의 임시 번호(111-111-1111)는 그대로\n주석: 임시 번호(LOGIN_CONTACT_NUMBER)와 확정 번호(FIND_ACCOUNT_CONTACTS)를 [프론트엔드 연동]에서 구분"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "아이디 · 비밀번호 찾기 모달에 기술평가 · K-BIGx 보고서 담당자 번호가 보임"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관 로그인](/org/auth)\n[기업 아이디 · 비밀번호 찾기](/corp/auth/find-account)\n[기관 아이디 · 비밀번호 찾기](/org/auth/find-account)"
+                        },
+                        {"label": "함께 작업", "value": "두 파일 한 번에 적용(새 상수를 가져다 씀)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f0223b55c09cfb61dd70df0cfbecb51e6ec85672)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 로그인 화면 — 기관회원 [회원가입]이 가입 안내 모달을 열도록 수정",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/login-screen.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: 모달 열기가 문단 전체에 걸려 있어 [회원가입]을 눌러도 모달이 열리지 않음\nTO-BE: SignUpNotice 에 wrapButton 추가 — 모달이 [회원가입] 버튼만 감쌈\n주석: [프론트엔드 연동]을 현재 동작에 맞게 갱신 — 기업 회원가입 주소만 임시값, 기관 [회원가입] · [찾기]는 모달이라 연동 없음"
+                        },
+                        {"label": "결과", "value": "기관회원 탭의 [회원가입]을 누르면 기관회원 가입 안내 모달이 열림"},
+                        {"label": "영향 화면", "value": "[기관 로그인](/org/auth)\n[기업 로그인](/corp/auth)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6086dccf6320b4c1f8c3d570ebdb7e870ae10624)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 기관회원 가입 안내 모달 — 가입 대상 표만 가로 스크롤",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/login-agency-signup-guide-dialog.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: 모바일에서 표가 모달 폭에 눌려 칸이 글자 단위로 깨짐\nTO-BE: 표 최소 폭 500(dialogTableClassName) · 표 상자만 가로 스크롤\n표 상자: 키보드로 밀 수 있게 포커스를 받고 \"기관회원 가입 대상 표\"로 읽힘"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "모바일은 표만 좌우로 밀어 확인 · 태블릿 · PC 는 표가 다 들어가 스크롤 없음"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관 로그인](/org/auth)\n[기관회원 가입 안내](/org/auth/agency-signup-guide)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/66e34eb99c052b8d53e45197a11e9a8288c8bc38)"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "title": "마이페이지 대표자 이력 고객정보활용동의 — 이메일 필수 · 전자서명 확인 화면"
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 마이페이지 대표자 이력 고객정보활용동의 — 부분발송 이메일 필수",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/page.tsx\nsrc/components/custom/customer-consent-agreement.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: FormCard + EmailField(선택) · 안내 문구 \"안내문을 추가로 받으실 이메일 주소를 입력해 주세요.\"\nTO-BE: <CustomerConsentNoticeEmail /> 한 줄 — 안내 문구 삭제 · 이메일 필수(기술평가 4개 모형과 같음)\n주석: 전자서명 흐름([동의 후 인증서명] → 전자서명 모달 → [제출하기] → 대표자 이력) · 이메일 카드를 쓰는 화면 5개로 갱신"
+                        },
+                        {"label": "결과", "value": "이메일을 올바르게 입력해야 [동의 후 인증서명]이 열림"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[마이페이지 대표자 이력 고객정보활용동의](/corp/mypage/representative-history/customer-consent)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/10a240ca747832110c9cef3709eba4018f2b30ca)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 마이페이지 전자서명 확인 화면 4종 — 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/individual/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certificate-select/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certified/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certify-error/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "모달만 열어 두고 확인하는 화면 4개 · KTRS-FM 전자서명 확인 화면을 재수출"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[전자서명 (개인기업)](/corp/mypage/representative-history/customer-consent/electronic-signature/individual)\n[인증서 선택](/corp/mypage/representative-history/customer-consent/electronic-signature/certificate-select)\n[전자서명 (인증 완료)](/corp/mypage/representative-history/customer-consent/electronic-signature/certified)\n[전자서명 (인증 실패)](/corp/mypage/representative-history/customer-consent/electronic-signature/certify-error)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0815851ed09cff98d4f1827d7354c2f81c30b355)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 퍼블리싱 인덱스 — 마이페이지 대표자 이력 전자서명 4행 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "마이페이지 > 대표자 이력 > 고객정보활용동의: 전자서명 → 전자서명 (법인기업) 이름 변경 · 아래에 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패 4행 추가"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6dad7e1984ede50c67020483cca8b8737824e85)"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "title": "로그인 기관회원 가입 안내 모달 — 하단 연락처를 서비스별 담당자 번호로 교체"
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 기관회원 가입 안내 모달 — 하단 안내 상자에 기술평가 · K-BIGx 담당자 번호 표시(임시 번호 삭제)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/login.ts\nsrc/components/composite/login-agency-signup-guide-dialog.tsx\nsrc/components/composite/login-find-account-dialog.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: \"제한없는 사용을 위한 협약을 원하시는 은행회원 등은 담당자(111-111-1111)에게 연락주세요.\" 한 문단\nTO-BE: \"기관회원 가입은 아래 담당자에게 연락주세요.\" → 구분선 → 담당자 / 기술평가 051-606-7398 · K-BIGx 보고서 051-606-7596(왼쪽 서비스 · 오른쪽 번호)\nlogin.ts: 연락처를 LOGIN_CONTACT_LABEL · LOGIN_CONTACTS 하나로 합침 — 아이디 · 비밀번호 찾기와 가입 안내가 같이 씀\n상수 삭제: LOGIN_CONTACT_NUMBER(임시 번호) · FIND_ACCOUNT_CONTACT_LABEL · FIND_ACCOUNT_CONTACTS"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "가입 안내 모달에 확정 번호가 보이고, 번호가 바뀌면 login.ts 의 LOGIN_CONTACTS 만 고치면 됨"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관회원 가입 안내](/org/auth/agency-signup-guide)\n[기관 아이디 · 비밀번호 찾기](/org/auth/find-account) (모양 그대로)"
+                        },
+                        {"label": "함께 작업", "value": "세 파일 한 번에 적용(상수 이름이 바뀌어 함께 넣어야 빌드됨)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/44c018f52b4e4b83a9ddb462a313defe161e4515)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "가격정책 화면 — [기술평가] · [K-BIGx 보고서] 탭 추가 · [기술평가] 탭 신규"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] 가격정책 탭 전환(PricingTabs) — [기술평가] · [K-BIGx 보고서] 밑줄 탭 신규",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/pricing-tabs.tsx"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "[기술평가] · [K-BIGx 보고서] 1뎁스 탭 — 이용약관과 같은 밑줄 탭\n탭 본문은 서버에서 그린 그대로 받고(views), 탭 전환만 맡음"
+                        },
+                        {"label": "함께 작업", "value": "아래 카드보다 먼저 추가"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f986cae07649f508ad1df9cd69726211408de599)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 가격정책 본문 — 기존 내용을 [K-BIGx 보고서] 탭으로 옮기고 [기술평가] 탭(회원 별 서비스 안내) 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/pricing.ts\nsrc/components/custom/pricing-policy.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: 무료 · 유료 서비스 · 이용 안내 한 화면\nTO-BE: 탭 [기술평가] · [K-BIGx 보고서] — 기존 내용은 [K-BIGx 보고서] 탭으로 그대로 이동\n[기술평가] 탭 신규: 회원 별 서비스 안내(기업회원 [무료] · 기관회원 [유료] 카드 — 이용 서비스 · 평가모형 배지) → 기관 이용 안내\npricing.ts: 탭 목록(PRICING_VIEWS) · ?tab= 이름(PRICING_TAB_QUERY_KEY) · 회원 카드(TECH_MEMBER_PLANS) · 기관 이용 안내(TECH_ORG_GUIDE) 추가\nPricingPolicy props 추가: defaultView(처음 열 탭, 없으면 [기술평가])"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "가격정책에 들어오면 [기술평가] 탭이 먼저 보이고, [K-BIGx 보고서] 탭에서 이용권을 구매"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 가격정책](/corp/pricing)\n[기관 가격정책](/org/pricing)"
+                        },
+                        {"label": "함께 작업", "value": "두 파일 한 번에 적용 · 위 카드 다음"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/337c56e79c29da893dcdb9978f932c735bb9b9e4)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 가격정책 페이지(기업 · 기관) — 주소 ?tab=kbigx 로 [K-BIGx 보고서] 탭 바로 열기",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/pricing/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/pricing/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "주소의 ?tab=kbigx 를 읽어 PricingPolicy 의 defaultView 로 넘김(없거나 모르는 값이면 [기술평가])"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "/corp/pricing?tab=kbigx 로 들어오면 [K-BIGx 보고서] 탭이 열린 채로 보임"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 가격정책 · K-BIGx 탭](/corp/pricing?tab=kbigx)\n[기관 가격정책 · K-BIGx 탭](/org/pricing?tab=kbigx)"
+                        },
+                        {"label": "함께 작업", "value": "위 카드 다음"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/94408e4480a5d80775f156c16f77102398b9dcbc)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] K-BIGx 이용권 구매 안내 모달 — [구매하기]를 가격정책 [K-BIGx 보고서] 탭으로 연결",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/k-bigx-report/innovation-growth-report/pass-purchase-guide/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/innovation-growth-report/pass-purchase-guide/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "purchaseHref /corp/pricing → /corp/pricing?tab=kbigx (기관도 같음)"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "K-BIGx 이용권 구매 안내에서 [구매하기]를 누르면 이용권 카드가 있는 탭이 바로 열림"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 이용권 구매 안내](/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide)\n[기관 이용권 구매 안내](/org/k-bigx-report/innovation-growth-report/pass-purchase-guide)"
+                        },
+                        {"label": "함께 작업", "value": "위 카드 다음"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b987104e1514d67df306d6ece7990b19dc4702e3)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.4.3",
             "releasedAt": "2026-10-23",
             "changes": [
