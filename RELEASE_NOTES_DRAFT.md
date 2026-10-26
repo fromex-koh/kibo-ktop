@@ -218,3 +218,46 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [기관 로그인](/org/auth)
     - [기관회원 가입 안내](/org/auth/agency-signup-guide)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/66e34eb99c052b8d53e45197a11e9a8288c8bc38)
+
+# 작업: 마이페이지 대표자 이력 고객정보활용동의 — 이메일 필수 · 전자서명 확인 화면
+
+## [Diff 확인]
+
+### [화면] 마이페이지 대표자 이력 고객정보활용동의 — 부분발송 이메일 필수
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/page.tsx
+    - src/components/custom/customer-consent-agreement.tsx
+- 변경:
+    - AS-IS: FormCard + EmailField(선택) · 안내 문구 "안내문을 추가로 받으실 이메일 주소를 입력해 주세요."
+    - TO-BE: <CustomerConsentNoticeEmail /> 한 줄 — 안내 문구 삭제 · 이메일 필수(기술평가 4개 모형과 같음)
+    - 주석: 전자서명 흐름([동의 후 인증서명] → 전자서명 모달 → [제출하기] → 대표자 이력) · 이메일 카드를 쓰는 화면 5개로 갱신
+- 결과: 이메일을 올바르게 입력해야 [동의 후 인증서명]이 열림
+- 영향 화면: [마이페이지 대표자 이력 고객정보활용동의](/corp/mypage/representative-history/customer-consent)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/10a240ca747832110c9cef3709eba4018f2b30ca)
+
+## [신규 추가]
+
+### [화면] 마이페이지 전자서명 확인 화면 4종 — 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/individual/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certificate-select/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certified/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/electronic-signature/certify-error/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 모달만 열어 두고 확인하는 화면 4개 · KTRS-FM 전자서명 확인 화면을 재수출
+- 영향 화면: [전자서명 (개인기업)](/corp/mypage/representative-history/customer-consent/electronic-signature/individual)
+    - [인증서 선택](/corp/mypage/representative-history/customer-consent/electronic-signature/certificate-select)
+    - [전자서명 (인증 완료)](/corp/mypage/representative-history/customer-consent/electronic-signature/certified)
+    - [전자서명 (인증 실패)](/corp/mypage/representative-history/customer-consent/electronic-signature/certify-error)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0815851ed09cff98d4f1827d7354c2f81c30b355)
+
+## [덮어쓰기]
+
+### [문서] 퍼블리싱 인덱스 — 마이페이지 대표자 이력 전자서명 4행 추가
+
+- 대상: src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.json
+    - src/content/publishing-guide/screen-registry.generated.json
+- 적용: 지정한 파일만 교체
+- 내용: 마이페이지 > 대표자 이력 > 고객정보활용동의: 전자서명 → 전자서명 (법인기업) 이름 변경 · 아래에 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패 4행 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6dad7e1984ede50c67020483cca8b8737824e85)
