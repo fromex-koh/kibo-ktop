@@ -261,3 +261,77 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 지정한 파일만 교체
 - 내용: 마이페이지 > 대표자 이력 > 고객정보활용동의: 전자서명 → 전자서명 (법인기업) 이름 변경 · 아래에 개인기업 · 인증서 선택 · 인증 완료 · 인증 실패 4행 추가
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6dad7e1984ede50c67020483cca8b8737824e85)
+
+# 작업: 로그인 기관회원 가입 안내 모달 — 하단 연락처를 서비스별 담당자 번호로 교체
+
+## [Diff 확인]
+
+### [컴포넌트] 기관회원 가입 안내 모달 — 하단 안내 상자에 기술평가 · K-BIGx 담당자 번호 표시(임시 번호 삭제)
+
+- 대상: src/content/service/login.ts
+    - src/components/composite/login-agency-signup-guide-dialog.tsx
+    - src/components/composite/login-find-account-dialog.tsx
+- 변경:
+    - AS-IS: "제한없는 사용을 위한 협약을 원하시는 은행회원 등은 담당자(111-111-1111)에게 연락주세요." 한 문단
+    - TO-BE: "기관회원 가입은 아래 담당자에게 연락주세요." → 구분선 → 담당자 / 기술평가 051-606-7398 · K-BIGx 보고서 051-606-7596(왼쪽 서비스 · 오른쪽 번호)
+    - login.ts: 연락처를 LOGIN_CONTACT_LABEL · LOGIN_CONTACTS 하나로 합침 — 아이디 · 비밀번호 찾기와 가입 안내가 같이 씀
+    - 상수 삭제: LOGIN_CONTACT_NUMBER(임시 번호) · FIND_ACCOUNT_CONTACT_LABEL · FIND_ACCOUNT_CONTACTS
+- 결과: 가입 안내 모달에 확정 번호가 보이고, 번호가 바뀌면 login.ts 의 LOGIN_CONTACTS 만 고치면 됨
+- 영향 화면: [기관회원 가입 안내](/org/auth/agency-signup-guide)
+    - [기관 아이디 · 비밀번호 찾기](/org/auth/find-account) (모양 그대로)
+- 함께 작업: 세 파일 한 번에 적용(상수 이름이 바뀌어 함께 넣어야 빌드됨)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/44c018f52b4e4b83a9ddb462a313defe161e4515)
+
+# 작업: 가격정책 화면 — [기술평가] · [K-BIGx 보고서] 탭 추가 · [기술평가] 탭 신규
+
+## [신규 추가]
+
+### [컴포넌트] 가격정책 탭 전환(PricingTabs) — [기술평가] · [K-BIGx 보고서] 밑줄 탭 신규
+
+- 대상: src/components/custom/pricing-tabs.tsx
+- 적용: 신규 파일 추가
+- 내용:
+    - [기술평가] · [K-BIGx 보고서] 1뎁스 탭 — 이용약관과 같은 밑줄 탭
+    - 탭 본문은 서버에서 그린 그대로 받고(views), 탭 전환만 맡음
+- 함께 작업: 아래 카드보다 먼저 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f986cae07649f508ad1df9cd69726211408de599)
+
+## [Diff 확인]
+
+### [컴포넌트] 가격정책 본문 — 기존 내용을 [K-BIGx 보고서] 탭으로 옮기고 [기술평가] 탭(회원 별 서비스 안내) 추가
+
+- 대상: src/content/service/pricing.ts
+    - src/components/custom/pricing-policy.tsx
+- 변경:
+    - AS-IS: 무료 · 유료 서비스 · 이용 안내 한 화면
+    - TO-BE: 탭 [기술평가] · [K-BIGx 보고서] — 기존 내용은 [K-BIGx 보고서] 탭으로 그대로 이동
+    - [기술평가] 탭 신규: 회원 별 서비스 안내(기업회원 [무료] · 기관회원 [유료] 카드 — 이용 서비스 · 평가모형 배지) → 기관 이용 안내
+    - pricing.ts: 탭 목록(PRICING_VIEWS) · ?tab= 이름(PRICING_TAB_QUERY_KEY) · 회원 카드(TECH_MEMBER_PLANS) · 기관 이용 안내(TECH_ORG_GUIDE) 추가
+    - PricingPolicy props 추가: defaultView(처음 열 탭, 없으면 [기술평가])
+- 결과: 가격정책에 들어오면 [기술평가] 탭이 먼저 보이고, [K-BIGx 보고서] 탭에서 이용권을 구매
+- 영향 화면: [기업 가격정책](/corp/pricing)
+    - [기관 가격정책](/org/pricing)
+- 함께 작업: 두 파일 한 번에 적용 · 위 카드 다음
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/337c56e79c29da893dcdb9978f932c735bb9b9e4)
+
+### [화면] 가격정책 페이지(기업 · 기관) — 주소 ?tab=kbigx 로 [K-BIGx 보고서] 탭 바로 열기
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-out)/pricing/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-out)/pricing/page.tsx
+- 변경: 주소의 ?tab=kbigx 를 읽어 PricingPolicy 의 defaultView 로 넘김(없거나 모르는 값이면 [기술평가])
+- 결과: /corp/pricing?tab=kbigx 로 들어오면 [K-BIGx 보고서] 탭이 열린 채로 보임
+- 영향 화면: [기업 가격정책 · K-BIGx 탭](/corp/pricing?tab=kbigx)
+    - [기관 가격정책 · K-BIGx 탭](/org/pricing?tab=kbigx)
+- 함께 작업: 위 카드 다음
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/94408e4480a5d80775f156c16f77102398b9dcbc)
+
+### [화면] K-BIGx 이용권 구매 안내 모달 — [구매하기]를 가격정책 [K-BIGx 보고서] 탭으로 연결
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/k-bigx-report/innovation-growth-report/pass-purchase-guide/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/innovation-growth-report/pass-purchase-guide/page.tsx
+- 변경: purchaseHref /corp/pricing → /corp/pricing?tab=kbigx (기관도 같음)
+- 결과: K-BIGx 이용권 구매 안내에서 [구매하기]를 누르면 이용권 카드가 있는 탭이 바로 열림
+- 영향 화면: [기업 이용권 구매 안내](/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide)
+    - [기관 이용권 구매 안내](/org/k-bigx-report/innovation-growth-report/pass-purchase-guide)
+- 함께 작업: 위 카드 다음
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b987104e1514d67df306d6ece7990b19dc4702e3)
