@@ -1,4 +1,5 @@
-// 가격정책 화면(PricingPolicy)의 문구·이용권 데이터 — 시안 "SB-FOTA-CM4-0001_가격 정책"(40007578:164043) 그대로다.
+// 가격정책 화면(PricingPolicy)의 문구·이용권 데이터. 화면은 1뎁스 탭 두 개다 — [기술평가](회원 별 서비스 안내 · 기관 이용 안내)
+// · [K-BIGx 보고서](무료 · 유료 서비스 · 이용 안내). 기업 · 기관이 같은 화면이다.
 //
 // [프론트엔드 연동] 이용권 목록·가격을 API 에서 받게 되면 PAID_PLANS 를 같은 모양(PricingPlan[])으로 바꿔 넣는다.
 // 화면 구조(카드·안내 상자)는 컴포넌트가 갖는다.
@@ -90,6 +91,73 @@ const PARTNER_GUIDE = {
     ],
 } as const
 
+// ── 1뎁스 탭 ──
+// ?tab=kbigx 로 들어오면 [K-BIGx 보고서] 탭이 열린 채로 보인다(이용권 구매 안내 모달의 [구매하기] 등). 없으면 [기술평가].
+const PRICING_TAB_QUERY_KEY = 'tab'
+const PRICING_VIEWS = [
+    {value: 'tech', label: '기술평가'},
+    {value: 'kbigx', label: 'K-BIGx 보고서'},
+] as const
+type PricingView = (typeof PRICING_VIEWS)[number]['value']
+const isPricingView = (value: unknown): value is PricingView => PRICING_VIEWS.some((view) => view.value === value)
+
+// ── [기술평가] 탭 — 회원 별 서비스 안내 ──
+// 고정 안내 문구다(가격 · 결제 없음). 평가모형 · 이용 서비스가 바뀌면 TECH_MEMBER_PLANS 의 배열만 고친다.
+const TECH_MEMBER_SERVICE = {
+    title: '회원 별 서비스 안내',
+    description:
+        '기업은 평가모형별로 월 1회 기술평가 자가진단 서비스를 무료로 이용할 수 있으며, 기관은 별도의 협약을 통해 타기업 대상 개별평가 및 일괄평가 서비스를 이용할 수 있습니다.',
+} as const
+
+// 회원 카드 — tone 은 배지 색 계열(free 파랑 · paid 보라). 기능(features)이 없는 카드는 오른쪽 체크 목록을 두지 않는다.
+type TechMemberPlan = {
+    id: 'corp' | 'org'
+    tone: 'free' | 'paid'
+    badge: string
+    name: string
+    nameDetail: string
+    features: readonly string[]
+    /** 이용 서비스 · 평가모형 줄 — 이름표와 배지 목록. */
+    rows: readonly {label: string; kind: 'service' | 'model'; items: readonly string[]}[]
+}
+const TECH_EVALUATION_MODELS = ['KTRS-FM', '투자모형', 'Tech-Index(일반)', 'Tech-Index(창업)'] as const
+const TECH_MEMBER_PLANS: readonly TechMemberPlan[] = [
+    {
+        id: 'corp',
+        tone: 'free',
+        badge: '무료',
+        name: '기업회원',
+        nameDetail: '(본인 기업 조회)',
+        features: ['평가모형 별 월 1회 제공', '이용권 불필요'],
+        rows: [
+            {label: '이용 서비스', kind: 'service', items: ['기술평가 (자가진단)']},
+            {label: '평가모형', kind: 'model', items: TECH_EVALUATION_MODELS},
+        ],
+    },
+    {
+        id: 'org',
+        tone: 'paid',
+        badge: '유료',
+        name: '기관회원',
+        nameDetail: '타 기업 조회',
+        // 기관 카드는 오른쪽 혜택 줄이 없다(시안).
+        features: [],
+        rows: [
+            {label: '이용 서비스', kind: 'service', items: ['개별평가', '일괄평가']},
+            {label: '평가모형', kind: 'model', items: TECH_EVALUATION_MODELS},
+        ],
+    },
+]
+
+const TECH_ORG_GUIDE = {
+    title: '기관 이용 안내',
+    items: [
+        '기관은 기술보증기금과 협약 체결 후 이용할 수 있습니다.',
+        '자세한 사항은 아래로 문의하여 주시기 바랍니다.',
+        '담당부서: 기술평가부, 담당자: 051-606-7398',
+    ],
+} as const
+
 // 결제하기로 넘길 때 고른 이용권을 싣는 주소 값(?plan=). 모르는 값이면 시안의 기본 이용권(프리미엄)을 보여 준다.
 const PLAN_QUERY_KEY = 'plan'
 const DEFAULT_PAYMENT_PLAN_ID: PricingPlan['id'] = 'premium'
@@ -98,6 +166,12 @@ const findPlan = (id: unknown): PricingPlan | undefined => PAID_PLANS.find((plan
 
 export {
     DEFAULT_PAYMENT_PLAN_ID,
+    isPricingView,
+    PRICING_TAB_QUERY_KEY,
+    PRICING_VIEWS,
+    TECH_MEMBER_PLANS,
+    TECH_MEMBER_SERVICE,
+    TECH_ORG_GUIDE,
     findPlan,
     FREE_SERVICE,
     NO_DEDUCTION_NOTICE,
@@ -107,4 +181,4 @@ export {
     PLAN_QUERY_KEY,
     USAGE_GUIDE,
 }
-export type {PricingPlan}
+export type {PricingPlan, PricingView, TechMemberPlan}
