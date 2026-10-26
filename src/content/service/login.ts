@@ -1,14 +1,19 @@
 // 로그인 화면의 모달 두 개가 쓰는 글.
 //
-// [프론트엔드 연동] 담당자 연락처(111-111-1111)는 시안에 적힌 임시 번호다 — 실제 번호로 바꾼다.
-// 기관회원 대상 표와 절차 안내는 운영 기준이 바뀌면 이 파일만 고치면 된다.
+// 연락처 · 가입 대상 표 · 절차 안내가 바뀌면 이 파일만 고치면 된다(화면 코드는 그대로).
 
-const LOGIN_CONTACT_NUMBER = '111-111-1111'
+// 서비스별 담당자 연락처(확정 번호) — 아이디 · 비밀번호 찾기와 기관회원 가입 안내가 같이 쓴다. 번호가 바뀌면 여기만 고친다.
+const LOGIN_CONTACT_LABEL = '담당자'
+const LOGIN_CONTACTS = [
+    {service: '기술평가', number: '051-606-7398'},
+    {service: 'K-BIGx 보고서', number: '051-606-7596'},
+] as const
 
 // ── 아이디 · 비밀번호 찾기 ──
-// 기관회원은 계정을 담당자가 발급하므로 찾기 화면 대신 연락처만 안내한다.
+// 기관회원은 계정을 담당자가 발급하므로 찾기 화면 대신 서비스별 담당자 연락처만 안내한다.
+// 안내 문장 아래 줄에 "담당자 기술평가 : 번호, K-BIGx 보고서 : 번호" 를 둔다(연락처는 서비스마다 한 덩어리로 줄바꿈).
 const FIND_ACCOUNT_TITLE = '아이디 · 비밀번호 찾기'
-const FIND_ACCOUNT_MESSAGE = `아이디 비밀번호는 담당자 (${LOGIN_CONTACT_NUMBER})으로 문의하여주세요.`
+const FIND_ACCOUNT_MESSAGE = '아이디·비밀번호 찾기는 담당자에게 문의 해주세요.'
 
 // ── 기관회원 가입 안내 ──
 const AGENCY_SIGN_UP_TITLE = '기관회원 가입 안내'
@@ -46,7 +51,8 @@ const AGENCY_SIGN_UP_STEPS = [
     {title: '로그인 및 이용', description: '전달받은 계정으로 로그인 후 서비스를 이용하실 수 있습니다.'},
 ] as const
 
-const AGENCY_SIGN_UP_ALERT = `제한없는 사용을 위한 협약을 원하시는 은행회원 등은 담당자(${LOGIN_CONTACT_NUMBER})에게 연락주세요.`
+// 강조 안내 문장 — 아래에 구분선 · 서비스별 연락처(LOGIN_CONTACTS)가 붙는다.
+const AGENCY_SIGN_UP_ALERT = '기관회원 가입은 아래 담당자에게 연락주세요.'
 
 const LOGIN_DIALOG_CLOSE_LABEL = '닫기'
 
@@ -59,6 +65,7 @@ export {
     AGENCY_SIGN_UP_TITLE,
     FIND_ACCOUNT_MESSAGE,
     FIND_ACCOUNT_TITLE,
-    LOGIN_CONTACT_NUMBER,
+    LOGIN_CONTACT_LABEL,
+    LOGIN_CONTACTS,
     LOGIN_DIALOG_CLOSE_LABEL,
 }

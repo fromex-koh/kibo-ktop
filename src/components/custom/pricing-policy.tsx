@@ -4,8 +4,10 @@ import {Check, CircleAlert} from 'lucide-react'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
 import {PaymentUnavailableDialog} from '@/components/composite/payment-unavailable-dialog'
 import {ListMarker} from '@/components/custom/list-marker'
+import PricingTabs from '@/components/custom/pricing-tabs'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
+import {Separator} from '@/components/ui/separator'
 import {
     FREE_SERVICE,
     NO_DEDUCTION_NOTICE,
@@ -13,15 +15,21 @@ import {
     PAID_SERVICE,
     PARTNER_GUIDE,
     PLAN_QUERY_KEY,
+    TECH_MEMBER_PLANS,
+    TECH_MEMBER_SERVICE,
+    TECH_ORG_GUIDE,
     USAGE_GUIDE,
     type PricingPlan,
+    type PricingView,
+    type TechMemberPlan,
 } from '@/content/service/pricing'
 import {cn} from '@/lib/utils'
 
-// 가격정책 — 시안 "SB-FOTA-CM4-0001_가격 정책"(40007578:164043). 기업·기관이 같은 화면이다.
+// 가격정책 — 시안 "SB-FOTA-CM4-0001_가격정책_기술평가 · _K-BIGx 보고서". 기업·기관이 같은 화면이다.
+// 1뎁스 탭(PricingTabs) 아래에 [기술평가](회원 별 서비스 안내 · 기관 이용 안내) · [K-BIGx 보고서](무료 · 유료 서비스 · 이용 안내).
 // 문구·이용권은 content/service/pricing.ts 에 있고, 이 파일은 짜임(카드·안내 상자)만 갖는다.
 //
-// 간격(시안): 구획(무료 · 유료 · 이용 안내) 사이 40 · 구획 제목과 설명 4 · 설명과 카드 24 · 카드 사이 24 ·
+// 간격(시안): 탭과 본문 40 · 구획 사이 40 · 구획 제목과 설명 4 · 설명과 카드 24 · 카드 사이 24 ·
 // 카드와 아래 안내 16 · 안내 상자 사이 24.
 
 const PRICE_FORMATTER = new Intl.NumberFormat('ko-KR')
@@ -147,14 +155,97 @@ const PlanCard = ({
     )
 }
 
+// ── [기술평가] 탭 ──
+
+// 회원 카드 배지 색 — 무료(기업) 파랑 · 유료(기관) 보라. 머리 배지는 테두리, 이용 서비스는 채움, 평가모형은 옅은 면.
+const MEMBER_BADGE_COLOR = {free: 'info', paid: 'secondary-purple'} as const
+
+// 회원 카드 — 머리(배지 · 이름 · 오른쪽 혜택) → 구분선 → 이용 서비스 · 평가모형 줄(이름표 100 + 배지들).
+// 좁은 화면에서는 혜택이 이름 아래로, 배지는 다음 줄로 내려간다.
+const TechMemberCard = ({plan}: {plan: TechMemberPlan}) => {
+    const titleId = `pricing-tech-${plan.id}`
+    const color = MEMBER_BADGE_COLOR[plan.tone]
+    return (
+        <li aria-labelledby={titleId} className={cn(cardClassName, 'flex flex-col gap-4')}>
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" color={color} shape="round" size="sm">
+                        {plan.badge}
+                    </Badge>
+                    <h3 id={titleId} className="flex flex-wrap items-baseline gap-x-1">
+                        <span className="typo-title-l-bold text-foreground">{plan.name}</span>
+                        <span className="typo-body-xl-regular text-foreground">{plan.nameDetail}</span>
+                    </h3>
+                </div>
+                {plan.features.length ? (
+                    <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                        {plan.features.map((feature) => (
+                            <Feature key={feature} iconClassName="text-success size-5" className="typo-body-xl-medium">
+                                {feature}
+                            </Feature>
+                        ))}
+                    </ul>
+                ) : null}
+            </div>
+            <Separator />
+            <dl className="flex flex-col gap-4">
+                {plan.rows.map((row) => (
+                    <div key={row.label} className="flex items-start">
+                        {/* 이름표 칸 100 — 배지(높이 28)와 글자 가운데를 맞춘다. */}
+                        <dt className="typo-body-l-regular text-foreground-subtle w-25 shrink-0 py-1">{row.label}</dt>
+                        <dd className="m-0 flex min-w-0 flex-wrap gap-2">
+                            {row.items.map((item) => (
+                                <Badge
+                                    key={item}
+                                    variant={row.kind === 'service' ? 'solid' : 'solid-pastel'}
+                                    color={color}
+                                    shape="round"
+                                    size="sm"
+                                >
+                                    {item}
+                                </Badge>
+                            ))}
+                        </dd>
+                    </div>
+                ))}
+            </dl>
+        </li>
+    )
+}
+
+const TechPricing = () => (
+    <div className="flex flex-col gap-10">
+        <section aria-labelledby="pricing-tech-member-title" className="flex flex-col gap-6">
+            <SectionHeading
+                id="pricing-tech-member-title"
+                title={TECH_MEMBER_SERVICE.title}
+                description={TECH_MEMBER_SERVICE.description}
+            />
+            <ul className="flex list-none flex-col gap-6">
+                {TECH_MEMBER_PLANS.map((plan) => (
+                    <TechMemberCard key={plan.id} plan={plan} />
+                ))}
+            </ul>
+        </section>
+        <InfoBox variant="outline" title={TECH_ORG_GUIDE.title} headingLevel={2}>
+            {TECH_ORG_GUIDE.items.map((item) => (
+                <InfoBoxItem key={item}>{item}</InfoBoxItem>
+            ))}
+        </InfoBox>
+    </div>
+)
+
 type PricingPolicyProps = {
     /** [구매하기]가 향할 결제 화면(기업). */
     paymentHref?: string
     /** 구매할 수 없는 회원(기관) — [구매하기]가 결제 화면 대신 결제 불가 안내 모달을 연다. */
     isPurchaseUnavailable?: boolean
+    /** 처음 열 탭 — 페이지의 ?tab= 값. 없으면 [기술평가]. */
+    defaultView?: PricingView
 }
 
-const PricingPolicy = ({paymentHref, isPurchaseUnavailable}: PricingPolicyProps) => (
+// ── [K-BIGx 보고서] 탭 — 무료 · 유료 서비스 · 이용 안내 ──
+const KbigxPricing = ({paymentHref, isPurchaseUnavailable}: Omit<PricingPolicyProps, 'defaultView'>) => (
     <div className="flex flex-col gap-10">
         <section aria-labelledby="pricing-free-title" className="flex flex-col gap-6">
             <SectionHeading id="pricing-free-title" title={FREE_SERVICE.title} description={FREE_SERVICE.description} />
@@ -226,6 +317,16 @@ const PricingPolicy = ({paymentHref, isPurchaseUnavailable}: PricingPolicyProps)
             ))}
         </div>
     </div>
+)
+
+const PricingPolicy = ({paymentHref, isPurchaseUnavailable, defaultView}: PricingPolicyProps) => (
+    <PricingTabs
+        defaultView={defaultView}
+        views={{
+            tech: <TechPricing />,
+            kbigx: <KbigxPricing paymentHref={paymentHref} isPurchaseUnavailable={isPurchaseUnavailable} />,
+        }}
+    />
 )
 
 export default PricingPolicy

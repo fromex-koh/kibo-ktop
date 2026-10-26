@@ -61,8 +61,8 @@
             "key": "corp-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-platform",
@@ -104,7 +104,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup",
@@ -124,8 +124,36 @@
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.3",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
@@ -286,14 +314,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
@@ -322,6 +350,34 @@
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
             "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
@@ -398,7 +454,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
@@ -427,6 +483,34 @@
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
             "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
@@ -503,7 +587,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup",
@@ -532,6 +616,34 @@
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
             "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
@@ -681,6 +793,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -761,8 +880,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -951,7 +1070,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
@@ -992,8 +1111,8 @@
             "key": "corp-mypage-representative-history-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
@@ -1001,6 +1120,34 @@
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
             "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",
@@ -1290,13 +1437,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-payment-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1419,8 +1559,8 @@
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "org-platform",
@@ -1462,14 +1602,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-verification-progress-service-unavailable",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -1595,7 +1735,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-customer-consent",
@@ -1910,7 +2050,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report",
@@ -1918,6 +2058,13 @@
             "implementationStatus": "in-progress",
             "version": "v3.4.2",
             "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company",
@@ -2609,8 +2756,8 @@
             "key": "org-k-bigx-report-innovation-growth-report-pass-purchase-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.4.4",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-bulk-data-search",

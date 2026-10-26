@@ -211,7 +211,35 @@
             "screenId": "SB-FOTA-CP1-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-individual",
+            "screenId": "SB-FOTA-CP1-0003",
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
@@ -407,7 +435,35 @@
             "screenId": "SB-FOTA-CP1-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-individual",
+            "screenId": "SB-FOTA-CP1-0103",
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
@@ -512,7 +568,35 @@
             "screenId": "SB-FOTA-CP1-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-individual",
+            "screenId": "SB-FOTA-CP1-0203",
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
@@ -617,7 +701,35 @@
             "screenId": "SB-FOTA-CP1-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-individual",
+            "screenId": "SB-FOTA-CP1-0303",
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
@@ -765,6 +877,13 @@
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report",
             "name": "기업혁신성장보고서 조회"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-identity-verification",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/identity-verification",
+            "name": "본인확인(인증번호)"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company",
@@ -1086,7 +1205,35 @@
             "screenId": "SB-FOTA-CP4-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent/electronic-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-individual",
+            "screenId": "SB-FOTA-CP4-0009",
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",
@@ -1374,13 +1521,6 @@
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/marketing-consent",
             "name": "마케팅 알림 수신동의"
-        },
-        {
-            "key": "corp-payment-complete",
-            "screenId": "SB-FOTA-CM6-0016",
-            "userType": "기업",
-            "path": "/corp/payment-complete",
-            "name": "결제 완료"
         },
         {
             "key": "corp-not-found",
@@ -2004,6 +2144,13 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report",
             "name": "기업혁신성장보고서 조회"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-identity-verification",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/identity-verification",
+            "name": "본인확인(인증번호)"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company",

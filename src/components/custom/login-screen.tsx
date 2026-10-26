@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, type FormEvent} from 'react'
+import {useState, type FormEvent, type ReactElement, type ReactNode} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import Link from 'next/link'
 import bankBuildingImage from '@public/images/login/bank-building.webp'
@@ -46,7 +46,9 @@ import {KIBO_ONE_PLATFORM_URL} from '@/constants/site'
 //     (복귀 주소 redirect 가 붙는다). 상수는 constants/site.ts 의 KIBO_ONE_PLATFORM_URL.
 //   · 기관회원 — 지금은 화면만 있는 form 이다. onSubmit 에 로그인 요청을 잇고, 실패하면 아래 오류 문구를
 //     role="alert" 자리에 채운다(LoginErrorMessage). '아이디 저장'은 아이디만 로컬에 남기는 값이다.
-//   · 회원가입 · 아이디/비밀번호 찾기 경로는 해당 화면이 생기면 href 를 바꾼다.
+//   · 기업회원 [기보 ONE 플랫폼 회원가입] 주소(KIBO_ONE_SIGN_UP_HREF)는 임시값이다 — 실제 주소로 바꾼다.
+//   · 기관회원 [회원가입] · [아이디 · 비밀번호 찾기]는 안내 모달만 연다 — 연동할 것이 없다.
+//     모달 문구 · 연락처는 content/service/login.ts 에서 고친다.
 
 type MemberType = 'corp' | 'org'
 
@@ -107,12 +109,21 @@ const PanelHeader = ({title, description}: {title: string; description: string})
 )
 
 // 카드 아래 한 줄 — "계정이 없으신가요? [회원가입]". 질문과 버튼이 한 문장처럼 읽히도록 나란히 둔다.
-// 카드 아래 한 줄 — 질문과 버튼이 한 문장처럼 읽히도록 나란히 둔다.
-// href 를 주면 링크, 주지 않으면 사용처가 감싼 모달 트리거로 쓴다.
-const SignUpNotice = ({question, label, href}: {question: string; label: string; href?: string}) => (
-    <p className="typo-body-xl-regular text-foreground-subtle flex flex-wrap items-center justify-center gap-2 break-keep">
-        {question}
-        {/* size md — 시안의 button_text 는 16/24 이고, 회원가입 글자만 Bold 다. */}
+// href 를 주면 링크, 주지 않으면 버튼이다. 버튼으로 모달을 열 때는 wrapButton 으로 버튼만 감싼다
+// — 문단 전체를 DialogTrigger 로 감싸면 여는 동작이 버튼에 닿지 않는다.
+const SignUpNotice = ({
+    question,
+    label,
+    href,
+    wrapButton,
+}: {
+    question: string
+    label: string
+    href?: string
+    wrapButton?: (button: ReactElement) => ReactNode
+}) => {
+    // size md — 시안의 button_text 는 16/24 이고, 회원가입 글자만 Bold 다.
+    const button = (
         <Button
             asChild={Boolean(href)}
             type={href ? undefined : 'button'}
@@ -123,8 +134,14 @@ const SignUpNotice = ({question, label, href}: {question: string; label: string;
         >
             {href ? <Link href={href}>{label}</Link> : label}
         </Button>
-    </p>
-)
+    )
+    return (
+        <p className="typo-body-xl-regular text-foreground-subtle flex flex-wrap items-center justify-center gap-2 break-keep">
+            {question}
+            {wrapButton ? wrapButton(button) : button}
+        </p>
+    )
+}
 
 // 기업회원 — 안내 상자 + 외부 사이트로 나가는 버튼.
 const CorpLoginPanel = () => (
@@ -332,9 +349,13 @@ const LoginScreen = ({userType}: {userType: LoginUserType}) => (
                         <div className={cardClassName} data-slot="login-card">
                             <OrgLoginPanel />
                         </div>
-                        <LoginAgencySignUpGuideDialog>
-                            <SignUpNotice question={ORG_SIGN_UP_QUESTION} label={ORG_SIGN_UP_LABEL} />
-                        </LoginAgencySignUpGuideDialog>
+                        <SignUpNotice
+                            question={ORG_SIGN_UP_QUESTION}
+                            label={ORG_SIGN_UP_LABEL}
+                            wrapButton={(button) => (
+                                <LoginAgencySignUpGuideDialog>{button}</LoginAgencySignUpGuideDialog>
+                            )}
+                        />
                     </TabsContent>
                 </Tabs>
             </div>

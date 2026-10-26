@@ -181,7 +181,7 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
     const [answers, setAnswers] = useState<ConsentAnswers>({})
     // 하단 확인 항목의 체크 상태.
     const [confirmations, setConfirmations] = useState<Record<string, boolean>>({})
-    // 필수 이메일 칸의 상태 — null 은 그 칸이 없는 화면(마이페이지 대표자 이력 등)이라 검사하지 않는다.
+    // 필수 이메일 칸의 상태 — null 은 그 칸이 없는 화면이라 검사하지 않는다.
     const [isNoticeEmailValid, setNoticeEmailValid] = useState<boolean | null>(null)
 
     // 범위 선택 시 필수 동의 모달을 연다.
@@ -413,9 +413,10 @@ const CustomerConsentAgreement = () => {
 // [동의 후 인증서명] 은 바로 다음 단계로 가지 않고 약정서 전자서명 모달을 연다 — 화면정의서의 전자서명이
 // 이 자리다. 전자서명이 끝나면 그때 nextHref 로 간다.
 
-// 모달의 [법인인증]·[개인인증] 은 둘 다 다음 단계로 넘어간다 — 화면 흐름만 잇는 자리다.
-// [프론트엔드 연동] 두 인증 모두 외부 인증 연동 자리다. 인증 절차(법인·개인 각각의 인증서, 둘 다
-// 마쳐야 완료되는 규칙)는 연동 때 여기서 처리하고, 성공한 뒤에 지금의 이동을 그대로 쓰면 된다.
+// 전자서명 모달에서 인증을 모두 마치고 [제출하기]를 누르면 다음 단계로 넘어간다.
+// [프론트엔드 연동] 아래 <ESignatureDialog> 에 businessType · businessNumber · onCertify 를 넘긴다
+// (각 props 설명은 composite/e-signature-dialog.tsx 머리 주석). [제출하기]는 모든 인증을 마쳐야 나타나므로
+// handleSigned 에서 완료 여부를 다시 확인할 필요는 없다.
 
 // 동의 값을 한곳에서 넘기는 폼 — 화면의 모든 컨트롤(동의 범위·항목별 동의·확인 체크·추가 이메일)이
 // name 을 갖고 있어 FormData 하나로 모인다. 값을 따로 모으는 상태를 만들지 않는 이유다.
@@ -461,17 +462,12 @@ const CustomerConsentForm = ({
             <form id={formId} noValidate onSubmit={handleSubmit}>
                 {children}
             </form>
-            <ESignatureDialog
-                open={isSignatureOpen}
-                onOpenChange={setIsSignatureOpen}
-                onCorporate={handleSigned}
-                onPersonal={handleSigned}
-            />
+            <ESignatureDialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen} onSubmit={handleSigned} />
         </>
     )
 }
 
-// 부분발송 이메일등록(필수) — 기업 기술평가 고객정보활용동의 4개 화면이 쓴다(마이페이지 대표자 이력은 쓰지 않음).
+// 부분발송 이메일등록(필수) — 기업 고객정보활용동의 5개 화면(기술평가 4개 모형 · 마이페이지 대표자 이력)이 쓴다.
 // 이메일이 올바르게 채워져야 [동의 후 인증서명]이 열린다(필수 동의 · 확인 항목과 함께).
 // [프론트엔드 연동] 값은 폼 값 additionalNoticeEmail(합친 주소 하나)로 다른 동의 값과 함께 넘어간다.
 const CustomerConsentNoticeEmail = () => {
