@@ -181,7 +181,7 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
     const [answers, setAnswers] = useState<ConsentAnswers>({})
     // 하단 확인 항목의 체크 상태.
     const [confirmations, setConfirmations] = useState<Record<string, boolean>>({})
-    // 필수 이메일 칸의 상태 — null 은 그 칸이 없는 화면(마이페이지 대표자 이력 등)이라 검사하지 않는다.
+    // 필수 이메일 칸의 상태 — null 은 그 칸이 없는 화면이라 검사하지 않는다.
     const [isNoticeEmailValid, setNoticeEmailValid] = useState<boolean | null>(null)
 
     // 범위 선택 시 필수 동의 모달을 연다.
@@ -467,7 +467,7 @@ const CustomerConsentForm = ({
     )
 }
 
-// 부분발송 이메일등록(필수) — 기업 기술평가 고객정보활용동의 4개 화면이 쓴다(마이페이지 대표자 이력은 쓰지 않음).
+// 부분발송 이메일등록(필수) — 기업 고객정보활용동의 5개 화면(기술평가 4개 모형 · 마이페이지 대표자 이력)이 쓴다.
 // 이메일이 올바르게 채워져야 [동의 후 인증서명]이 열린다(필수 동의 · 확인 항목과 함께).
 // [프론트엔드 연동] 값은 폼 값 additionalNoticeEmail(합친 주소 하나)로 다른 동의 값과 함께 넘어간다.
 const CustomerConsentNoticeEmail = () => {

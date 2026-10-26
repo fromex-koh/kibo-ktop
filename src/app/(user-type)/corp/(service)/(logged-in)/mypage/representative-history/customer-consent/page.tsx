@@ -1,10 +1,9 @@
 import type {Metadata} from 'next'
-import {EmailField} from '@/components/composite/email-field'
-import {FormCard} from '@/components/composite/form-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import {
     CustomerConsentAgreement,
     CustomerConsentForm,
+    CustomerConsentNoticeEmail,
     CustomerConsentProvider,
     CustomerConsentStepNavigation,
 } from '@/components/custom/customer-consent-agreement'
@@ -29,8 +28,7 @@ const CorpMypageRepresentativeHistoryCustomerConsentPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         {/* 동의서와 하단 CTA가 동의 상태를 공유한다. */}
         <CustomerConsentProvider>
-            {/* [프론트엔드 연동] 화면정의서의 전자서명 화면이 만들어지면 nextHref 를 그쪽으로 바꾼다.
-                지금은 동의를 마치면 대표자 이력으로 돌아간다. */}
+            {/* [동의 후 인증서명] → 약정서 전자서명 모달 → 인증을 마치고 [제출하기]를 누르면 대표자 이력으로 돌아간다. */}
             <CustomerConsentForm formId={FORM_ID} nextHref={REPRESENTATIVE_HISTORY_PATH}>
                 {/* 콘텐츠 폭은 공통 grid-layout을 따르고, 하단 여백은 StepNavigation이 담당한다. */}
                 <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
@@ -54,13 +52,7 @@ const CorpMypageRepresentativeHistoryCustomerConsentPage = () => (
 
                     <CustomerConsentAgreement />
 
-                    <FormCard
-                        title="부분발송 이메일등록"
-                        subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요."
-                    >
-                        {/* 아이디·도메인을 분리 입력하고 제출 시 하나의 이메일 값으로 조합한다. */}
-                        <EmailField name="additionalNoticeEmail" />
-                    </FormCard>
+                    <CustomerConsentNoticeEmail />
                 </div>
             </CustomerConsentForm>
 
