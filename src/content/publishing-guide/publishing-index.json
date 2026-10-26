@@ -1876,13 +1876,41 @@
                                     "iaRow": 130
                                 },
                                 {
-                                    "label": "전자서명",
+                                    "label": "전자서명 (법인기업)",
                                     "screenId": "SB-FOTA-CP4-0009",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
                                     "iaRow": 131
+                                },
+                                {
+                                    "label": "전자서명 (개인기업)",
+                                    "screenId": "SB-FOTA-CP4-0009",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-representative-history-customer-consent-electronic-signature-individual"
+                                },
+                                {
+                                    "label": "인증서 선택",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-representative-history-customer-consent-certificate-select"
+                                },
+                                {
+                                    "label": "전자서명 (인증 완료)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certified"
+                                },
+                                {
+                                    "label": "전자서명 (인증 실패)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certify-error"
                                 }
                             ]
                         },

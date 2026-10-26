@@ -1205,7 +1205,35 @@
             "screenId": "SB-FOTA-CP4-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent/electronic-signature",
-            "name": "전자서명"
+            "name": "전자서명 (법인기업)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-individual",
+            "screenId": "SB-FOTA-CP4-0009",
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/individual",
+            "name": "전자서명 (개인기업)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-certificate-select",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certificate-select",
+            "name": "인증서 선택"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certified",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certified",
+            "name": "전자서명 (인증 완료)"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certify-error",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature/certify-error",
+            "name": "전자서명 (인증 실패)"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",

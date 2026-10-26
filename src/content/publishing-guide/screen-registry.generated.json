@@ -1122,6 +1122,34 @@
             "isCurrent": false
         },
         {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-certificate-select",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certified",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature-certify-error",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
