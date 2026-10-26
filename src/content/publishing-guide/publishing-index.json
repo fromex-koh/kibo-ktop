@@ -452,13 +452,41 @@
                                     "iaRow": 24
                                 },
                                 {
-                                    "label": "전자서명",
+                                    "label": "전자서명 (법인기업)",
                                     "screenId": "SB-FOTA-CP1-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
                                     "iaRow": 25
+                                },
+                                {
+                                    "label": "전자서명 (개인기업)",
+                                    "screenId": "SB-FOTA-CP1-0003",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-individual"
+                                },
+                                {
+                                    "label": "인증서 선택",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-certificate-select"
+                                },
+                                {
+                                    "label": "전자서명 (인증 완료)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certified"
+                                },
+                                {
+                                    "label": "전자서명 (인증 실패)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certify-error"
                                 },
                                 {
                                     "label": "이어서 작성 안내",
@@ -744,13 +772,41 @@
                                             "iaRow": 50
                                         },
                                         {
-                                            "label": "전자서명",
+                                            "label": "전자서명 (법인기업)",
                                             "screenId": "SB-FOTA-CP1-0103",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
                                             "iaRow": 51
+                                        },
+                                        {
+                                            "label": "전자서명 (개인기업)",
+                                            "screenId": "SB-FOTA-CP1-0103",
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-individual"
+                                        },
+                                        {
+                                            "label": "인증서 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-certificate-select"
+                                        },
+                                        {
+                                            "label": "전자서명 (인증 완료)",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certified"
+                                        },
+                                        {
+                                            "label": "전자서명 (인증 실패)",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature-certify-error"
                                         },
                                         {
                                             "label": "이어서 작성 안내",
@@ -905,13 +961,41 @@
                                             "iaRow": 64
                                         },
                                         {
-                                            "label": "전자서명",
+                                            "label": "전자서명 (법인기업)",
                                             "screenId": "SB-FOTA-CP1-0203",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
                                             "iaRow": 65
+                                        },
+                                        {
+                                            "label": "전자서명 (개인기업)",
+                                            "screenId": "SB-FOTA-CP1-0203",
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-individual"
+                                        },
+                                        {
+                                            "label": "인증서 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-certificate-select"
+                                        },
+                                        {
+                                            "label": "전자서명 (인증 완료)",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certified"
+                                        },
+                                        {
+                                            "label": "전자서명 (인증 실패)",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature-certify-error"
                                         },
                                         {
                                             "label": "이어서 작성 안내",
@@ -1067,13 +1151,41 @@
                                     "iaRow": 78
                                 },
                                 {
-                                    "label": "전자서명",
+                                    "label": "전자서명 (법인기업)",
                                     "screenId": "SB-FOTA-CP1-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
                                     "application2Status": "완료",
                                     "iaRow": 79
+                                },
+                                {
+                                    "label": "전자서명 (개인기업)",
+                                    "screenId": "SB-FOTA-CP1-0303",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-individual"
+                                },
+                                {
+                                    "label": "인증서 선택",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-certificate-select"
+                                },
+                                {
+                                    "label": "전자서명 (인증 완료)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certified"
+                                },
+                                {
+                                    "label": "전자서명 (인증 실패)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature-certify-error"
                                 },
                                 {
                                     "label": "이어서 작성 안내",
@@ -1326,6 +1438,13 @@
                         "iaRow": 100
                     },
                     "children": [
+                        {
+                            "label": "본인확인(인증번호)",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-identity-verification"
+                        },
                         {
                             "label": "조회 결과",
                             "isGroupOnly": true,
@@ -2169,20 +2288,6 @@
                     "version": "미배포",
                     "key": "corp-notice-resources",
                     "iaRow": 155
-                }
-            ]
-        },
-        {
-            "name": "결제 완료",
-            "userType": "기업",
-            "children": [
-                {
-                    "label": "결제 완료",
-                    "screenId": "SB-FOTA-CM6-0016",
-                    "status": "대기중",
-                    "version": "미배포",
-                    "key": "corp-payment-complete",
-                    "iaRow": 156
                 }
             ]
         },
@@ -3536,6 +3641,13 @@
                     },
                     "children": [
                         {
+                            "label": "본인확인(인증번호)",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-identity-verification"
+                        },
+                        {
                             "label": "조회 결과",
                             "isGroupOnly": true,
                             "children": [
@@ -4587,6 +4699,15 @@
                             "version": "미배포",
                             "key": "carbon-login-find-account",
                             "externalHref": "https://fromex-carbon.vercel.app/login/find-account"
+                        },
+                        {
+                            "label": "선도기업 신청 보완요청 팝업",
+                            "screenId": null,
+                            "status": "완료",
+                            "application2Status": "완료",
+                            "version": "미배포",
+                            "key": "carbon-login-leader-supplement-notice",
+                            "externalHref": "https://fromex-carbon.vercel.app/login/leader-supplement-notice"
                         }
                     ]
                 },
