@@ -17,8 +17,9 @@ import {Input} from '@/components/ui/input'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
 
-// 본인 확인 모달 — 마이페이지 내 정보에 들어갈 때 비밀번호로 한 번 더 확인한다.
-// 가입 정보(기업명·아이디)는 읽기만 하는 값이라 SummaryList 로 두고, 입력은 비밀번호 한 칸이다.
+// 본인 확인 모달 — 비밀번호로 한 번 더 확인한다.
+//   · 마이페이지 내 정보: 가입 정보(기업명·아이디)를 SummaryList 로 함께 보인다(items).
+//   · K-BIGx 기업혁신성장보고서 조회: 가입 정보 없이 비밀번호 한 칸만(items 생략).
 //
 // [프론트엔드 연동] 아래 검사(비밀번호 입력 여부)는 그대로 두고 onSubmit 에 인증 API 를 붙이면 된다.
 // 서버가 "비밀번호가 일치하지 않습니다" 같은 답을 주면 error 상태에 넣어 같은 자리에 띄우면 된다.
@@ -36,8 +37,8 @@ type IdentityVerificationItem = {
 }
 
 type IdentityVerificationDialogProps = {
-    /** 확인용으로 보여 줄 가입 정보(기업명·아이디 등). */
-    items: readonly IdentityVerificationItem[]
+    /** 확인용으로 보여 줄 가입 정보(기업명·아이디 등). 생략하면 목록 없이 비밀번호 칸만 그린다. */
+    items?: readonly IdentityVerificationItem[]
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
@@ -85,19 +86,21 @@ const IdentityVerificationDialog = ({
                     <DialogDescription asChild>
                         <span className="block">본인인증을 위하여 비밀번호를 입력해 주시기 바랍니다.</span>
                     </DialogDescription>
-                    <SummaryList>
-                        {items.map((item) => (
-                            <SummaryListItem
-                                key={item.term}
-                                term={item.term}
-                                // 좁은 화면에서는 이름과 값을 위아래로 둔다 — 한 줄에 두면 값이 긴 기업명은
-                                // 이름 칸까지 밀어 "기업 / 명" 처럼 낱말이 갈라진다.
-                                className="max-sm:flex-col max-sm:items-start max-sm:gap-1 max-sm:[&>dd]:text-left"
-                            >
-                                {item.value}
-                            </SummaryListItem>
-                        ))}
-                    </SummaryList>
+                    {items?.length ? (
+                        <SummaryList>
+                            {items.map((item) => (
+                                <SummaryListItem
+                                    key={item.term}
+                                    term={item.term}
+                                    // 좁은 화면에서는 이름과 값을 위아래로 둔다 — 한 줄에 두면 값이 긴 기업명은
+                                    // 이름 칸까지 밀어 "기업 / 명" 처럼 낱말이 갈라진다.
+                                    className="max-sm:flex-col max-sm:items-start max-sm:gap-1 max-sm:[&>dd]:text-left"
+                                >
+                                    {item.value}
+                                </SummaryListItem>
+                            ))}
+                        </SummaryList>
+                    ) : null}
                     {/* 라벨·간격·오류 메시지는 다른 입력 화면과 같은 Field 가 그린다 — 메시지 자리와 색,
                         입력 아래 간격이 그 화면들과 똑같아진다. */}
                     <Field id={PASSWORD_FIELD} label="비밀번호" required error={error || undefined}>
