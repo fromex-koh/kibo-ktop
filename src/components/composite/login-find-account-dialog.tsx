@@ -14,10 +14,10 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-    FIND_ACCOUNT_CONTACT_LABEL,
-    FIND_ACCOUNT_CONTACTS,
     FIND_ACCOUNT_MESSAGE,
     FIND_ACCOUNT_TITLE,
+    LOGIN_CONTACT_LABEL,
+    LOGIN_CONTACTS,
     LOGIN_DIALOG_CLOSE_LABEL,
 } from '@/content/service/login'
 
@@ -43,8 +43,8 @@ const LoginFindAccountDialog = ({children, defaultOpen}: LoginFindAccountDialogP
                     {FIND_ACCOUNT_MESSAGE}
                     <br />
                     {/* 좁은 화면에서 줄이 넘치면 서비스 단위로 접는다 — 번호 중간에서 끊기지 않게. */}
-                    {FIND_ACCOUNT_CONTACT_LABEL}{' '}
-                    {FIND_ACCOUNT_CONTACTS.map(({service, number}, index) => (
+                    {LOGIN_CONTACT_LABEL}{' '}
+                    {LOGIN_CONTACTS.map(({service, number}, index) => (
                         <Fragment key={service}>
                             {index > 0 ? ', ' : null}
                             <span className="whitespace-nowrap">

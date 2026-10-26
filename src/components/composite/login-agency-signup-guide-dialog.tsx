@@ -6,6 +6,7 @@ import type {ReactNode} from 'react'
 import {CircleAlert} from 'lucide-react'
 import {ListMarker} from '@/components/custom/list-marker'
 import {Button} from '@/components/ui/button'
+import {Separator} from '@/components/ui/separator'
 import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {DialogTrigger} from '@/components/ui/dialog'
 import {dialogInfoBodyClassName} from '@/components/theme/dialog.variants'
@@ -17,6 +18,8 @@ import {
     AGENCY_SIGN_UP_TARGET_HEADER,
     AGENCY_SIGN_UP_TARGETS,
     AGENCY_SIGN_UP_TITLE,
+    LOGIN_CONTACT_LABEL,
+    LOGIN_CONTACTS,
     LOGIN_DIALOG_CLOSE_LABEL,
 } from '@/content/service/login'
 import {cn} from '@/lib/utils'
@@ -24,7 +27,7 @@ import {cn} from '@/lib/utils'
 // 기관회원 가입 안내 — 기관회원 로그인의 [회원가입]에서 연다. 기관회원은 담당자 확인을 거쳐 계정을 받으므로
 // 가입 대상과 절차를 알리는 읽기 전용 모달이다.
 //
-// 짜임: 안내 상자(옅은 회색 · 목록 3줄) → 가입 대상 표 → 1~5 절차 → 강조 안내(옅은 파랑) → 풀폭 [닫기].
+// 짜임: 안내 상자(옅은 회색 · 목록 3줄) → 가입 대상 표 → 1~5 절차 → 강조 안내(옅은 파랑 · 서비스별 담당자 연락처) → 풀폭 [닫기].
 // 내용이 길어 본문 구획이 모달 안에서 스크롤된다. 여백은 모달 공통 32 를 따른다.
 
 // 가입 대상 표 — 첫 칸(기관회원)이 두 줄을 세로로 묶는다. 칸 색은 시안대로 머리 칸만 옅은 파랑이다.
@@ -127,11 +130,29 @@ const LoginAgencySignUpGuideDialog = ({children, defaultOpen}: LoginAgencySignUp
                     ))}
                 </ol>
 
-                {/* 강조 안내 — 옅은 파랑 면에 경고 아이콘과 한 문단. */}
-                <p className="bg-primary-subtle typo-body-l-medium text-label-foreground flex gap-1 rounded-sm p-4">
-                    <CircleAlert aria-hidden="true" className="size-icon-sm mt-0.5 shrink-0" />
-                    <span className="min-w-0">{AGENCY_SIGN_UP_ALERT}</span>
-                </p>
+                {/* 강조 안내 — 안내 문장 → 구분선 → 담당자 연락처(서비스 · 번호). 번호는 content/service/login.ts 의 LOGIN_CONTACTS. */}
+                <div className="bg-primary-subtle flex flex-col gap-4 rounded-sm p-4">
+                    <p className="typo-body-l-medium text-label-foreground flex gap-1">
+                        <CircleAlert aria-hidden="true" className="size-icon-sm mt-0.5 shrink-0" />
+                        <span className="min-w-0">{AGENCY_SIGN_UP_ALERT}</span>
+                    </p>
+                    <Separator />
+                    <div className="flex flex-col gap-2">
+                        <h3 id="agency-sign-up-contacts" className="typo-body-l-bold text-foreground">
+                            {LOGIN_CONTACT_LABEL}
+                        </h3>
+                        <dl aria-labelledby="agency-sign-up-contacts" className="flex flex-col gap-2">
+                            {LOGIN_CONTACTS.map(({service, number}) => (
+                                <div key={service} className="flex justify-between gap-4">
+                                    <dt className="typo-body-l-regular text-foreground-subtle">{service}</dt>
+                                    <dd className="typo-body-l-medium text-label-foreground m-0 tabular-nums">
+                                        {number}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
             </div>
             <DialogFooter className="sm:px-8 sm:pb-8">
                 <DialogClose asChild>
