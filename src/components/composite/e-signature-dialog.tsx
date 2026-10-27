@@ -29,27 +29,32 @@ import {cn} from '@/lib/utils'
 // [프론트엔드 연동] 아래 props 만 연결하면 된다. 화면과 상태 처리(칩 전환 · 결과 표시 · 포커스)는 그대로 둔다.
 //   · businessType — 회원정보로 판단해 넘긴다.
 //       'corporation'(법인기업, 기본) = 법인인증 + 개인인증 2건 / 'individual'(개인기업) = 개인인증 1건
-//   · businessNumber — 회원정보의 사업자등록번호(기본값은 목업).
-//   · onCertify(method, registrationNumber, certificate) — 인증서를 고르면 불린다. 여기서 인증 모듈을 열고
+//   · businessNumber — 회원정보의 사업자등록번호. 법인인증 화면에 읽기 전용으로 보인다(입력 칸 없음).
+//   · onCertify({method, certificate, residentNumber}) — 인증서를 고르면 불린다. 여기서 인증 모듈을 열고
 //       성공이면 true, 실패(정보 불일치 등)면 false 를 돌려준다. Promise 도 된다. 예외가 나면 실패로 처리한다.
+//       residentNumber(대표자 주민등록번호)는 개인인증일 때만 있다 — 법인인증은 businessNumber 로 확인한다.
 //       넘기지 않으면 항상 성공으로 본다(퍼블리싱 확인용).
 //   · onSubmit — [제출하기]는 모든 인증을 마쳐야 나타나므로 여기서 완료 여부를 다시 확인할 필요가 없다.
-//   · 번호 칸에는 name 이 없다 — 폼으로 보내지 않고 onCertify 인자로만 받는다.
+//   · 주민등록번호 칸에는 name 이 없다 — 폼으로 보내지 않고 onCertify 인자로만 받는다.
 //   · previewResult · previewFailCertificate 는 퍼블리싱 확인 화면 전용이다. 실서비스에서는 넘기지 않는다.
 //
 // 이미 구현된 동작
-//   · 번호 · 인증 결과는 인증마다 따로 기억한다 — 칩을 오가거나 모달을 닫았다 열어도 남는다(같은 화면에 있는 동안).
-//   · 성공: 칩에 [인증완료] 배지 + "공동인증서로 인증했습니다." 안내, 그 인증의 번호 칸은 잠긴다(읽기 전용).
+//   · 입력값 · 인증 결과는 인증마다 따로 기억한다 — 칩을 오가거나 모달을 닫았다 열어도 남는다(같은 화면에 있는 동안).
+//   · 성공: 칩에 [인증완료] 배지 + "공동인증서로 인증했습니다." 안내, 주민등록번호 칸은 잠긴다(읽기 전용).
 //     남은 인증이 있으면 그 칩으로 자동 전환한다. 모달을 다시 열 때도 남은 인증 칩으로 연다.
-//   · 실패: 번호 칸 빨간 테두리 + 오류 문구. 번호를 고치면 지워진다.
+//   · 실패: 칸(법인인증은 사업자등록번호, 개인인증은 주민등록번호) 빨간 테두리 + 오류 문구.
+//     주민등록번호를 고치면 지워진다.
 //   · 인증하는 동안(onCertify 대기)에는 [인증서로 인증하기]를 막아 두 번 눌리지 않게 한다.
 //   · 결과가 나오면 그 자리로 스크롤 · 포커스를 옮긴다(화면 낭독기 안내 포함).
 
 type SignatureMethod = 'corporate' | 'personal'
 type BusinessType = 'corporation' | 'individual'
 
-// 앞 6 · 뒤 7 자리 — 법인등록번호와 주민등록번호가 같은 자릿수다.
-type RegistrationNumber = {front: string; back: string}
+// 대표자 주민등록번호 — 앞 6 · 뒤 7 자리.
+type ResidentNumber = {front: string; back: string}
+
+// onCertify 인자 — residentNumber 는 개인인증일 때만 있다.
+type CertifyRequest = {method: SignatureMethod; certificate: CertificateType; residentNumber?: ResidentNumber}
 
 // 사업자 유형별 안내 문구 · 고를 수 있는 인증.
 // 안내 문단은 두 문장을 각자 한 줄에 둔다 — 한 문자열로 두면 폭에 따라 문장 중간에서 접힌다.
@@ -72,47 +77,44 @@ const BUSINESS_TYPES: Record<
     },
 }
 
+// 인증별 화면 — 입력 칸(residentNumber)이 있는 인증은 개인인증뿐이다.
 const SIGNATURE_METHODS: Record<
     SignatureMethod,
     {
         label: string
         guide: string
         certificateGuide: string
-        numberLabel: string
-        placeholders: RegistrationNumber
-        isBackMasked: boolean
+        /** 주민등록번호 입력 칸 — 없으면 사업자등록번호(읽기 전용)를 보인다. */
+        residentNumber?: {label: string; placeholders: ResidentNumber}
+        errorMessage: string
     }
 > = {
     corporate: {
         label: '법인인증',
-        guide: '법인등록번호를 입력해 주세요.',
+        guide: '사업자등록번호를 확인해 주세요.',
         certificateGuide: '법인인증 — 사업장(법인) 인증서로 인증합니다.',
-        numberLabel: '법인등록번호',
-        placeholders: {front: '110111', back: '1234567'},
-        isBackMasked: false,
+        errorMessage:
+            '사업자등록번호와 인증서 정보가 일치하지 않습니다. 사업장(법인) 인증서를 확인한 뒤 다시 인증해 주세요.',
     },
     personal: {
         label: '개인인증',
         guide: '대표자 주민등록번호를 입력해 주세요.',
         certificateGuide: '개인인증 — 대표자 개인 인증서로 인증합니다.',
-        numberLabel: '대표자 주민등록번호',
-        placeholders: {front: '800101', back: '*******'},
-        isBackMasked: true,
+        residentNumber: {label: '대표자 주민등록번호', placeholders: {front: '800101', back: '*******'}},
+        errorMessage:
+            '대표자 주민등록번호와 인증서 정보가 일치하지 않습니다. 주민등록번호를 확인한 뒤 다시 인증해 주세요.',
     },
 }
 
 const CERTIFICATE_NAMES: Record<CertificateType, string> = {joint: '공동인증서', financial: '금융인증서'}
-const CERTIFY_ERROR_MESSAGE = '입력한 정보와 인증서 정보가 일치하지 않습니다. 입력값을 확인한 뒤 다시 인증해 주세요.'
-
-// 인증을 마친 기록 — 완료 표시에 쓸 인증서 종류와, 잠근 번호를 다시 보여 줄 값.
-type CertifiedRecord = {certificate: CertificateType; registrationNumber: RegistrationNumber}
 
 // 결과 뒤 포커스 · 스크롤할 자리 — 완료 안내(success) · 오류 문구(failure) · 남은 인증의 첫 칸(next).
 type RevealTarget = 'success' | 'failure' | 'next'
 
 const NUMBER_FRONT_LENGTH = 6
 const NUMBER_BACK_LENGTH = 7
-const EMPTY_NUMBER: RegistrationNumber = {front: '', back: ''}
+const EMPTY_NUMBER: ResidentNumber = {front: '', back: ''}
+// [퍼블리싱 확인용] 확인 화면 · 동의 화면이 넘기는 목업 사업자등록번호. 실서비스는 회원정보 값을 넘긴다.
 const PREVIEW_BUSINESS_NUMBER = '123-45-67890'
 
 const isSignatureMethod = (value: string): value is SignatureMethod => value === 'corporate' || value === 'personal'
@@ -130,24 +132,16 @@ type ESignatureDialogProps = {
     businessType?: BusinessType
     /** 처음 고른 인증(법인기업일 때만 의미가 있다). 기본 법인인증. */
     defaultMethod?: SignatureMethod
-    /** 사업자등록번호(읽기 전용 칸). [프론트엔드 연동] 회원정보 값을 넘긴다. */
-    businessNumber?: string
-    /** 인증서를 골랐을 때(인증 연동 자리). 성공이면 true, 실패면 false 를 돌려준다. 넘기지 않으면 성공으로 본다. */
-    onCertify?: (
-        method: SignatureMethod,
-        registrationNumber: RegistrationNumber,
-        certificate: CertificateType,
-    ) => boolean | Promise<boolean>
+    /** 사업자등록번호 — 법인인증 화면에 읽기 전용으로 보인다. [프론트엔드 연동] 회원정보 값을 넘긴다. */
+    businessNumber: string
+    /** 인증서를 골랐을 때(인증 연동 자리). 성공이면 true, 실패면 false. 넘기지 않으면 성공으로 본다. */
+    onCertify?: (request: CertifyRequest) => boolean | Promise<boolean>
     /** 인증을 마친 뒤 [제출하기]를 눌렀을 때. */
     onSubmit?: () => void
     /** [퍼블리싱 확인용] onCertify 가 없을 때 이 인증서를 고르면 실패로 본다 — 확인 화면에서 실패 흐름을 눌러 보는 용도. */
     previewFailCertificate?: CertificateType
-    /** [퍼블리싱 확인용] 처음부터 보여 줄 인증 결과 · 입력값 — 성공 · 실패 케이스 화면에서만 쓴다. */
-    previewResult?: {
-        status: 'success' | 'failure'
-        registrationNumber: RegistrationNumber
-        certificate?: CertificateType
-    }
+    /** [퍼블리싱 확인용] 모든 인증을 이 결과(성공 · 실패)로 시작한다 — 칩을 오가며 인증별 결과 화면을 본다. */
+    previewResult?: {status: 'success' | 'failure'; residentNumber: ResidentNumber; certificate?: CertificateType}
 }
 
 const ESignatureDialog = ({
@@ -157,7 +151,7 @@ const ESignatureDialog = ({
     onOpenChange,
     businessType = 'corporation',
     defaultMethod = 'corporate',
-    businessNumber = PREVIEW_BUSINESS_NUMBER,
+    businessNumber,
     onCertify,
     onSubmit,
     previewResult,
@@ -170,33 +164,27 @@ const ESignatureDialog = ({
         business.methods.includes(defaultMethod) ? defaultMethod : business.methods[0],
     )
     // 번호는 인증마다 따로 둔다 — 두 인증을 모두 해야 하므로 칩을 오가도 입력한 값이 남는다.
-    // 성공 케이스 확인 화면은 마친 인증 모두에 번호를 채워 둔다(실패 케이스는 지금 인증에만).
-    const [numbers, setNumbers] = useState<Partial<Record<SignatureMethod, RegistrationNumber>>>(() => {
-        if (!previewResult) return {}
-        const filledMethods = previewResult.status === 'success' ? business.methods : [method]
-        return Object.fromEntries(filledMethods.map((value) => [value, previewResult.registrationNumber]))
-    })
-    const [isCertificateOpen, setIsCertificateOpen] = useState(false)
-    // onCertify 를 기다리는 동안 — 인증 버튼을 막는다.
-    const [isCertifying, setIsCertifying] = useState(false)
-    // 인증마다 마친 기록.
-    // 성공 케이스 확인 화면은 고를 수 있는 인증을 모두 마친 상태로 시작한다.
-    const [certified, setCertified] = useState<Partial<Record<SignatureMethod, CertifiedRecord>>>(() =>
-        previewResult?.status === 'success'
+    const [numbers, setNumbers] = useState<Partial<Record<SignatureMethod, ResidentNumber>>>(() =>
+        previewResult
             ? Object.fromEntries(
-                  business.methods.map((value) => [
-                      value,
-                      {
-                          certificate: previewResult.certificate ?? 'joint',
-                          registrationNumber: previewResult.registrationNumber,
-                      },
-                  ]),
+                  business.methods
+                      .filter((value) => SIGNATURE_METHODS[value].residentNumber)
+                      .map((value) => [value, previewResult.residentNumber]),
               )
             : {},
     )
-    // 인증마다 실패 여부 — 칩을 오가도 그 인증의 오류 문구가 남는다(번호를 고치면 지워진다).
+    const [isCertificateOpen, setIsCertificateOpen] = useState(false)
+    // onCertify 를 기다리는 동안 — 인증 버튼을 막는다.
+    const [isCertifying, setIsCertifying] = useState(false)
+    // 인증마다 마친 인증서 종류(완료 안내 문구에 쓴다).
+    const [certified, setCertified] = useState<Partial<Record<SignatureMethod, CertificateType>>>(() =>
+        previewResult?.status === 'success'
+            ? Object.fromEntries(business.methods.map((value) => [value, previewResult.certificate ?? 'joint']))
+            : {},
+    )
+    // 인증마다 실패 여부 — 칩을 오가도 그 인증의 오류 문구가 남는다(주민등록번호를 고치면 지워진다).
     const [failed, setFailed] = useState<Partial<Record<SignatureMethod, boolean>>>(() =>
-        previewResult?.status === 'failure' ? {[method]: true} : {},
+        previewResult?.status === 'failure' ? Object.fromEntries(business.methods.map((value) => [value, true])) : {},
     )
     // 마지막 인증 결과 · 결과가 나온 횟수 — 횟수가 바뀔 때마다 결과 자리로 스크롤한다.
     // next — 성공했고 남은 인증으로 자동 전환한 경우(남은 인증의 첫 칸으로 간다).
@@ -205,19 +193,24 @@ const ESignatureDialog = ({
     const [announcement, setAnnouncement] = useState('')
     const [resultCount, setResultCount] = useState(0)
     const selected = SIGNATURE_METHODS[method]
-    const certifiedRecord = certified[method]
+    const certifiedCertificate = certified[method]
     const number = numbers[method] ?? EMPTY_NUMBER
     const isFailed = Boolean(failed[method])
     const isAllCertified = business.methods.every((value) => certified[value])
-    const isComplete = number.front.length === NUMBER_FRONT_LENGTH && number.back.length === NUMBER_BACK_LENGTH
+    // 입력 칸이 없는 법인인증은 바로 인증할 수 있다.
+    const isComplete =
+        !selected.residentNumber ||
+        (number.front.length === NUMBER_FRONT_LENGTH && number.back.length === NUMBER_BACK_LENGTH)
     const errorId = `${idPrefix}-${method}-error`
     const successId = `${idPrefix}-${method}-success`
 
     const guideId = `${idPrefix}-guide`
     const businessNumberId = `${idPrefix}-business-number`
     const numberFrontId = `${idPrefix}-${method}-front`
+    // 실패 · 다음 인증으로 넘어갈 때 포커스할 첫 칸.
+    const firstFieldId = selected.residentNumber ? numberFrontId : businessNumberId
 
-    const setNumber = (part: keyof RegistrationNumber, value: string) => {
+    const setNumber = (part: keyof ResidentNumber, value: string) => {
         setFailed((prev) => ({...prev, [method]: false}))
         lastResultRef.current = null
         setNumbers((prev) => ({
@@ -232,12 +225,12 @@ const ESignatureDialog = ({
     // 결과 자리를 보이게 하고 포커스를 옮긴다. 본문이 스크롤 상자라 block: 'nearest' 로 필요한 만큼만 움직인다.
     // 동작을 줄이도록 설정한 사용자에게는 즉시 이동한다([6.3.1]).
     const revealResult = (result: RevealTarget) => {
-        const targetId = result === 'failure' ? errorId : result === 'success' ? successId : numberFrontId
+        const targetId = result === 'failure' ? errorId : result === 'success' ? successId : firstFieldId
         const target = document.getElementById(targetId)
         if (!target) return
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         target.scrollIntoView({block: 'nearest', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
-        const focusTarget = result === 'success' ? target : document.getElementById(numberFrontId)
+        const focusTarget = result === 'success' ? target : document.getElementById(firstFieldId)
         focusTarget?.focus({preventScroll: true})
     }
 
@@ -256,7 +249,9 @@ const ESignatureDialog = ({
         setIsCertifying(true)
         // 인증 연동에서 예외가 나도 실패로 보고 오류 문구를 띄운다(버튼이 막힌 채 남지 않게).
         const certify = async () =>
-            onCertify ? onCertify(method, number, certificate) : certificate !== previewFailCertificate
+            onCertify
+                ? onCertify({method, certificate, residentNumber: selected.residentNumber ? number : undefined})
+                : certificate !== previewFailCertificate
         const isSuccess = await certify().catch(() => false)
         setIsCertifying(false)
         setFailed((prev) => ({...prev, [method]: !isSuccess}))
@@ -265,7 +260,7 @@ const ESignatureDialog = ({
             setResultCount((count) => count + 1)
             return
         }
-        setCertified((prev) => ({...prev, [method]: {certificate, registrationNumber: number}}))
+        setCertified((prev) => ({...prev, [method]: certificate}))
         // 남은 인증(아직 안 마친 첫 건)이 있으면 그 칩으로 넘어간다.
         const nextMethod = business.methods.find((value) => value !== method && !certified[value])
         if (nextMethod) {
@@ -282,7 +277,7 @@ const ESignatureDialog = ({
     // 화면이 다 그려진 뒤라야 스크롤 위치가 맞아 한 프레임 미룬다.
     // 닫았다 다시 열 때 지금 인증을 이미 마쳤고 남은 인증이 있으면, 남은 인증 칩으로 열고 그 첫 칸으로 간다.
     const handleOpenAutoFocus = (event: Event) => {
-        const nextMethod = certifiedRecord
+        const nextMethod = certifiedCertificate
             ? business.methods.find((value) => value !== method && !certified[value])
             : undefined
         if (nextMethod) {
@@ -293,7 +288,7 @@ const ESignatureDialog = ({
             setResultCount((count) => count + 1)
             return
         }
-        const result = isFailed ? 'failure' : certifiedRecord ? 'success' : null
+        const result = isFailed ? 'failure' : certifiedCertificate ? 'success' : null
         if (!result) return
         event.preventDefault()
         requestAnimationFrame(() => revealResult(result))
@@ -383,64 +378,73 @@ const ESignatureDialog = ({
                         <h3 id={guideId} className="typo-title-l-bold text-foreground">
                             {selected.guide}
                         </h3>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <Label htmlFor={businessNumberId} className="typo-body-xl-bold text-foreground">
-                                    사업자등록번호
-                                </Label>
-                                {/* 회원정보에 있는 값이라 고치지 않는다 — readOnly 는 값을 보이고 포커스도 받는다. */}
-                                <Input id={businessNumberId} value={businessNumber} readOnly />
-                            </div>
-                            {/* key 로 인증마다 칸을 새로 그린다 — 다른 인증의 칸 상태(포커스 등)가 섞이지 않는다. */}
-                            <div key={method} className="flex flex-col gap-4">
-                                <Label htmlFor={numberFrontId} className="typo-body-xl-bold text-foreground">
-                                    {selected.numberLabel}
-                                </Label>
-                                <div className="flex items-center gap-2">
+                        {/* key 로 인증마다 칸을 새로 그린다 — 다른 인증의 칸 상태(포커스 등)가 섞이지 않는다. */}
+                        <div key={method} className="flex flex-col gap-4">
+                            {selected.residentNumber ? (
+                                <>
+                                    <Label htmlFor={numberFrontId} className="typo-body-xl-bold text-foreground">
+                                        {selected.residentNumber.label}
+                                    </Label>
+                                    <div className="flex items-center gap-2">
+                                        <Input
+                                            id={numberFrontId}
+                                            inputMode="numeric"
+                                            autoComplete="off"
+                                            maxLength={NUMBER_FRONT_LENGTH}
+                                            placeholder={selected.residentNumber.placeholders.front}
+                                            aria-label={`${selected.residentNumber.label} 앞자리`}
+                                            value={number.front}
+                                            onChange={(event) => setNumber('front', event.target.value)}
+                                            readOnly={Boolean(certifiedCertificate)}
+                                            aria-invalid={isFailed || undefined}
+                                            aria-describedby={isFailed ? errorId : undefined}
+                                            className="min-w-0 flex-1"
+                                        />
+                                        <span aria-hidden="true" className="typo-body-xl-regular text-foreground">
+                                            -
+                                        </span>
+                                        {/* 주민등록번호 뒷자리는 화면에 드러나지 않게 가린다. */}
+                                        <Input
+                                            type="password"
+                                            inputMode="numeric"
+                                            autoComplete="off"
+                                            maxLength={NUMBER_BACK_LENGTH}
+                                            placeholder={selected.residentNumber.placeholders.back}
+                                            aria-label={`${selected.residentNumber.label} 뒷자리`}
+                                            value={number.back}
+                                            onChange={(event) => setNumber('back', event.target.value)}
+                                            readOnly={Boolean(certifiedCertificate)}
+                                            aria-invalid={isFailed || undefined}
+                                            aria-describedby={isFailed ? errorId : undefined}
+                                            className="min-w-0 flex-1"
+                                        />
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Label htmlFor={businessNumberId} className="typo-body-xl-bold text-foreground">
+                                        사업자등록번호
+                                    </Label>
+                                    {/* 회원정보에 있는 값이라 고치지 않는다 — readOnly 는 값을 보이고 포커스도 받는다. */}
                                     <Input
-                                        id={numberFrontId}
-                                        inputMode="numeric"
-                                        autoComplete="off"
-                                        maxLength={NUMBER_FRONT_LENGTH}
-                                        placeholder={selected.placeholders.front}
-                                        aria-label={`${selected.numberLabel} 앞자리`}
-                                        value={number.front}
-                                        onChange={(event) => setNumber('front', event.target.value)}
-                                        readOnly={Boolean(certifiedRecord)}
+                                        id={businessNumberId}
+                                        value={businessNumber}
+                                        readOnly
                                         aria-invalid={isFailed || undefined}
                                         aria-describedby={isFailed ? errorId : undefined}
-                                        className="min-w-0 flex-1"
                                     />
-                                    <span aria-hidden="true" className="typo-body-xl-regular text-foreground">
-                                        -
-                                    </span>
-                                    {/* 주민등록번호 뒷자리는 화면에 드러나지 않게 가린다. */}
-                                    <Input
-                                        type={selected.isBackMasked ? 'password' : 'text'}
-                                        inputMode="numeric"
-                                        autoComplete="off"
-                                        maxLength={NUMBER_BACK_LENGTH}
-                                        placeholder={selected.placeholders.back}
-                                        aria-label={`${selected.numberLabel} 뒷자리`}
-                                        value={number.back}
-                                        onChange={(event) => setNumber('back', event.target.value)}
-                                        readOnly={Boolean(certifiedRecord)}
-                                        aria-invalid={isFailed || undefined}
-                                        aria-describedby={isFailed ? errorId : undefined}
-                                        className="min-w-0 flex-1"
-                                    />
-                                </div>
-                                {/* 번호 칸과 오류 문구 사이 8 — 바깥 gap-4 에서 덜어 낸다. */}
-                                {isFailed ? (
-                                    <FieldError id={errorId} className="-mt-2 scroll-my-6">
-                                        {CERTIFY_ERROR_MESSAGE}
-                                    </FieldError>
-                                ) : null}
-                            </div>
+                                </>
+                            )}
+                            {/* 입력 칸과 오류 문구 사이 8 — 바깥 gap-4 에서 덜어 낸다. */}
+                            {isFailed ? (
+                                <FieldError id={errorId} className="-mt-2 scroll-my-6">
+                                    {selected.errorMessage}
+                                </FieldError>
+                            ) : null}
                         </div>
                         {/* 완료 안내 — 옅은 파랑 상자에 체크 + 문구(높이 45). 문구가 바뀌면 화면 낭독기가 읽는다. */}
                         <div aria-live="polite" className="empty:hidden">
-                            {certifiedRecord ? (
+                            {certifiedCertificate ? (
                                 <p
                                     id={successId}
                                     // 결과를 알리려 포커스를 받는 자리라 tabIndex -1(탭 순서에는 넣지 않는다).
@@ -452,7 +456,7 @@ const ESignatureDialog = ({
                                         icon={Check}
                                         className="bg-primary text-primary-foreground size-icon-md"
                                     />
-                                    {CERTIFICATE_NAMES[certifiedRecord.certificate]}로 인증했습니다.
+                                    {CERTIFICATE_NAMES[certifiedCertificate]}로 인증했습니다.
                                 </p>
                             ) : null}
                         </div>
@@ -470,7 +474,7 @@ const ESignatureDialog = ({
                             type="button"
                             size="xl"
                             // 이 인증을 이미 마쳤으면(다른 인증이 남은 경우) 다른 칩을 고를 때까지 막는다.
-                            disabled={!isComplete || Boolean(certifiedRecord) || isCertifying}
+                            disabled={!isComplete || Boolean(certifiedCertificate) || isCertifying}
                             onClick={() => setIsCertificateOpen(true)}
                         >
                             인증서로 인증하기
@@ -490,5 +494,5 @@ const ESignatureDialog = ({
     )
 }
 
-export {ESignatureDialog}
-export type {BusinessType, ESignatureDialogProps, RegistrationNumber, SignatureMethod}
+export {ESignatureDialog, PREVIEW_BUSINESS_NUMBER}
+export type {BusinessType, CertifyRequest, ESignatureDialogProps, ResidentNumber, SignatureMethod}
