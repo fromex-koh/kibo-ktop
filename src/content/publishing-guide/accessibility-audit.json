@@ -1,7 +1,7 @@
 {
-    "checkedAt": "2026-10-26T08:41:01.484Z",
-    "commit": "170a8c8150a0d2b970d640cf27827bdbd4f30e83",
-    "sourceHash": "ffb548b743901f7c5216eac355b3d9acc0c62e107b7e3deb6d7b858fde046281",
+    "checkedAt": "2026-10-27T07:34:28.632Z",
+    "commit": "5e467895dc879d4674fc3bf257f9beb0862bb849",
+    "sourceHash": "880d47c5e75270ae5fa905752c379b4815823a6f282216e8591a9ca164b40ea5",
     "validatorVersion": "26.10.12 (0a70d65)",
     "screens": [
         {
@@ -6144,19 +6144,19 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 22976
+                    "firstColumn": 23007
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 23191
+                    "firstColumn": 23222
                 },
                 {
                     "type": "error",
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
-                    "firstColumn": 27933
+                    "firstColumn": 27964
                 }
             ]
         },
@@ -15586,19 +15586,19 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 22976
+                    "firstColumn": 23007
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 23191
+                    "firstColumn": 23222
                 },
                 {
                     "type": "error",
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
-                    "firstColumn": 27933
+                    "firstColumn": 27964
                 }
             ]
         },
@@ -21438,19 +21438,19 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 22976
+                    "firstColumn": 23007
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 23191
+                    "firstColumn": 23222
                 },
                 {
                     "type": "error",
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
-                    "firstColumn": 27933
+                    "firstColumn": 27964
                 }
             ]
         },
@@ -27302,19 +27302,19 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 22976
+                    "firstColumn": 23007
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 23191
+                    "firstColumn": 23222
                 },
                 {
                     "type": "error",
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
-                    "firstColumn": 27933
+                    "firstColumn": 27964
                 }
             ]
         },
@@ -45564,19 +45564,19 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 22976
+                    "firstColumn": 23007
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 1,
-                    "firstColumn": 23191
+                    "firstColumn": 23222
                 },
                 {
                     "type": "error",
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
-                    "firstColumn": 27933
+                    "firstColumn": 27964
                 }
             ]
         },
