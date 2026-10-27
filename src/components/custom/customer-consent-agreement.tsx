@@ -7,7 +7,7 @@ import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
 import {ConsentTermsStepDialogContent} from '@/components/composite/consent-terms-dialog'
 import {EmailField} from '@/components/composite/email-field'
-import {ESignatureDialog} from '@/components/composite/e-signature-dialog'
+import {ESignatureDialog, PREVIEW_BUSINESS_NUMBER} from '@/components/composite/e-signature-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {StepNavigation} from '@/components/composite/step-navigation'
@@ -414,9 +414,9 @@ const CustomerConsentAgreement = () => {
 // 이 자리다. 전자서명이 끝나면 그때 nextHref 로 간다.
 
 // 전자서명 모달에서 인증을 모두 마치고 [제출하기]를 누르면 다음 단계로 넘어간다.
-// [프론트엔드 연동] 아래 <ESignatureDialog> 에 businessType · businessNumber · onCertify 를 넘긴다
-// (각 props 설명은 composite/e-signature-dialog.tsx 머리 주석). [제출하기]는 모든 인증을 마쳐야 나타나므로
-// handleSigned 에서 완료 여부를 다시 확인할 필요는 없다.
+// [프론트엔드 연동] 아래 <ESignatureDialog> 에 businessType · onCertify 를 넘기고, businessNumber 의 목업 값을
+// 회원정보 값으로 바꾼다(각 props 설명은 composite/e-signature-dialog.tsx 머리 주석). [제출하기]는 모든 인증을
+// 마쳐야 나타나므로 handleSigned 에서 완료 여부를 다시 확인할 필요는 없다.
 
 // 동의 값을 한곳에서 넘기는 폼 — 화면의 모든 컨트롤(동의 범위·항목별 동의·확인 체크·추가 이메일)이
 // name 을 갖고 있어 FormData 하나로 모인다. 값을 따로 모으는 상태를 만들지 않는 이유다.
@@ -462,7 +462,13 @@ const CustomerConsentForm = ({
             <form id={formId} noValidate onSubmit={handleSubmit}>
                 {children}
             </form>
-            <ESignatureDialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen} onSubmit={handleSigned} />
+            {/* [프론트엔드 연동] businessNumber — 목업 값 자리. 회원정보의 사업자등록번호로 바꾼다. */}
+            <ESignatureDialog
+                businessNumber={PREVIEW_BUSINESS_NUMBER}
+                open={isSignatureOpen}
+                onOpenChange={setIsSignatureOpen}
+                onSubmit={handleSigned}
+            />
         </>
     )
 }

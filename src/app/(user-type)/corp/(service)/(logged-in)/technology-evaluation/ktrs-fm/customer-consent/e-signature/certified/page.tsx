@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ESignatureDialog} from '@/components/composite/e-signature-dialog'
+import {ESignatureDialog, PREVIEW_BUSINESS_NUMBER} from '@/components/composite/e-signature-dialog'
 import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 
 export const metadata: Metadata = {title: '전자서명 (인증 완료)'}
@@ -14,8 +14,9 @@ const CorpKtrsFmESignatureCertifiedPage = () => (
             </PopupPreviewNote>
         </main>
         <ESignatureDialog
+            businessNumber={PREVIEW_BUSINESS_NUMBER}
             defaultOpen
-            previewResult={{status: 'success', registrationNumber: {front: '110111', back: '1234567'}}}
+            previewResult={{status: 'success', residentNumber: {front: '800101', back: '1234567'}}}
         />
     </>
 )

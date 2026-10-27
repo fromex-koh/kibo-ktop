@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ESignatureDialog} from '@/components/composite/e-signature-dialog'
+import {ESignatureDialog, PREVIEW_BUSINESS_NUMBER} from '@/components/composite/e-signature-dialog'
 import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 
 export const metadata: Metadata = {title: '전자서명 (개인기업)'}
@@ -16,7 +16,12 @@ const CorpKtrsFmESignatureIndividualPage = () => (
                 확인용: 인증서 선택에서 공동인증서는 인증 성공, 금융인증서는 인증 실패로 보입니다.
             </PopupPreviewNote>
         </main>
-        <ESignatureDialog businessType="individual" defaultOpen previewFailCertificate="financial" />
+        <ESignatureDialog
+            businessType="individual"
+            businessNumber={PREVIEW_BUSINESS_NUMBER}
+            defaultOpen
+            previewFailCertificate="financial"
+        />
     </>
 )
 
