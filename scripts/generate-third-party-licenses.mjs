@@ -3,6 +3,8 @@ import {resolve} from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const OUTPUT = resolve(ROOT, 'THIRD_PARTY_LICENSES.md')
+// 컴포넌트 가이드 '오픈소스 라이선스' 화면이 읽는 목록 — 위 문서와 같은 데이터에서 만든다(손으로 고치지 않는다).
+const SUMMARY_OUTPUT = resolve(ROOT, 'src/content/publishing-guide/third-party-licenses.generated.json')
 const FONT_LICENSE = resolve(ROOT, 'src/app/fonts/LICENSE-PRETENDARD.txt')
 const CHECK_ONLY = process.argv.includes('--check')
 
@@ -18,6 +20,8 @@ const findLicenseFile = (packageDirectory) =>
         .filter((file) => /^(licen[cs]e|copying|notice)(\.|$)/i.test(file))
         .sort()[0]
 
+const summaries = []
+
 const sections = Object.keys(rootPackage.dependencies)
     .sort((a, b) => a.localeCompare(b))
     .map((name) => {
@@ -30,6 +34,13 @@ const sections = Object.keys(rootPackage.dependencies)
         if (!licenseFile) throw new Error(`${name}@${pkg.version}: LICENSE/NOTICE 파일을 찾을 수 없습니다.`)
 
         const repository = resolveRepository(pkg)
+        summaries.push({
+            name: pkg.name,
+            version: pkg.version,
+            license: pkg.license ?? 'See license text',
+            source: repository,
+            kind: 'package',
+        })
         const metadata = [
             `## ${pkg.name}@${pkg.version}`,
             '',
@@ -45,6 +56,13 @@ const sections = Object.keys(rootPackage.dependencies)
     })
 
 const fontLicense = readFileSync(FONT_LICENSE, 'utf8').trim()
+summaries.push({
+    name: 'Pretendard Variable',
+    version: '-',
+    license: 'OFL-1.1',
+    source: 'https://github.com/orioncactus/pretendard',
+    kind: 'font',
+})
 sections.push(
     [
         '## Pretendard Variable Font',
@@ -72,14 +90,25 @@ const output = [
     ...sections.flatMap((section) => [section, '']),
 ].join('\n')
 
+const summaryOutput = `${JSON.stringify(
+    {
+        '//': '자동 생성 파일 — 직접 수정하지 않습니다. yarn license-notices 가 THIRD_PARTY_LICENSES.md 와 함께 만듭니다.',
+        licenses: summaries,
+    },
+    null,
+    4,
+)}\n`
+
 if (CHECK_ONLY) {
     const current = existsSync(OUTPUT) ? readFileSync(OUTPUT, 'utf8') : ''
-    if (current !== output) {
+    const currentSummary = existsSync(SUMMARY_OUTPUT) ? readFileSync(SUMMARY_OUTPUT, 'utf8') : ''
+    if (current !== output || currentSummary !== summaryOutput) {
         console.error('❌ THIRD_PARTY_LICENSES.md가 현재 dependencies와 다릅니다. yarn license-notices를 실행하세요.')
         process.exit(1)
     }
     console.log('✅ THIRD_PARTY_LICENSES.md 최신 상태 확인')
 } else {
     writeFileSync(OUTPUT, output)
+    writeFileSync(SUMMARY_OUTPUT, summaryOutput)
     console.log(`✅ THIRD_PARTY_LICENSES.md 생성 완료 (${sections.length}개 고지)`)
 }
