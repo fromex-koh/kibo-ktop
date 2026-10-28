@@ -8,8 +8,8 @@
 //   · 쪽 번호 · 목차의 장 시작 번호 · 장 첫 쪽 여부(장 제목 박스 / 머리말)는 다 만든 목록에서 계산한다.
 //
 // [프론트엔드 연동]
-//   · 인쇄할 장 = 인쇄 출력물 선택 모달에서 고른 항목(PrintOutputSectionId). 확인용 화면은 ?sections= 로 받는다.
-//   · 인쇄 주소 = getKbigxPrintHref(KBIGX_PRINT_CORP_PATH | KBIGX_PRINT_ORG_PATH, {reportId, sections}) — 웹 보고서 [출력하기]가 새 탭으로 연다.
+//   · 담을 장 = 보고서 내용 선택 모달에서 고른 항목(PrintOutputSectionId). 확인용 화면은 ?sections= 로 받는다.
+//   · 인쇄 주소 = getKbigxPrintHref(KBIGX_PRINT_CORP_PATH | KBIGX_PRINT_ORG_PATH, {reportId, sections}) — 보고서 내용 선택 모달의 [보고서 미리보기]가 새 탭으로 연다(문서 화면만, 자동 인쇄 없음).
 //   · 표지 · 목차 · 참고자료(등급 정의) · 뒷표지는 고른 장과 관계없이 늘 들어간다 — 참고자료는 모달에서 고르는 항목이 아니다.
 //   · 행 수는 서버에서 글자 수로 어림한다(아래 *_PAGE · *_AREA 상수). 이 값은 컴포넌트의 열 폭 · 글자 크기 · 여백과 맞물려 있어
 //     쪽 모양을 바꾸면 같이 고친다. 어긋나면 확인 화면에 넘침 표시가 뜬다(kbigx-print-page-body.tsx).
@@ -20,7 +20,9 @@ import {
 } from '@/content/service/k-bigx-print-output-selection'
 import {
     INNOVATION_REPORT_CASE_QUERY,
+    INNOVATION_REPORT_EMPTY_QUERY,
     INNOVATION_REPORT_ID_QUERY,
+    toExcellentPatentRows,
     type InnovationGrowthReport,
 } from '@/content/service/k-bigx-innovation-report'
 import {
@@ -50,14 +52,13 @@ const KBIGX_PRINT_NOTICE =
 // 날짜 표기 — 2026-09-30 → 2026.09.30(표지 발급일).
 const formatKbigxPrintDate = (date: string) => date.replaceAll('-', '.')
 
-// 확인용 화면 안내 — 화면에서만 보이고 인쇄물에는 나오지 않는다.
-const KBIGX_PRINT_TEMPLATE_NOTICE =
-    '이 화면은 서비스 화면이 아니라 결과 보고서 템플릿을 확인하는 용도입니다. 서비스에서는 보고서 화면의 [보고서 출력] → 인쇄 출력물 선택에서 고른 항목만 인쇄 미리보기에 나옵니다.'
+// 도구 막대 아래 안내 — 화면에서만 보이고 인쇄물에는 나오지 않는다. 도구 막대의 [PDF 다운로드]와 짝이다.
+const KBIGX_PRINT_PDF_NOTICE = '보고서를 인쇄하려면 PDF 파일을 다운로드한 후, 파일에서 인쇄해 주세요.'
 
 // 고른 장을 받는 주소 쿼리 — ?sections=briefing,company
 const KBIGX_PRINT_SECTIONS_QUERY = 'sections'
 
-// 쪽이 속하는 장 — 인쇄 출력물 선택 항목 + 늘 들어가는 참고자료.
+// 쪽이 속하는 장 — 보고서 내용 선택 항목 + 늘 들어가는 참고자료.
 type KbigxPrintSectionId = PrintOutputSectionId | 'reference'
 
 const REFERENCE_SECTION_LABEL = '참고자료'
@@ -321,26 +322,9 @@ const getKbigxPatentRows = (patents: readonly PatentRowText[]): KbigxPatentRows 
     return {patentRows, emptyRows: rows - patentRows}
 }
 
-// 우수특허 줄 — 웹 화면과 같이 피인용 지수 높은 순 10건 + 나머지는 11번째 '기타' 줄 하나(피인용 횟수 합).
-// 정렬은 여기서 한다(받은 순서와 무관). 피인용 지수가 숫자가 아니면(값 없음) 맨 뒤로,
-// '기타' 합은 숫자인 값만 더한다(하나도 없으면 NaN → 칸에 '-').
-const citationRank = (value: number) => (Number.isFinite(value) ? value : Number.NEGATIVE_INFINITY)
-const excellentPatentRows = (report: InnovationGrowthReport) => {
-    const sorted = [...report.techInnovation.excellentPatents].sort(
-        (a, b) => citationRank(b.citationIndex) - citationRank(a.citationIndex) || 0,
-    )
-    const rest = sorted.slice(KBIGX_PRINT_LIST_LIMIT)
-    const restCitations = rest.map((patent) => patent.citations).filter(Number.isFinite)
-    return {
-        patents: sorted.slice(0, KBIGX_PRINT_LIST_LIMIT),
-        /** '기타' 줄 피인용 횟수 합. 11건 이상일 때만 값이 있고, 10건 이하면 null(기타 줄 없음). */
-        otherCitations: rest.length
-            ? restCitations.length
-                ? restCitations.reduce((sum, value) => sum + value, 0)
-                : Number.NaN
-            : null,
-    }
-}
+// 우수특허 줄 — 웹 화면과 같은 규칙(toExcellentPatentRows: 피인용 지수 높은 순 10건 + '기타' 줄).
+const excellentPatentRows = (report: InnovationGrowthReport) =>
+    toExcellentPatentRows(report.techInnovation.excellentPatents, KBIGX_PRINT_LIST_LIMIT)
 // 우수특허 — 한 쪽 · 10행(+ 11건 이상이면 '기타' 줄). 모자라면 '-' 줄로 채우고, 10행이
 // rowsHeight − '기타' 줄 높이를 넘으면 들어가는 행까지만 그린다(적어도 1행).
 type KbigxExcellentPatentRows = ReturnType<typeof excellentPatentRows> & {emptyRows: number}
@@ -516,12 +500,12 @@ const parseKbigxPrintSections = (value: string | string[] | undefined): readonly
     return selected.length ? selected : PRINT_OUTPUT_SELECTION_SECTIONS.map((section) => section.id)
 }
 
-// 인쇄본 주소(기업 · 기관) — 웹 보고서 [보고서 출력] → 인쇄 출력물 선택 [출력하기]가 이 주소를 새 탭으로 연다(lib/open-report-print-tab.ts).
+// 인쇄본 주소(기업 · 기관) — 웹 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기]가 이 주소를 새 탭으로 연다(lib/open-report-print-tab.ts).
 // 두 화면은 같은 인쇄본을 그린다. 각 사용자 유형의 웹 보고서 page.tsx 가 자기 주소를 printPath 로 넘긴다.
 const KBIGX_PRINT_CORP_PATH = '/corp/k-bigx-report/innovation-growth-report/report-print'
 const KBIGX_PRINT_ORG_PATH = '/org/k-bigx-report/innovation-growth-report/report-print'
 
-// 인쇄본 주소 + 쿼리 — 보고서 id · 고른 장(?sections=), 퍼블리싱 확인용 열람 케이스(?case=, 연동 후 지운다).
+// 인쇄본 주소 + 쿼리 — 보고서 id · 고른 장(?sections=), 퍼블리싱 확인용 열람 케이스(?case=) · 값 모양(?empty=)(둘 다 연동 후 지운다).
 // 인쇄본 화면이 이 값으로 보고서를 다시 조회해 그린다 — 웹 화면을 찍는 것이 아니다.
 const getKbigxPrintHref = (
     path: string,
@@ -529,12 +513,19 @@ const getKbigxPrintHref = (
         reportId,
         sections,
         previewCase,
-    }: {reportId?: string | null; sections: readonly PrintOutputSectionId[]; previewCase?: string | null},
+        previewEmpty,
+    }: {
+        reportId?: string | null
+        sections: readonly PrintOutputSectionId[]
+        previewCase?: string | null
+        previewEmpty?: string | null
+    },
 ) => {
     const params = new URLSearchParams()
     if (reportId) params.set(INNOVATION_REPORT_ID_QUERY, reportId)
     params.set(KBIGX_PRINT_SECTIONS_QUERY, sections.join(','))
     if (previewCase) params.set(INNOVATION_REPORT_CASE_QUERY, previewCase)
+    if (previewEmpty) params.set(INNOVATION_REPORT_EMPTY_QUERY, previewEmpty)
 
     return `${path}?${params.toString()}`
 }
@@ -572,7 +563,7 @@ const KBIGX_PRINT_SECTION_SUBTITLES: Partial<Record<KbigxPrintSectionId, string>
 const getKbigxPrintSectionSubtitle = (section: KbigxPrintSectionId | undefined) =>
     section ? KBIGX_PRINT_SECTION_SUBTITLES[section] : undefined
 
-// 장 이름 — 장 제목 박스 · 머리말 · 목차에 쓴다. 인쇄 출력물 선택 항목의 label 을 그대로 쓴다.
+// 장 이름 — 장 제목 박스 · 머리말 · 목차에 쓴다. 보고서 내용 선택 항목의 label 을 그대로 쓴다.
 const getKbigxPrintSectionLabel = (section: KbigxPrintSectionId | undefined) =>
     section === 'reference'
         ? REFERENCE_SECTION_LABEL
@@ -616,7 +607,7 @@ export {
     KBIGX_PRINT_SECTIONS_QUERY,
     KBIGX_PRINT_TAGLINE,
     KBIGX_PRINT_TAGLINE_EN,
-    KBIGX_PRINT_TEMPLATE_NOTICE,
+    KBIGX_PRINT_PDF_NOTICE,
     parseKbigxPrintSections,
 }
 export type {

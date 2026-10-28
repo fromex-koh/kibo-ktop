@@ -6,7 +6,7 @@ import '@/styles/report-print.css'
 
 export const metadata: Metadata = {title: KBIGX_PRINT_REPORT_TITLE}
 
-// K-BIGx 보고서 · 보고서 출력(기업) (corp-k-bigx-report-innovation-growth-report-report-print · /corp/k-bigx-report/innovation-growth-report/report-print)
+// K-BIGx 보고서 · 보고서 미리보기(기업) (corp-k-bigx-report-innovation-growth-report-report-print · /corp/k-bigx-report/innovation-growth-report/report-print)
 // 쿼리 · 인쇄 흐름 · 연동 지점은 components/custom/kbigx-print-page.tsx 참고. 기관 화면과 같은 인쇄본을 그린다.
 
 const CorpKbigxReportPrintPage = ({searchParams}: KbigxPrintPageProps) => <KbigxPrintPage searchParams={searchParams} />
