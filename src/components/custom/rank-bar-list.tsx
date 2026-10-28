@@ -1,4 +1,4 @@
-import type {ReactNode} from 'react'
+import {useId, type ReactNode} from 'react'
 import {Star} from 'lucide-react'
 import {cn} from '@/lib/utils'
 
@@ -38,6 +38,8 @@ type RankBarColors = {
     subjectBar: string
     /** 막대 바탕(막대 칸 전체 길이) — 없으면 바탕을 그리지 않는다(기업 유형별 4대 혁신역량 비교는 옅은 면). */
     track?: string
+    /** 평균 막대 사선 · 테두리 — 주면 평균 막대가 averageBar 바탕 + 45° 사선 무늬 + 테두리가 된다(흑백 인쇄에서도 평균으로 읽힌다). */
+    averageLine?: string
 }
 
 type RankBarListProps = {
@@ -89,6 +91,11 @@ const DEFAULT_COLORS: RankBarColors = {
 }
 
 const PERCENT = 100
+// 평균 사선 무늬 — 칸 6 · 선 1.5 · 45°. 테두리 1.5 는 막대 안쪽에 그린다(막대 칸이 바깥 절반을 자르므로 굵기를 두 배로 준다).
+const HATCH_SIZE = 6
+const HATCH_STROKE = 1.5
+const HATCH_ANGLE = 45
+const AVERAGE_BAR_STROKE = HATCH_STROKE * 2
 const TEN = 10
 // 막대 끝 값 단계 — 1 · 2 · 2.5 · 5 · 10 × 자릿수(23.5 → 25).
 const NICE_STEPS = [1, 2, 2.5, 5, 10] as const
@@ -125,7 +132,10 @@ const RankBarList = ({
     renderName,
 }: RankBarListProps) => {
     const color = {...DEFAULT_COLORS, ...colors}
+    // 사선 무늬 id — 한 문서에 목록이 여럿이어도 겹치지 않게.
+    const hatchId = `rank-hatch-${useId().replace(/:/g, '')}`
     const scaleMax = max ?? rankBarScaleMax(items)
+    const hasHatch = Boolean(color.averageLine) && items.some((item) => item.tone === 'average')
 
     return (
         <div
@@ -136,13 +146,43 @@ const RankBarList = ({
             )}
         >
             <Title className={titleClassName ?? 'bg-muted text-primary typo-body-xl-bold px-3.5 py-2.5'}>{title}</Title>
+            {/* 평균 사선 무늬 — 목록에 한 번만 정의하고 평균 줄 막대가 가져다 쓴다(같은 id 가 두 번 생기지 않게). */}
+            {hasHatch ? (
+                <svg aria-hidden="true" width={0} height={0} className="block">
+                    <defs>
+                        <pattern
+                            id={hatchId}
+                            patternUnits="userSpaceOnUse"
+                            width={HATCH_SIZE}
+                            height={HATCH_SIZE}
+                            patternTransform={`rotate(${HATCH_ANGLE})`}
+                        >
+                            <rect width={HATCH_SIZE} height={HATCH_SIZE} fill={color.averageBar} />
+                            <line
+                                x1={0}
+                                y1={0}
+                                x2={0}
+                                y2={HATCH_SIZE}
+                                stroke={color.averageLine}
+                                strokeWidth={HATCH_STROKE}
+                            />
+                        </pattern>
+                    </defs>
+                </svg>
+            ) : null}
             {items.length ? (
                 <ol>
                     {items.map((item) => {
                         const tone = item.tone ?? 'default'
                         const percent = item.value > 0 ? Math.min(1, item.value / scaleMax) * PERCENT : 0
-                        const fill =
-                            tone === 'subject' ? color.subjectBar : tone === 'average' ? color.averageBar : color.bar
+                        const isHatched = tone === 'average' && hasHatch
+                        const fill = isHatched
+                            ? `url(#${hatchId})`
+                            : tone === 'subject'
+                              ? color.subjectBar
+                              : tone === 'average'
+                                ? color.averageBar
+                                : color.bar
 
                         return (
                             <li
@@ -181,7 +221,20 @@ const RankBarList = ({
                                 </span>
                                 <svg aria-hidden="true" className={cn('block min-w-0 flex-1', barClassName ?? 'h-4')}>
                                     {color.track ? <rect width="100%" height="100%" fill={color.track} /> : null}
-                                    {percent > 0 ? <rect width={`${percent}%`} height="100%" fill={fill} /> : null}
+                                    {percent > 0 && isHatched ? (
+                                        <svg width={`${percent}%`} height="100%">
+                                            <rect
+                                                width="100%"
+                                                height="100%"
+                                                fill={fill}
+                                                stroke={color.averageLine}
+                                                strokeWidth={AVERAGE_BAR_STROKE}
+                                            />
+                                        </svg>
+                                    ) : null}
+                                    {percent > 0 && !isHatched ? (
+                                        <rect width={`${percent}%`} height="100%" fill={fill} />
+                                    ) : null}
                                 </svg>
                                 <span
                                     className={cn(

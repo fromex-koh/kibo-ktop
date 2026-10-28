@@ -41,6 +41,8 @@ type ValueColumnColors = {
     bar: string
     /** 강조 막대 · 글자(wide). */
     highlight: string
+    /** 강조 글자(wide) — 막대와 글자 색을 다르게 둘 때. 없으면 highlight. */
+    highlightLabel?: string
     baseline: string
     /** 칸 사이 점선(compact). */
     divider: string
@@ -254,12 +256,13 @@ const ValueColumnChart = ({
                     const valueColor =
                         variant === 'wide'
                             ? isHighlighted
-                                ? color.highlight
+                                ? (color.highlightLabel ?? color.highlight)
                                 : color.value
                             : isHighlighted
                               ? color.value
                               : color.mutedValue
-                    const categoryColor = variant === 'wide' && isHighlighted ? color.highlight : color.category
+                    const categoryColor =
+                        variant === 'wide' && isHighlighted ? (color.highlightLabel ?? color.highlight) : color.category
 
                     return (
                         <g key={item.id}>
