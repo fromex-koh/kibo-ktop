@@ -27,8 +27,8 @@ const PART_ROWS = [
         key: 'shell',
         cells: [
             <code key="p">ReportPrintShell · ReportSheet</code>,
-            '도구 막대 + A4 용지. 용지는 1360px 폭으로 그려 화면 폭에 맞춰 줄입니다. ?print=1 이면 다 그린 뒤 인쇄 대화상자를 엽니다.',
-            '특허평가 결과 보고서',
+            '도구 막대 + A4 용지. 용지는 1360px 폭으로 그려 화면 폭에 맞춰 줄입니다. 주된 버튼은 [인쇄하기](기본) 또는 [PDF 다운로드](primaryAction="pdf-download" — 쪽들을 PDF 한 파일로 바로 받음)입니다. ?print=1 이면 다 그린 뒤 인쇄 대화상자를 엽니다.',
+            '특허평가 결과 보고서([인쇄하기]) · K-BIGx 기업혁신성장 보고서([PDF 다운로드])',
         ],
     },
     {
@@ -76,7 +76,7 @@ const EMPHASIS_CODE = `import {renderReportEmphasis} from '@/components/custom/r
 
 <p>{renderReportEmphasis('프롬엑스테크의 혁신성장역량지수는 **상위 2.2% 이내** 수준입니다.')}</p>`
 
-// K-BIGx 인쇄본 전용 토큰 — 목록은 tokens.json 의 kbigxPrint 를 그대로 읽는다(추가하면 여기에도 바로 보인다).
+// K-BIGx PDF 템플릿 전용 토큰 — 목록은 tokens.json 의 kbigxPrint 를 그대로 읽는다(추가하면 여기에도 바로 보인다).
 const KBX = tokens.kbigxPrint
 const KBX_COLOR_ENTRIES = Object.entries(KBX.color)
 // 색 값 글자 — 참조('blue.500') 그대로, 섞은 색은 'mint.700 45% + common.white'.
@@ -95,7 +95,7 @@ const KBX_KIND_ROWS = [
         cells: [
             '색',
             <code key="c">text-kbx-* · bg-kbx-* · border-kbx-*</code>,
-            `역할 ${KBX_COLOR_ENTRIES.length}개(아래 목록). 모두 primitive 참조(남보라 계열은 extra.*). 막대 채움처럼 옅은 등급 색은 두 색을 미리 섞은 불투명 색(grade-*-fill).`,
+            `역할 ${KBX_COLOR_ENTRIES.length}개(아래 목록). 모두 primitive 참조(Tailwind 팔레트에 없는 색은 extra.*). 막대 채움처럼 옅은 등급 색은 두 색을 미리 섞은 불투명 색(grade-*-fill).`,
         ],
     },
     {
@@ -156,7 +156,7 @@ const KBX_KIND_ROWS = [
     },
 ] as const
 
-// K-BIGx 인쇄본 쪽 부품 — components/custom/kbigx-print-parts.tsx
+// K-BIGx PDF 템플릿 쪽 부품 — components/custom/kbigx-print-parts.tsx
 const KBX_PART_COLUMNS = [
     {key: 'part', header: '부품', align: 'start', rowHeader: true},
     {key: 'role', header: '하는 일', align: 'start', wrap: true},
@@ -274,14 +274,17 @@ const KBX_PART_ROWS = [
     },
     {
         key: 'sales-bar-list',
-        cells: [<code key="p">KbxSalesBarList</code>, '인당 매출액 막대 목록. 최근 연도는 남색 · 굵게.'],
+        cells: [
+            <code key="p">KbxSalesBarList</code>,
+            "인당 매출액 막대 목록. 최근 연도는 남색 · 굵게. 값은 천원 단위 정수(496,750), 값이 없는 해는 막대 없이 '-'.",
+        ],
     },
     {key: 'sub-text', cells: [<code key="p">KbxSubText</code>, '칸 안 둘째 줄 괄호 값(19px 옅은 글자).']},
     {
         key: 'tag',
         cells: [
             <code key="p">KbxGradeTag</code>,
-            '등급 알약. tone 을 주면 등급 색 바탕(getTechIndexGrade · getCriGradeTone), 현금흐름등급은 className 에 KBX_CASH_FLOW_TAG_CLASS.',
+            '등급 알약. tone 을 주면 등급 색 바탕(getTechIndexGrade), 기업신용등급은 className 에 KBX_CREDIT_TAG_CLASS(getCriGradeBand 9단계), 현금흐름등급은 KBX_CASH_FLOW_TAG_CLASS.',
         ],
     },
     {
@@ -295,14 +298,14 @@ const KBX_PART_ROWS = [
         key: 'format',
         cells: [
             <code key="p">kbigx-print-format.ts</code>,
-            "값 표시 공통 — KBX_EMPTY_VALUE('-') · formatKbxNumber(값, 포맷) · isKbxNumber · sumKbxNumbers · orKbxEmpty, 포맷 kbxNumberFormat(1,234) · kbxFixed1Format(0.0) · kbxFixed2Format(0.00).",
+            "값 표시 공통 — KBX_EMPTY_VALUE('-') · formatKbxNumber(값, 포맷) · isKbxNumber · sumKbxNumbers · orKbxEmpty, 포맷 kbxNumberFormat(1,234) · kbxIntegerFormat(정수 반올림 — 천원 금액 496,750) · kbxFixed1Format(0.0) · kbxFixed2Format(0.00).",
         ],
     },
     {
         key: 'preparing',
         cells: [
             <code key="p">KbigxPrintPreparing</code>,
-            "인쇄 준비 안내 — [출력하기]로 연 새 탭(?print=1)에서 차트가 그려지고 인쇄 대화상자가 뜰 때까지 화면을 덮습니다(LoadingState · '인쇄할 보고서를 준비하고 있습니다.'). 인쇄물에는 나오지 않고, 같은 탭에서 열린 경우 인쇄가 끝나면 걷힙니다. loading.tsx 는 두지 않습니다(스트리밍 빈 표가 남음).",
+            "준비 안내 — 주소에 ?print=1 이 붙은 바로 인쇄 흐름에서만 쓰입니다(지금 K-BIGx 서비스 흐름은 [보고서 미리보기] → 문서 화면 → [PDF 다운로드]라 쓰지 않음). 차트가 그려지고 인쇄 대화상자가 뜰 때까지 화면을 덮습니다(LoadingState · 'PDF로 받을 보고서를 준비하고 있습니다.'). 인쇄물에는 나오지 않고, 같은 탭에서 열린 경우 인쇄가 끝나면 걷힙니다. loading.tsx 는 두지 않습니다(스트리밍 빈 표가 남음).",
         ],
     },
     {
@@ -321,7 +324,7 @@ const KBX_PART_ROWS = [
     },
 ] as const
 
-// K-BIGx 인쇄본 파일 구성 — 쪽 종류별로 어느 파일이 그리고, 어떤 차트 컴포넌트를 쓰는지.
+// K-BIGx PDF 템플릿 파일 구성 — 쪽 종류별로 어느 파일이 그리고, 어떤 차트 컴포넌트를 쓰는지.
 const KBX_FILE_COLUMNS = [
     {key: 'file', header: '파일', align: 'start', rowHeader: true},
     {key: 'role', header: '그리는 쪽', align: 'start', wrap: true},
@@ -341,7 +344,7 @@ const KBX_FILE_ROWS = [
         key: 'page',
         cells: [
             <code key="f">kbigx-print-page.tsx</code>,
-            '인쇄본 페이지 본문 — 보고서 조회 · 장 고르기 · 자동 인쇄. 기업 · 기관 report-print/page.tsx 가 함께 씁니다.',
+            'PDF 템플릿 페이지 본문 — 보고서 조회 · 장 고르기 · 자동 인쇄. 기업 · 기관 report-print/page.tsx 가 함께 씁니다.',
             '-',
         ],
     },
@@ -458,7 +461,61 @@ const KBX_FILE_ROWS = [
     },
 ] as const
 
-// 인쇄본 데이터 표시 공통 규칙 — 모든 쪽에 같이 적용된다.
+// K-BIGx PDF 템플릿 단독 HTML — 백엔드가 데이터를 넣어 PDF 를 대량 생성하는 전달물(templates/kbigx-report-template.html).
+const STANDALONE_COLUMNS = [
+    {key: 'item', header: '항목', align: 'start', rowHeader: true},
+    {key: 'detail', header: '내용', align: 'start', wrap: true},
+] as const
+
+// [원본 전용] rebuild · source 칸과 STANDALONE_CODE 는 전달본에서 '원본 저장소에서 생성' 안내로 바뀐다(build-frontend-handoff.mjs).
+const STANDALONE_ROWS = [
+    {
+        key: 'file',
+        cells: [
+            '파일',
+            'templates/kbigx-report-template.html 한 장에 화면 코드 · 스타일 · 글꼴(Pretendard) · 이미지 · 목업 데이터가 모두 들어 있습니다. 인터넷 없이 열리고, OS 다크 설정과 관계없이 늘 라이트로 그립니다.',
+        ],
+    },
+    {
+        key: 'use',
+        cells: [
+            '쓰는 법',
+            '백엔드가 파일 안 데이터(JSON) 칸을 실데이터로 바꿔 헤드리스 브라우저로 열고, data-ready 가 붙으면 PDF 로 저장합니다. 데이터 넣는 법 · 값 · 순서 · 개수 규칙은 파일 맨 위 주석에 있습니다.',
+        ],
+    },
+    {
+        key: 'rebuild',
+        cells: [
+            '다시 만들기',
+            "yarn dev 를 켠 상태에서 yarn kbigx-template 을 실행합니다. 'bigx print template' 배지가 붙은 컴포넌트, kbigx-print-* 파일, K-BIGx 목업 · 토큰 · 스타일을 고치면 다시 만듭니다(자동 검사가 잡지 않습니다).",
+        ],
+    },
+    {
+        key: 'source',
+        cells: [
+            '고치는 곳',
+            '결과 파일은 손으로 고치지 않습니다. 생성기는 scripts/kbigx-report-template/ 이고, 파일 맨 위 안내 주석은 header.txt, 파일 안 화면 코드는 entry.tsx 에서 고칩니다.',
+        ],
+    },
+    {
+        key: 'version',
+        cells: [
+            '버전 · 전달',
+            '퍼블리싱 인덱스 마이페이지 › K-BIGx 보고서 이력 › [보고서 템플릿 다운로드](기업 · 기관)로 받습니다(/downloads/kbigx-report-template.html — 빌드 때 정적 파일로 만듦). git 으로 버전을 관리하고 퍼블리싱 인덱스 자산 버전에 표시됩니다. frontend-handoff 전달본의 templates/ 에도 함께 들어갑니다. 입력과 Chrome 버전이 같으면 결과가 똑같아 git diff 로 바뀐 여부를 바로 볼 수 있습니다.',
+        ],
+    },
+] as const
+
+const STANDALONE_CODE = `# 1) 개발 서버를 켠다(스타일을 이 서버의 보고서 미리보기 화면에서 떠 온다)
+yarn dev
+
+# 2) 다른 터미널에서 단독 HTML 을 다시 만든다 — templates/kbigx-report-template.html 을 덮어쓴다
+yarn kbigx-template
+
+# 서버 주소 · Chrome 위치가 다르면
+KBIGX_TEMPLATE_BASE_URL=http://localhost:3001 CHROME_PATH=/usr/bin/google-chrome yarn kbigx-template`
+
+// PDF 템플릿 데이터 표시 공통 규칙 — 모든 쪽에 같이 적용된다.
 const KBX_RULE_COLUMNS = [
     {key: 'rule', header: '규칙', align: 'start', rowHeader: true},
     {key: 'detail', header: '내용', align: 'start', wrap: true},
@@ -550,7 +607,11 @@ const KBX_TEXT_ROWS = [
 
 const KBX_CODE = `// 보고서 문서를 .kbigx-print 상자로 감싼다 — 이 안에서만 kbx 값이 있다.
 <div className="kbigx-print">
-  <ReportPrintShell title="K-BIGx 기업혁신성장 보고서">
+  <ReportPrintShell
+    title="K-BIGx 기업혁신성장 보고서"
+    primaryAction="pdf-download"
+    pdfFileName="K-BIGx 기업혁신성장 보고서_프롬엑스테크"
+  >
     <ReportSheet page={3} total={31}>
       <h2 className="kbx-text-36 text-kbx-primary font-kbx-extrabold">진단브리핑</h2>
       <p className="kbx-text-21 leading-kbx-160 text-kbx-foreground-subtle">본문</p>
@@ -565,9 +626,23 @@ const PROPS_ITEMS = [
     [
         'ReportPrintShell',
         'notice',
-        '도구 막대 아래 안내 문구입니다. 없으면 특허평가 결과 보고서 문구, null 이면 안내 줄을 뺍니다(K-BIGx 서비스 인쇄).',
+        '도구 막대 아래 안내 문구입니다. 없으면 특허평가 결과 보고서 문구, null 이면 안내 줄을 뺍니다(?print=1 바로 인쇄).',
         '-',
         'string | null',
+    ],
+    [
+        'ReportPrintShell',
+        'primaryAction',
+        "도구 막대의 주된 버튼입니다. 'print' 는 [인쇄하기](인쇄 대화상자), 'pdf-download' 는 [PDF 다운로드](쪽들을 PDF 파일로 바로 내려받음 · 만드는 동안 'PDF 만드는 중…')입니다.",
+        "'print'",
+        "'print' | 'pdf-download'",
+    ],
+    [
+        'ReportPrintShell',
+        'pdfFileName',
+        "pdf-download 로 받을 파일 이름(확장자 제외)입니다. 없으면 title. K-BIGx 는 '보고서 이름_기업명' 입니다.",
+        'title',
+        'string',
     ],
     ['ReportSheet', 'page · total', '용지 아래 가운데 쪽수(3 / 5)입니다. 둘 다 있어야 보입니다.', '-', 'number'],
     ['ReportSheet', 'children', '용지 한 장의 내용입니다.', '-', 'ReactNode'],
@@ -627,9 +702,20 @@ const ReportShellGuidePage = () => (
                             숨긴 프레임으로 엽니다.
                         </li>
                         <li>
-                            K-BIGx 웹 보고서(기업) [보고서 출력] → 인쇄 출력물 선택 [출력하기]는 고른 장만 담은 인쇄본을
-                            새 탭으로 엽니다(<code>openReportPrintTab</code>). 새 탭은 인쇄가 끝나면 스스로 닫히고,
-                            Chrome · Safari 모두 같은 방식입니다.
+                            K-BIGx 웹 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기]는 고른 장만 담은
+                            보고서 화면을 새 탭으로 엽니다(<code>openReportTab</code> — 자동 인쇄 없음). 사용자는 그
+                            화면의 [PDF 다운로드]로 받습니다.
+                        </li>
+                        <li>
+                            [PDF 다운로드]는 브라우저에서 쪽마다 그림(JPEG, 용지의 1.5배 해상도)으로 떠 A4 한 쪽씩 묶어
+                            PDF 한 파일로 내려받습니다(<code>lib/download-report-pdf.ts</code>). 인쇄 대화상자는 열지
+                            않습니다. 라이브러리는 html-to-image · jsPDF(둘 다 MIT, 고지는{' '}
+                            <code>THIRD_PARTY_LICENSES.md</code>)이고 누를 때 불러옵니다.
+                        </li>
+                        <li>
+                            PDF 의 글자는 그림이라 선택 · 검색이 되지 않고, 9쪽 기준 약 3MB · 10초 안팎이 걸립니다.
+                            글자가 살아 있는 PDF 가 필요하면 서버에서 만들어 내려주는 방식으로 바꿉니다(셸의 [프론트엔드
+                            연동] 주석). 서버용으로는 아래 &lsquo;K-BIGx PDF 템플릿 단독 HTML&rsquo; 을 씁니다.
                         </li>
                     </ul>
                 </div>
@@ -673,10 +759,10 @@ const ReportShellGuidePage = () => (
             <section aria-labelledby="report-kbx-tokens" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="report-kbx-tokens" className="typo-h4-bold">
-                        K-BIGx 인쇄본 전용 토큰 (kbx)
+                        K-BIGx PDF 템플릿 전용 토큰 (kbx)
                     </h2>
                     <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
-                        <li>K-BIGx 인쇄본 전용 값입니다. 웹 화면 토큰과 따로 둡니다.</li>
+                        <li>K-BIGx PDF 템플릿 전용 값입니다. 웹 화면 토큰과 따로 둡니다.</li>
                         <li>
                             <code>.kbigx-print</code> 상자 안에서만 동작합니다.
                         </li>
@@ -691,12 +777,26 @@ const ReportShellGuidePage = () => (
                     </ul>
                 </div>
                 <Table
-                    caption="K-BIGx 인쇄본 전용 토큰 종류"
+                    caption="K-BIGx PDF 템플릿 전용 토큰 종류"
                     columns={KBX_KIND_COLUMNS}
                     rows={KBX_KIND_ROWS}
                     size="md"
                 />
-                <ul aria-label="K-BIGx 인쇄본 색 목록" className="kbigx-print grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <code>chart-*</code> — PDF 템플릿 그래프 명도 3단계: subject(신청 · 조회기업, 진남) ·
+                        general(일반 · 유형, 파랑) · average-base/line(평균, 옅은 바탕 + 사선) · series-1/2(주체 없는
+                        2계열) · track · trend(꺾은선, halo 흰 테두리).
+                    </li>
+                    <li>
+                        <code>credit-tag-*</code> — 기업신용등급 알약(<code>KBX_CREDIT_TAG_CLASS</code>, 등급 단계마다
+                        한 색).
+                    </li>
+                </ul>
+                <ul
+                    aria-label="K-BIGx PDF 템플릿 색 목록"
+                    className="kbigx-print grid gap-3 md:grid-cols-2 xl:grid-cols-3"
+                >
                     {KBX_COLOR_ENTRIES.map(([name, value]) => (
                         <li key={name} className="flex items-center gap-3">
                             {/* 토큰을 목록으로 그리는 가이드라 인라인 CSS 변수를 쓴다(PB-12). */}
@@ -722,7 +822,7 @@ const ReportShellGuidePage = () => (
             <section aria-labelledby="report-kbx-parts" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="report-kbx-parts" className="typo-h4-bold">
-                        K-BIGx 인쇄본 쪽 부품
+                        K-BIGx PDF 템플릿 쪽 부품
                     </h2>
                     <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>
@@ -738,19 +838,24 @@ const ReportShellGuidePage = () => (
                                 rel="noopener noreferrer"
                                 className={LINK_CLASS}
                             >
-                                K-BIGx 보고서 인쇄본
+                                K-BIGx 보고서 PDF 템플릿
                                 <span className="sr-only"> (새 창)</span>
                             </Link>
                         </li>
                         <li>
-                            인쇄본이 가이드가 있는 컴포넌트를 새로 쓰기 시작하면 메뉴 목록(
+                            PDF 템플릿이 가이드가 있는 컴포넌트를 새로 쓰기 시작하면 메뉴 목록(
                             <code>constants/publishing-guide.ts</code>)의 그 항목에 <code>isKbigxPrint: true</code> 를
                             더합니다. 가이드 제목 옆 bigx print template 배지와 가이드 홈 목록에 함께 나옵니다.
                         </li>
                     </ul>
                 </div>
-                <Table caption="K-BIGx 인쇄본 파일 구성" columns={KBX_FILE_COLUMNS} rows={KBX_FILE_ROWS} size="md" />
-                <Table caption="K-BIGx 인쇄본 쪽 부품" columns={KBX_PART_COLUMNS} rows={KBX_PART_ROWS} size="md" />
+                <Table
+                    caption="K-BIGx PDF 템플릿 파일 구성"
+                    columns={KBX_FILE_COLUMNS}
+                    rows={KBX_FILE_ROWS}
+                    size="md"
+                />
+                <Table caption="K-BIGx PDF 템플릿 쪽 부품" columns={KBX_PART_COLUMNS} rows={KBX_PART_ROWS} size="md" />
             </section>
         </BaseCard>
 
@@ -758,7 +863,7 @@ const ReportShellGuidePage = () => (
             <section aria-labelledby="report-kbx-rules" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="report-kbx-rules" className="typo-h4-bold">
-                        K-BIGx 인쇄본 표시 규칙
+                        K-BIGx PDF 템플릿 표시 규칙
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         데이터 길이 · 빈 값과 관계없이 쪽 배치가 깨지지 않도록 모든 쪽에 같이 적용합니다. 비공개 열람
@@ -766,8 +871,39 @@ const ReportShellGuidePage = () => (
                         붙여 봅니다.
                     </p>
                 </div>
-                <Table caption="K-BIGx 인쇄본 공통 규칙" columns={KBX_RULE_COLUMNS} rows={KBX_RULE_ROWS} size="md" />
-                <Table caption="K-BIGx 인쇄본 긴 글자 처리" columns={KBX_TEXT_COLUMNS} rows={KBX_TEXT_ROWS} size="md" />
+                <Table
+                    caption="K-BIGx PDF 템플릿 공통 규칙"
+                    columns={KBX_RULE_COLUMNS}
+                    rows={KBX_RULE_ROWS}
+                    size="md"
+                />
+                <Table
+                    caption="K-BIGx PDF 템플릿 긴 글자 처리"
+                    columns={KBX_TEXT_COLUMNS}
+                    rows={KBX_TEXT_ROWS}
+                    size="md"
+                />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="report-kbx-standalone" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="report-kbx-standalone" className="typo-h4-bold">
+                        K-BIGx PDF 템플릿 단독 HTML (백엔드 전달)
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        서버에서 보고서 PDF 를 대량으로 만들 때 쓰는 HTML 한 장입니다. 이 화면의 PDF 템플릿과 같은
+                        코드로 만들어 결과가 똑같습니다.
+                    </p>
+                </div>
+                <Table
+                    caption="K-BIGx PDF 템플릿 단독 HTML"
+                    columns={STANDALONE_COLUMNS}
+                    rows={STANDALONE_ROWS}
+                    size="md"
+                />
+                <CodeBlock code={STANDALONE_CODE} language="bash" copyLabel="복사" />
             </section>
         </BaseCard>
 
@@ -780,9 +916,15 @@ const ReportShellGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        도구 막대의 [인쇄하기] · [닫기] 는 <code>button type=&quot;button&quot;</code> 이고 글자 이름이
-                        보입니다. 함께 놓인 Printer · X 아이콘과 안내 문구의 Info 아이콘은{' '}
+                        도구 막대의 [인쇄하기](K-BIGx 는 [PDF 다운로드]) · [닫기] 는{' '}
+                        <code>button type=&quot;button&quot;</code>
+                        이고 글자 이름이 보입니다. 함께 놓인 Printer(Download) · X 아이콘과 안내 문구의 Info 아이콘은{' '}
                         <code>aria-hidden=&quot;true&quot;</code> 로 숨깁니다[5.1.1].
+                    </li>
+                    <li>
+                        [PDF 다운로드]는 만드는 동안 눌리지 않고 아이콘이 도는 스피너(LoaderCircle)로, 글자가 &lsquo;PDF
+                        만드는 중…&rsquo; 으로 바뀌며 <code>aria-busy</code> 로 진행 중임을 알립니다. 만들지 못하면 도구
+                        막대 아래에 오류 문구를 <code>role=&quot;alert&quot;</code> 로 띄웁니다[7.4.2].
                     </li>
                     <li>
                         도구 막대와 템플릿 안내는 <code>.report-toolbar</code> 로 화면에서만 보이고 인쇄물에는 빠집니다.
