@@ -329,6 +329,14 @@
     }
 }
 
+/* 사용처: @/components/composite/truncated-text.tsx(TruncationTooltip) — 말줄임 툴팁은 마우스를 받지 않는다.
+   툴팁은 글 바로 위에 떠서 이웃 줄(도넛 범례 · 표의 위 칸)을 덮는데, 마우스를 받으면 덮인 줄에 마우스가 닿지 않는다.
+   툴팁 내용은 pointer-events-none 을 받지만, Radix 가 그 바깥에 두는 위치 상자(popper wrapper)는 클래스를 받지 않아
+   여기서 끈다 — 내용 쪽 표시(data-truncation-tooltip)로 말줄임 툴팁의 상자만 고른다. */
+[data-radix-popper-content-wrapper]:has(> [data-truncation-tooltip]) {
+    pointer-events: none;
+}
+
 /* ─── 차트 면 그라데이션의 색 ─────────────────────────────────────────────────────────────────
    사용처: components/custom/grade-distribution-chart.tsx 의 <linearGradient> 안 <stop> 두 개.
 
