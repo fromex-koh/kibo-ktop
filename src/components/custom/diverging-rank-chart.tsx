@@ -1,5 +1,6 @@
 'use client'
 
+import {TruncatedText} from '@/components/composite/truncated-text'
 import {useChartAnimation} from '@/components/custom/chart-reveal'
 import {useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {Star} from 'lucide-react'
@@ -63,6 +64,11 @@ type DivergingRankChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'>
     showLegend?: boolean
     /** 목록이 비었을 때 칸에 적는 글자. */
     emptyText?: string
+    /**
+     * 별 표시 행(isHighlighted)의 값 글자 모양(예: 'typo-micro-bold' — 고성장 % 를 굵게). 값 글자의 typo-* 를 이 값으로 바꾼다.
+     * 주지 않으면 다른 행과 같은 모양이다 — 이 값을 넘기는 화면만 바뀐다(인쇄본 RankBarList 의 같은 이름 옵션과 같은 뜻).
+     */
+    highlightValueClassName?: string
 }
 
 type Direction = 'left' | 'right'
@@ -94,7 +100,28 @@ const TONE_SR_TEXT: Record<DivergingRankTone, string> = {
 const barClassName = (direction: Direction, tone: DivergingRankTone = 'default') =>
     tone === 'default' ? DEFAULT_BAR_CLASS_NAME[direction] : TONE_BAR_CLASS_NAME[tone]
 
-// 막대 안에 이름이 들어가는지 — 막대 요소의 글꼴로 이름 폭을 재어 막대 안쪽 폭과 견준다.
+// 줄 안 요소 사이 간격(gap-1 = 4).
+const ROW_GAP_PX = 4
+
+// 막대 밖 남은 폭 — 줄 폭에서 막대 · 값 · 별(밖 이름은 빼고)과 그 사이 간격을 뺀 폭. 밖 이름까지 들어가면 간격이 하나 는다.
+const outsideRoom = (bar: HTMLElement) => {
+    const row = bar.parentElement
+    if (!row) return 0
+    const others = Array.from(row.children).filter(
+        (child) => child !== bar && !(child instanceof HTMLElement && child.dataset.outsideName !== undefined),
+    )
+    const othersWidth = others.reduce((sum, child) => sum + child.getBoundingClientRect().width, 0)
+    return (
+        row.getBoundingClientRect().width -
+        bar.getBoundingClientRect().width -
+        othersWidth -
+        (others.length + 1) * ROW_GAP_PX
+    )
+}
+
+// 이름을 막대 밖으로 옮길 막대 — 막대 안에 들어가지 않고, 막대 밖 남은 폭에는 다 들어갈 때만 옮긴다.
+// 밖에도 다 들어가지 않으면(막대가 줄을 거의 다 차지하는 1위 등) 막대 안에 둔 채 한 줄 말줄임 + 툴팁 — 막대 길이는 줄이지 않는다
+// (막대가 줄면 값 순서와 막대 길이 순서가 어긋난다).
 const measureOverflowIds = (container: HTMLElement, context: CanvasRenderingContext2D) => {
     const bars = Array.from(container.querySelectorAll<HTMLElement>('[data-bar-id]'))
     return bars
@@ -102,7 +129,9 @@ const measureOverflowIds = (container: HTMLElement, context: CanvasRenderingCont
             const name = bar.dataset.barName ?? ''
             const style = window.getComputedStyle(bar)
             context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
-            return context.measureText(name).width + NAME_INSET_PX > bar.getBoundingClientRect().width
+            const nameWidth = context.measureText(name).width
+            const isInsideFit = nameWidth + NAME_INSET_PX <= bar.getBoundingClientRect().width
+            return !isInsideFit && nameWidth <= outsideRoom(bar)
         })
         .map((bar) => bar.dataset.barId ?? '')
 }
@@ -150,6 +179,7 @@ const DivergingRankChart = ({
     highlightLabel = '고성장 기업',
     showLegend = true,
     emptyText = '자료가 없습니다.',
+    highlightValueClassName,
     className,
     ...props
 }: DivergingRankChartProps) => {
@@ -180,8 +210,9 @@ const DivergingRankChart = ({
                 data-chart-reveal=""
                 data-bar-id={barKey}
                 data-bar-name={item.name}
+                // 막대는 줄지 않는다(shrink-0) — 막대 길이가 곧 값이다. 자리가 모자라면 밖 이름이 줄어든다.
                 className={cn(
-                    'typo-micro-medium flex h-full min-w-0 shrink items-center overflow-hidden px-2 text-white',
+                    'typo-micro-medium flex h-full min-w-0 shrink-0 items-center overflow-hidden px-2 text-white',
                     isLeft && 'justify-end',
                     barClassName(direction, item.tone),
                     // 막대는 가운데 축에서 바깥으로 자란다.
@@ -190,17 +221,26 @@ const DivergingRankChart = ({
                 )}
                 style={{width: `calc((100% - ${VALUE_RESERVE}) * ${ratio})`}}
             >
-                {isNameOutside ? null : <span className="truncate">{item.name}</span>}
+                {/* 이름 — 막대 안 · 밖 모두 한 줄 말줄임. 잘렸을 때만 마우스 올리기 · 탭으로 전체 이름을 툴팁으로 본다.
+                    그래프(role="img") 안이라 Tab 초점은 두지 않는다 — 전체 이름은 아래 숨김 표가 읽어 준다. */}
+                {isNameOutside ? null : (
+                    <TruncatedText lines={1} isFocusable={false} className="min-w-0">
+                        {item.name}
+                    </TruncatedText>
+                )}
             </div>
         )
         const outsideName = isNameOutside ? (
             <span
                 key="name"
                 data-chart-reveal=""
+                data-outside-name=""
+                // 감싼 상자도 한 줄 · 넘침 숨김(truncate)이라야 줄 안 폭이 모자랄 때 막대가 아니라 이름이 줄어든다.
                 className={cn('typo-micro-medium text-label-foreground min-w-0 truncate', labelRevealClassName)}
-                title={item.name}
             >
-                {item.name}
+                <TruncatedText lines={1} isFocusable={false}>
+                    {item.name}
+                </TruncatedText>
             </span>
         ) : null
         const value = (
@@ -208,7 +248,8 @@ const DivergingRankChart = ({
                 key="value"
                 data-chart-reveal=""
                 className={cn(
-                    'typo-micro-regular text-foreground-subtle shrink-0 whitespace-nowrap tabular-nums',
+                    item.isHighlighted && highlightValueClassName ? highlightValueClassName : 'typo-micro-regular',
+                    'text-foreground-subtle shrink-0 whitespace-nowrap tabular-nums',
                     labelRevealClassName,
                 )}
             >

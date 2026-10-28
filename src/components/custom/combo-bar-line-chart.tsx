@@ -13,6 +13,7 @@ import {
     type BarShapeProps,
     type LabelProps,
 } from 'recharts'
+import {TruncationTooltip} from '@/components/composite/truncated-text'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
@@ -160,12 +161,16 @@ const comboLineDomain = (values: readonly number[]): [number, number] => {
 }
 
 type LineDotProps = {cx?: number; cy?: number; index?: number}
-type TickProps = {x?: number | string; y?: number | string; payload?: {value?: unknown}}
+type TickProps = {x?: number | string; y?: number | string; payload?: {value?: unknown; index?: number}}
 
-// 항목 이름 한 글자 폭 어림(12px 한글) — 칸보다 긴 이름은 줄임표로 자르고 전체 이름은 title 로 남긴다.
+// 항목 이름 한 글자 폭 어림(12px 한글) — 칸보다 긴 이름은 줄임표로 자르고, 잘린 이름에 마우스를 올리거나 탭하면
+// 전체 이름을 툴팁(TruncationTooltip — 표의 말줄임 툴팁과 같은 모양 · 여닫기)으로 보인다.
+// 그래프는 role="img" 라 이름에 Tab 초점을 두지 않는다[8.1.1] — 전체 이름은 아래 숨김 표가 스크린리더에 읽어 준다.
 const TICK_CHAR_WIDTH = 12
 const TICK_SIDE_PADDING = 8
 const ELLIPSIS = '…'
+// 값이 없는 막대 · 숨김 표 칸.
+const EMPTY_VALUE = '-'
 
 const ComboBarLineChart = ({
     ariaLabel,
@@ -200,8 +205,14 @@ const ComboBarLineChart = ({
         lineValue: {label: lineLabel, color: LINE_COLOR},
     } satisfies ChartConfig
     // id 는 숨김 표의 key 로만 쓴다 — 차트로 넘기면 그린 도형마다 같은 id 가 붙는다[8.1.1].
-    const chartData = data.map((item) => ({label: item.label, value: item.value, lineValue: item.lineValue}))
-    const barValues = data.map((item) => item.value)
+    // 막대 값이 숫자가 아니면 값 없음 — 막대를 그리지 않고(null) 바닥선 위에 '-' 를 적는다(renderTick).
+    const hasBarValue = (value: number) => Number.isFinite(value)
+    const chartData = data.map((item) => ({
+        label: item.label,
+        value: hasBarValue(item.value) ? item.value : null,
+        lineValue: item.lineValue,
+    }))
+    const barValues = data.map((item) => item.value).filter(hasBarValue)
     const lineValues = data.flatMap((item) => (item.lineValue === null ? [] : [item.lineValue]))
     const barDomain = comboBarDomain(barValues.length ? barValues : [0], baseline, maxValueRatio)
     const lineDomain = comboLineDomain(lineValues)
@@ -222,7 +233,7 @@ const ComboBarLineChart = ({
         const item = data[index]
         if (!item || item.lineValue === null) return null
         const cy = toLineY(item.lineValue)
-        const barEndY = toBarY(item.value)
+        const barEndY = hasBarValue(item.value) ? toBarY(item.value) : barBottomY
         const barTop = Math.min(barEndY, barBottomY)
         const barBottom = Math.max(barEndY, barBottomY)
         const aboveBaseline = cy - DOT_OUTER_RADIUS - LINE_LABEL_GAP
@@ -300,21 +311,62 @@ const ComboBarLineChart = ({
 
     // 항목 이름 — 칸(최소 80) 폭을 넘으면 줄여 옆 칸 · 그래프 가장자리 밖으로 넘치지 않게 한다. 숨김 표는 전체 이름을 읽는다.
     const renderTick = ({x, y, payload}: TickProps) => {
-        const text = String(payload?.value ?? '')
+        // 항목 이름이 비면 '-'.
+        const text = String(payload?.value ?? '').trim() || EMPTY_VALUE
         const maxChars = Math.max(2, Math.floor((MIN_CELL_WIDTH - TICK_SIDE_PADDING) / TICK_CHAR_WIDTH))
         const isTruncated = text.length > maxChars
+        const item = typeof payload?.index === 'number' ? data[payload.index] : undefined
+        const isBarMissing = item !== undefined && !hasBarValue(item.value)
+        // 선 값 없음 — 점 없이 '-'. 막대 안에 들어가면 막대 세로 가운데(흰 글자), 아니면 그림 세로 가운데. 그림 좌표(0 = 위)를
+        // 항목 이름 자리(바닥선 + 간격) 기준으로 옮겨 적는다.
+        const plotBottomY = Number(y ?? 0) - CELLS_X_TICK_MARGIN
+        const isLineMissing = item !== undefined && item.lineValue === null
+        const barTopY = item !== undefined && hasBarValue(item.value) ? toBarY(item.value) : barBottomY
+        const isMissingLineOnBar = Math.abs(barBottomY - barTopY) >= CELLS_LABEL_FONT_SIZE * 2
+        const missingLineY =
+            plotBottomY -
+            PLOT_HEIGHT +
+            (isMissingLineOnBar ? (barTopY + barBottomY) / 2 : PLOT_HEIGHT / 2) +
+            CELLS_LABEL_FONT_SIZE / 2
         return (
-            <text
-                x={Number(x ?? 0)}
-                y={Number(y ?? 0)}
-                dy="0.71em"
-                textAnchor="middle"
-                fill={CELLS_X_TICK.fill}
-                fontSize={CELLS_X_TICK.fontSize}
-            >
-                {isTruncated ? <title>{text}</title> : null}
-                {isTruncated ? `${text.slice(0, maxChars - 1)}${ELLIPSIS}` : text}
-            </text>
+            <g>
+                {isLineMissing ? (
+                    <text
+                        x={Number(x ?? 0)}
+                        y={missingLineY}
+                        textAnchor="middle"
+                        fill={isMissingLineOnBar ? LINE_LABEL_ON_BAR_FILL : CELLS_LABEL_FILL}
+                        fontSize={CELLS_LABEL_FONT_SIZE}
+                    >
+                        {EMPTY_VALUE}
+                    </text>
+                ) : null}
+                {/* 막대 값 없음 — 바닥선 바로 위에 '-'. */}
+                {isBarMissing ? (
+                    <text
+                        x={Number(x ?? 0)}
+                        y={Number(y ?? 0) - CELLS_X_TICK_MARGIN - BAR_LABEL_OFFSET}
+                        textAnchor="middle"
+                        fill={CELLS_LABEL_FILL}
+                        fontSize={CELLS_LABEL_FONT_SIZE}
+                    >
+                        {EMPTY_VALUE}
+                    </text>
+                ) : null}
+                <TruncationTooltip content={text} isTruncated={isTruncated}>
+                    <text
+                        x={Number(x ?? 0)}
+                        y={Number(y ?? 0)}
+                        dy="0.71em"
+                        textAnchor="middle"
+                        fill={CELLS_X_TICK.fill}
+                        fontSize={CELLS_X_TICK.fontSize}
+                        className={isTruncated ? 'cursor-default' : undefined}
+                    >
+                        {isTruncated ? `${text.slice(0, maxChars - 1)}${ELLIPSIS}` : text}
+                    </text>
+                </TruncationTooltip>
+            </g>
         )
     }
 
@@ -418,8 +470,8 @@ const ComboBarLineChart = ({
                     <tbody>
                         {data.map((item) => (
                             <tr key={item.id}>
-                                <th scope="row">{item.label}</th>
-                                <td>{barFormatter.format(item.value)}</td>
+                                <th scope="row">{item.label.trim() || EMPTY_VALUE}</th>
+                                <td>{hasBarValue(item.value) ? barFormatter.format(item.value) : EMPTY_VALUE}</td>
                                 <td>{item.lineValue === null ? '값 없음' : lineFormatter.format(item.lineValue)}</td>
                             </tr>
                         ))}
