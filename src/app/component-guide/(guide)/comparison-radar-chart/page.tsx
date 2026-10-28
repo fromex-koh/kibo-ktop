@@ -128,7 +128,7 @@ const STYLE_ROWS = [
         cells: [
             <code key="name">TECH_INDEX_RADAR_STYLE</code>,
             <code key="file">tech-index-radar-style.ts</code>,
-            '같은 구조에 반지름 70 · 축 이름 12 · 말풍선 없음. 세부지표별 상대비교 카드용입니다.',
+            '같은 구조에 반지름 70 · 축 이름 12 · 말풍선 없음. K-BIGx Tech-Index 탭의 혁신성장역량지수 부문별 지표 비교 카드용입니다.',
         ],
     },
 ] as const
@@ -200,7 +200,7 @@ const STYLE_PROP_ROWS = toRows([
     ],
     [
         'dotRadius · dotStrokeWidth · dotFillColor',
-        "주 계열 꼭짓점 점의 반지름 · 'hollow' 테두리 굵기 · 'hollow' 안 색입니다(인쇄본은 6.5 · 3 · var(--kbx-color-paper)).",
+        "주 계열 꼭짓점 점의 반지름 · 'hollow' 테두리 굵기 · 'hollow' 안 색입니다(PDF 템플릿은 6.5 · 3 · var(--kbx-color-paper)).",
         "filled 5 · hollow 4 · 2 · 'var(--ds-surface)'",
         'number · number · string',
     ],
@@ -227,13 +227,13 @@ const STYLE_PROP_ROWS = toRows([
     ],
     [
         'tickGap',
-        '축 끝 ↔ 축 이름 거리입니다. 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘립니다(K-BIGx 인쇄본 진단브리핑 14).',
+        '축 끝 ↔ 축 이름 거리입니다. 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘립니다(K-BIGx PDF 템플릿 진단브리핑 14).',
         '8',
         'number',
     ],
     [
         'tickValueColor',
-        "축 이름 뒤에 한 칸 띄고 주 계열 값을 이 색 · 굵게 붙입니다(예: '기술인력역량 94.3' — K-BIGx 인쇄본 Tech-Index 세부지표). 없으면 축 이름만.",
+        "축 이름 뒤에 한 칸 띄고 주 계열 값을 이 색 · 굵게 붙입니다(예: '기술인력역량 94.3' — K-BIGx PDF 템플릿 Tech-Index 세부지표). 없으면 축 이름만.",
         'undefined',
         'string',
     ],
@@ -248,7 +248,7 @@ const STYLE_PROP_ROWS = toRows([
     ],
     [
         'fixedSize',
-        '칸 폭을 재지 않고 이 크기(px)로 그립니다. 용지를 축소해 보여 주는 인쇄본(K-BIGx 진단브리핑 420 × 312 · Tech-Index 509 × 416)에서 처음에 줄어든 크기로 그려지는 것을 막습니다. 주면 말풍선은 그리지 않습니다. 없으면 칸 폭에 맞춥니다(웹 화면).',
+        '칸 폭을 재지 않고 이 크기(px)로 그립니다. 용지를 축소해 보여 주는 PDF 템플릿(K-BIGx 진단브리핑 420 × 312 · Tech-Index 509 × 416)에서 처음에 줄어든 크기로 그려지는 것을 막습니다. 주면 말풍선은 그리지 않습니다. 없으면 칸 폭에 맞춥니다(웹 화면).',
         'undefined',
         '{width: number; height: number}',
     ],

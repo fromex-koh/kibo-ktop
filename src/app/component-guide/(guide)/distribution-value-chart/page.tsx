@@ -73,7 +73,7 @@ const LOADING_CODE = `import {DistributionValueChartSkeleton} from '@/components
   <DistributionValueChart {...chartProps} />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 색만 kbx 변수로 넘깁니다(kbigx-print-tech-index.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 색만 kbx 변수로 넘깁니다(kbigx-print-tech-index.tsx).
 <DistributionValueChart
   {...chartProps}
   colors={{
@@ -130,7 +130,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const DistributionValueChartGuidePage = () => (
     <GuidePageShell
         title="분포 곡선 값 차트 (DistributionValueChart)"
-        description="평균 · 표준편차로 종 모양 곡선을 그리고 조회 대상 점수 자리에 점과 순위 글자를 찍는 차트입니다. K-BIGx 보고서 인쇄본 Tech-Index 의 Tech-Index 표준정보 비교 그래프입니다."
+        description="평균 · 표준편차로 종 모양 곡선을 그리고 조회 대상 점수 자리에 점과 순위 글자를 찍는 차트입니다. K-BIGx 보고서 PDF 템플릿 Tech-Index 의 Tech-Index 표준정보 비교 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="dvc-basic" className="flex flex-col gap-6">
@@ -190,8 +190,8 @@ const DistributionValueChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="dvc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="dvc-loading" title="4. 불러오는 중 (DistributionValueChartSkeleton)">
-                    같은 그림 범위에 종 모양 면 · 바닥선 · 눈금 숫자 자리를 그립니다. 인쇄본은 데이터를 받은 뒤 서버에서
-                    바로 그려 스켈레톤 없이 나옵니다.
+                    같은 그림 범위에 종 모양 면 · 바닥선 · 눈금 숫자 자리를 그립니다. PDF 템플릿은 데이터를 받은 뒤
+                    서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -213,7 +213,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="dvc-print" title="5. K-BIGx PDF 템플릿에서">
                     Tech-Index 1쪽 — 소제목 오른쪽 &apos;전체 평균 50.5점&apos;, 아래 16 간격에 요약 상자. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=tech-index"
@@ -221,7 +221,7 @@ const DistributionValueChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 Tech-Index
+                        K-BIGx 보고서 PDF 템플릿 Tech-Index
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

@@ -154,7 +154,7 @@ const LOADING_CODE = `import {MarkerLineChartSkeleton} from '@/components/compos
   <MarkerLineChart data={ratios} series={series} ariaLabel="연도별 주요재무비율 추이" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 표 → 그래프 → 범례(가운데), 간격 16(kbigx-print-company.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 표 → 그래프 → 범례(가운데), 간격 16(kbigx-print-company.tsx).
 <MarkerLineChart
   data={…}
   series={rows.map((row, index) => ({key: row.key, label: row.label, color: MARKER_SERIES_COLORS[index]}))}
@@ -249,7 +249,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const MarkerLineChartGuidePage = () => (
     <GuidePageShell
         title="표식 꺾은선 (MarkerLineChart)"
-        description="여러 계열의 추이를 계열마다 다른 선 모양과 점 모양으로 그리는 차트입니다. 색만으로 구분하지 않습니다. K-BIGx 보고서 인쇄본 기업현황의 주요재무비율 · 현금흐름, 신용/재무정보의 재무비율진단, 활동성정보의 에너지 사용량 그래프입니다."
+        description="여러 계열의 추이를 계열마다 다른 선 모양과 점 모양으로 그리는 차트입니다. 색만으로 구분하지 않습니다. K-BIGx 보고서 PDF 템플릿 기업현황의 주요재무비율 · 현금흐름, 신용/재무정보의 재무비율진단, 활동성정보의 에너지 사용량 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="mlc-basic" className="flex flex-col gap-6">
@@ -364,8 +364,8 @@ const MarkerLineChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="mlc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="mlc-loading" title="4. 불러오는 중 (MarkerLineChartSkeleton)">
-                    차트와 같은 그림 범위(560 × 300)에 바닥선 · 선 · 점 · 항목 이름 자리를 그립니다. 인쇄본은 데이터를
-                    받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                    차트와 같은 그림 범위(560 × 300)에 바닥선 · 선 · 점 · 항목 이름 자리를 그립니다. PDF 템플릿은
+                    데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -381,7 +381,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="mlc-print" title="5. K-BIGx PDF 템플릿에서">
                     기업현황 재무현황 칸(폭 556) 안에서 표 → 그래프 → 범례 순서로 16 간격입니다. 신용/재무정보
                     재무비율진단은 <code>width={'{1168}'}</code> 로 표 아래 30 · 범례는 그래프 아래 10 입니다. 확인
                     화면:{' '}
@@ -391,7 +391,7 @@ const MarkerLineChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기업현황
+                        K-BIGx 보고서 PDF 템플릿 기업현황
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

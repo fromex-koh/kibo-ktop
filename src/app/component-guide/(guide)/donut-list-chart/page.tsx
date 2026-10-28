@@ -138,7 +138,7 @@ const LOADING_CODE = `import {DonutListChartSkeleton} from '@/components/composi
   <DonutListChart data={middleCategory} ariaLabel="중분류 기준 보유기술 비중" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 도넛 300 · 목록 폭 684 · 간격 64 · 줄 여백 10(마지막 5) · 구분선 1(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 도넛 300 · 목록 폭 684 · 간격 64 · 줄 여백 10(마지막 5) · 구분선 1(kbigx-print-innovation.tsx).
 <DonutListChart
   className="gap-16"
   donutClassName="w-75"
@@ -151,7 +151,7 @@ const PRINT_CODE = `// K-BIGx 인쇄본 — 도넛 300 · 목록 폭 684 · 간�
   data={items.map((item, index) => ({...item, color: kbxCategoryColor(item.label, index)}))}
 />`
 
-const SHARE_PRINT_CODE = `// K-BIGx 인쇄본 기업 · 특허 현황 비중 — 도넛 172(가는 고리) · 줄 사이 15 · 색 칸 16(옅은 테두리) · 비중 굵게 + 건수 옅게.
+const SHARE_PRINT_CODE = `// K-BIGx PDF 템플릿 기업 · 특허 현황 비중 — 도넛 172(가는 고리) · 줄 사이 15 · 색 칸 16(옅은 테두리) · 비중 굵게 + 건수 옅게.
 <DonutListChart
   className="gap-7"
   donutClassName="w-43"
@@ -209,7 +209,7 @@ const PROPS_ITEMS = [
     [
         'DonutListChart',
         'donutCaption',
-        '도넛 바로 아래 가운데 짧은 글입니다(예: 2024년 기준 — 인쇄본 담보 현황). 없으면 도넛만 그립니다.',
+        '도넛 바로 아래 가운데 짧은 글입니다(예: 2024년 기준 — PDF 템플릿 담보 현황). 없으면 도넛만 그립니다.',
         '-',
         'ReactNode',
     ],
@@ -223,7 +223,7 @@ const PROPS_ITEMS = [
     [
         'DonutListChart',
         'listHeader',
-        '목록 바로 위 글(예: 단위)입니다. 목록과 한 묶음이라 className 의 items-* 로 묶음째 세로 정렬합니다(인쇄본 담보 현황 — 도넛 칸의 세로 가운데).',
+        '목록 바로 위 글(예: 단위)입니다. 목록과 한 묶음이라 className 의 items-* 로 묶음째 세로 정렬합니다(PDF 템플릿 담보 현황 — 도넛 칸의 세로 가운데).',
         '없음',
         'ReactNode',
     ],
@@ -254,7 +254,7 @@ const PROPS_ITEMS = [
     [
         'DonutListChart',
         'emptyClassName',
-        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx 인쇄본은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
+        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
         "'text-foreground-subtle py-10 text-center'",
         'string',
     ],
@@ -280,7 +280,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const DonutListChartGuidePage = () => (
     <GuidePageShell
         title="도넛 + 목록 (DonutListChart)"
-        description="분류별 비중을 도넛으로 그리고, 옆에 색 칸 · 이름 · 비중 · 건수 줄 목록을 두는 차트입니다. K-BIGx 보고서 인쇄본 기술혁신정보의 기술 보유현황(중분류 · 세부분야 기준) · 매출 규모별 기업수 · 특허수 비중 그래프입니다."
+        description="분류별 비중을 도넛으로 그리고, 옆에 색 칸 · 이름 · 비중 · 건수 줄 목록을 두는 차트입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 기술 보유현황(중분류 · 세부분야 기준) · 매출 규모별 기업수 · 특허수 비중 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="dlc-basic" className="flex flex-col gap-6">
@@ -317,7 +317,7 @@ const DonutListChartGuidePage = () => (
                     <li>
                         값은 &apos;비중% · 건수개&apos; 로 적습니다. 목록이 곧 값이라 숨김 목록을 따로 두지 않습니다.
                     </li>
-                    <li>크기 · 글자 · 선 모양은 className 들로 바꿉니다 — 인쇄본은 kbx 클래스를 넘깁니다.</li>
+                    <li>크기 · 글자 · 선 모양은 className 들로 바꿉니다 — PDF 템플릿은 kbx 클래스를 넘깁니다.</li>
                     <li>
                         고리 두께 · 조각 사이 선은 <code>ring</code> 으로 바꿉니다. 비중은 굵게 · 건수는 옅게처럼 값을
                         나눠 꾸밀 때는 <code>valueClassName</code> · <code>countClassName</code> 을 씁니다.
@@ -347,13 +347,13 @@ const DonutListChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="dlc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="dlc-loading" title="4. 불러오는 중 (DonutListChartSkeleton)">
-                    도넛 고리와 목록 줄 자리를 같은 배치로 그립니다. 인쇄본은 데이터를 받은 뒤 서버에서 바로 그려
+                    도넛 고리와 목록 줄 자리를 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려
                     스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example
                         title="도넛 아래 글 (donutCaption)"
-                        description="도넛 바로 아래 가운데에 기준 연도 같은 짧은 글을 둡니다(인쇄본 담보 현황 — 2024년 기준)."
+                        description="도넛 바로 아래 가운데에 기준 연도 같은 짧은 글을 둡니다(PDF 템플릿 담보 현황 — 2024년 기준)."
                     >
                         <DonutListChart
                             data={STANDARD_DATA.slice(0, 3)}
@@ -380,7 +380,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="dlc-print" title="5. K-BIGx PDF 템플릿에서">
                     기술혁신정보 1쪽 — 분류 기준 제목(아래 짙은 선) → 도넛 + 목록, 중분류 · 세부분야 기준을 위아래로 56
                     간격에 둡니다. 확인 화면:{' '}
                     <Link
@@ -389,7 +389,7 @@ const DonutListChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기술혁신정보
+                        K-BIGx 보고서 PDF 템플릿 기술혁신정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

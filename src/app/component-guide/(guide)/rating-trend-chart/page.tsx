@@ -103,7 +103,7 @@ const LOADING_CODE = `import {RatingTrendChartSkeleton} from '@/components/compo
   <RatingTrendChart data={history} ariaLabel="기업신용등급 이전평가이력" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-credit.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-credit.tsx).
 <RatingTrendChart
   data={history}
   ariaLabel="기업신용등급 이전평가이력"
@@ -166,7 +166,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const RatingTrendChartGuidePage = () => (
     <GuidePageShell
         title="등급 이력 꺾은선 (RatingTrendChart)"
-        description="시점마다 받은 등급을 등급 높낮이 줄 위에 점으로 찍고 선으로 잇는 차트입니다. 세로축 없이 점 위 등급 글자로 읽고, 가장 최근 점은 채운 점 · 강조 색입니다. K-BIGx 보고서 인쇄본 신용/재무정보의 기업신용등급 이전평가이력 · 현금흐름등급 평가이력 그래프입니다."
+        description="시점마다 받은 등급을 등급 높낮이 줄 위에 점으로 찍고 선으로 잇는 차트입니다. 세로축 없이 점 위 등급 글자로 읽고, 가장 최근 점은 채운 점 · 강조 색입니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보의 기업신용등급 이전평가이력 · 현금흐름등급 평가이력 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="rtc-basic" className="flex flex-col gap-6">
@@ -224,8 +224,8 @@ const RatingTrendChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="rtc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="rtc-loading" title="4. 불러오는 중 (RatingTrendChartSkeleton)">
-                    차트와 같은 그림 범위(680 × 280)에 등급 줄 · 선 · 점 · 등급 글자 · 시점 자리를 그립니다. 인쇄본은
-                    데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                    차트와 같은 그림 범위(680 × 280)에 등급 줄 · 선 · 점 · 등급 글자 · 시점 자리를 그립니다. PDF
+                    템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -241,7 +241,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-print" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="rtc-print" title="5. K-BIGx PDF 템플릿에서">
                     이전평가이력 · 평가이력 소제목 아래 16 에 그래프(3) · 표(2)를 48 간격으로 나란히 둡니다.
                     기업신용등급 표는 최근 것부터 지금 등급을 뺀 지난 평가만, 현금흐름등급 표는 평가이력 전체를 최근
                     것부터 적습니다. 현금흐름등급 높낮이(rank)는 CF1 이 위가 되도록 7 − 단계 숫자(cashFlowLevel)입니다.
@@ -252,7 +252,7 @@ const RatingTrendChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 신용/재무정보
+                        K-BIGx 보고서 PDF 템플릿 신용/재무정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

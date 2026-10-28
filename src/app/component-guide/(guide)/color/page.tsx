@@ -127,7 +127,7 @@ const primitiveGroups: Record<string, string[]> = tokens.primitiveGroups
 const common: Record<string, string> = tokens.common
 const extra: Record<string, string> = tokens.extra
 const alpha: Record<string, number[]> = tokens.alpha
-// 인쇄본 역할 색 — 값은 참조('blue.500') 또는 섞은 색({mix, amount, base}).
+// PDF 템플릿 역할 색 — 값은 참조('blue.500') 또는 섞은 색({mix, amount, base}).
 const kbxColor: Record<string, string | {mix: string; amount: number; base: string}> = tokens.kbigxPrint.color
 
 // 용도 = 이 색('common.white' · 'extra.cyan')을 참조하는 시맨틱 토큰 이름.
@@ -138,7 +138,7 @@ const semanticUsersOf = (reference: string) => {
     return users.length ? users.join(', ') : undefined
 }
 
-// K-BIGx 인쇄본 역할 색(kbigxPrint.color) 중 이 색을 참조하는 것 → kbx-primary 처럼 보인다.
+// K-BIGx PDF 템플릿 역할 색(kbigxPrint.color) 중 이 색을 참조하는 것 → kbx-primary 처럼 보인다.
 const kbxUsersOf = (reference: string) => {
     const users = Object.entries(kbxColor)
         .filter(([, value]) => (typeof value === 'string' ? [value] : [value.mix, value.base]).includes(reference))
@@ -146,7 +146,7 @@ const kbxUsersOf = (reference: string) => {
     return users.length ? users.join(', ') : undefined
 }
 
-// extra 를 웹 화면용과 K-BIGx 인쇄본 전용으로 나눈다 — 인쇄본 역할 색만 참조하면 인쇄본 전용이다.
+// extra 를 웹 화면용과 K-BIGx PDF 템플릿 전용으로 나눈다 — PDF 템플릿 역할 색만 참조하면 PDF 템플릿 전용이다.
 const extraEntries = Object.entries(extra)
 const reportExtra = extraEntries.filter(([name]) => kbxUsersOf(`extra.${name}`) && !semanticUsersOf(`extra.${name}`))
 const webExtra = extraEntries.filter(([name]) => !reportExtra.some(([reportName]) => reportName === name))
@@ -241,9 +241,9 @@ const PLACE_ROWS = [
     {
         key: 'kbx',
         cells: [
-            'K-BIGx 보고서 인쇄본의 역할 색',
+            'K-BIGx 보고서 PDF 템플릿의 역할 색',
             <code key="w">kbigxPrint.color</code>,
-            '위 색만 참조합니다(kbx-primary = extra.indigo). 인쇄본 밖에서는 값이 없습니다.',
+            '위 색만 참조합니다(kbx-primary = extra.indigo). PDF 템플릿 밖에서는 값이 없습니다.',
         ],
     },
 ] as const
@@ -442,14 +442,14 @@ const ColorGuidePage = () => (
                         </div>
                         <div className="flex flex-col gap-3">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="typo-title-m-bold text-foreground">6-2. K-BIGx 인쇄본 전용</h3>
+                                <h3 className="typo-title-m-bold text-foreground">6-2. K-BIGx PDF 템플릿 전용</h3>
                                 <Badge variant="outline" color="neutral" size="sm">
                                     kbigxPrint.color 만 참조
                                 </Badge>
                             </div>
                             <ColorTable
                                 headingLevel={4}
-                                caption="extra K-BIGx 인쇄본 전용"
+                                caption="extra K-BIGx PDF 템플릿 전용"
                                 title={
                                     <Link href="/component-guide/report-shell" className={LINK_CLASS}>
                                         리포트 공통 · kbx 토큰
