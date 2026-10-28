@@ -178,6 +178,18 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'cash-flow-cf-5-foreground': 'bg-cash-flow-cf-5-foreground',
     'cash-flow-cf-6': 'bg-cash-flow-cf-6',
     'cash-flow-cf-6-foreground': 'bg-cash-flow-cf-6-foreground',
+    'cash-flow-gauge-cf-1-from': 'bg-cash-flow-gauge-cf-1-from',
+    'cash-flow-gauge-cf-1-to': 'bg-cash-flow-gauge-cf-1-to',
+    'cash-flow-gauge-cf-2-from': 'bg-cash-flow-gauge-cf-2-from',
+    'cash-flow-gauge-cf-2-to': 'bg-cash-flow-gauge-cf-2-to',
+    'cash-flow-gauge-cf-3-from': 'bg-cash-flow-gauge-cf-3-from',
+    'cash-flow-gauge-cf-3-to': 'bg-cash-flow-gauge-cf-3-to',
+    'cash-flow-gauge-cf-4-from': 'bg-cash-flow-gauge-cf-4-from',
+    'cash-flow-gauge-cf-4-to': 'bg-cash-flow-gauge-cf-4-to',
+    'cash-flow-gauge-cf-5-from': 'bg-cash-flow-gauge-cf-5-from',
+    'cash-flow-gauge-cf-5-to': 'bg-cash-flow-gauge-cf-5-to',
+    'cash-flow-gauge-cf-6-from': 'bg-cash-flow-gauge-cf-6-from',
+    'cash-flow-gauge-cf-6-to': 'bg-cash-flow-gauge-cf-6-to',
     'grade-scale-track': 'bg-grade-scale-track',
     'gauge-excellent-from': 'bg-gauge-excellent-from',
     'gauge-excellent-to': 'bg-gauge-excellent-to',
@@ -191,6 +203,23 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'gauge-low-to': 'bg-gauge-low-to',
     'gauge-weak-from': 'bg-gauge-weak-from',
     'gauge-weak-to': 'bg-gauge-weak-to',
+    'credit-gauge-prime-from': 'bg-credit-gauge-prime-from',
+    'credit-gauge-prime-to': 'bg-credit-gauge-prime-to',
+    'credit-gauge-good-from': 'bg-credit-gauge-good-from',
+    'credit-gauge-good-to': 'bg-credit-gauge-good-to',
+    'credit-gauge-fair-from': 'bg-credit-gauge-fair-from',
+    'credit-gauge-fair-to': 'bg-credit-gauge-fair-to',
+    'credit-gauge-subfair-from': 'bg-credit-gauge-subfair-from',
+    'credit-gauge-subfair-to': 'bg-credit-gauge-subfair-to',
+    'credit-gauge-low-from': 'bg-credit-gauge-low-from',
+    'credit-gauge-low-to': 'bg-credit-gauge-low-to',
+    'credit-gauge-verylow-from': 'bg-credit-gauge-verylow-from',
+    'credit-gauge-verylow-to': 'bg-credit-gauge-verylow-to',
+    'credit-gauge-risk-from': 'bg-credit-gauge-risk-from',
+    'credit-gauge-risk-to': 'bg-credit-gauge-risk-to',
+    'credit-gauge-hold-from': 'bg-credit-gauge-hold-from',
+    'credit-gauge-hold-to': 'bg-credit-gauge-hold-to',
+    'credit-gauge-track': 'bg-credit-gauge-track',
     sidebar: 'bg-sidebar',
     'sidebar-foreground': 'bg-sidebar-foreground',
     'sidebar-primary': 'bg-sidebar-primary',
@@ -455,10 +484,12 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'report-series-1~6 (K-BIGx 보고서 계열 색)', match: (n) => n.startsWith('report-series-')},
     // 비중 도넛(PercentageDonutChart) 조각 색 — 다크는 어두운 카드 위에서 보이게 밝힌 값.
     {name: 'donut-1~8 (비중 도넛 조각 색)', match: (n) => n.startsWith('donut-')},
+    // 기업신용등급 게이지(SemicircleRatingGauge) — 등급 단계별 원호 그라데이션과 트랙.
+    {name: 'credit-gauge-* (기업신용등급 게이지)', match: (n) => n.startsWith('credit-gauge-')},
     // 현금흐름등급 게이지(GradeScaleGauge) — 등급 칸 · 원호 색과 칸 글자 색, 원호 트랙.
     {
-        name: 'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)',
-        match: (n) => n.startsWith('cash-flow-cf-') || n === 'grade-scale-track',
+        name: 'cash-flow-cf-1~6 · cash-flow-gauge-cf-1~6 · grade-scale-track (현금흐름등급 게이지)',
+        match: (n) => n.startsWith('cash-flow-cf-') || n.startsWith('cash-flow-gauge-cf-') || n === 'grade-scale-track',
     },
     // 조회 목록의 진행 상태 글자색 — 라이트는 단계 팔레트 밖 값이라 extra.azure, 다크는 blue.300 을 가리킨다.
     {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
@@ -674,11 +705,21 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             카드 위에서도 보입니다. 다른 화면의 차트는 chart-1~5 를 쓰므로 이 값을 바꿔도 영향이 없습니다.
         </>
     ),
-    'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)': (
+    'cash-flow-cf-1~6 · cash-flow-gauge-cf-1~6 · grade-scale-track (현금흐름등급 게이지)': (
         <>
             현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cf-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
-            단계로 바뀌고 글자는 짙은 색이 됩니다(CF5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
-            트랙으로, 다크에서 어두운 칸 색이 묻히지 않게 다른 게이지 트랙(gauge-track)보다 밝습니다.
+            단계로 바뀌고 글자는 짙은 색이 됩니다(CF5 만 어두운 칸 + 밝은 글자). 원호는 cash-flow-gauge-cf-n-from/-to 로
+            따로 칠합니다 — 라이트는 혁신성장역량지수 게이지와 같은 2색 그라데이션, 다크는 칸 색과 같은 단색입니다.
+            grade-scale-track 은 원호의 빈 트랙으로, 다크에서 어두운 칸 색이 묻히지 않게 다른 게이지
+            트랙(gauge-track)보다 밝습니다.
+        </>
+    ),
+    'credit-gauge-* (기업신용등급 게이지)': (
+        <>
+            K-BIGx 웹 보고서 기업신용등급 게이지(SemicircleRatingGauge)의 등급 단계별 원호 색입니다. 단계는 우량 · 양호
+            · 보통 · 보통이하 · 낮음 · 매우낮음 · 위험 · 유보(prime ~ hold)이고 평가제외(NR)는 원호를 채우지 않습니다.
+            라이트는 from → to 2색 그라데이션, 다크는 from · to 가 같은 단색입니다. credit-gauge-track 은 빈 트랙(다크
+            gray.500)입니다.
         </>
     ),
     'donut-1~8 (비중 도넛 조각 색)': (

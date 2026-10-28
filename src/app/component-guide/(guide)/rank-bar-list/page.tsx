@@ -56,6 +56,13 @@ const LARGE = toItems([
 const SHARED_MAX = rankBarScaleMax(SMALL, LARGE)
 const SMALL_COLORS = {bar: 'var(--ds-navy-500)'}
 const LARGE_COLORS = {bar: 'var(--ds-blue-500)'}
+// PDF 템플릿 색 — kbigx-print-innovation.tsx 의 rankColors 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
+const printColors = (bar: string) => ({
+    bar,
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
+    subjectBar: 'var(--kbx-color-green)',
+})
 
 // 3. 엣지 케이스.
 const EDGE_CASES = [
@@ -121,12 +128,17 @@ const LOADING_CODE = `import {RankBarListSkeleton} from '@/components/composite/
   <RankBarList {...listProps} />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 20px · 줄 여백 8 · 이름 칸 170 · 막대 16 · 값 칸 72(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 20px · 줄 여백 8 · 이름 칸 170 · 막대 16 · 값 칸 72(kbigx-print-innovation.tsx).
 <RankBarList
   title="매출 100억원 이하"
   items={small}
   max={rankBarScaleMax(small, large)}
-  colors={{bar: 'var(--kbx-color-navy)', averageBar: 'var(--kbx-color-purple-strong)', subjectBar: 'var(--kbx-color-green)'}}
+  colors={{
+    bar: 'var(--kbx-color-navy)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)', // 평균 = 옅은 바탕 + 사선 · 테두리
+    subjectBar: 'var(--kbx-color-green)',
+  }}
   listClassName="kbx-text-20 text-kbx-foreground border-kbx-primary kbx-border-t-strong"
   titleClassName="bg-kbx-surface text-kbx-primary kbx-text-21 font-kbx-extrabold px-3.5 py-2.5"
   rowClassName="border-kbx-border-subtle kbx-border-b-hairline py-2"
@@ -157,6 +169,13 @@ const PROPS_ITEMS = [
         '웹 단계 색 · 바탕 없음',
         'Partial<RankBarColors>',
     ],
+    [
+        'RankBarColors',
+        'averageLine',
+        '평균 막대 사선 · 테두리 색입니다. 주면 평균 막대가 averageBar 바탕 + 45° 사선이 됩니다.',
+        '없음(단색)',
+        'string',
+    ],
     ['RankBarList', 'formatValue', '값 글자 형식입니다.', "'23.5%'", '(value: number) => string'],
     ['RankBarList', 'highlightLabel', '강조 별의 이름(화면 낭독기용)입니다.', "'강조'", 'string'],
     ['RankBarList', 'emptyText', '항목이 없을 때 문구입니다.', "'표시할 데이터가 없습니다.'", 'string'],
@@ -177,7 +196,7 @@ const PROPS_ITEMS = [
     [
         'RankBarList',
         'renderName',
-        '이름 글자 그리기입니다. 인쇄본 성장률 우수기업은 이름을 한 줄로 두고 칸보다 길면 말줄임(…)합니다. 없으면 띄어쓰기 없는 긴 이름도 이름 칸 안에서 줄을 바꿉니다.',
+        '이름 글자 그리기입니다. PDF 템플릿 성장률 우수기업은 이름을 한 줄로 두고 칸보다 길면 말줄임(…)합니다. 없으면 띄어쓰기 없는 긴 이름도 이름 칸 안에서 줄을 바꿉니다.',
         '이름 그대로',
         '(name: string) => ReactNode',
     ],
@@ -209,7 +228,7 @@ const PROPS_ITEMS = [
     [
         'RankBarList',
         'emptyClassName',
-        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx 인쇄본은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
+        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
         "'text-foreground-subtle py-10 text-center'",
         'string',
     ],
@@ -235,7 +254,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const RankBarListGuidePage = () => (
     <GuidePageShell
         title="순위 막대 목록 (RankBarList)"
-        description="제목 아래 항목마다 이름 · 가로 막대 · 값을 한 줄씩 적고, 끝에 평균 · 조회기업 줄을 두는 목록입니다. K-BIGx 보고서 인쇄본 기술혁신정보의 성장률 우수기업입니다."
+        description="제목 아래 항목마다 이름 · 가로 막대 · 값을 한 줄씩 적고, 끝에 평균 · 조회기업 줄을 두는 목록입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 성장률 우수기업입니다."
     >
         <BaseCard>
             <section aria-labelledby="rbl-basic" className="flex flex-col gap-6">
@@ -283,8 +302,8 @@ const RankBarListGuidePage = () => (
                         길이를 견줄 수 있게 합니다.
                     </li>
                     <li>
-                        평균 줄은 위 짙은 선 · 옅은 굵은 글자 · 평균 막대 색, 조회기업 줄은 옅은 면 · 남색 굵은
-                        글자입니다.
+                        평균 줄은 위 짙은 선 · 옅은 굵은 글자 · 평균 막대 색(<code>averageLine</code> 을 주면 사선 ·
+                        테두리), 조회기업 줄은 옅은 면 · 남색 굵은 글자입니다.
                     </li>
                     <li>받은 순서대로 그립니다 — 화면이 정렬하지 않습니다.</li>
                 </ul>
@@ -317,8 +336,8 @@ const RankBarListGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="rbl-loading" className="flex flex-col gap-6">
                 <SectionHeading id="rbl-loading" title="4. 불러오는 중 (RankBarListSkeleton)">
-                    제목 줄과 값 줄(이름 · 막대 · 값 자리)을 같은 배치로 그립니다. 인쇄본은 데이터를 받은 뒤 서버에서
-                    바로 그려 스켈레톤 없이 나옵니다.
+                    제목 줄과 값 줄(이름 · 막대 · 값 자리)을 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤
+                    서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid items-start gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -341,7 +360,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-print" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="rbl-print" title="5. K-BIGx PDF 템플릿에서">
                     기술혁신정보 4쪽 — 소제목 오른쪽에 &apos;★ 고성장 기업&apos; 범례, 그 아래 두 목록을 48 간격으로
                     나란히 둡니다. 확인 화면:{' '}
                     <Link
@@ -350,10 +369,40 @@ const RankBarListGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기술혁신정보
+                        K-BIGx 보고서 PDF 템플릿 기술혁신정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        평균 막대는 옅은 바탕 + 파랑 사선 · 테두리(<code>averageLine</code>)입니다 — 같은 쪽 경쟁기업
+                        사업실적 그래프의 평균과 같은 표현이고, 색을 빼도(흑백 인쇄) 사선 막대 = 평균으로 읽힙니다.
+                    </li>
+                    <li>조회기업 막대는 초록 — 100억원 이하 목록의 막대(남색)와 구분됩니다.</li>
+                </ul>
+                <Example
+                    title="PDF 템플릿 색"
+                    description="kbx 색을 넘긴 모습입니다(.kbigx-print 안 · 다크에서도 흰 바탕)."
+                >
+                    <div className="kbigx-print bg-kbx-paper grid items-start gap-12 rounded-sm p-4 xl:grid-cols-2">
+                        <RankBarList
+                            titleAs="h3"
+                            title="매출 100억원 이하"
+                            items={SMALL}
+                            max={SHARED_MAX}
+                            colors={printColors('var(--kbx-color-navy)')}
+                            highlightLabel="고성장"
+                        />
+                        <RankBarList
+                            titleAs="h3"
+                            title="매출 100억원 초과"
+                            items={LARGE}
+                            max={SHARED_MAX}
+                            colors={printColors('var(--kbx-color-blue)')}
+                            highlightLabel="고성장"
+                        />
+                    </div>
+                </Example>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
