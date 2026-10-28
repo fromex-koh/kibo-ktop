@@ -101,12 +101,13 @@ const SPECIAL_CASES: readonly {title: string; description: string; data: RatioSt
     },
     {
         title: '모두 0 (자료 없음)',
-        description: '빈 회색 막대만 두고 범례는 모두 0.0% 로 적습니다.',
+        description: "빈 회색 막대만 두고 범례 비율은 모두 '-' 로 적습니다(0.0% 는 실제 값 0 으로 읽히므로).",
         data: pair(0, 0),
     },
     {
         title: '음수',
-        description: '0 이하 · 숫자가 아닌 값은 0 으로 보고 막대에서 뺍니다.',
+        description:
+            "0 이하 · 숫자가 아닌 값은 0 으로 보고 막대에서 뺍니다. 숫자가 아닌 값(받지 못한 값)은 범례에 '-'.",
         data: pair(-12, 56.2),
     },
     {

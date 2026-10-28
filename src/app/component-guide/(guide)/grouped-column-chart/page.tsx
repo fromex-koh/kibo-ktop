@@ -71,6 +71,14 @@ const BOTTOM_EDGE_DATA: GroupedColumnItem[] = [
     {id: 'big', label: '큰 값', values: {'2022': 16329, '2023': 18115, '2024': 18243}},
 ]
 
+// 값이 빠진 해 — values 에 그 해 키를 넣지 않는다(missingValueText 가 그 자리에 '-' 를 적는다).
+const MISSING_VALUE_DATA: GroupedColumnItem[] = [
+    {id: 'assets', label: '총자산', values: {'2022': 11826, '2023': 17168, '2024': 18768}},
+    {id: 'equity', label: '자본총계', values: {'2022': 5332, '2024': 5191}},
+    {id: 'sales', label: '매출액', values: {'2022': 16329, '2024': 18243}},
+    {id: 'net-income', label: '순이익', values: {'2022': 821, '2023': 466}},
+]
+
 const NEGATIVE_DATA: GroupedColumnItem[] = [
     {id: 'sales', label: '매출액', values: {'2022': 16329, '2023': 18115, '2024': 18243}},
     {id: 'operating-profit', label: '영업이익', values: {'2022': 1042, '2023': -497, '2024': 821}},
@@ -255,6 +263,14 @@ const CELLS_CASES = [
         series: REPORT_SERIES,
     },
     {
+        title: "값 없음 — missingValueText='-'",
+        description:
+            "값이 없는 해는 막대 없이 그 자리에 '-' 를 적고, 숨김 표도 '-' 로 읽습니다. 주지 않으면 자리만 비웁니다(숨김 표는 0).",
+        data: MISSING_VALUE_DATA,
+        series: REPORT_SERIES,
+        missingValueText: '-',
+    },
+    {
         title: '항목 2개 · 계열 2개',
         description: '칸이 넓어져도 막대 두께와 간격은 그대로이고 칸 가운데에 모입니다.',
         data: FEW_ITEMS_DATA,
@@ -334,6 +350,13 @@ const PROPS_ITEMS = [
         'number',
     ],
     ['GroupedColumnChart', 'yAxisStep', "y축 눈금 간격입니다. 'default' 에서만 쓰입니다.", '-', 'number'],
+    [
+        'GroupedColumnChart',
+        'missingValueText',
+        "값이 없는 막대(그 계열 값이 없거나 숫자가 아님) 자리에 막대 대신 적을 글자입니다(예: '-'). 값 글자와 같은 자리에 적고 말풍선 · 숨김 표도 이 글자로 읽습니다. 주지 않으면 그 자리를 비웁니다(숨김 표는 0).",
+        '-',
+        'string',
+    ],
     [
         'GroupedColumnChart',
         'showAxes',
@@ -493,6 +516,9 @@ const GroupedColumnChartGuidePage = () => (
                                         data={[...item.data]}
                                         series={[...item.series]}
                                         showValueLabels
+                                        missingValueText={
+                                            'missingValueText' in item ? item.missingValueText : undefined
+                                        }
                                         ariaLabel={item.title}
                                     />
                                 </li>

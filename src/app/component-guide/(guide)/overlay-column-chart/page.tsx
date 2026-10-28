@@ -94,6 +94,13 @@ const MANY_ITEMS_DATA = toItems(
         ] as const
     }),
 )
+// 값 없음 — 2022년은 일부만, 2023년은 모든 막대가 비어 있다(값 대신 NaN).
+const MISSING_DATA = toItems([
+    ['2022년', {sales: Number.NaN, operatingProfit: 980, netIncome: Number.NaN}],
+    ['2023년', {sales: Number.NaN, operatingProfit: Number.NaN, netIncome: Number.NaN}],
+    ['2024년', {sales: 16100, operatingProfit: 1350, netIncome: Number.NaN}],
+])
+
 const SINGLE_DATA = toItems([['2024년', {totalAssets: 18981, liabilities: 8100, equity: 10881}]])
 
 const USAGE_CODE = `import {OverlayColumnChart} from '@/components/custom/overlay-column-chart'
@@ -183,7 +190,13 @@ const PROPS_ITEMS = [
     ['OverlayColumnSeries', 'color', '막대 색입니다.', '-', 'string'],
     ['OverlayColumnItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['OverlayColumnItem', 'label', '칸 아래 항목 이름입니다.', '-', 'string'],
-    ['OverlayColumnItem', 'values', 'key 별 값입니다.', '-', 'Record<string, number>'],
+    [
+        'OverlayColumnItem',
+        'values',
+        "key 별 값입니다. 값이 없으면(없는 키 · 숫자 아님) 막대 없이 바닥선 바로 위에 '-' 를 적고, 한 항목의 막대가 모두 없으면 가운데에 '-' 하나만 적습니다.",
+        '-',
+        'Record<string, number>',
+    ],
 ] as const
 
 const SPECIAL_CASES = [
@@ -232,6 +245,14 @@ const SPECIAL_CASES = [
         data: LONG_NUMBER_DATA,
     },
     {
+        title: '값 없음',
+        description:
+            "값이 없는 막대 자리에는 '-' 를 적습니다. 2023년처럼 한 항목의 막대가 모두 없으면 막대마다 적지 않고 가운데에 '-' 하나만 적습니다.",
+        base: INCOME_BASE,
+        series: INCOME_SERIES,
+        data: MISSING_DATA,
+    },
+    {
         title: '항목이 많을 때',
         description: '칸 폭 120 × 항목 수를 최소 폭으로 지키고, 모자라면 그래프만 가로로 넘깁니다.',
         base: BALANCE_BASE,
@@ -250,7 +271,7 @@ const SPECIAL_CASES = [
 const OverlayColumnChartGuidePage = () => (
     <GuidePageShell
         title="겹친 막대 (OverlayColumnChart)"
-        description="기준 값(예: 총자산)을 넓고 옅은 막대로 깔고 그 앞에 세부 값(예: 부채 · 자본)을 좁은 막대로 세워 한 칸에서 견줍니다. 세로축 없이 막대마다 값을 바로 적는 인쇄본용 겹친 막대는 NestedColumnChart 입니다."
+        description="기준 값(예: 총자산)을 넓고 옅은 막대로 깔고 그 앞에 세부 값(예: 부채 · 자본)을 좁은 막대로 세워 한 칸에서 견줍니다. 세로축 없이 막대마다 값을 바로 적는 PDF 템플릿용 겹친 막대는 NestedColumnChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="occ-basic" className="flex flex-col gap-6">

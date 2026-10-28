@@ -113,12 +113,13 @@ const LOADING_CODE = `import {DualBarTableSkeleton} from '@/components/composite
   <DualBarTable {...tableProps} />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 21px · 머리 줄 위아래 10 · 값 줄 7 · 이름 열 170 · 막대 18 · 숫자 칸 90(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 21px · 머리 줄 위아래 10 · 값 줄 7 · 이름 열 170 · 막대 18 · 숫자 칸 90(kbigx-print-innovation.tsx).
 <DualBarTable
   caption="매출 규모별 기업수(개) · 특허수(건)"
   categoryTitle="매출 규모"
-  left={{title: '기업수', color: 'var(--kbx-color-purple)'}}
-  right={{title: '특허수', color: 'var(--kbx-color-blue)'}}
+  // 기업수 진남 · 특허수 파랑(범례 칩도 같은 토큰)
+  left={{title: '기업수', color: 'var(--kbx-color-chart-series-1)'}}
+  right={{title: '특허수', color: 'var(--kbx-color-chart-series-2)'}}
   data={rows}
   tableClassName="kbx-text-21 text-kbx-foreground border-kbx-primary kbx-border-t-strong"
   headClassName="bg-kbx-surface text-kbx-primary font-kbx-bold py-2.5"
@@ -128,6 +129,10 @@ const PRINT_CODE = `// K-BIGx 인쇄본 — 21px · 머리 줄 위아래 10 · �
   barClassName="h-4.5"
   valueClassName="w-22.5"
 />`
+
+// PDF 템플릿 색 — kbigx-print-innovation.tsx 의 MARKET_SCALE_BARS 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
+const PRINT_LEFT = {title: '기업수', color: 'var(--kbx-color-chart-series-1)'}
+const PRINT_RIGHT = {title: '특허수', color: 'var(--kbx-color-chart-series-2)'}
 
 const PROPS_ITEMS = [
     ['DualBarTable', 'caption', '표 이름입니다(화면에 보이지 않는 caption).', '-', 'string'],
@@ -157,7 +162,13 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['DualBarTableItem', 'id · label', '항목 식별자 · 이름입니다.', '-', 'string · ReactNode'],
-    ['DualBarTableItem', 'left · right', '두 열의 값입니다. 0 이하는 막대를 그리지 않습니다.', '-', 'number'],
+    [
+        'DualBarTableItem',
+        'left · right',
+        "두 열의 값입니다. 0 이하는 막대를 그리지 않습니다. 숫자가 아니면(NaN) 값 없음 — 막대 없이 '-'(0 은 '0'). K-BIGx 매출 규모 표는 5행 고정(toMarketScaleRows)이라 데이터가 없어도 5행 모두 '-'.",
+        '-',
+        'number',
+    ],
     ['DualBarTableSkeleton', 'rowCount', '값 줄 수입니다.', '5', 'number'],
     [
         'DualBarTableSkeleton',
@@ -188,7 +199,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const DualBarTableGuidePage = () => (
     <GuidePageShell
         title="두 값 막대 표 (DualBarTable)"
-        description="항목마다 두 값(예: 기업수 · 특허수)을 가로 막대와 숫자로 나란히 적는 표입니다. K-BIGx 보고서 인쇄본 기술혁신정보의 매출 규모별 기업 및 특허 현황입니다."
+        description="항목마다 두 값(예: 기업수 · 특허수)을 가로 막대와 숫자로 나란히 적는 표입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 매출 규모별 기업 및 특허 현황입니다."
     >
         <BaseCard>
             <section aria-labelledby="dbt-basic" className="flex flex-col gap-6">
@@ -225,7 +236,7 @@ const DualBarTableGuidePage = () => (
                         막대는 열마다 따로 견줍니다 — 그 열의 가장 큰 값이 막대 칸의 78%, 나머지는 값에 비례합니다.
                         숫자와 막대 끝 사이에 여백이 남습니다.
                     </li>
-                    <li>크기 · 글자 · 선 모양은 className 들로 바꿉니다 — 인쇄본은 kbx 클래스를 넘깁니다.</li>
+                    <li>크기 · 글자 · 선 모양은 className 들로 바꿉니다 — PDF 템플릿은 kbx 클래스를 넘깁니다.</li>
                 </ul>
             </section>
         </BaseCard>
@@ -263,8 +274,8 @@ const DualBarTableGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="dbt-loading" className="flex flex-col gap-6">
                 <SectionHeading id="dbt-loading" title="4. 불러오는 중 (DualBarTableSkeleton)">
-                    같은 표 짜임에 이름 · 막대 · 숫자 자리를 회색으로 그립니다. 인쇄본은 데이터를 받은 뒤 서버에서 바로
-                    그려 스켈레톤 없이 나옵니다.
+                    같은 표 짜임에 이름 · 막대 · 숫자 자리를 회색으로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서
+                    바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -286,7 +297,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-print" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="dbt-print" title="5. K-BIGx PDF 템플릿에서">
                     기술혁신정보 3쪽 — 소제목 오른쪽에 기업수 · 특허수 범례(KbxLegend density=&quot;unit&quot;), 표 아래
                     28 간격에 기업수 · 특허수 비중 도넛(DonutListChart)을 나란히 둡니다. 확인 화면:{' '}
                     <Link
@@ -295,10 +306,31 @@ const DualBarTableGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기술혁신정보
+                        K-BIGx 보고서 PDF 템플릿 기술혁신정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        기업수는 진남(chart-series-1), 특허수는 파랑(chart-series-2) — 범례 순서와 명도 순서(진함 →
+                        중간)가 같아 흑백 인쇄에서도 두 계열이 갈립니다. 범례 칩(bg-kbx-chart-series-1 · 2)도 같은
+                        토큰입니다.
+                    </li>
+                </ul>
+                <Example
+                    title="PDF 템플릿 색"
+                    description="kbx 색을 넘긴 모습입니다(.kbigx-print 안 · 다크에서도 흰 바탕)."
+                >
+                    <div className="kbigx-print bg-kbx-paper rounded-sm p-4">
+                        <DualBarTable
+                            caption="매출 규모별 기업수 · 특허수 PDF 템플릿 색 예시"
+                            categoryTitle="매출 규모"
+                            left={PRINT_LEFT}
+                            right={PRINT_RIGHT}
+                            data={STANDARD_DATA}
+                        />
+                    </div>
+                </Example>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>

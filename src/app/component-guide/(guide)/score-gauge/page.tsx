@@ -89,10 +89,18 @@ const SPECIAL_CASES = [
     },
     {
         title: '범위를 벗어난 값 (120)',
-        description: '0~100 으로 맞춰 채움과 글자가 같은 값(100)을 보입니다. 음수 · 숫자가 아닌 값은 0 이 됩니다.',
+        description: '0~100 으로 맞춰 채움과 글자가 같은 값(100)을 보입니다. 음수는 0 이 됩니다.',
         score: 120,
         statusLabel: '우수',
         tone: 'excellent',
+    },
+    {
+        title: '점수 없음 (NaN)',
+        description:
+            "숫자가 아니면 트랙만 두고 가운데에 '-' 하나 — 단위 · 상태 이름은 숨깁니다('0점 취약' 으로 보이지 않게). 실제 0점과 구분됩니다.",
+        score: Number.NaN,
+        statusLabel: '취약',
+        tone: 'weak',
     },
     {
         title: '소수가 긴 값 (73.856)',
@@ -174,7 +182,7 @@ const PROPS_ITEMS = [
     [
         'ScoreGauge',
         'score',
-        '0~100 점수입니다. 범위를 벗어나거나 숫자가 아니면 끝(0 · 100)으로 맞추고, 소수는 첫째 자리까지 보입니다.',
+        "0~100 점수입니다. 범위를 벗어나면 끝(0 · 100)으로 맞추고, 소수는 첫째 자리까지 보입니다. 숫자가 아니면(NaN) 점수 없음 — '-' 만 보입니다.",
         '-',
         'number',
     ],
@@ -293,7 +301,11 @@ const ScoreGaugeGuidePage = () => (
                                         statusLabel={item.statusLabel}
                                         tone={item.tone}
                                         caption={'caption' in item ? item.caption : undefined}
-                                        ariaLabel={`${item.score}점, ${item.statusLabel}`}
+                                        ariaLabel={
+                                            Number.isFinite(item.score)
+                                                ? `${item.score}점, ${item.statusLabel}`
+                                                : '평가 점수가 없습니다.'
+                                        }
                                     />
                                 </li>
                             ))}

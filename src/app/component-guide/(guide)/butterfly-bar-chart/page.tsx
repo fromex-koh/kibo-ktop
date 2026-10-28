@@ -126,11 +126,11 @@ const CHOICE_ROWS = [
     {
         key: 'dual-bar-table',
         cells: [
-            '같은 두 값을 표 칸 안 막대 + 숫자로(인쇄본)',
+            '같은 두 값을 표 칸 안 막대 + 숫자로(PDF 템플릿)',
             <Link key="c" href="/component-guide/dual-bar-table" className={LINK_CLASS}>
                 DualBarTable
             </Link>,
-            '표 짜임이라 숫자를 표처럼 읽습니다. K-BIGx 인쇄본 매출 규모별 기업 및 특허 현황에 씁니다.',
+            '표 짜임이라 숫자를 표처럼 읽습니다. K-BIGx PDF 템플릿 매출 규모별 기업 및 특허 현황에 씁니다.',
         ],
     },
 ] as const
@@ -165,8 +165,14 @@ const PROPS_ITEMS = [
     ],
     ['ButterflyBarItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['ButterflyBarItem', 'label', '가운데 칸에 쓰는 항목 이름입니다.', '-', 'string'],
-    ['ButterflyBarItem', 'left', '왼쪽 값입니다.', '-', 'number'],
-    ['ButterflyBarItem', 'right', '오른쪽 값입니다.', '-', 'number'],
+    [
+        'ButterflyBarItem',
+        'left',
+        "왼쪽 값입니다. 숫자가 아니면(NaN) 막대 없이 '-'(숨김 표도 '-'), 0 은 '0'.",
+        '-',
+        'number',
+    ],
+    ['ButterflyBarItem', 'right', '오른쪽 값입니다. 값 없음 처리는 left 와 같습니다.', '-', 'number'],
     [
         'ButterflyBarChartSkeleton',
         'label',
