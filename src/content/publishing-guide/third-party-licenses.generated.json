@@ -1,0 +1,187 @@
+{
+    "//": "자동 생성 파일 — 직접 수정하지 않습니다. yarn license-notices 가 THIRD_PARTY_LICENSES.md 와 함께 만듭니다.",
+    "licenses": [
+        {
+            "name": "@base-ui/react",
+            "version": "1.6.0",
+            "license": "MIT",
+            "source": "https://github.com/mui/base-ui",
+            "kind": "package"
+        },
+        {
+            "name": "class-variance-authority",
+            "version": "0.7.1",
+            "license": "Apache-2.0",
+            "source": "https://github.com/joe-bell/cva",
+            "kind": "package"
+        },
+        {
+            "name": "clsx",
+            "version": "2.1.1",
+            "license": "MIT",
+            "source": "lukeed/clsx",
+            "kind": "package"
+        },
+        {
+            "name": "cmdk",
+            "version": "1.1.1",
+            "license": "MIT",
+            "source": "https://github.com/pacocoursey/cmdk",
+            "kind": "package"
+        },
+        {
+            "name": "cytoscape",
+            "version": "3.34.0",
+            "license": "MIT",
+            "source": "https://github.com/cytoscape/cytoscape.js",
+            "kind": "package"
+        },
+        {
+            "name": "cytoscape-fcose",
+            "version": "2.2.0",
+            "license": "MIT",
+            "source": "https://github.com/iVis-at-Bilkent/cytoscape.js-fcose",
+            "kind": "package"
+        },
+        {
+            "name": "date-fns",
+            "version": "4.4.0",
+            "license": "MIT",
+            "source": "https://github.com/date-fns/date-fns",
+            "kind": "package"
+        },
+        {
+            "name": "html-to-image",
+            "version": "1.11.13",
+            "license": "MIT",
+            "source": "https://github.com/bubkoo/html-to-image",
+            "kind": "package"
+        },
+        {
+            "name": "jspdf",
+            "version": "4.2.1",
+            "license": "MIT",
+            "source": "https://github.com/parallax/jsPDF",
+            "kind": "package"
+        },
+        {
+            "name": "lottie-web",
+            "version": "5.13.0",
+            "license": "MIT",
+            "source": "https://github.com/airbnb/lottie-web",
+            "kind": "package"
+        },
+        {
+            "name": "lucide-react",
+            "version": "1.23.0",
+            "license": "ISC",
+            "source": "https://github.com/lucide-icons/lucide",
+            "kind": "package"
+        },
+        {
+            "name": "next",
+            "version": "16.2.9",
+            "license": "MIT",
+            "source": "vercel/next.js",
+            "kind": "package"
+        },
+        {
+            "name": "next-themes",
+            "version": "0.4.6",
+            "license": "MIT",
+            "source": "https://github.com/pacocoursey/next-themes",
+            "kind": "package"
+        },
+        {
+            "name": "prism-react-renderer",
+            "version": "2.4.1",
+            "license": "MIT",
+            "source": "https://github.com/FormidableLabs/prism-react-renderer",
+            "kind": "package"
+        },
+        {
+            "name": "radix-ui",
+            "version": "1.6.2",
+            "license": "MIT",
+            "source": "https://github.com/radix-ui/primitives",
+            "kind": "package"
+        },
+        {
+            "name": "react",
+            "version": "19.2.4",
+            "license": "MIT",
+            "source": "https://github.com/facebook/react",
+            "kind": "package"
+        },
+        {
+            "name": "react-day-picker",
+            "version": "10.0.1",
+            "license": "MIT",
+            "source": "https://github.com/gpbl/react-day-picker",
+            "kind": "package"
+        },
+        {
+            "name": "react-dom",
+            "version": "19.2.4",
+            "license": "MIT",
+            "source": "https://github.com/facebook/react",
+            "kind": "package"
+        },
+        {
+            "name": "react-is",
+            "version": "19.2.8",
+            "license": "MIT",
+            "source": "https://github.com/react/react",
+            "kind": "package"
+        },
+        {
+            "name": "recharts",
+            "version": "3.8.0",
+            "license": "MIT",
+            "source": "https://github.com/recharts/recharts",
+            "kind": "package"
+        },
+        {
+            "name": "shadcn",
+            "version": "4.13.0",
+            "license": "MIT",
+            "source": "https://github.com/shadcn-ui/ui",
+            "kind": "package"
+        },
+        {
+            "name": "sonner",
+            "version": "2.0.7",
+            "license": "MIT",
+            "source": "https://github.com/emilkowalski/sonner",
+            "kind": "package"
+        },
+        {
+            "name": "tailwind-merge",
+            "version": "3.6.0",
+            "license": "MIT",
+            "source": "https://github.com/dcastil/tailwind-merge",
+            "kind": "package"
+        },
+        {
+            "name": "tw-animate-css",
+            "version": "1.4.0",
+            "license": "MIT",
+            "source": "Wombosvideo/tw-animate-css",
+            "kind": "package"
+        },
+        {
+            "name": "wordcloud",
+            "version": "1.2.3",
+            "license": "MIT",
+            "source": "https://github.com/timdream/wordcloud2.js",
+            "kind": "package"
+        },
+        {
+            "name": "Pretendard Variable",
+            "version": "-",
+            "license": "OFL-1.1",
+            "source": "https://github.com/orioncactus/pretendard",
+            "kind": "font"
+        }
+    ]
+}
