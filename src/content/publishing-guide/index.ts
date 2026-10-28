@@ -176,6 +176,13 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (value.externalHref !== undefined && typeof value.externalHref !== 'string') {
         throw new Error(`[content] ${where}: externalHref 는 문자열이어야 합니다.`)
     }
+    if (value.downloadHref !== undefined && typeof value.downloadHref !== 'string') {
+        throw new Error(`[content] ${where}: downloadHref 는 문자열이어야 합니다.`)
+    }
+    // 다운로드 행은 화면이 아니다 — key 를 같이 두면 경로 레지스트리 짝 검사와 화면 링크가 엇갈린다.
+    if (value.downloadHref !== undefined && value.key !== undefined) {
+        throw new Error(`[content] ${where}: downloadHref 와 key 는 함께 둘 수 없습니다.`)
+    }
     return {
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
         ...(typeof value.iaRow === 'number' ? {iaRow: value.iaRow} : {}),
@@ -193,6 +200,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         ...(value.isRestored === true ? {isRestored: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
         ...(typeof value.externalHref === 'string' ? {externalHref: value.externalHref} : {}),
+        ...(typeof value.downloadHref === 'string' ? {downloadHref: value.downloadHref} : {}),
     }
 }
 

@@ -146,6 +146,7 @@ export type StructureLeaf = {
     isRed?: boolean
     userType?: UserType // 없으면 상위에서 상속(최종적으로 없으면 공통).
     externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
+    downloadHref?: string // 화면 대신 파일을 내려받는 항목의 주소(예: 보고서 템플릿 HTML). 링크가 다운로드로 그려진다.
 }
 
 // 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
@@ -168,6 +169,7 @@ export type ScreenInfo = {
     isRed?: boolean
     userType?: UserType
     externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
+    downloadHref?: string // 화면 대신 파일을 내려받는 항목의 주소(예: 보고서 템플릿 HTML). 링크가 다운로드로 그려진다.
 }
 
 export type StructureBranch = {

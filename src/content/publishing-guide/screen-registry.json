@@ -1044,14 +1044,14 @@
             "screenId": "SB-FOTA-CP1-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/print-output-selection",
-            "name": "인쇄 출력물 선택"
+            "name": "보고서 내용 선택"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
             "screenId": "SB-FOTA-CP7-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/report-print",
-            "name": "보고서 출력"
+            "name": "보고서 미리보기"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
@@ -1082,25 +1082,11 @@
             "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
         },
         {
-            "key": "corp-k-bigx-report-report-history",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/k-bigx-report/report-history",
-            "name": "보고서 이력 조회 (마이페이지)"
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
             "screenId": "SB-FOTA-CP3-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/terms-of-service",
             "name": "이용약관"
-        },
-        {
-            "key": "corp-k-bigx-report-report-history-report-print",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/k-bigx-report/report-history/report-print",
-            "name": "보고서 출력"
         },
         {
             "key": "corp-carbon-neutrality",
@@ -1311,13 +1297,6 @@
             "userType": "기업",
             "path": "/corp/mypage/k-bigx-report-history",
             "name": "K-BIGx 보고서 이력"
-        },
-        {
-            "key": "corp-mypage-k-bigx-report-history-report-view",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/k-bigx-report-history/report-view",
-            "name": "보고서 보기"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
@@ -2269,14 +2248,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/print-output-selection",
-            "name": "인쇄 출력물 선택"
+            "name": "보고서 내용 선택"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
             "screenId": null,
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/report-print",
-            "name": "보고서 출력"
+            "name": "보고서 미리보기"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
@@ -2305,13 +2284,6 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=credit-finance&case=partner-person",
             "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
-        },
-        {
-            "key": "org-k-bigx-report-report-history",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/report-history",
-            "name": "보고서 이력 조회 (마이페이지)"
         },
         {
             "key": "org-carbon-neutrality",
@@ -2501,13 +2473,6 @@
             "userType": "기관",
             "path": "/org/mypage/k-bigx-report-history",
             "name": "K-BIGx 보고서 이력"
-        },
-        {
-            "key": "org-mypage-k-bigx-report-history-report-print",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/mypage/k-bigx-report-history/report-print",
-            "name": "보고서 출력"
         },
         {
             "key": "org-mypage-sub-account-progress",
@@ -2865,13 +2830,6 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/bulk-data-search/complete",
             "name": "대량정보조회 완료"
-        },
-        {
-            "key": "org-k-bigx-report-report-history-report-print",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/report-history/report-print",
-            "name": "보고서 출력"
         },
         {
             "key": "org-mypage-sub-account-progress-create",
