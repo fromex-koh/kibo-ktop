@@ -14,7 +14,14 @@ import {
 import {RankBarList, type RankBarListProps} from '@/components/custom/rank-bar-list'
 import {TECH_INDEX_RADAR_STYLE} from '@/components/custom/tech-index-radar-style'
 import {ValueColumnChart} from '@/components/custom/value-column-chart'
-import {getTechIndexGrade, type InnovationGrowthReport} from '@/content/service/k-bigx-innovation-report'
+import {
+    getTechIndexGrade,
+    TECH_INDEX_CAPABILITIES,
+    TECH_INDEX_FALLBACK_STANDARD,
+    TECH_INDEX_INDICATOR_TITLES,
+    type InnovationGrowthReport,
+    INNOVATION_REPORT_SCORE_MAX,
+} from '@/content/service/k-bigx-innovation-report'
 import {cn} from '@/lib/utils'
 import {isKbxNumber, KBX_EMPTY_VALUE, kbxFixed1Format} from '@/components/custom/kbigx-print-format'
 
@@ -26,8 +33,6 @@ type PageProps = {report: InnovationGrowthReport}
 const PRIMARY_LABEL = '신청기업'
 const COMPARISON_LABEL = '전체평균'
 const AVERAGE_COMPANY_LABEL = '전체기업'
-// 점수 만점 — 4대 혁신역량 부분별 비교 카드 · 유형별 4대 혁신역량 막대 공통 눈금.
-const SCORE_MAX = 100
 // 값이 없을 때 적는 글자 · 점수가 없을 때 요약 문장.
 const NO_SCORE_TEXT = '평가 점수가 없습니다.'
 const NO_STANDARD_TEXT = '표준정보 비교 결과가 없습니다.'
@@ -39,10 +44,12 @@ const formatScore = (value: number) => (isKbxNumber(value) ? kbxFixed1Format.for
 const toChartScore = (value: number) => (isKbxNumber(value) ? value : 0)
 const missingText = (value: number) => (isKbxNumber(value) ? undefined : KBX_EMPTY_VALUE)
 
-// 막대 색 — 신청기업 보라 · 유형 파랑. 4대 혁신역량 카드의 신청기업 막대는 역량마다 고정 색, 전체기업은 회색.
+// 막대 색 — 신청기업 진남 · 유형 파랑(흑백 인쇄에서도 명도로 갈린다), 신청기업 글자는 남색. 4대 혁신역량 카드의
+// 신청기업 막대는 역량마다 고정 색(등급 색), 전체기업은 회색.
 // [프론트엔드 연동] capabilities[].id 는 infra · input · activity · output(화면 보고서와 같다) — 다른 id 면 파랑.
-const SUBJECT_COLOR = 'var(--kbx-color-purple)'
-const TYPE_COLOR = 'var(--kbx-color-blue)'
+const SUBJECT_COLOR = 'var(--kbx-color-chart-subject)'
+const SUBJECT_LABEL_COLOR = 'var(--kbx-color-chart-subject-label)'
+const TYPE_COLOR = 'var(--kbx-color-chart-general)'
 const AVERAGE_COLOR = 'var(--kbx-color-gray)'
 const CAPABILITY_COLORS: Record<string, string> = {
     infra: 'var(--kbx-color-mint)',
@@ -51,16 +58,16 @@ const CAPABILITY_COLORS: Record<string, string> = {
     output: 'var(--kbx-color-red)',
 }
 
-// 기업 유형별 4대 혁신역량 막대 목록 공통 props — 0~100 눈금, 신청기업 행(tone: 'subject')은 보라 · 가장 굵게.
+// 기업 유형별 4대 혁신역량 막대 목록 공통 props — 0~100 눈금, 신청기업 행(tone: 'subject')은 진남 막대 · 남색 글자 · 가장 굵게.
 const CAPABILITY_LIST_PROPS = {
     titleAs: 'h4',
-    max: SCORE_MAX,
+    max: INNOVATION_REPORT_SCORE_MAX,
     formatValue: formatScore,
-    colors: {bar: TYPE_COLOR, subjectBar: SUBJECT_COLOR, track: 'var(--kbx-color-surface)'},
+    colors: {bar: TYPE_COLOR, subjectBar: SUBJECT_COLOR, track: 'var(--kbx-color-chart-track)'},
     listClassName: 'kbx-text-20 text-kbx-foreground border-kbx-foreground kbx-border-t-regular',
     titleClassName: 'kbx-text-22 font-kbx-bold pt-kbx-14 pb-1.5',
     rowClassName: 'gap-3 py-1.5',
-    subjectRowClassName: 'text-kbx-purple font-kbx-extrabold',
+    subjectRowClassName: 'text-kbx-chart-subject-label font-kbx-extrabold',
     nameClassName: 'w-24',
     barClassName: 'h-5',
     valueClassName: 'w-14',
@@ -155,8 +162,9 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
     const hasScore = isKbxNumber(score)
     const scoreLabel = formatScore(score)
     const meanLabel = formatScore(standard.mean)
-    // 표준정보 분포 — 평균이 없으면 그래프 대신 빈 상태, 점수나 요약 조각이 없으면 안내 문구(NO_STANDARD_TEXT).
-    const hasStandard = isKbxNumber(standard.mean)
+    // 표준정보 분포 — 평균 · 표준편차가 없어도 곡선은 모양용 값(TECH_INDEX_FALLBACK_STANDARD)으로 그리고 점만 뺀다(웹 보고서와 같다).
+    // 점수나 요약 조각이 없으면 안내 문구(NO_STANDARD_TEXT).
+    const hasStandard = isKbxNumber(standard.mean) && isKbxNumber(standard.standardDeviation)
     const hasSummary = hasScore && standard.summary.length > 0
 
     return (
@@ -208,26 +216,27 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
                 </div>
                 {/* 점수 → 표준정보 소제목 40(블록 안 간격 32 + mt-2). */}
                 <KbxSubBlock title="Tech-Index 표준정보 비교" unit={`전체 평균 ${meanLabel}점`} className="mt-2">
-                    {/* 분포 그래프 — 본문 폭의 16/25, 가운데. 빈 상태 높이(h-53.75 = 215)는 그래프 높이와 같게 둔다. */}
-                    <KbxChartBox isEmpty={!hasStandard} emptyClassName="h-53.75 w-16/25 self-center">
-                        <DistributionValueChart
-                            className="w-16/25 self-center"
-                            ariaLabel={`Tech-Index 표준정보 분포 — 전체 평균 ${meanLabel}점, 조회기업 ${scoreLabel}점, ${standard.percentileLabel}`}
-                            mean={standard.mean}
-                            standardDeviation={standard.standardDeviation}
-                            value={score}
-                            markerLabel={standard.percentileLabel}
-                            colors={{
-                                curve: 'var(--kbx-color-blue)',
-                                grid: 'var(--kbx-color-border)',
-                                baseline: 'var(--kbx-color-chart-line-subtle)',
-                                tick: 'var(--kbx-color-label)',
-                                label: 'var(--kbx-color-chart-marker-label)',
-                                markerStroke: 'var(--kbx-color-paper)',
-                                surface: 'var(--kbx-color-paper)',
-                            }}
-                        />
-                    </KbxChartBox>
+                    {/* 분포 그래프 — 본문 폭의 16/25, 가운데. 값이 없어도 곡선은 늘 그린다(점만 빠짐). */}
+                    <DistributionValueChart
+                        className="w-16/25 self-center"
+                        ariaLabel={`Tech-Index 표준정보 분포 — 전체 평균 ${meanLabel}점, 조회기업 ${scoreLabel}점, ${standard.percentileLabel}`}
+                        mean={hasStandard ? standard.mean : TECH_INDEX_FALLBACK_STANDARD.mean}
+                        standardDeviation={
+                            hasStandard ? standard.standardDeviation : TECH_INDEX_FALLBACK_STANDARD.standardDeviation
+                        }
+                        // 점수가 없으면 점 · 순위 글자를 그리지 않는다.
+                        value={hasScore ? score : undefined}
+                        markerLabel={hasScore ? standard.percentileLabel : undefined}
+                        colors={{
+                            curve: 'var(--kbx-color-blue)',
+                            grid: 'var(--kbx-color-border)',
+                            baseline: 'var(--kbx-color-chart-line-subtle)',
+                            tick: 'var(--kbx-color-label)',
+                            label: 'var(--kbx-color-chart-marker-label)',
+                            markerStroke: 'var(--kbx-color-paper)',
+                            surface: 'var(--kbx-color-paper)',
+                        }}
+                    />
                     <p className="bg-kbx-surface border-kbx-border kbx-border-hairline rounded-kbx-12 kbx-text-23 leading-kbx-160 py-kbx-22 px-7 text-center break-keep">
                         {hasSummary ? (
                             <SummaryText parts={standard.summary} companyName={report.companyName} />
@@ -239,9 +248,13 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
             </KbxBlock>
             <KbxBlock title="혁신성장역량지수 부문별 지표 비교" unit={LEGEND}>
                 <div className="grid grid-cols-2 gap-14">
-                    {indicators.map((indicator) => (
+                    {/* 두 묶음은 늘 이 제목으로 그린다 — 받지 못한 묶음은 그래프 자리에 빈 상태(웹 보고서와 같다). */}
+                    {TECH_INDEX_INDICATOR_TITLES.map((title) => ({
+                        title,
+                        items: indicators.find((indicator) => indicator.title === title)?.items ?? [],
+                    })).map((indicator) => (
                         <KbxSubBlock
-                            key={indicator.id}
+                            key={indicator.title}
                             title={indicator.title}
                             className="border-kbx-border kbx-border-hairline rounded-kbx-14 px-kbx-22 pt-kbx-22 gap-3 pb-5"
                         >
@@ -277,11 +290,11 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
         <>
             <KbxBlock title="혁신성장역량지수 비교">
                 <KbxSubBlock title="기업 유형별 Tech-Index 비교">
-                    {/* 0~100 눈금, isSubject 인 유형(신청기업)은 보라. 빈 상태 높이(h-84)는 그래프 높이와 같게 둔다. */}
+                    {/* 0~100 눈금, isSubject 인 유형(신청기업)은 진남 막대 · 남색 글자. 빈 상태 높이(h-84)는 그래프 높이와 같게 둔다. */}
                     <KbxChartBox isEmpty={!companyTypes.length} emptyClassName="h-84">
                         <ValueColumnChart
                             ariaLabel="기업 유형별 Tech-Index 비교"
-                            max={SCORE_MAX}
+                            max={INNOVATION_REPORT_SCORE_MAX}
                             data={companyTypes.map((item) => ({
                                 id: item.id,
                                 label: item.label,
@@ -292,6 +305,7 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                             colors={{
                                 bar: TYPE_COLOR,
                                 highlight: SUBJECT_COLOR,
+                                highlightLabel: SUBJECT_LABEL_COLOR,
                                 baseline: 'var(--kbx-color-foreground)',
                                 value: 'var(--kbx-color-foreground)',
                                 category: 'var(--kbx-color-foreground)',
@@ -301,33 +315,44 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                 </KbxSubBlock>
                 {/* 소제목 사이 64(블록 안 간격 32 + mt-8) — 소제목이 셋이라 구획이 잘 갈리게 넉넉히 띄운다(블록 사이 80 보다는 좁게). */}
                 <KbxSubBlock title="4대 혁신역량 부분별 비교" className="mt-8">
-                    {/* 역량마다 카드 하나(4열). 역량이 없으면 카드 높이(373 = h-93.25)의 빈 상태. */}
-                    <KbxChartBox isEmpty={!capabilities.length} emptyClassName="h-93.25">
-                        <div className="grid grid-cols-4 gap-5">
-                            {capabilities.map((capability) => (
-                                <section
-                                    key={capability.id}
-                                    aria-label={`${capability.label} 점수`}
-                                    className="border-kbx-border kbx-border-hairline rounded-kbx-14 px-kbx-22 pt-kbx-22 flex flex-col gap-3 pb-5"
+                    {/* 역량마다 카드 하나(4열) — 네 카드(인프라 · 투입 · 활동 · 성과)를 늘 그린다(웹 보고서와 같다). 받지 못했거나
+                        두 점수가 모두 없는 카드는 그래프 자리에 빈 상태. 카드 높이 373(min-h-93.25)을 지켜 넷 다 비어도 같은 높이. */}
+                    <div className="grid grid-cols-4 gap-5">
+                        {TECH_INDEX_CAPABILITIES.map(({id, label}) => ({
+                            id,
+                            label,
+                            capability: capabilities.find((item) => item.id === id),
+                        })).map(({id, label, capability}) => (
+                            <section
+                                key={id}
+                                aria-label={`${label} 점수`}
+                                className="border-kbx-border kbx-border-hairline rounded-kbx-14 px-kbx-22 pt-kbx-22 flex min-h-93.25 flex-col gap-3 pb-5"
+                            >
+                                <KbxChartBox
+                                    isEmpty={
+                                        !capability ||
+                                        (!isKbxNumber(capability.score) && !isKbxNumber(capability.average))
+                                    }
+                                    emptyClassName="min-h-0 flex-1"
                                 >
                                     <ValueColumnChart
                                         variant="compact"
-                                        max={SCORE_MAX}
-                                        ariaLabel={`${capability.label} — 신청기업과 전체기업 점수`}
+                                        max={INNOVATION_REPORT_SCORE_MAX}
+                                        ariaLabel={`${label} — 신청기업과 전체기업 점수`}
                                         data={[
                                             {
                                                 id: 'subject',
                                                 label: PRIMARY_LABEL,
-                                                value: toChartScore(capability.score),
-                                                valueText: missingText(capability.score),
-                                                color: CAPABILITY_COLORS[capability.id] ?? TYPE_COLOR,
+                                                value: toChartScore(capability?.score ?? Number.NaN),
+                                                valueText: missingText(capability?.score ?? Number.NaN),
+                                                color: CAPABILITY_COLORS[id] ?? TYPE_COLOR,
                                                 isHighlighted: true,
                                             },
                                             {
                                                 id: 'average',
                                                 label: AVERAGE_COMPANY_LABEL,
-                                                value: toChartScore(capability.average),
-                                                valueText: missingText(capability.average),
+                                                value: toChartScore(capability?.average ?? Number.NaN),
+                                                valueText: missingText(capability?.average ?? Number.NaN),
                                                 color: AVERAGE_COLOR,
                                             },
                                         ]}
@@ -339,16 +364,21 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                                             category: 'var(--kbx-color-label)',
                                         }}
                                     />
-                                    <h5 className="kbx-text-22 font-kbx-bold text-center">{capability.label}</h5>
-                                </section>
-                            ))}
-                        </div>
-                    </KbxChartBox>
+                                </KbxChartBox>
+                                <h5 className="kbx-text-22 font-kbx-bold text-center">{label}</h5>
+                            </section>
+                        ))}
+                    </div>
                 </KbxSubBlock>
                 {/* 소제목 사이 64(블록 안 간격 32 + mt-8). */}
                 <KbxSubBlock title="기업 유형별 4대 혁신역량 비교" className="mt-8">
                     <div className="grid grid-cols-2 items-start gap-x-12 gap-y-6">
-                        {capabilityByType.map((capability) => (
+                        {/* 네 역량(인프라 · 투입 · 활동 · 성과)은 늘 그린다 — 받지 못한 역량은 목록 자리에 빈 상태(웹 보고서와 같다). */}
+                        {TECH_INDEX_CAPABILITIES.map(({id, label}) => ({
+                            id,
+                            label,
+                            items: capabilityByType.find((capability) => capability.id === id)?.items ?? [],
+                        })).map((capability) => (
                             <RankBarList
                                 key={capability.id}
                                 {...CAPABILITY_LIST_PROPS}

@@ -7,8 +7,9 @@ const KBX_EMPTY_VALUE = '-'
 // 비공개 · 해당 데이터가 없는 표 칸 문구(신용/재무정보 · 활동성정보).
 const KBX_NOT_APPLICABLE_TEXT = '해당사항 없음'
 
-// 천 단위 쉼표(1,234) · 소수 한 자리 고정(73.8 · 60.0) · 소수 둘째 자리 고정(10.00).
+// 천 단위 쉼표(1,234) · 정수 반올림(천원 금액 — 496,750) · 소수 한 자리 고정(73.8 · 60.0) · 소수 둘째 자리 고정(10.00).
 const kbxNumberFormat = new Intl.NumberFormat('ko-KR')
+const kbxIntegerFormat = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 0})
 const kbxFixed1Format = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
 const kbxFixed2Format = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
@@ -32,6 +33,7 @@ export {
     KBX_NOT_APPLICABLE_TEXT,
     kbxFixed1Format,
     kbxFixed2Format,
+    kbxIntegerFormat,
     kbxNumberFormat,
     orKbxEmpty,
     sumKbxNumbers,

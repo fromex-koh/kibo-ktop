@@ -11,8 +11,9 @@ import {
 } from '@/content/service/k-bigx-print-report'
 import {cn} from '@/lib/utils'
 import {PRIVATE_CARD_LABEL} from '@/components/composite/private-content'
-import {isKbxNumber, KBX_EMPTY_VALUE, kbxFixed1Format} from '@/components/custom/kbigx-print-format'
+import {isKbxNumber, KBX_EMPTY_VALUE, kbxIntegerFormat} from '@/components/custom/kbigx-print-format'
 import {estimateTextEm} from '@/content/service/k-bigx-print-measure'
+import type {CriGradeBand} from '@/content/service/cri-grades'
 
 // K-BIGx 보고서 인쇄본 — 쪽 공통 부품. 모든 쪽이 이 부품을 조합해 그린다.
 // 치수 · 색은 kbx 토큰(tokens.json kbigxPrint)이라 .kbigx-print 안에서만 값이 있다.
@@ -95,14 +96,16 @@ const KbxPageHeader = ({label, companyName}: {label: ReactNode; companyName: str
             <span aria-hidden="true" className="bg-kbx-primary h-kbx-34 w-2" />
             <span className="kbx-text-30 tracking-kbx-tight text-kbx-primary font-kbx-extrabold">{label}</span>
         </div>
-        {/* 기업명 — 길면 글자를 줄이고(21 → 17), 그래도 길면 줄을 접는다(잘리지 않음). 장 이름 쪽을 밀지 않도록 폭 절반까지만. */}
+        {/* 기업명 — 길면 글자를 줄이고(21 → 17), 그래도 길면 한 줄 끝을 말줄임(…)한다 — 머리말은 한 줄 자리라 접으면
+            끝 몇 글자만 아랫줄로 떨어진다. 장 이름 쪽을 밀지 않도록 폭 절반까지만. */}
         <div
             className={cn(
-                'text-kbx-foreground-subtle leading-kbx-130 max-w-1/2 min-w-0 text-right',
+                'text-kbx-foreground-subtle leading-kbx-130 max-w-1/2 min-w-0 truncate text-right',
                 fitKbxText(companyName, HEADER_NAME_WIDTH, HEADER_NAME_STEPS),
             )}
         >
-            {companyName}
+            {/* 기업명이 비면 '-'(표지 기업명과 같다). */}
+            {companyName.trim() || KBX_EMPTY_VALUE}
         </div>
     </div>
 )
@@ -190,9 +193,10 @@ const KbxBlock = ({title, unit, tag, children, className, unitPosition = 'title'
         <div className="border-kbx-border kbx-border-b-regular relative flex items-baseline justify-between gap-5 pb-4">
             <h3 className="kbx-text-36 tracking-kbx-tight font-kbx-extrabold shrink-0">{title}</h3>
             {unit && unitPosition === 'title' ? <KbxUnit>{unit}</KbxUnit> : null}
-            {/* 꼬리표 — 제목 줄 오른쪽 끝, 제목과 세로 가운데. 길면 제목을 밀지 않게 폭 절반까지에서 줄을 접는다. */}
+            {/* 꼬리표 — 제목 줄 오른쪽 끝, 제목과 세로 가운데. 늘 한 줄 알약 — 폭 절반을 넘으면 끝을 말줄임(…)한다
+                (두 줄로 접으면 알약 모양이 깨진다). 종이에는 툴팁이 없으므로 잘린 뒷부분은 웹 보고서에서 본다. */}
             {tag ? (
-                <div className="bg-kbx-surface text-kbx-primary kbx-text-21 font-kbx-bold px-kbx-18 py-kbx-6 max-w-1/2 self-center rounded-full text-center break-keep">
+                <div className="bg-kbx-surface text-kbx-primary kbx-text-21 font-kbx-bold px-kbx-18 py-kbx-6 max-w-1/2 min-w-0 self-center truncate rounded-full text-center">
                     {tag}
                 </div>
             ) : null}
@@ -406,6 +410,21 @@ const KBX_CASH_FLOW_TAG_CLASS: Record<number, string> = {
     3: 'bg-kbx-orange border-kbx-orange text-kbx-ink',
     2: 'bg-kbx-green border-kbx-green text-kbx-paper',
     1: 'bg-kbx-blue border-kbx-blue text-kbx-paper',
+}
+
+// 기업신용등급 알약 색 — 등급 단계(cri-grades.ts getCriGradeBand, 웹 게이지와 같은 9단계)별 kbx credit-tag 색.
+// 진단브리핑 · 신용/재무정보 기업신용등급이 같이 쓴다. 바탕 + 흰 글자(대비 5.4:1 이상), 평가제외는 흰 바탕 + 점선 테두리.
+// 표에 없는 코드(단계 없음)는 알약 기본 모양(남색 테두리)을 쓴다.
+const KBX_CREDIT_TAG_CLASS: Record<CriGradeBand, string> = {
+    prime: 'bg-kbx-credit-tag-prime border-kbx-credit-tag-prime text-kbx-paper',
+    good: 'bg-kbx-credit-tag-good border-kbx-credit-tag-good text-kbx-paper',
+    fair: 'bg-kbx-credit-tag-fair border-kbx-credit-tag-fair text-kbx-paper',
+    subfair: 'bg-kbx-credit-tag-subfair border-kbx-credit-tag-subfair text-kbx-paper',
+    low: 'bg-kbx-credit-tag-low border-kbx-credit-tag-low text-kbx-paper',
+    verylow: 'bg-kbx-credit-tag-verylow border-kbx-credit-tag-verylow text-kbx-paper',
+    risk: 'bg-kbx-credit-tag-risk border-kbx-credit-tag-risk text-kbx-paper',
+    hold: 'bg-kbx-credit-tag-hold border-kbx-credit-tag-hold text-kbx-paper',
+    excluded: 'bg-kbx-paper border-kbx-credit-tag-excluded text-kbx-foreground-subtle border-dashed',
 }
 
 // 안내 문구 — 표 · 그래프 아래 작은 글(18px · 행간 1.5).
@@ -753,7 +772,10 @@ const SALES_SCALE_STEP = 100
 const SALES_PERCENT = 100
 
 const KbxSalesBarList = ({items}: {items: readonly {label: string; value: number}[]}) => {
-    const scale = Math.ceil(Math.max(...items.map((item) => item.value), 1) / SALES_SCALE_STEP) * SALES_SCALE_STEP
+    // 값이 없는 해(숫자 아님)는 막대 없이 값 칸에 '-' — 눈금은 숫자인 값으로만 잡는다.
+    const scale =
+        Math.ceil(Math.max(...items.map((item) => item.value).filter(isKbxNumber), 1) / SALES_SCALE_STEP) *
+        SALES_SCALE_STEP
 
     return (
         <ul className="border-kbx-border kbx-border-t-regular kbx-text-22 flex flex-col">
@@ -773,12 +795,14 @@ const KbxSalesBarList = ({items}: {items: readonly {label: string; value: number
                         <span aria-hidden="true" className="bg-kbx-surface h-11 min-w-0 flex-1">
                             <span
                                 className="bg-kbx-blue block h-full"
-                                style={{width: `${(Math.max(item.value, 0) / scale) * SALES_PERCENT}%`}}
+                                style={{
+                                    width: `${isKbxNumber(item.value) ? (Math.max(item.value, 0) / scale) * SALES_PERCENT : 0}%`,
+                                }}
                             />
                         </span>
-                        {/* 값 칸 — 기본 110, 값이 길면(466,500.0) 그만큼 늘고 막대가 짧아진다. */}
+                        {/* 값 칸 — 기본 110, 값이 길면(496,750) 그만큼 늘고 막대가 짧아진다. 인당 매출액은 천원 단위라 정수로 적는다. */}
                         <span className="min-w-kbx-110 shrink-0 text-right whitespace-nowrap tabular-nums">
-                            {kbxFixed1Format.format(item.value)}
+                            {isKbxNumber(item.value) ? kbxIntegerFormat.format(item.value) : KBX_EMPTY_VALUE}
                         </span>
                     </li>
                 )
@@ -926,6 +950,7 @@ export {
     fitKbxText,
     getKbxIssueWords,
     KBX_CASH_FLOW_TAG_CLASS,
+    KBX_CREDIT_TAG_CLASS,
     KBX_CATEGORY_COLORS,
     KBX_CHART_EMPTY_CLASS,
     KBX_CHART_EMPTY_TEXT,
