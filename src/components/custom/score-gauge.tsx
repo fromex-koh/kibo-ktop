@@ -12,13 +12,15 @@ import {cn} from '@/lib/utils'
 //   상태별 gauge-<상태>-from 에서 시작해 왼쪽 아래로 갈수록 gauge-<상태>-to 로 번지는 그라데이션(tokens.json)이다.
 //   가운데 글자: 점수 40 Bold + 단위 24 Bold → 상태 20 Bold → 보조 14 Regular(gray.500). 글자 묶음의 아래는 원호 바닥에서 32 위.
 // 수치는 role="img" 의 이름으로도 읽어 준다.
+// 점수가 숫자가 아니면(NaN 등 — 점수 없음) 원호는 트랙만, 가운데는 '-' 하나(단위 · 상태 이름 없음) — '0점 취약' 으로
+//   보이지 않게 한다. 실제 0점은 '0점' 과 상태 이름이 그대로 나온다.
 
 type ScoreGaugeTone = ArcGaugeTone
 // 상태별 대표 색 — 요약 문장 등 게이지 밖에서 같은 상태 색을 쓰는 곳을 위해 그대로 내보낸다.
 const SCORE_GAUGE_TONE_COLORS = ARC_GAUGE_TONE_COLORS
 
 type ScoreGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    /** 0~100 점수. 범위를 벗어나거나 숫자가 아니면 끝(0 · 100)으로 맞추고, 소수는 첫째 자리까지 보인다. */
+    /** 0~100 점수. 범위를 벗어나면 끝(0 · 100)으로 맞추고, 소수는 첫째 자리까지 보인다. 숫자가 아니면 점수 없음('-'). */
     score: number
     /** 점수 뒤 단위(기본 '점'). */
     unit?: string
@@ -38,6 +40,7 @@ type ScoreGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 const MAX_SCORE = 100
 // 표시 점수 — 채움과 같은 값(0~100으로 맞춘 값)을 소수 첫째 자리까지 보인다(73.856 → 73.9, 100 → 100).
 const scoreFormatter = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
+const EMPTY_SCORE = '-'
 
 const ScoreGauge = ({
     score,
@@ -51,8 +54,9 @@ const ScoreGauge = ({
     className,
     ...props
 }: ScoreGaugeProps) => {
-    // 범위를 벗어나거나 숫자가 아니면(NaN) 끝으로 맞춘다 — 채움과 글자가 같은 값을 보이게.
-    const safeScore = Number.isFinite(score) ? Math.min(MAX_SCORE, Math.max(0, score)) : 0
+    // 범위를 벗어나면 끝으로 맞춘다 — 채움과 글자가 같은 값을 보이게. 숫자가 아니면 점수 없음(채움 0 · '-').
+    const hasScore = Number.isFinite(score)
+    const safeScore = hasScore ? Math.min(MAX_SCORE, Math.max(0, score)) : 0
 
     return (
         <div {...props} className={cn('mx-auto w-full', className)}>
@@ -69,11 +73,13 @@ const ScoreGauge = ({
                 {/* 글자 묶음은 제목이 아닌 그림 속 글자라 p 대신 div 를 쓴다 — 크고 굵은 p 는 접근성 검사기(WAVE)가 '제목일 수 있음'으로 잡는다. 값은 role="img" 이름으로 읽힌다. */}
                 <div className="flex items-baseline gap-1 whitespace-nowrap">
                     <span className="typo-display-m-bold text-foreground tabular-nums">
-                        {scoreFormatter.format(safeScore)}
+                        {hasScore ? scoreFormatter.format(safeScore) : EMPTY_SCORE}
                     </span>
-                    <span className="typo-h4-bold text-foreground">{unit}</span>
+                    {hasScore ? <span className="typo-h4-bold text-foreground">{unit}</span> : null}
                 </div>
-                <div className="typo-title-l-bold text-foreground -mt-1 break-keep">{statusLabel}</div>
+                {hasScore ? (
+                    <div className="typo-title-l-bold text-foreground -mt-1 break-keep">{statusLabel}</div>
+                ) : null}
                 {caption ? (
                     <div className="typo-body-l-regular text-foreground-subtle mt-2 break-keep">{caption}</div>
                 ) : null}

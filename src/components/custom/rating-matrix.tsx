@@ -17,14 +17,16 @@ import {cn} from '@/lib/utils'
 // 표시 칸은 색만으로 읽히지 않게 화면 낭독기용 글자(항목: 등급)를 함께 둔다[5.3.1].
 // 보고서 안에서는 카드가 보일 때 표시 원이 위 줄부터 차례로 튀어나온다(chart-reveal.tsx · animate-chart-pop).
 //
-// [프론트엔드 연동] rows 는 화면에 보일 순서대로 넘긴다. rating 은 'weak' · 'poor' · 'normal' · 'good' · 'excellent' 중 하나.
+// [프론트엔드 연동] rows 는 화면에 보일 순서대로 넘긴다. rating 은 'weak' · 'poor' · 'normal' · 'good' · 'excellent' 중 하나 —
+//   값이 없으면 null(그 줄의 단계 칸마다 '-', 줄 이름은 그대로).
 
 type RatingLevel = ArcGaugeTone
 
 type RatingMatrixRow = {
     id: string
     label: string
-    rating: RatingLevel
+    /** 없으면(null · 다섯 단계 밖 값) 그 줄의 단계 칸마다 '-'. 줄 이름은 그대로 둔다. */
+    rating: RatingLevel | null
 }
 
 type RatingMatrixProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -44,6 +46,7 @@ const RATING_LEVELS: ReadonlyArray<{id: RatingLevel; label: string; markerClassN
 ]
 
 const cellClassName = 'border-subtle-3 border-b'
+const EMPTY_VALUE = '-'
 
 // 줄마다 표시 점이 차례로 나타나는 간격(ms).
 const POP_STAGGER_MS = 80
@@ -77,44 +80,51 @@ const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps)
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map((row, rowIndex) => (
-                        <tr key={row.id}>
-                            <th
-                                scope="row"
-                                className={cn(
-                                    cellClassName,
-                                    'typo-body-l-medium text-foreground px-1 py-2 text-center break-keep',
-                                )}
-                            >
-                                {row.label}
-                            </th>
-                            {RATING_LEVELS.map((level) => (
-                                <td key={level.id} className={cn(cellClassName, 'py-2 text-center')}>
-                                    {row.rating === level.id ? (
-                                        <>
-                                            {/* 색 원은 그림이라 숨기고, 읽을 글자는 원 밖(칸 바탕)에 둔다 — 원 안에 두면 흰 글자 ·
+                    {rows.map((row, rowIndex) => {
+                        const hasRating = RATING_LEVELS.some((level) => level.id === row.rating)
+                        return (
+                            <tr key={row.id}>
+                                <th
+                                    scope="row"
+                                    className={cn(
+                                        cellClassName,
+                                        'typo-body-l-medium text-foreground px-1 py-2 text-center break-keep',
+                                    )}
+                                >
+                                    {row.label}
+                                </th>
+                                {RATING_LEVELS.map((level) => (
+                                    <td key={level.id} className={cn(cellClassName, 'py-2 text-center')}>
+                                        {!hasRating ? (
+                                            <span className="typo-body-l-regular text-foreground-subtle inline-flex h-6 items-center">
+                                                {EMPTY_VALUE}
+                                            </span>
+                                        ) : row.rating === level.id ? (
+                                            <>
+                                                {/* 색 원은 그림이라 숨기고, 읽을 글자는 원 밖(칸 바탕)에 둔다 — 원 안에 두면 흰 글자 ·
                                             색 바탕 조합으로 대비 검사(WAVE)가 '매우 낮은 대비'를 잡는다(보통 orange · 양호 mint). */}
-                                            <span
-                                                data-chart-reveal=""
-                                                aria-hidden="true"
-                                                className={cn(
-                                                    'mx-auto flex size-6 items-center justify-center rounded-full text-white',
-                                                    level.markerClassName,
-                                                    animate && 'motion-safe:animate-chart-pop',
-                                                )}
-                                                style={{animationDelay: `${rowIndex * POP_STAGGER_MS}ms`}}
-                                            >
-                                                <Check className="size-3.5" strokeWidth={3} />
-                                            </span>
-                                            <span className="sr-only">
-                                                {row.label}: {level.label}
-                                            </span>
-                                        </>
-                                    ) : null}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                                                <span
+                                                    data-chart-reveal=""
+                                                    aria-hidden="true"
+                                                    className={cn(
+                                                        'mx-auto flex size-6 items-center justify-center rounded-full text-white',
+                                                        level.markerClassName,
+                                                        animate && 'motion-safe:animate-chart-pop',
+                                                    )}
+                                                    style={{animationDelay: `${rowIndex * POP_STAGGER_MS}ms`}}
+                                                >
+                                                    <Check className="size-3.5" strokeWidth={3} />
+                                                </span>
+                                                <span className="sr-only">
+                                                    {row.label}: {level.label}
+                                                </span>
+                                            </>
+                                        ) : null}
+                                    </td>
+                                ))}
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </table>
         </div>
