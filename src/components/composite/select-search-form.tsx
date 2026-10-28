@@ -122,6 +122,8 @@ const SelectSearchForm = ({
     // 값이 비었거나 형식이 맞지 않으면 입력 아래에 안내를 보이고 입력으로 포커스를 옮긴다[7.4.2].
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
+        // 조회 중에는 다시 제출하지 않는다 — 버튼을 disabled 로 막지 않으므로(아래 [검색하기] 주석) 여기서 막는다.
+        if (isSearching) return
 
         const value = keyword.trim()
         const getError = () => {
@@ -224,7 +226,8 @@ const SelectSearchForm = ({
                     <span className="hidden flex-1 md:block" aria-hidden="true" />
                 )}
                 <div className="flex items-center justify-end gap-5">
-                    {/* [초기화]는 글자 버튼이다 — 누르면 기준과 입력이 처음 상태로 돌아간다. */}
+                    {/* [초기화]는 글자 버튼이다 — 누르면 기준과 입력이 처음 상태로 돌아간다.
+                    조회 중에는 disabled 로 막는다 — 포커스는 [검색하기]에 있으므로 [초기화]가 꺼져도 포커스를 잃지 않는다. */}
                     <Button type="reset" variant="text-underline" size="md" disabled={isSearching}>
                         {resetLabel}
                         <RotateCcw aria-hidden="true" />
@@ -232,12 +235,16 @@ const SelectSearchForm = ({
                     {/* [검색하기] — md 크기에 기본(primary) md 의 굵게 대신 Medium, 간격 8 대신 4 를 둔다.
                     조회 중에는 돋보기 자리에 도는 표시를 두고 글자를 searchingLabel 로 바꾼다 — 최소 폭 128 을 잡아 두어
                     글자가 짧아져도 버튼이 흔들리지 않는다. 표시는 장식이라 읽히지 않게 하고, 진행 중이라는 사실은
-                    aria-busy 가 전한다[8.2.1]. 동작 줄이기 설정에서는 돌지 않는다[6.3.1]. */}
+                    aria-busy 가 전한다[8.2.1]. 동작 줄이기 설정에서는 돌지 않는다[6.3.1].
+                    조회 중에도 disabled 를 쓰지 않는다 — 키보드로 누른 버튼이 disabled 가 되면 브라우저가 포커스를 빼서
+                    다음 Tab 이 화면 맨 위부터 시작한다[6.1.2]. 대신 aria-disabled 로 알리고 다시 제출은 handleSubmit 이 막는다.
+                    흐리게(disabled 모양) 하지 않는다 — 도는 표시와 바뀐 글자가 이미 조회 중임을 보여 주고, 흐린 버튼은
+                    포커스 표시까지 약하게 보여 지금 위치를 놓치기 쉽다. */}
                     <Button
                         type="submit"
                         size="md"
                         className="min-w-32 gap-1 font-medium"
-                        disabled={isSearching}
+                        aria-disabled={isSearching || undefined}
                         aria-busy={isSearching}
                     >
                         {isSearching ? (
