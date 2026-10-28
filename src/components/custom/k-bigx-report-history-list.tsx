@@ -24,6 +24,7 @@ import {
     type KBigxReportHistoryItem,
 } from '@/constants/k-bigx-report-history'
 import {K_BIGX_REPORT_ROUTES} from '@/content/service/k-bigx-report-history'
+import {KBIGX_PRINT_CORP_PATH, KBIGX_PRINT_ORG_PATH} from '@/content/service/k-bigx-print-report'
 import {useIsMobile} from '@/hooks/use-mobile'
 
 // K-BIGx 보고서 이력 목록 — Figma "SB-FOTA-CM0-0017_마이페이지_K-BIGx 보고서 이력"(기업)·
@@ -94,6 +95,8 @@ type KBigxReportHistoryListProps = {
 const KBigxReportHistoryList = ({items, pageSize = 10, userType = 'corp'}: KBigxReportHistoryListProps) => {
     const [page, setPage] = useState(1)
     const isMobile = useIsMobile()
+    // [보고서 다운로드] 가 여는 보고서 문서 화면 — 기업 · 기관 화면마다 다르다(웹 보고서와 같은 주소).
+    const printPath = userType === 'org' ? KBIGX_PRINT_ORG_PATH : KBIGX_PRINT_CORP_PATH
 
     // 받은 순서를 그대로 그린다 — 정렬은 조회 조건과 함께 서버가 정한다.
     const sortedItems = items
@@ -177,7 +180,7 @@ const KBigxReportHistoryList = ({items, pageSize = 10, userType = 'corp'}: KBigx
                         <ul className="flex flex-col gap-4">
                             {visibleItems.map((item) => (
                                 <li key={item.id}>
-                                    <KBigxReportCard item={item} routes={K_BIGX_REPORT_ROUTES} />
+                                    <KBigxReportCard item={item} routes={K_BIGX_REPORT_ROUTES} printPath={printPath} />
                                 </li>
                             ))}
                         </ul>

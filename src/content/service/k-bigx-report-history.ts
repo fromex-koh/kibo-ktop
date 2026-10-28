@@ -83,10 +83,9 @@ const NOT_READY_PATH = '#'
 
 const getKBigxReportHistory = async (): Promise<readonly KBigxReportHistoryItem[]> => MOCK_K_BIGX_REPORT_HISTORY
 
-// 카드 버튼이 가는 곳 — [보고서 다운로드] 가 받는 보고서 파일과, 기관 대량정보조회의 [엑셀 결과]·[HTML 압축파일]
-// 결과 파일. 기업·기관 화면이 함께 쓴다. 주소가 정해지면 여기만 채운다.
+// 카드 버튼이 가는 곳 — 기관 대량정보조회의 [엑셀 결과]·[HTML 압축파일] 결과 파일. 기업·기관 화면이 함께 쓴다.
+// 주소가 정해지면 여기만 채운다. [보고서 다운로드] 는 웹 보고서와 같은 보고서 내용 선택 모달을 연다(k-bigx-report-download-button.tsx).
 const K_BIGX_REPORT_ROUTES = {
-    download: NOT_READY_PATH,
     excel: NOT_READY_PATH,
     htmlArchive: NOT_READY_PATH,
 } as const
