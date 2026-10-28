@@ -1,25 +1,31 @@
 'use client'
 
-import {Award, Lightbulb} from 'lucide-react'
+import {Award, ChevronRight, Lightbulb} from 'lucide-react'
+import {EmptyState} from '@/components/composite/empty-state'
 import {ButterflyBarChart} from '@/components/custom/butterfly-bar-chart'
 import {ComboBarLineChart} from '@/components/custom/combo-bar-line-chart'
 import {DivergingRankChart, DivergingRankLegend, type DivergingRankItem} from '@/components/custom/diverging-rank-chart'
 import {ListMarker} from '@/components/custom/list-marker'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {WordCloud} from '@/components/custom/word-cloud'
+import {cn} from '@/lib/utils'
 import {
     Card,
     NoticeBox,
     ReportTable,
+    ReportTextCell,
     SectionTitle,
     SubBlock,
     TableNote,
     WithUnit,
 } from '@/components/custom/innovation-growth-report-parts'
-import type {
-    InnovationInstitute,
-    InnovationRankItem,
-    InnovationTechDetail,
+import {
+    toExcellentPatentRows,
+    toMarketScaleRows,
+    type InnovationInstitute,
+    type InnovationRankItem,
+    type InnovationTechDetail,
+    INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 import type {WordCloudItem} from '@/components/custom/word-cloud'
 import type {ReactNode} from 'react'
@@ -49,9 +55,42 @@ const RND_PROJECTS_LIMIT = 10
 // R&D 전문기관은 쪽마다 이름이 다르다.
 const OTHER_ROW_LABEL = '기타'
 const EMPTY_CELL = '-'
+
+// 맞춤형 기술분야 경로 — '(기술분야) 대분류 – 중분류 – 소분류' 를 단계 목록으로 나눈다(앞의 괄호 머리 · 구분자 – 또는 > 제거).
+// [프론트엔드 연동] path 는 이 모양의 문자열로 받는다. 단계가 없으면 분야 이름(name) 하나만 태그로 보인다.
+const FIELD_PATH_PREFIX = /^\([^)]*\)\s*/
+const FIELD_PATH_SEPARATOR = /\s*[–>]\s*/
+const toFieldLevels = (path: string) => path.replace(FIELD_PATH_PREFIX, '').split(FIELD_PATH_SEPARATOR).filter(Boolean)
 const RND_INSTITUTES_OTHER_LABELS = {government: '기타 연구소', academia: '기타 산학협력단'} as const
 
+// 분석특허 · 맞춤형 기술분야 상자 — 같은 모양으로 맞춘다. 상자 안 글자는 모두 안내 상자 글자색(navy-600).
+//   · 이름: 특허명 · 기술분야(14 Medium)
+//   · 값: 특허 이름 · 특허번호(16 Bold) / 대분류 · 중분류(14 Medium) / 설명(16 Bold)
+//   · 강조: 소분류(태그, 16 Bold)
+const ANALYSIS_LABEL_CLASS = 'typo-body-l-medium text-navy-600'
+const ANALYSIS_VALUE_CLASS = 'typo-body-xl-bold text-navy-600'
+const ANALYSIS_LEVEL_CLASS = 'typo-body-l-medium text-navy-600'
+// 소분류 태그 — 흰 글자 대비: 라이트 4.53:1(blue.500, 4.5:1 충족).
+const ANALYSIS_TAG_CLASS =
+    'bg-primary text-primary-foreground typo-body-xl-bold inline-flex h-7 items-center rounded-sm px-2'
+
+// 비중 · 증가율 · 지수는 소수 첫째 자리까지 늘 보인다(40 → 40.0).
+const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
+// 숫자 칸 — 값이 없으면(숫자 아님) '-'. 0 은 0 으로 적는다.
+const formatCount = (value: number | undefined) =>
+    typeof value === 'number' && Number.isFinite(value) ? numberFormatter.format(value) : EMPTY_CELL
+// 정부 R&D '전문기관' 칸 — '부처명 (전문기관)'. 전문기관이 없으면 부처명만, 부처명이 없으면 '-'(PDF 템플릿과 같다).
+const toMinistryWithAgency = (ministry: string, agency: string) => {
+    const ministryText = ministry.trim() || EMPTY_CELL
+    return agency.trim() ? `${ministryText} (${agency.trim()})` : ministryText
+}
+// 숫자인 값만 더한다 — 하나도 없으면 NaN(formatCount 가 '-' 로 적는다). 0 은 0.
+const sumFiniteNumbers = (values: readonly (number | undefined)[]) => {
+    const numbers = values.filter((value): value is number => typeof value === 'number' && Number.isFinite(value))
+    return numbers.length ? numbers.reduce((sum, value) => sum + value, 0) : Number.NaN
+}
 // R&D 전문기관 한 쪽 — 10곳까지 그대로, 넘으면 11번째 줄에 나머지를 '기타 …'로 합친다(특허보유수 · 비중을 더한다).
+// PDF 템플릿과 같이 숫자인 값만 더하고, 하나도 없으면 NaN → 칸에 '-'.
 const groupInstitutes = (rows: readonly InnovationInstitute[], otherLabel: string): InnovationInstitute[] => {
     if (rows.length <= RND_INSTITUTES_LIMIT) return [...rows]
     const rest = rows.slice(RND_INSTITUTES_LIMIT)
@@ -59,25 +98,49 @@ const groupInstitutes = (rows: readonly InnovationInstitute[], otherLabel: strin
         ...rows.slice(0, RND_INSTITUTES_LIMIT),
         {
             name: otherLabel,
-            patentCount: rest.reduce((sum, row) => sum + row.patentCount, 0),
-            ratio: rest.reduce((sum, row) => sum + row.ratio, 0),
+            patentCount: sumFiniteNumbers(rest.map((row) => row.patentCount)),
+            ratio: sumFiniteNumbers(rest.map((row) => row.ratio)),
         },
     ]
 }
-// 비중 · 증가율 · 지수는 소수 첫째 자리까지 늘 보인다(40 → 40.0).
-const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
+const formatOneDecimal = (value: number | undefined) =>
+    typeof value === 'number' && Number.isFinite(value) ? oneDecimalFormatter.format(value) : EMPTY_CELL
+// 표에 줄이 하나도 없을 때 — 머리글 아래 빈 상태(기업현황 경영진 · 주주 표와 같은 방식). 높이는 표마다 다르게 준다.
+const EMPTY_TABLE_CLASS = 'border-subtle-3 border-b'
 
 // 출원번호(등록번호) · 출원일(등록일) · 출원인(권리자)처럼 한 칸에 두 줄로 적는 값. 머리 칸도 같은 모양으로 두 줄이다.
+// 값이 비면 '-'.
 const TwoLines = ({first, second}: {first: string; second: string}) => (
     <>
-        {first}
-        <br />({second})
+        {first || EMPTY_CELL}
+        <br />({second || EMPTY_CELL})
     </>
 )
-// 특허명 — 두 줄까지만 보이고 넘치면 말줄임(기획). 글자는 DOM 에 전부 남아 스크린리더는 끝까지 읽는다.
-// title 속성은 두지 않는다 — 글자와 같은 title 은 접근성 검사기(WAVE)가 중복으로 잡는다.
-const PatentTitle = ({children}: {children: string}) => <span className="line-clamp-2 break-keep">{children}</span>
+// 이머징 기술 기간 머리('2015~2016년') — 칸이 좁으면(태블릿) '~' 뒤에서만 두 줄로 접는다. 머리 칸은 기본이 한 줄 고정이라
+// 그대로 두면 글자가 옆 칸으로 넘쳐 겹친다. 칸이 넓으면 한 줄 그대로.
+const PeriodHeader = ({children}: {children: string}) => {
+    const [start, end] = children.split('~')
+    return end === undefined ? (
+        children
+    ) : (
+        <span className="break-keep whitespace-normal">
+            {start}~<wbr />
+            {end}
+        </span>
+    )
+}
+// 출원인 / 권리자 칸 — 위 출원인, 아래 (권리자). 각각 2줄까지 보이고 넘치면 말줄임 + 툴팁(ReportTextCell).
+const PatentHolder = ({applicant, rightHolder}: {applicant: string; rightHolder: string}) => (
+    <span className="flex flex-col">
+        <ReportTextCell>{applicant}</ReportTextCell>
+        {/* 권리자는 괄호로 감싼다 — 잘려도 닫는 괄호는 남긴다('(한국전자통신연구…)'). */}
+        <ReportTextCell suffix=")">{rightHolder.trim() ? `(${rightHolder.trim()})` : `(${EMPTY_CELL})`}</ReportTextCell>
+    </span>
+)
 // 특허 표 공통 머리 — 특허명 열 폭은 표마다 다르다.
+// 표 최소 폭(minWidthClassName) — 고정 폭 열(widthClassName)의 합에 나머지 열이 글자가 깨지지 않는 폭을 더한 값이다.
+// 화면이 그보다 좁으면(태블릿) 열을 줄이지 않고 표 상자 안에서 좌우로 넘긴다 — 줄이면 폭이 없는 열이 글자 몇 개 폭으로 눌린다.
+// 열 폭을 바꾸면 이 값도 같이 본다.
 const patentColumns = (titleWidthClassName: string) => [
     {key: 'no', label: 'No', widthClassName: 'w-15'},
     {key: 'title', label: '특허명', widthClassName: titleWidthClassName, align: 'start' as const},
@@ -94,7 +157,7 @@ const IconBulletBlock = ({icon, title, items}: {icon: ReactNode; title: string; 
             {title}
         </h5>
         <ul className="typo-body-xl-regular text-foreground-subtle flex flex-col gap-1">
-            {items.map((item) => (
+            {(items.length ? items : [EMPTY_CELL]).map((item) => (
                 <li key={item} className="flex">
                     <ListMarker type="unordered" />
                     <span className="min-w-0 break-keep">{item}</span>
@@ -121,26 +184,55 @@ type InnovationGrowthReportTechProps = {
 
 const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGrowthReportTechProps) => {
     const {holdings, analysis, marketScale, emergingTech, rndInstitutes, governmentRnd} = detail
+    // 이머징 기술 기간 열 — 기간을 받지 못하면 머리 '-' 기간 칸 5개를 둔다(PDF 템플릿과 같다 — 칸 값도 '-').
+    const hasEmergingPeriods = emergingTech.periods.length > 0
+    const emergingPeriods = hasEmergingPeriods
+        ? emergingTech.periods
+        : Array.from({length: INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT}, (_, index) => `empty-period-${index}`)
+    // 이머징 기술 합계 줄 — 기간마다 위 줄 값의 합(PDF 템플릿과 같다).
+    const emergingPeriodTotals = emergingPeriods.map((_, index) =>
+        hasEmergingPeriods ? sumFiniteNumbers(emergingTech.rows.map((row) => row.counts[index])) : Number.NaN,
+    )
+    // 기술분야 단계 — 경로가 비면 분야 이름 하나(태그).
+    const pathLevels = toFieldLevels(analysis.field.path)
+    const fieldLevels = pathLevels.length ? pathLevels : [analysis.field.name || EMPTY_CELL]
+    // 특허기술 분석 — 카드마다 값이 하나도 없으면 빈 상태, 일부만 없으면 그 자리 '-'.
+    const hasAnalysisPatent = Boolean(analysis.patentTitle || analysis.patentNumber || analysis.summary.length)
+    const hasAnalysisField = Boolean(
+        analysis.field.name || analysis.field.path || analysis.field.description || analysis.reasons.length,
+    )
     const governmentInstitutes = groupInstitutes(rndInstitutes.government.rows, RND_INSTITUTES_OTHER_LABELS.government)
     const academiaInstitutes = groupInstitutes(rndInstitutes.academia.rows, RND_INSTITUTES_OTHER_LABELS.academia)
+    const marketScaleRows = toMarketScaleRows(marketScale.rows)
+    const hasMarketScale = marketScaleRows.some((row) => Number.isFinite(row.companies) || Number.isFinite(row.patents))
+    const hasInstitutes = governmentInstitutes.length > 0 || academiaInstitutes.length > 0
     // [프론트엔드 연동 · 정렬] 우수특허 — 기획: 피인용 지수 높은 순. 받은 순서와 무관하게 화면이 정렬한 뒤 10건,
-    // 나머지(rest)는 11번째 '기타' 줄에 피인용 횟수 합으로 넣는다.
-    const excellentPatentsSorted = [...detail.excellentPatents].sort((a, b) => b.citationIndex - a.citationIndex)
-    const excellentPatents = excellentPatentsSorted.slice(0, EXCELLENT_PATENTS_LIMIT)
-    const excellentPatentsRest = excellentPatentsSorted.slice(EXCELLENT_PATENTS_LIMIT)
+    // 나머지는 11번째 '기타' 줄에 피인용 횟수 합으로 넣는다. 규칙은 PDF 템플릿과 공용(toExcellentPatentRows) —
+    // 피인용 지수가 없는 특허는 맨 뒤, '기타' 합은 숫자인 값만 더한다(하나도 없으면 '-').
+    const {patents: excellentPatents, otherCitations: excellentOtherCitations} = toExcellentPatentRows(
+        detail.excellentPatents,
+        EXCELLENT_PATENTS_LIMIT,
+    )
     // 정부 R&D 표 — 접수중 · 접수기간 도래 두 표가 같은 열을 쓴다.
     const rndProjectColumns = [
         {key: 'no', label: 'No', widthClassName: 'w-15'},
-        {key: 'ministry', label: '부처명'},
-        {key: 'title', label: '공고명', widthClassName: 'w-90', align: 'start' as const, isNoWrap: true},
+        {key: 'ministry', label: '전문기관'},
+        // 공고명 · 전문기관은 2줄, 담당자는 1줄까지 보이고 넘치면 말줄임 + 툴팁(ReportTextCell). 접수기간은 날짜라 한 줄 고정.
+        {key: 'title', label: '공고명', widthClassName: 'w-90', align: 'start' as const},
         {key: 'period', label: '접수기간', isNoWrap: true},
-        {key: 'agency', label: '전문기관', isNoWrap: true},
-        {key: 'manager', label: '담당자', isNoWrap: true},
+        {key: 'manager', label: '담당자'},
     ]
     const rndProjectRows = (projects: InnovationTechDetail['governmentRnd']['open']) =>
         projects.map((project, index) => ({
             id: `${project.title}-${index}`,
-            cells: {no: index + 1, ...project},
+            // 값이 빈 칸은 '-'.
+            cells: {
+                no: index + 1,
+                ministry: <ReportTextCell>{toMinistryWithAgency(project.ministry, project.agency)}</ReportTextCell>,
+                title: <ReportTextCell>{project.title}</ReportTextCell>,
+                period: project.period || EMPTY_CELL,
+                manager: <ReportTextCell lines={1}>{project.manager}</ReportTextCell>,
+            },
         }))
 
     return (
@@ -172,31 +264,45 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                     {/* [프론트엔드 연동 · 정렬] 출원일 최근순으로 받아 그 순서대로 그린다. 최대 10건 — 규칙은 파일 위 [표 노출 건수 규칙]. */}
                     <Card title="특허 보유현황" className="gap-0">
                         <WithUnit unit="최대 10개 · 출원일 최근순">
-                            <ReportTable
-                                caption="특허 보유현황(최대 10개, 출원일 최근순)"
-                                columns={[
-                                    ...patentColumns('w-82.5'),
-                                    {key: 'field', label: '기술분야', widthClassName: 'w-55'},
-                                ]}
-                                rows={holdings.patents.slice(0, PATENT_HOLDINGS_LIMIT).map((patent, index) => ({
-                                    id: patent.applicationNumber,
-                                    cells: {
-                                        no: index + 1,
-                                        title: <PatentTitle>{patent.title}</PatentTitle>,
-                                        number: (
-                                            <TwoLines
-                                                first={patent.applicationNumber}
-                                                second={patent.registrationNumber}
-                                            />
-                                        ),
-                                        date: (
-                                            <TwoLines first={patent.applicationDate} second={patent.registrationDate} />
-                                        ),
-                                        holder: <TwoLines first={patent.applicant} second={patent.rightHolder} />,
-                                        field: patent.field,
-                                    },
-                                }))}
-                            />
+                            <div className="flex flex-col">
+                                <ReportTable
+                                    caption="특허 보유현황(최대 10개, 출원일 최근순)"
+                                    minWidthClassName="min-w-265"
+                                    columns={[
+                                        ...patentColumns('w-82.5'),
+                                        {key: 'field', label: '기술분야', widthClassName: 'w-55'},
+                                    ]}
+                                    rows={holdings.patents.slice(0, PATENT_HOLDINGS_LIMIT).map((patent, index) => ({
+                                        id: patent.applicationNumber,
+                                        cells: {
+                                            no: index + 1,
+                                            title: <ReportTextCell>{patent.title}</ReportTextCell>,
+                                            number: (
+                                                <TwoLines
+                                                    first={patent.applicationNumber}
+                                                    second={patent.registrationNumber}
+                                                />
+                                            ),
+                                            date: (
+                                                <TwoLines
+                                                    first={patent.applicationDate}
+                                                    second={patent.registrationDate}
+                                                />
+                                            ),
+                                            holder: (
+                                                <PatentHolder
+                                                    applicant={patent.applicant}
+                                                    rightHolder={patent.rightHolder}
+                                                />
+                                            ),
+                                            field: <ReportTextCell>{patent.field}</ReportTextCell>,
+                                        },
+                                    }))}
+                                />
+                                {holdings.patents.length ? null : (
+                                    <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-56')} />
+                                )}
+                            </div>
                         </WithUnit>
                     </Card>
                 </div>
@@ -207,30 +313,82 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                 <SectionTitle id="ig-tech-analysis" title="특허기술 분석" />
                 <div className="flex flex-col gap-6">
                     <Card title="분석특허">
-                        <NoticeBox className="text-center">
-                            특허명 : {analysis.patentTitle}({analysis.patentNumber})
-                        </NoticeBox>
-                        <IconBulletBlock
-                            icon={<Award aria-hidden="true" className="size-icon-md shrink-0" />}
-                            title="특허 개요"
-                            items={analysis.summary}
-                        />
+                        {hasAnalysisPatent ? (
+                            <>
+                                {/* 특허명 — 위에 이름, 아래 줄에 특허 이름(왼쪽)과 특허번호(오른쪽 끝). 이름이 길면 이름 칸 안에서만 줄을 바꾸고
+                            번호는 첫 줄 오른쪽에 그대로 둔다(띄어쓰기 없는 긴 이름도 상자 안에서 끊는다). */}
+                                <NoticeBox className="px-8">
+                                    <dl className="flex flex-col gap-1">
+                                        <dt className={ANALYSIS_LABEL_CLASS}>특허명</dt>
+                                        <dd className="m-0 flex items-baseline justify-between gap-x-6">
+                                            <span
+                                                className={cn(
+                                                    ANALYSIS_VALUE_CLASS,
+                                                    'min-w-0 flex-1 wrap-anywhere break-keep',
+                                                )}
+                                            >
+                                                {analysis.patentTitle || EMPTY_CELL}
+                                            </span>
+                                            <span className={cn(ANALYSIS_VALUE_CLASS, 'shrink-0 tabular-nums')}>
+                                                {analysis.patentNumber || EMPTY_CELL}
+                                            </span>
+                                        </dd>
+                                    </dl>
+                                </NoticeBox>
+                                <IconBulletBlock
+                                    icon={<Award aria-hidden="true" className="size-icon-md shrink-0" />}
+                                    title="특허 개요"
+                                    items={analysis.summary}
+                                />
+                            </>
+                        ) : (
+                            <EmptyState className="min-h-34" />
+                        )}
                     </Card>
                     <Card title="맞춤형 기술분야">
-                        <NoticeBox className="flex flex-col items-center gap-2 text-center">
-                            <p className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1">
-                                <span className="bg-primary text-primary-foreground typo-body-l-medium inline-flex h-7 items-center rounded-sm px-3">
-                                    {analysis.field.name}
-                                </span>
-                                <span className="typo-body-l-regular">{analysis.field.path}</span>
-                            </p>
-                            <p>{analysis.field.description}</p>
-                        </NoticeBox>
-                        <IconBulletBlock
-                            icon={<Lightbulb aria-hidden="true" className="size-icon-md shrink-0" />}
-                            title="판단 근거"
-                            items={analysis.reasons}
-                        />
+                        {hasAnalysisField ? (
+                            <>
+                                {/* 기술분야 — 분석특허 상자와 같은 짜임. 위에 이름, 아래 줄에 대분류 › 중분류 › 소분류(태그), 선 아래 설명. */}
+                                <NoticeBox className="flex flex-col gap-2 px-8">
+                                    <dl className="flex flex-col gap-1">
+                                        <dt className={ANALYSIS_LABEL_CLASS}>기술분야</dt>
+                                        <dd className="m-0">
+                                            <ol className="flex flex-wrap items-center gap-x-1 gap-y-1">
+                                                {fieldLevels.map((level, index) => (
+                                                    <li key={`${index}-${level}`} className="flex items-center gap-x-1">
+                                                        {index ? (
+                                                            <ChevronRight
+                                                                aria-hidden="true"
+                                                                className="size-icon-sm text-navy-600 shrink-0"
+                                                            />
+                                                        ) : null}
+                                                        <span
+                                                            className={
+                                                                index === fieldLevels.length - 1
+                                                                    ? ANALYSIS_TAG_CLASS
+                                                                    : ANALYSIS_LEVEL_CLASS
+                                                            }
+                                                        >
+                                                            {level}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </dd>
+                                    </dl>
+                                    <p className="border-navy-200 typo-body-xl-bold text-navy-600 border-t pt-2 break-keep">
+                                        {analysis.field.description || EMPTY_CELL}
+                                    </p>
+                                </NoticeBox>
+                                <IconBulletBlock
+                                    icon={<Lightbulb aria-hidden="true" className="size-icon-md shrink-0" />}
+                                    title="판단 근거"
+                                    items={analysis.reasons}
+                                />
+                            </>
+                        ) : (
+                            <EmptyState className="min-h-34" />
+                        )}
                     </Card>
                 </div>
             </section>
@@ -239,18 +397,24 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
             <section aria-labelledby="ig-tech-market" className="flex flex-col gap-4">
                 <SectionTitle id="ig-tech-market" title="맞춤형 기술정보-기업·특허 현황" />
                 <Card title="매출 규모별 기업 및 특허 현황" className="gap-4">
-                    <ButterflyBarChart
-                        ariaLabel="매출 규모별 기업수와 특허수"
-                        categoryTitle="매출 규모"
-                        data={marketScale.rows.map((row) => ({
-                            id: row.id,
-                            label: row.label,
-                            left: row.companies,
-                            right: row.patents,
-                        }))}
-                        left={{title: '기업수(개)', color: 'var(--ds-report-series-3)'}}
-                        right={{title: '특허수(건)', color: 'var(--ds-report-series-2)'}}
-                    />
+                    {/* 값이 하나도 없으면 빈 상태, 일부만 없으면 5행 고정에 그 칸만 '-'(toMarketScaleRows).
+                        인쇄본은 값이 없어도 5행 '-' 표를 그대로 둔다. */}
+                    {hasMarketScale ? (
+                        <ButterflyBarChart
+                            ariaLabel="매출 규모별 기업수와 특허수"
+                            categoryTitle="매출 규모"
+                            data={marketScaleRows.map((row) => ({
+                                id: row.id,
+                                label: row.label,
+                                left: row.companies,
+                                right: row.patents,
+                            }))}
+                            left={{title: '기업수(개)', color: 'var(--ds-report-series-3)'}}
+                            right={{title: '특허수(건)', color: 'var(--ds-report-series-2)'}}
+                        />
+                    ) : (
+                        <EmptyState className="min-h-56" />
+                    )}
                     <div className="grid grid-cols-2 gap-12">
                         {/* [프론트엔드 연동 · 정렬] 조각 순서는 비중순이 아니라 매출 규모 순(10억원 이하 → 300억원 초과) — 데이터가 그 순서로 온다. */}
                         <PercentageDonutChart
@@ -274,20 +438,24 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                     <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-0">
                         {/* 막대 = 매출액(조회기업 · 평균 강조), 선 = 영업이익률(데이터 필드명은 growthRate · 막대와 따로 된 눈금). 받은 순서대로 그린다. */}
                         <WithUnit unit="단위: 백만원, %">
-                            <ComboBarLineChart
-                                ariaLabel="경쟁기업 사업실적 — 매출액과 영업이익률"
-                                barLabel="매출액"
-                                barUnit="백만원"
-                                lineLabel="영업이익률"
-                                lineUnit="%"
-                                data={detail.competitors.map((item) => ({
-                                    id: item.id,
-                                    label: item.label,
-                                    value: item.sales,
-                                    lineValue: item.growthRate,
-                                    tone: item.tone === 'subject' ? 'highlight' : (item.tone ?? 'default'),
-                                }))}
-                            />
+                            {detail.competitors.length ? (
+                                <ComboBarLineChart
+                                    ariaLabel="경쟁기업 사업실적 — 매출액과 영업이익률"
+                                    barLabel="매출액"
+                                    barUnit="백만원"
+                                    lineLabel="영업이익률"
+                                    lineUnit="%"
+                                    data={detail.competitors.map((item) => ({
+                                        id: item.id,
+                                        label: item.label,
+                                        value: item.sales,
+                                        lineValue: item.growthRate,
+                                        tone: item.tone === 'subject' ? 'highlight' : (item.tone ?? 'default'),
+                                    }))}
+                                />
+                            ) : (
+                                <EmptyState className="min-h-56.5" />
+                            )}
                         </WithUnit>
                     </Card>
                     {/* '★ 고성장 기업' 범례는 카드 제목 줄 오른쪽에 둔다(차트 위 범례 줄은 끈다).
@@ -297,78 +465,95 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         aside={<DivergingRankLegend />}
                         className="gap-4"
                     >
-                        <DivergingRankChart
-                            showLegend={false}
-                            ariaLabel="성장률 우수기업 — 매출 100억원 이하 · 100억원 초과 기업의 성장률 순위"
-                            left={{
-                                title: detail.growthLeaders.small.title,
-                                items: detail.growthLeaders.small.items.map(toRankItem),
-                            }}
-                            right={{
-                                title: detail.growthLeaders.large.title,
-                                items: detail.growthLeaders.large.items.map(toRankItem),
-                            }}
-                        />
+                        {detail.growthLeaders.small.items.length || detail.growthLeaders.large.items.length ? (
+                            <DivergingRankChart
+                                showLegend={false}
+                                // 한쪽 목록만 비면 그 쪽 칸에 적는 안내.
+                                emptyText="조회된 데이터가 없습니다."
+                                // 고성장(★) 기업의 성장률 % 는 굵게(PDF 템플릿과 같다).
+                                highlightValueClassName="typo-micro-bold"
+                                ariaLabel="성장률 우수기업 — 매출 100억원 이하 · 100억원 초과 기업의 성장률 순위"
+                                left={{
+                                    title: detail.growthLeaders.small.title,
+                                    items: detail.growthLeaders.small.items.map(toRankItem),
+                                }}
+                                right={{
+                                    title: detail.growthLeaders.large.title,
+                                    items: detail.growthLeaders.large.items.map(toRankItem),
+                                }}
+                            />
+                        ) : (
+                            <EmptyState className="min-h-56" />
+                        )}
                     </Card>
                 </div>
             </section>
 
-            {/* 맞춤형 기술정보-우수기술 */}
+            {/* 맞춤형 기술정보 · 우수기술 */}
             <section aria-labelledby="ig-tech-excellent" className="flex flex-col gap-4">
-                <SectionTitle id="ig-tech-excellent" title="맞춤형 기술정보-우수기술" />
+                <SectionTitle id="ig-tech-excellent" title="맞춤형 기술정보 · 우수기술" />
                 <div className="flex flex-col gap-6">
                     {/* 최대 11줄(10건 + '기타' 1줄) — 화면이 정렬 · 자르기 · 합치기를 모두 한다. 규칙은 파일 위 [표 노출 건수 규칙]. */}
                     <Card title="우수특허" className="gap-4">
-                        <ReportTable
-                            caption="우수특허(피인용 횟수 · 피인용 지수)"
-                            columns={[
-                                ...patentColumns('w-90'),
-                                {key: 'citations', label: '피인용 횟수', widthClassName: 'w-30'},
-                                {key: 'citationIndex', label: '피인용 지수*', widthClassName: 'w-30'},
-                            ]}
-                            rows={[
-                                ...excellentPatents.map((patent, index) => ({
-                                    id: patent.applicationNumber,
-                                    cells: {
-                                        no: index + 1,
-                                        title: <PatentTitle>{patent.title}</PatentTitle>,
-                                        number: (
-                                            <TwoLines
-                                                first={patent.applicationNumber}
-                                                second={patent.registrationNumber}
-                                            />
-                                        ),
-                                        date: (
-                                            <TwoLines first={patent.applicationDate} second={patent.registrationDate} />
-                                        ),
-                                        holder: <TwoLines first={patent.applicant} second={patent.rightHolder} />,
-                                        citations: numberFormatter.format(patent.citations),
-                                        citationIndex: oneDecimalFormatter.format(patent.citationIndex),
-                                    },
-                                })),
-                                ...(excellentPatentsRest.length
-                                    ? [
-                                          {
-                                              id: 'other',
-                                              cells: {
-                                                  no: excellentPatents.length + 1,
-                                                  title: OTHER_ROW_LABEL,
-                                                  number: EMPTY_CELL,
-                                                  date: EMPTY_CELL,
-                                                  holder: EMPTY_CELL,
-                                                  citations: numberFormatter.format(
-                                                      excellentPatentsRest.reduce(
-                                                          (sum, patent) => sum + patent.citations,
-                                                          0,
-                                                      ),
-                                                  ),
-                                                  citationIndex: EMPTY_CELL,
+                        <div className="flex flex-col">
+                            <ReportTable
+                                caption="우수특허(피인용 횟수 · 피인용 지수)"
+                                minWidthClassName="min-w-265"
+                                columns={[
+                                    ...patentColumns('w-90'),
+                                    {key: 'citations', label: '피인용 횟수', widthClassName: 'w-30'},
+                                    {key: 'citationIndex', label: '피인용 지수*', widthClassName: 'w-30'},
+                                ]}
+                                rows={[
+                                    ...excellentPatents.map((patent, index) => ({
+                                        id: patent.applicationNumber,
+                                        cells: {
+                                            no: index + 1,
+                                            title: <ReportTextCell>{patent.title}</ReportTextCell>,
+                                            number: (
+                                                <TwoLines
+                                                    first={patent.applicationNumber}
+                                                    second={patent.registrationNumber}
+                                                />
+                                            ),
+                                            date: (
+                                                <TwoLines
+                                                    first={patent.applicationDate}
+                                                    second={patent.registrationDate}
+                                                />
+                                            ),
+                                            holder: (
+                                                <PatentHolder
+                                                    applicant={patent.applicant}
+                                                    rightHolder={patent.rightHolder}
+                                                />
+                                            ),
+                                            citations: formatCount(patent.citations),
+                                            citationIndex: formatOneDecimal(patent.citationIndex),
+                                        },
+                                    })),
+                                    ...(excellentOtherCitations !== null
+                                        ? [
+                                              {
+                                                  id: 'other',
+                                                  cells: {
+                                                      no: excellentPatents.length + 1,
+                                                      title: OTHER_ROW_LABEL,
+                                                      number: EMPTY_CELL,
+                                                      date: EMPTY_CELL,
+                                                      holder: EMPTY_CELL,
+                                                      citations: formatCount(excellentOtherCitations),
+                                                      citationIndex: EMPTY_CELL,
+                                                  },
                                               },
-                                          },
-                                      ]
-                                    : []),
-                            ]}
-                        />
+                                          ]
+                                        : []),
+                                ]}
+                            />
+                            {excellentPatents.length ? null : (
+                                <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-56')} />
+                            )}
+                        </div>
                         <TableNote>
                             * 피인용 지수는 특허의 피인용 횟수를 경과연도로 나누어 정규화한 값임(Age-Normalized Citation
                             Index, ANCI)
@@ -381,37 +566,69 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         description="귀사의 기술과 유사한 기술분야(세부분야)에 대한 최근 10년간 등록특허 증가율을 확인하여 각 기술분야의 발전정도를 확인할 수 있는 정보입니다."
                         className="gap-4"
                     >
-                        <ReportTable
-                            caption="이머징 기술 — 기술분야별 특허 등록건수 · 증가율 · 비중"
-                            columns={[
-                                {key: 'no', label: 'No', widthClassName: 'w-15'},
-                                {key: 'field', label: '기술분야', widthClassName: 'w-53.5', align: 'start'},
-                                ...emergingTech.periods.map((period) => ({
-                                    key: period,
-                                    label: period,
-                                    group: '특허 등록건수',
-                                })),
-                                {key: 'total', label: '합계', group: '특허 등록건수'},
-                                {key: 'growthRate', label: '증가율(%)', widthClassName: 'w-25'},
-                                {key: 'share', label: '비중(%)', widthClassName: 'w-25'},
-                            ]}
-                            rows={emergingTech.rows.map((row, index) => ({
-                                id: row.field,
-                                cells: {
-                                    no: index + 1,
-                                    field: row.field,
-                                    ...Object.fromEntries(
-                                        emergingTech.periods.map((period, periodIndex) => [
-                                            period,
-                                            numberFormatter.format(row.counts[periodIndex] ?? 0),
-                                        ]),
-                                    ),
-                                    total: numberFormatter.format(row.counts.reduce((sum, count) => sum + count, 0)),
-                                    growthRate: oneDecimalFormatter.format(row.growthRate),
-                                    share: oneDecimalFormatter.format(row.share),
-                                },
-                            }))}
-                        />
+                        <div className="flex flex-col">
+                            <ReportTable
+                                caption="이머징 기술 — 기술분야별 특허 등록건수 · 증가율 · 비중"
+                                minWidthClassName="min-w-255"
+                                columns={[
+                                    {key: 'no', label: 'No', widthClassName: 'w-15'},
+                                    {key: 'field', label: '기술분야', widthClassName: 'w-53.5', align: 'start'},
+                                    ...emergingPeriods.map((period) => ({
+                                        key: period,
+                                        label: hasEmergingPeriods ? <PeriodHeader>{period}</PeriodHeader> : EMPTY_CELL,
+                                        group: '특허 등록건수',
+                                    })),
+                                    {key: 'total', label: '합계', group: '특허 등록건수'},
+                                    {key: 'growthRate', label: '증가율(%)', widthClassName: 'w-25'},
+                                    {key: 'share', label: '비중(%)', widthClassName: 'w-25'},
+                                ]}
+                                rows={emergingTech.rows.map((row, index) => ({
+                                    id: `${row.field}-${index}`,
+                                    cells: {
+                                        no: index + 1,
+                                        field: <ReportTextCell>{row.field}</ReportTextCell>,
+                                        ...Object.fromEntries(
+                                            emergingPeriods.map((period, periodIndex) => [
+                                                period,
+                                                hasEmergingPeriods ? formatCount(row.counts[periodIndex]) : EMPTY_CELL,
+                                            ]),
+                                        ),
+                                        // 합계 — 숫자인 칸만 더한다. 숫자가 하나도 없으면 '-'.
+                                        total: row.counts.some((count) => Number.isFinite(count))
+                                            ? numberFormatter.format(
+                                                  row.counts
+                                                      .filter((count) => Number.isFinite(count))
+                                                      .reduce((sum, count) => sum + count, 0),
+                                              )
+                                            : EMPTY_CELL,
+                                        growthRate: formatOneDecimal(row.growthRate),
+                                        share: formatOneDecimal(row.share),
+                                    },
+                                }))}
+                                // 합계 줄(PDF 템플릿과 같다) — 기간마다 위 줄 값의 합 · 그 합들의 합. 증가율 · 비중은 '-'.
+                                // 숫자인 칸만 더하고 하나도 없으면 '-'. 줄이 하나도 없으면 합계 줄 대신 빈 상태.
+                                footerCells={
+                                    emergingTech.rows.length
+                                        ? [
+                                              {key: 'label', content: '합계', colSpan: 2},
+                                              ...emergingPeriodTotals.map((total, index) => ({
+                                                  key: `period-${index}`,
+                                                  content: formatCount(total),
+                                              })),
+                                              {
+                                                  key: 'total',
+                                                  content: formatCount(sumFiniteNumbers(emergingPeriodTotals)),
+                                              },
+                                              {key: 'growthRate', content: EMPTY_CELL},
+                                              {key: 'share', content: EMPTY_CELL},
+                                          ]
+                                        : undefined
+                                }
+                            />
+                            {emergingTech.rows.length ? null : (
+                                <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-56')} />
+                            )}
+                        </div>
                     </Card>
                 </div>
             </section>
@@ -424,78 +641,103 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         title="R&D 이슈"
                         description="R&D 이슈는 귀사의 기술이 속한 기술분야(세부분야)를 기준으로, 최근 3년 이내에 등록된 특허를 분석하여 제공되는 정보입니다."
                     >
-                        <WordCloud
-                            words={[...issues]}
-                            colors={issueColors}
-                            ariaLabel="최근 3년 등록특허의 R&D 이슈 키워드"
-                            className="h-54 w-full"
-                        />
+                        {/* 키워드가 없으면 WordCloud 대신 같은 높이의 빈 상태 — 빈 목록을 넘기면 WordCloud 가 스켈레톤을 계속 보인다. */}
+                        {issues.length ? (
+                            <WordCloud
+                                words={[...issues]}
+                                colors={issueColors}
+                                ariaLabel="최근 3년 등록특허의 R&D 이슈 키워드"
+                                className="h-54 w-full"
+                            />
+                        ) : (
+                            <EmptyState className="min-h-54" />
+                        )}
                     </Card>
                     {/* 쪽마다 최대 11줄(10건 + '기타' 1줄) — 화면이 합친다(groupInstitutes). 받은 순서대로 앞 10건을 두므로 정렬은
                         API 순서를 따른다. 두 쪽 길이가 달라도 긴 쪽까지 줄을 만들고 짧은 쪽 칸은 비운다. 합계 줄은 받은 total 그대로.
                         규칙은 파일 위 [표 노출 건수 규칙]. */}
                     <Card title="R&D 전문기관 현황" className="gap-4">
-                        <ReportTable
-                            caption="R&D 전문기관 현황 — 정부출연연구소 · 산학협력단별 특허보유수와 비중"
-                            columns={[
-                                {key: 'no', label: 'No', widthClassName: 'w-15'},
-                                ...(['government', 'academia'] as const).flatMap((side) => {
-                                    const group = `${side === 'government' ? '정부출연연구소' : '산학협력단'} (${oneDecimalFormatter.format(rndInstitutes[side].share)}%)*`
-                                    return [
-                                        {key: `${side}-name`, label: '기관명', group, widthClassName: 'w-80'},
-                                        {key: `${side}-count`, label: '특허보유수', group},
-                                        {key: `${side}-ratio`, label: '비중(%)', group},
-                                    ]
-                                }),
-                            ]}
-                            rows={Array.from(
-                                {length: Math.max(governmentInstitutes.length, academiaInstitutes.length)},
-                                (_, index) => {
-                                    const government = governmentInstitutes[index]
-                                    const academia = academiaInstitutes[index]
-                                    return {
-                                        id: `institute-${index}`,
-                                        cells: {
-                                            no: index + 1,
-                                            'government-name': government?.name ?? '',
-                                            'government-count': government
-                                                ? numberFormatter.format(government.patentCount)
-                                                : '',
-                                            'government-ratio': government
-                                                ? oneDecimalFormatter.format(government.ratio)
-                                                : '',
-                                            'academia-name': academia?.name ?? '',
-                                            'academia-count': academia
-                                                ? numberFormatter.format(academia.patentCount)
-                                                : '',
-                                            'academia-ratio': academia
-                                                ? oneDecimalFormatter.format(academia.ratio)
-                                                : '',
-                                        },
-                                    }
-                                },
-                            )}
-                            footerCells={[
-                                {key: 'government-label', content: '합계', colSpan: 2},
-                                {
-                                    key: 'government-count',
-                                    content: numberFormatter.format(rndInstitutes.government.total.patentCount),
-                                },
-                                {
-                                    key: 'government-ratio',
-                                    content: oneDecimalFormatter.format(rndInstitutes.government.total.ratio),
-                                },
-                                {key: 'academia-label', content: '합계'},
-                                {
-                                    key: 'academia-count',
-                                    content: numberFormatter.format(rndInstitutes.academia.total.patentCount),
-                                },
-                                {
-                                    key: 'academia-ratio',
-                                    content: oneDecimalFormatter.format(rndInstitutes.academia.total.ratio),
-                                },
-                            ]}
-                        />
+                        <div className="flex flex-col">
+                            <ReportTable
+                                caption="R&D 전문기관 현황 — 정부출연연구소 · 산학협력단별 특허보유수와 비중"
+                                minWidthClassName="min-w-275"
+                                columns={[
+                                    {key: 'no', label: 'No', widthClassName: 'w-15'},
+                                    ...(['government', 'academia'] as const).flatMap((side) => {
+                                        const group = `${side === 'government' ? '정부출연연구소' : '산학협력단'} (${formatOneDecimal(rndInstitutes[side].share)}%)*`
+                                        return [
+                                            {key: `${side}-name`, label: '기관명', group, widthClassName: 'w-80'},
+                                            {key: `${side}-count`, label: '특허보유수', group},
+                                            {key: `${side}-ratio`, label: '비중(%)', group},
+                                        ]
+                                    }),
+                                ]}
+                                rows={Array.from(
+                                    {length: Math.max(governmentInstitutes.length, academiaInstitutes.length)},
+                                    (_, index) => {
+                                        const government = governmentInstitutes[index]
+                                        const academia = academiaInstitutes[index]
+                                        // 한쪽 기관을 하나도 받지 못했으면 그쪽 칸은 '-'(데이터 없음). 받았는데 다른 쪽보다 짧기만 하면 빈칸.
+                                        const governmentBlank = governmentInstitutes.length ? '' : EMPTY_CELL
+                                        const academiaBlank = academiaInstitutes.length ? '' : EMPTY_CELL
+                                        return {
+                                            id: `institute-${index}`,
+                                            cells: {
+                                                no: index + 1,
+                                                'government-name': government ? (
+                                                    <ReportTextCell>{government.name}</ReportTextCell>
+                                                ) : (
+                                                    governmentBlank
+                                                ),
+                                                'government-count': government
+                                                    ? formatCount(government.patentCount)
+                                                    : governmentBlank,
+                                                'government-ratio': government
+                                                    ? formatOneDecimal(government.ratio)
+                                                    : governmentBlank,
+                                                'academia-name': academia ? (
+                                                    <ReportTextCell>{academia.name}</ReportTextCell>
+                                                ) : (
+                                                    academiaBlank
+                                                ),
+                                                'academia-count': academia
+                                                    ? formatCount(academia.patentCount)
+                                                    : academiaBlank,
+                                                'academia-ratio': academia
+                                                    ? formatOneDecimal(academia.ratio)
+                                                    : academiaBlank,
+                                            },
+                                        }
+                                    },
+                                )}
+                                // 기관이 하나도 없으면 합계 줄 대신 빈 상태.
+                                footerCells={
+                                    hasInstitutes
+                                        ? [
+                                              {key: 'government-label', content: '합계', colSpan: 2},
+                                              {
+                                                  key: 'government-count',
+                                                  content: formatCount(rndInstitutes.government.total.patentCount),
+                                              },
+                                              {
+                                                  key: 'government-ratio',
+                                                  content: formatOneDecimal(rndInstitutes.government.total.ratio),
+                                              },
+                                              {key: 'academia-label', content: '합계'},
+                                              {
+                                                  key: 'academia-count',
+                                                  content: formatCount(rndInstitutes.academia.total.patentCount),
+                                              },
+                                              {
+                                                  key: 'academia-ratio',
+                                                  content: formatOneDecimal(rndInstitutes.academia.total.ratio),
+                                              },
+                                          ]
+                                        : undefined
+                                }
+                            />
+                            {hasInstitutes ? null : <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-56')} />}
+                        </div>
                         <TableNote>
                             * 세부분야 전체 특허건수 기준 정부출연연구소와 산학협력단의 특허건수 비중임
                         </TableNote>
@@ -507,20 +749,32 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                             <SubBlock
                                 title="접수중과제"
                                 titleClassName="typo-body-l-medium"
-                                aside={`기준일자 · ${governmentRnd.baseDate}`}
+                                aside={`기준일자 · ${governmentRnd.baseDate || EMPTY_CELL}`}
                             >
-                                <ReportTable
-                                    caption="정부 R&D 접수중과제"
-                                    columns={rndProjectColumns}
-                                    rows={rndProjectRows(governmentRnd.open.slice(0, RND_PROJECTS_LIMIT))}
-                                />
+                                <div className="flex flex-col">
+                                    <ReportTable
+                                        caption="정부 R&D 접수중과제"
+                                        minWidthClassName="min-w-235"
+                                        columns={rndProjectColumns}
+                                        rows={rndProjectRows(governmentRnd.open.slice(0, RND_PROJECTS_LIMIT))}
+                                    />
+                                    {governmentRnd.open.length ? null : (
+                                        <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-34')} />
+                                    )}
+                                </div>
                             </SubBlock>
                             <SubBlock title="접수기간 도래 과제(미확정)*" titleClassName="typo-body-l-medium">
-                                <ReportTable
-                                    caption="정부 R&D 접수기간 도래 과제(미확정)"
-                                    columns={rndProjectColumns}
-                                    rows={rndProjectRows(governmentRnd.upcoming.slice(0, RND_PROJECTS_LIMIT))}
-                                />
+                                <div className="flex flex-col">
+                                    <ReportTable
+                                        caption="정부 R&D 접수기간 도래 과제(미확정)"
+                                        minWidthClassName="min-w-235"
+                                        columns={rndProjectColumns}
+                                        rows={rndProjectRows(governmentRnd.upcoming.slice(0, RND_PROJECTS_LIMIT))}
+                                    />
+                                    {governmentRnd.upcoming.length ? null : (
+                                        <EmptyState className={cn(EMPTY_TABLE_CLASS, 'min-h-34')} />
+                                    )}
+                                </div>
                                 <TableNote>
                                     * 접수기간 도래 과제는 사업실시가 확정되지 않은 과제로, 보고서 조회시점 기준 전년
                                     동기에 접수 중(예정 포함)인 과제임
