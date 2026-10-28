@@ -887,8 +887,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
@@ -957,43 +957,43 @@
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
@@ -2091,8 +2091,8 @@
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-company-overview",
@@ -2161,43 +2161,43 @@
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-carbon-neutrality",
