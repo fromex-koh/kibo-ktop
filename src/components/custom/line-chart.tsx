@@ -1,7 +1,7 @@
 'use client'
 
 import {useId, type ComponentPropsWithoutRef} from 'react'
-import {Area, CartesianGrid, ComposedChart, LabelList, Line, XAxis, YAxis} from 'recharts'
+import {Area, CartesianGrid, ComposedChart, LabelList, Line, XAxis, YAxis, type LabelProps} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
@@ -14,6 +14,8 @@ import {
     cellsBottomLine,
     cellsDividerLines,
     cellsEdgeLines,
+    CELLS_LABEL_FILL,
+    CELLS_LABEL_FONT_SIZE,
     renderCellsLineValueLabel,
 } from '@/components/custom/chart-cells'
 import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
@@ -165,6 +167,30 @@ const columnsLineDomain = (minimumValue: number, maximumValue: number): [number,
         : [minimumValue - padding, maximumValue + padding]
 }
 
+// 값이 없는 점(숫자 아님)의 값 글자 '-'. recharts 는 값이 없는 점에는 값 글자를 부르지 않으므로, 빈 점 자리에만 눈금 바닥
+// 값을 둔 보이지 않는 선(MISSING_KEY_SUFFIX)을 하나 더 그리고 그 선의 값 글자로 '-' 를 바닥 바로 위에 적는다.
+const EMPTY_VALUE = '-'
+const MISSING_KEY_SUFFIX = '__missing'
+const MISSING_LABEL_GAP = 4
+const renderMissingValueLabel = ({x, y, viewBox, value}: LabelProps) => {
+    // 값이 있는 점은 보이지 않는 선의 값이 비어 있다 — 그 자리에는 적지 않는다.
+    if (value === null || value === undefined) return null
+    const pointX = typeof x === 'number' ? x : viewBox && 'x' in viewBox ? viewBox.x : undefined
+    const pointY = typeof y === 'number' ? y : viewBox && 'y' in viewBox ? viewBox.y : undefined
+    if (typeof pointX !== 'number' || typeof pointY !== 'number') return null
+    return (
+        <text
+            x={pointX}
+            y={pointY - MISSING_LABEL_GAP}
+            textAnchor="middle"
+            fill={CELLS_LABEL_FILL}
+            fontSize={CELLS_LABEL_FONT_SIZE}
+        >
+            {EMPTY_VALUE}
+        </text>
+    )
+}
+
 const LineChart = ({
     appearance = 'default',
     legendPlacement = 'bottom',
@@ -210,12 +236,30 @@ const LineChart = ({
     const isCells = appearance === 'cells' || isColumns
     // 면 채움 그라디언트 id — 한 화면에 차트가 여럿이어도 겹치지 않게 차트마다 다르게 만든다.
     const gradientIdPrefix = `line-area-${useId().replace(/[^a-zA-Z0-9-]/g, '')}`
-    const values = data.flatMap((item) => series.map(({key}) => item.values[key] ?? 0))
+    // 값이 없는 점(숫자 아님)은 눈금 범위에서 뺀다 — 선을 끊고 그 자리에 '-' 를 적는다(renderMissingValueLabel).
+    const values = data
+        .flatMap((item) => series.map(({key}) => item.values[key] ?? 0))
+        .filter((value) => Number.isFinite(value))
     const cellsDomain: [number, number] = !values.length
         ? [0, 1]
         : isColumns
           ? columnsLineDomain(Math.min(...values), Math.max(...values))
           : cellsLineDomain(Math.min(...values), Math.max(...values))
+    // 값 글자를 적는 cells 차트에서 빈 점이 있는 계열 — 빈 점 자리에만 눈금 바닥 값을 둔 보이지 않는 선으로 '-' 를 적는다.
+    // 값 글자가 없는 차트는 선만 끊는다 — 바닥의 '-' 가 어느 계열 것인지 알 수 없고 다른 점에 가려진다.
+    const missingKeys =
+        isCells && showValueLabels
+            ? series.map(({key}) => key).filter((key) => data.some((item) => !Number.isFinite(item.values[key] ?? 0)))
+            : []
+    const chartRows = chartData.map((row, index) => ({
+        ...row,
+        ...Object.fromEntries(
+            missingKeys.map((key) => [
+                `${key}${MISSING_KEY_SUFFIX}`,
+                Number.isFinite(data[index].values[key] ?? 0) ? null : cellsDomain[0],
+            ]),
+        ),
+    }))
     const minimumValue = Math.min(0, ...values)
     const maximumValue = Math.max(0, ...values)
     const normalizedStep = yAxisStep && yAxisStep > 0 ? yAxisStep : undefined
@@ -309,7 +353,7 @@ const LineChart = ({
                     {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                     <ComposedChart
                         accessibilityLayer={false}
-                        data={chartData}
+                        data={chartRows}
                         margin={
                             isCells
                                 ? {top: 0, right: 0, bottom: 0, left: 0}
@@ -590,6 +634,20 @@ const LineChart = ({
                                 </Line>
                             )
                         })}
+                        {missingKeys.map((key) => (
+                            <Line
+                                key={`${key}${MISSING_KEY_SUFFIX}`}
+                                dataKey={`${key}${MISSING_KEY_SUFFIX}`}
+                                stroke="none"
+                                dot={false}
+                                activeDot={false}
+                                legendType="none"
+                                tooltipType="none"
+                                isAnimationActive={false}
+                            >
+                                <LabelList dataKey={`${key}${MISSING_KEY_SUFFIX}`} content={renderMissingValueLabel} />
+                            </Line>
+                        ))}
                     </ComposedChart>
                 </ChartContainer>
             </div>
@@ -630,7 +688,11 @@ const LineChart = ({
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
                                 {series.map(({key}) => (
-                                    <td key={key}>{valueFormatter.format(item.values[key] ?? 0)}</td>
+                                    <td key={key}>
+                                        {Number.isFinite(item.values[key] ?? 0)
+                                            ? valueFormatter.format(item.values[key] ?? 0)
+                                            : EMPTY_VALUE}
+                                    </td>
                                 ))}
                             </tr>
                         ))}

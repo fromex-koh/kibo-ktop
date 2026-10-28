@@ -19,7 +19,7 @@ import {cn} from '@/lib/utils'
 //   · 값이 모두 같으면 범위를 한 단위 넓혀 선을 가운데쯤에 둔다. 점이 하나면 가운데에 둔다.
 //   · 기간 이름이 그림 끝을 넘으면 안쪽으로 당긴다(템플릿 마지막 25.09월 x 1144 → 1136).
 //   · 점이 많아 기간 이름이 겹치면 몇 칸씩 건너뛰어 적는다(처음 · 마지막은 늘 적음). 값 글자가 겹치면 값 글자를 줄인다(최소 12px).
-//   · 값이 없는 점(undefined)은 선을 끊고 점 · 글자를 그리지 않는다.
+//   · 값이 없는 점(undefined · 숫자 아님)은 선을 끊고 점을 그리지 않으며, 값 글자 자리에 '-' 를 바닥선 위에 적는다.
 //   · 값 글자 뒤에 바탕색(colors.dotFill) 테두리를 깔아 선이 글자를 지나가도 읽힌다.
 // 서버에서 바로 그려지고 마우스 반응 · 움직임이 없다(툴팁 없음). 값 전체는 화면에 보이지 않는 목록으로도 읽어 준다.
 //
@@ -145,6 +145,8 @@ const WIDE_RATIO = 0.9
 const WIDE_CHAR_START = 0x1100
 const TEN = 10
 
+// 값이 없는 점의 값 글자.
+const EMPTY_VALUE = '-'
 const numberFormat = new Intl.NumberFormat('ko-KR')
 const round = (value: number) => Math.round(value * 10) / 10
 
@@ -299,7 +301,18 @@ const ValueLineChart = ({
                     paintOrder="stroke"
                 >
                     {points.map((point) => {
-                        if (point.y === null || point.item.value === undefined) return null
+                        // 값 없음 — 점이 없으니 바닥선 위(값 글자와 같은 간격)에 '-'.
+                        if (point.y === null || point.item.value === undefined) {
+                            return (
+                                <text
+                                    key={point.item.id}
+                                    x={round(clampX(point.x, estimateWidth(EMPTY_VALUE, valueFontSize)))}
+                                    y={round(geometry.baselineY - geometry.valueOffset)}
+                                >
+                                    {EMPTY_VALUE}
+                                </text>
+                            )
+                        }
                         const text = formatValue(point.item.value)
                         return (
                             <text

@@ -73,6 +73,8 @@ type CellsBarLabelOptions = {
     count?: number
     /** 값 목록 — 가장 큰 · 작은 값은 솎지 않는다. */
     values?: readonly number[]
+    /** false 면 긴 값을 '123.5만'으로 줄이지 않고 그대로 적는다 — 항목이 적어 자리가 넉넉한 막대만(K-BIGx 인당 매출액). 기본 true. */
+    isCompact?: boolean
 }
 
 // 막대 값 글자 — 막대가 자라는 쪽 끝에서 4 떨어진다(양수는 위, 음수는 아래). 0 은 막대 없이 바닥선 바로 위에 값만 남는다.
@@ -90,8 +92,8 @@ const renderCellsBarValueLabel = (
         return null
     }
     const numericValue = Number(value ?? 0)
-    const text = formatCellsValue(numericValue, format)
-    const {count, values = []} = options
+    const {count, values = [], isCompact = true} = options
+    const text = isCompact ? formatCellsValue(numericValue, format) : format(numericValue)
     if (count && parentViewBox && 'width' in parentViewBox && typeof parentViewBox.width === 'number') {
         const isExtreme =
             values.length > 0 && (numericValue === Math.max(...values) || numericValue === Math.min(...values))
