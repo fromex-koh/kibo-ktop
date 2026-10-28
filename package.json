@@ -22,7 +22,8 @@
         "check:conventions": "node scripts/check-conventions.mjs",
         "typecheck": "next typegen && tsc --noEmit",
         "verify": "yarn tokens && yarn screen-registry && yarn license-notices:check && yarn lint && yarn format:check && yarn check:conventions && yarn typecheck",
-        "prepare": "husky"
+        "prepare": "husky",
+        "kbigx-template": "node scripts/kbigx-report-template/build.mjs"
     },
     "dependencies": {
         "@base-ui/react": "^1.6.0",
@@ -32,6 +33,8 @@
         "cytoscape": "3.34.0",
         "cytoscape-fcose": "2.2.0",
         "date-fns": "^4.4.0",
+        "html-to-image": "^1.11.13",
+        "jspdf": "^4.2.1",
         "lottie-web": "^5.13.0",
         "lucide-react": "^1.23.0",
         "next": "16.2.9",
@@ -56,6 +59,7 @@
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "@types/wordcloud": "1.2.2",
+        "esbuild": "0.25.10",
         "eslint": "^9",
         "eslint-config-next": "16.2.9",
         "eslint-config-prettier": "^10.1.8",
