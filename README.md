@@ -44,20 +44,21 @@ yarn dev                     # http://localhost:3000
 
 ## 스크립트
 
-| 명령                                | 설명                                                |
-| ----------------------------------- | --------------------------------------------------- |
-| `yarn dev`                          | 개발 서버                                           |
-| `yarn build` · `yarn start`         | 프로덕션 빌드 · 실행                                |
-| `yarn verify`                       | push 전 통합 검사(아래 항목을 순서대로 실행)        |
-| `yarn tokens`                       | `tokens.json` → `src/app/tokens.css` 생성           |
-| `yarn lint`                         | ESLint(접근성 포함)                                 |
-| `yarn format` · `yarn format:check` | Prettier 적용 · 검사                                |
-| `yarn check:conventions`            | Tailwind/className 컨벤션 검사                      |
-| `yarn typecheck`                    | 타입 검사                                           |
-| `yarn license-notices`              | 제3자 라이선스 고지(`THIRD_PARTY_LICENSES.md`) 갱신 |
-| `yarn audit:accessibility`          | 전체 화면 W3C 마크업 검사                           |
-| `yarn frontend-handoff`             | 전달본 생성                                         |
-| `yarn asset-versions`               | 릴리스 메타데이터 생성(GitHub Actions 전용)         |
+| 명령                                | 설명                                                                   |
+| ----------------------------------- | ---------------------------------------------------------------------- |
+| `yarn dev`                          | 개발 서버                                                              |
+| `yarn build` · `yarn start`         | 프로덕션 빌드 · 실행                                                   |
+| `yarn verify`                       | push 전 통합 검사(아래 항목을 순서대로 실행)                           |
+| `yarn tokens`                       | `tokens.json` → `src/app/tokens.css` 생성                              |
+| `yarn lint`                         | ESLint(접근성 포함)                                                    |
+| `yarn format` · `yarn format:check` | Prettier 적용 · 검사                                                   |
+| `yarn check:conventions`            | Tailwind/className 컨벤션 검사                                         |
+| `yarn typecheck`                    | 타입 검사                                                              |
+| `yarn license-notices`              | 제3자 라이선스 고지(`THIRD_PARTY_LICENSES.md`) 갱신                    |
+| `yarn audit:accessibility`          | 전체 화면 W3C 마크업 검사                                              |
+| `yarn frontend-handoff`             | 전달본 생성                                                            |
+| `yarn kbigx-template`               | K-BIGx 보고서 PDF 템플릿 단독 HTML 생성(아래 "PDF 템플릿 다시 만들기") |
+| `yarn asset-versions`               | 릴리스 메타데이터 생성(GitHub Actions 전용)                            |
 
 `git push` 때 `yarn verify` 가 자동 실행되고, 실패하면 push 가 거부됩니다.
 
@@ -80,6 +81,7 @@ docs/                       # 컨벤션 문서(아래 "문서")
 scripts/                    # 토큰 생성 · 컨벤션 검사 · 접근성 검사 · 릴리스 · 전달본 생성
 vendor/shadcn-baseline/     # 수정한 shadcn 셸의 원본 스타일 기준선(앱에서 import 하지 않음)
 handoff/                    # 전달본용 사이트 설정 원본
+templates/                  # K-BIGx 보고서 PDF 생성용 단독 HTML(백엔드 전달)
 public/                     # 정적 에셋
 src/
   app/
@@ -98,12 +100,24 @@ src/
 
 ### 직접 고치지 않는 생성 파일
 
-| 파일                                                    | 만드는 곳                             |
-| ------------------------------------------------------- | ------------------------------------- |
-| `src/app/tokens.css`                                    | `yarn tokens` (git 미추적)            |
-| `src/content/publishing-guide/*.generated.json`         | 릴리스 때 GitHub Actions 가 생성·커밋 |
-| `src/content/publishing-guide/accessibility-audit.json` | `yarn audit:accessibility`            |
-| `THIRD_PARTY_LICENSES.md`                               | `yarn license-notices`                |
+| 파일                                                               | 만드는 곳                                                 |
+| ------------------------------------------------------------------ | --------------------------------------------------------- |
+| `src/app/tokens.css`                                               | `yarn tokens` (git 미추적)                                |
+| `src/content/publishing-guide/*.generated.json`                    | 릴리스 때 GitHub Actions 가 생성·커밋                     |
+| `src/content/publishing-guide/accessibility-audit.json`            | `yarn audit:accessibility`                                |
+| `THIRD_PARTY_LICENSES.md`                                          | `yarn license-notices`                                    |
+| `templates/kbigx-report-template.html`                             | `yarn kbigx-template`                                     |
+| `src/content/publishing-guide/third-party-licenses.generated.json` | `yarn license-notices`(가이드 '오픈소스 라이선스' 화면용) |
+
+### PDF 템플릿 다시 만들기
+
+`templates/kbigx-report-template.html` 은 손으로 고치지 않습니다. PDF 템플릿 코드(`kbigx-print-*`) · 목업 · 스타일을 바꾸면 다시 만들어 덮어씁니다.
+
+1. `yarn dev` 를 켭니다 — 스타일 · 글꼴을 dev 서버의 보고서 미리보기 화면에서 떠 옵니다(주소는 `KBIGX_TEMPLATE_BASE_URL` 로 변경, 기본 `http://localhost:3000`).
+2. `yarn kbigx-template` 을 실행합니다 — 헤드리스 Chrome 으로 목업을 미리 그려 넣습니다(Chrome 위치는 `CHROME_PATH` 로 지정).
+3. 브라우저로 결과 파일을 열어 표지 · 목차 · 각 장이 보이는지 확인합니다.
+
+생성기는 `scripts/kbigx-report-template/` 이고, 파일 맨 위 안내 주석은 `header.txt` 에서 고칩니다. 생성기는 전달본에 들어가지 않습니다.
 
 ## 작업 기준
 
@@ -130,10 +144,14 @@ src/
 
 `frontend-handoff` 브랜치는 `yarn frontend-handoff` 로 만든 전달본입니다. 제작·검수 도구(`docs/` · `.github/` · 린트 설정 · 대부분의 `scripts/`)는 빼고, 화면 · 컴포넌트 · 가이드 · 토큰 생성 환경을 담습니다. 전달 범위와 흐름은 `/component-guide` 의 "다른 저장소로 이식"에서 확인합니다.
 
+`templates/kbigx-report-template.html` 은 K-BIGx 보고서 PDF 템플릿을 단독 HTML 한 장으로 묶은 결과물입니다. 백엔드가 데이터를 넣어 PDF 를 만들 때 쓰며, 전달본에는 결과 파일만 그대로 들어갑니다(다시 만드는 법은 위 "PDF 템플릿 다시 만들기").
+
+- 받는 곳: 퍼블리싱 인덱스 마이페이지 › K-BIGx 보고서 이력 › [보고서 템플릿 다운로드](기업 · 기관). 주소 `/downloads/kbigx-report-template.html` 은 빌드 때 이 파일을 정적 응답으로 굳힙니다.
+
 컴포넌트를 다른 저장소로 옮길 때는 다음을 함께 가져갑니다.
 
 - 토큰 파이프라인: `tokens.json` · `scripts/build-tokens.mjs` · `src/app/globals.css` · `postcss.config.mjs`
-- 라이선스 고지: `THIRD_PARTY_LICENSES.md` · `src/app/fonts/LICENSE-PRETENDARD.txt`
+- 라이선스 고지: `THIRD_PARTY_LICENSES.md` · `src/app/fonts/LICENSE-PRETENDARD.txt` · 정리 문서 `/component-guide/licenses`
 
 ## 검색 노출 차단
 

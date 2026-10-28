@@ -94,6 +94,55 @@ if (handoffPublishingIndex.includes('toScreenOpenHref')) {
 }
 writeFileSync(handoffPublishingIndexPath, handoffPublishingIndex)
 
+// K-BIGx PDF 템플릿 단독 HTML 은 원본 저장소의 생성기(scripts/kbigx-report-template/ · yarn kbigx-template)로 만든다.
+// 생성기는 전달하지 않으므로, 전달본에 남는 "다시 만드는 법" 안내를 "원본 저장소에서 만들어 전달" 안내로 바꾼다.
+// 바꿀 자리를 찾지 못하면 멈춘다 — 전달본에 없는 명령을 안내하는 문구가 조용히 남지 않게 한다.
+const KBIGX_TEMPLATE_ORIGIN = '원본 퍼블리싱 저장소에서 만들어 전달하는 결과물'
+const rewriteHandoffFile = (path, replacements) => {
+    const filePath = resolve(outputDirectory, path)
+    const rewritten = replacements.reduce(
+        (source, [pattern, replacement, label]) => replaceRequired(source, pattern, replacement, label),
+        readFileSync(filePath, 'utf8'),
+    )
+    if (/kbigx-template|scripts\/kbigx-report-template/.test(rewritten)) {
+        throw new Error(`handoff 에 원본 전용 생성기 안내가 남아 있습니다: ${path}`)
+    }
+    writeFileSync(filePath, rewritten)
+}
+
+rewriteHandoffFile('src/app/downloads/kbigx-report-template.html/route.ts', [
+    ['(yarn kbigx-template 로 생성)', `(${KBIGX_TEMPLATE_ORIGIN})`, '다운로드 주소 주석'],
+])
+rewriteHandoffFile('src/app/component-guide/(guide)/report-shell/page.tsx', [
+    [/\n\/\/ \[원본 전용\][^\n]*/, '', '원본 전용 표식 주석'],
+    [
+        /('다시 만들기',\s*)"[^"]*"/,
+        `$1"${KBIGX_TEMPLATE_ORIGIN}입니다. 'bigx print template' 배지가 붙은 컴포넌트 · kbigx-print-* 파일 · K-BIGx 목업을 바꿔도 이 HTML 은 저절로 바뀌지 않으므로, 인쇄 템플릿을 바꿀 때는 원본 저장소에 새 HTML 을 요청합니다."`,
+        '다시 만들기 칸',
+    ],
+    [
+        /('고치는 곳',\s*)'[^']*'/,
+        "$1'결과 파일은 손으로 고치지 않습니다. 파일 맨 위 안내 주석과 화면 코드는 원본 저장소의 생성기에서 고칩니다.'",
+        '고치는 곳 칸',
+    ],
+    [
+        /const STANDALONE_CODE = `[^`]*`/,
+        'const STANDALONE_CODE = `# 이 HTML 은 원본 퍼블리싱 저장소에서 만들어 전달합니다 — 전달본에서는 다시 만들지 않습니다.\n# 받는 곳: 퍼블리싱 인덱스 › 마이페이지 › K-BIGx 보고서 이력 › [보고서 템플릿 다운로드]\n# 파일 위치: templates/kbigx-report-template.html (손으로 고치지 않음)`',
+        '다시 만드는 법 코드',
+    ],
+])
+rewriteHandoffFile('src/constants/publishing-guide.ts', [
+    [
+        '고치면 인쇄본을 함께 확인하고 yarn kbigx-template 로 단독 HTML 도 다시 만듭니다.',
+        '고치면 인쇄본을 함께 확인합니다. PDF 템플릿 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
+        '인쇄 템플릿 배지 설명',
+    ],
+])
+
+// K-BIGx 보고서 PDF 템플릿(단독 HTML) — 백엔드가 데이터를 넣어 PDF 를 대량 생성할 때 쓰는 전달물이다.
+// 빠진 채 전달되지 않도록 없으면 멈춘다.
+copyRequiredHandoffAsset('templates/kbigx-report-template.html', 'templates/kbigx-report-template.html')
+
 // 원본 사이트 정보와 handoff 사이트 정보는 별도로 관리한다.
 copyRequiredHandoffAsset('handoff/site.ts', 'src/constants/site.ts')
 
@@ -296,6 +345,13 @@ yarn dev
 \`src/constants/site.ts\`는 handoff 전용 사이트명, 설명, URL과 저장소 URL을 관리합니다. handoff 생성 전에는 저장소의 \`handoff/site.ts\`를 수정합니다.
 
 OG 이미지 경로는 \`/og-image.png\`로 유지하며, 디자인 작업 완료 후 \`handoff/og-image.png\`를 추가하면 자동으로 적용됩니다.
+
+## K-BIGx 보고서 PDF 템플릿
+
+\`templates/kbigx-report-template.html\`은 K-BIGx 기업혁신성장 보고서를 PDF 로 만드는 단독 HTML 한 장입니다. 글꼴 · 라이브러리 · 이미지가 파일 안에 모두 들어 있어 이 파일만 백엔드에 전달하면 됩니다. 데이터 넣는 법, PDF 저장 시점, 값 · 순서 · 개수 규칙은 파일 맨 위 주석에 있습니다.
+
+- 원본 퍼블리싱 저장소에서 만들어 전달하는 결과물입니다. **손으로 고치지 않습니다.** 인쇄 템플릿(\`kbigx-print-*\` 컴포넌트 · K-BIGx 목업)을 바꿔도 이 HTML 은 저절로 바뀌지 않으므로, 바뀐 HTML 이 필요하면 원본 저장소에 요청합니다.
+- 퍼블리싱 인덱스의 [보고서 템플릿 다운로드](\`/downloads/kbigx-report-template.html\`)는 빌드 때 이 파일을 읽어 정적 파일로 만듭니다. \`templates/\` 를 지우거나 옮기면 \`yarn build\` 가 실패합니다.
 
 ## 디자인 토큰
 

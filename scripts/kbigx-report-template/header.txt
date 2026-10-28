@@ -1,0 +1,135 @@
+  K-BIGx 기업혁신성장 보고서 — PDF 템플릿(단독 HTML)
+  데이터만 바꾸면 표 · 그래프 · 쪽 나눔 · 목차 · '-' 처리까지 다시 계산해 그린다.
+  늘 라이트 모드로 그린다(OS · 브라우저의 다크 설정과 무관).
+
+  [1] 구성 — 바꾸는 곳은 ① 뿐
+    ① <script id="kbigx-report-data">   보고서 데이터(JSON). 지금은 목업
+    ② <div id="kbigx-report-root">      목업으로 미리 그린 마크업. 열 때 ① 로 다시 그려진다
+    ③ 마지막 <script>                    화면 코드
+
+  [2] PDF 만들기
+    1. ① 에 JSON 을 넣는다. 이때 '<' 는 \u003c 로 바꿔 넣는다 — 값에 "</script>" 가 있으면 ① 이 끊겨 data-error 가 난다.
+         화면에는 '<' 그대로 나온다.
+         예) JSON.stringify(data).replace(/</g, '\\u003c')   // JS 기준
+    2. 파일을 연다. 고른 장만 만들 때는 주소 뒤에 ?sections=장,장
+         briefing 진단브리핑 · company 기업현황 · innovation 기술혁신정보 · tech-index Tech-Index
+         credit-finance 신용/재무정보 · activity 활동성정보
+         표지 · 목차 · 참고자료는 늘 들어간다. 장 순서는 보고서 순서로 고정. 맞는 이름이 없으면 전체 장.
+    3. #kbigx-report-root 에 data-ready="true" 나 data-error 가 붙을 때까지 기다린다.
+         보통 1 ~ 2초. 30초가 지나도 둘 다 없으면 실패로 본다.
+    4. data-ready  → page.pdf({preferCSSPageSize: true, printBackground: true})   A4 세로
+       data-error  → 저장하지 않는다. 속성 값에 데이터 오류 이유가 적힌다.
+    ※ 기다리지 않고 저장하면 목업 값이 찍힐 수 있다.
+    ※ 외부 파일을 받지 않는다(글꼴 Pretendard · 이미지 · 코드 모두 이 파일 안) — 인터넷이 없어도 된다.
+    ※ Pretendard 에 없는 글자(데이터 속 ☆ ◎ 같은 특수기호 · 옛한글 등)만 서버 글꼴로 그린다.
+       서버에 한글 글꼴(예: Noto Sans CJK KR)이 하나도 없으면 그 글자는 □ 로 나온다 — 설치를 권장.
+
+  [3] 데이터 기본 규칙
+    · 목업 JSON 이 형식 견본 — 키 · 구조는 그대로 두고 값만 바꾼다. 배열 건수는 자유.
+    · 값이 없으면 '' · [] · null → 화면이 '-' · 빈 상태로 그린다.
+      단 장 · 묶음 객체(creditDetail · techInnovation.holdings 등)는 null 로 보내지 말고 키를 갖춘 채 값만 비운다(null 이면 data-error).
+    · 형식: 날짜 "2025-12-04" · 연도 "2024년" · 그래프 시점 "25.10월" · 비율 43.8(% 숫자)
+    · 신용/재무정보 · 활동성정보의 연도별 표는 최근 3개년만 그린다(연도를 못 받으면 companyStatus.finance.years 기준).
+    · 목록은 자르지 않고 보낸다 — 그려지는 건수는 [7].
+    · 필드 이름 주의: techInnovation.competitors[].growthRate 는 화면에 '영업이익률(%)' 로 나온다(이름과 뜻이 다르다).
+    · 장별 데이터
+        표지          companyName · issuedAt(발급일)
+        진단브리핑    company · innovation · techIndex · creditFinance · activity
+                      createdAt(기준일자) · subCategoryName(기술혁신정보 제목 옆 분야 태그)
+        기업현황      companyStatus        기술혁신정보  techInnovation      Tech-Index  techIndexDetail
+        신용/재무정보 creditDetail         활동성정보    activityDetail
+        안 쓰임       title · lookupBaseDate
+
+  [4] 정해진 값 — 글자 그대로 넣는다(다르면 '-' · 빠짐 · 오류)
+    viewerCase(필수)                 "self" 가림 없음
+                                     "partner-corp"   단기연체 · 상거래연체 · 공공체납 표 + 차입금 현황 가림
+                                     "partner-person" 위 + 법인등기 · 당좌거래정지 표 가림
+    등급 코드          creditFinance.rating.grade · creditDetail.ratingHistory[].grade
+                         CRI 등급 AAA+ ~ D · R · NR (예 "BBB0" "A-")
+                       creditDetail.cashFlow.grade · creditDetail.cashFlow.history[].grade   CF1 ~ CF6
+    재무비율 평가      creditFinance.ratios[].rating   excellent · good · normal · poor · weak
+    강조 표시          techInnovation.competitors[].tone · techInnovation.growthLeaders.*.items[].tone
+                         "subject" 신청기업 · "average" 평균 · 일반 기업은 넣지 않음
+                       techInnovation.growthLeaders.*.items[].isHighGrowth   true 면 그 막대 강조
+                       techIndexDetail.companyTypes[] · capabilityByType[].items[] 의 isSubject   true 면 신청기업 줄 강조
+    인증 보유          companyStatus.certifications[].isCertified   true 보유 · false 미보유 · 항목이 없으면 '-'
+    요약 문장          techIndexDetail.standard.summary[].isStrong · isLineBreak   굵게 · 줄바꿈
+    도넛 색            모든 도넛 · 원형은 데이터의 "color" 를 쓰지 않고 받은 순서로 칠한다(진한 남색 → 옅은 파랑, 순서는 [6]).
+                       innovation.technologies · techInnovation.holdings.middleCategory · smallCategory 에서는
+                       label "기타" 조각만 회색이 된다.
+
+  [5] 고정 이름 — 이 글자로 찾아 정해진 자리에 넣는다
+    company.rows[].label                    기업명 · 대표자 · 기업유형/형태 · 표준산업분류 · 대표기술분야 · 주요제품
+    creditFinance.ratios · comparison 의 label   매출액증가율 · 영업이익률 · 자기자본비율 · 총자본회전율 · 현금흐름
+    creditFinance.statements[].label        총자산 · 자본총계 · 부채총계 · 매출액 · 영업이익 · 순이익
+    creditFinance.rating.details[].label    평가일자 · 결산일자
+    creditDetail.cashFlow.details[].label   결산일자
+    innovation.rnd[].label                  중소벤처기업부 · 과학기술정보통신부 · 산업통상부 · 보건복지부
+                                            받은 부처 순서대로 그리고, 이 넷 중 빠진 부처는 '- 건' 으로 채워 최소 4칸
+    companyStatus.overview[].label          기업명 · 대표자 · 법인등록번호 · 사업자등록번호 · 설립일 · 종업원수 · 기업유형/형태
+                                            기업규모 · 주소 · 표준산업분류 · 대표기술분야 · 주요제품
+    companyStatus.finance 의 key            balance   total-assets · liabilities · equity
+                                            income    sales · operating-profit · net-income
+                                            ratios    operating-margin · debt-ratio · receivables-turnover · sales-growth · asset-growth
+                                            cashFlows operating · financing · investing · net-change · cash-vs-income
+    companyStatus.intellectualProperty[]    id(patent · utility-model · design · trademark) + count(건수)
+    companyStatus.certifications[].id       venture · innobiz · mainbiz · research-lab
+    creditDetail.ratios[]                   growth        매출액증가율 · 총자산증가율 · 순이익증가율 · 영업이익증가율
+      (id · rows[].label)                   profitability 영업이익률 · 당기순이익률 · 자기자본이익률 · 총자본영업이익률
+                                            stability     자기자본비율 · 부채비율 · 이자보상비율 (배) · 차입금의존도
+                                            activity      총자본회전율 · 매출채권회전율 · 재고자산회전율 · 순운전자본회전율
+    creditDetail.borrowings.groups[]        short 단기차입금 · 유동성장기부채 · 단기사채 · 유동화채무 | long 장기차입금 · 장기사채
+    creditDetail.borrowingChanges.rows[].label   차입금(백만원) · 차입금/매출액(%) · 차입금상환계수 · 총차입금변동률(%)
+    creditDetail.institutions.rows[].label  은행업권 · 상호금융업권 · 저축은행업권 · 카드/캐피탈업권 · 대부업권
+    creditDetail.collaterals[].label        부동산 · 특수저당 · 보증
+    creditDetail.creditInfo[].id            closure · registry · suspension · short-overdue · trade-overdue · public-arrears
+    creditDetail.creditInfo[].status "해당없음"   '해당사항 없음' 으로 보이고 가리지 않는다
+    techInnovation.marketScale.rows[].label 10억원 이하 · 30억원 이하 · 100억원 이하 · 300억원 이하 · 300억원 초과
+    techIndexDetail.capabilities · capabilityByType 의 id   infra · input · activity · output
+    techIndexDetail.indicators[].title      인프라·투입 부문 · 활동·성과 부문
+    activityDetail.energy.electricity · gas 의 label   본사 · 공장 · 기타
+
+  [6] 순서 — 화면이 정렬하는 목록과, 받은 순서대로 그리는 목록이 섞여 있다
+    화면이 정렬(보내는 순서 무관)
+      creditDetail.ratingHistory · cashFlow.history   date 로 정렬 — 표는 최신 3건, 그래프는 같은 3건을 오래된 → 최신
+      techInnovation.excellentPatents                 피인용 지수 높은 순 10건 + 나머지는 '기타' 한 줄로 합친다(전부 보낸다)
+      creditDetail.collaterals                        label 로 찾아 부동산 · 특수저당 · 보증 순
+    받은 순서대로 그림(이 순서로 정렬해 보낸다)
+      innovation.technologies                         비중 큰 순, 나머지는 "기타" 로 맨 뒤
+      techInnovation.holdings.middleCategory · smallCategory   위와 같음
+      techInnovation.marketScale.companyShare · patentShare    매출 규모 순(10억원 이하 → 300억원 초과)
+      creditDetail.institutions.share                 비중 큰 순
+      innovation.issues(R&D 이슈 단어)                중요도(weight) 높은 순
+      companyStatus.shareholders                      지분율 높은 순
+      techInnovation.holdings.patents(특허 보유현황)  출원일 최근순 — 앞 10건을 그린다
+      techInnovation.growthLeaders.*.items            성장률 높은 순 10건 → 평균 · 조회기업 줄
+      techInnovation.rndInstitutes.*.rows             앞 10곳을 그리고, 나머지는 '기타 …' 한 줄로 합친다
+      techInnovation.emergingTech.rows                상위 10건 + "기타" 줄까지 백엔드가 만들어 보낸다
+      그래프 시점 목록                                오래된 → 최신(activity.employees · activity.salesPerEmployee ·
+                                                      creditDetail.borrowingTrend · creditDetail.creditCollateral.points 등)
+      creditDetail.creditInfo[].rows                  표마다 첫 줄만 그린다 — 보일 줄을 맨 앞에 둔다
+
+  [7] 개수 — PDF 에 그려지는 건수(넘치면 안 보이고, 모자라면 '-' 줄 · 빈 상태)
+    고정 — 이 개수로 그린다
+      company.rows 6 · creditFinance.ratios · comparison 5 · creditFinance.statements 6
+      companyStatus  overview 12 · intellectualProperty 4 · certifications 4
+                     finance.balance 3 · income 3 · ratios 5 · cashFlows 5
+      creditDetail   creditInfo 6표(표마다 1줄) · ratios 4묶음 × 4줄 · borrowings 단기 4 + 장기 2 · borrowingChanges 4
+                     institutions.rows 5 · collaterals 3 · ratingHistory · cashFlow.history 최근 3건
+      techIndexDetail  capabilities 4 · capabilityByType 4 · indicators 2
+      techInnovation.marketScale.rows 5구간 · activityDetail.energy 본사 · 공장 · 기타 3
+      연도(신용/재무정보 · 활동성정보) 3개년
+    최대
+      10건    techInnovation.holdings.patents · techInnovation.governmentRnd.open
+              companyStatus.customers · companyStatus.suppliers
+      6건     techInnovation.governmentRnd.upcoming(도래 과제 — 쪽에 남는 높이만큼)
+      10건 + '기타' 1줄   techInnovation.excellentPatents · rndInstitutes.*(화면이 합친다) · emergingTech(백엔드가 만든다)
+      10건 + 평균 · 조회기업   techInnovation.growthLeaders.*.items
+      companyStatus.executives · shareholders 5행 · affiliates 3행 기준
+              — 기업현황 첫 쪽 개요 글 길이에 따라 1 ~ 10행 사이로 늘거나 준다
+    최소 · 제한 없음
+      innovation.rnd           최소 4칸(빠진 기본 부처는 '- 건'), 더 받으면 모두
+      도넛 조각               색 7가지 + "기타"(회색) — 8조각까지 권장(넘으면 색이 처음부터 되풀이)
+      받은 만큼 모두           innovation.stats · averages · issues · techInnovation.competitors ·
+                               activity.employees · creditDetail.borrowingTrend 등
+      techInnovation.emergingTech.periods   받은 기간 수만큼 열(못 받으면 '-' 5칸)

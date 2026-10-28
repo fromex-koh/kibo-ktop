@@ -12,6 +12,9 @@ src/app/fonts
 src/app/tokens.css
 .claude/settings.local.json
 
+# K-BIGx 보고서 PDF 템플릿 단독 HTML — 화면 코드 · 스타일 · 목업을 묶어 만든 결과물이라 손으로 고치지 않는다(yarn kbigx-template 로 다시 만들어 덮어쓴다).
+templates/kbigx-report-template.html
+
 # shadcn 셸(ui/) — 순정·수정 셸 모두 업스트림 2-space 포맷을 그대로 유지한다(SC-02). 수정 셸도
 # 본문은 업스트림 코드라, 프로젝트 포맷(4-space)으로 재포맷하면 업데이트 때 diff 전체가 오염된다.
 # (lint·check:conventions 는 수정 셸을 검사하지만, 포맷만은 업스트림을 따른다.)
