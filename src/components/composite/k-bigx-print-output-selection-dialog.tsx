@@ -1,7 +1,7 @@
 'use client'
 
 import {useId, useState, type ReactNode} from 'react'
-import {Printer} from 'lucide-react'
+import {Eye} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
@@ -15,15 +15,15 @@ import {
 } from '@/content/service/k-bigx-print-output-selection'
 import {cn} from '@/lib/utils'
 
-// 인쇄 출력물 선택 — 인쇄할 보고서 구성 항목을 고르는 모달.
-// 출력 대상 요약(기업명 · 조회기준일) → 항목 고르기[전체선택 / 항목 6개] → [출력하기].
+// 보고서 내용 선택 — PDF 로 받을 보고서 구성 항목을 고르는 모달.
+// 대상 요약(기업명 · 조회기준일) → 항목 고르기[전체선택 / 항목 6개] → [보고서 미리보기].
 //   · 전체선택은 항목을 모두 켜고 끈다. 일부만 골라지면 '일부'(indeterminate) 상태다.
-//   · 아무 항목도 고르지 않으면 [출력하기]가 눌리지 않는다.
-//   · 열 때마다 defaultSelected 로 되돌린다 — 지난번 출력 · 취소 때 고른 항목은 남기지 않는다.
-// 쓰는 곳: 웹 보고서 [보고서 출력](innovation-growth-report-document.tsx) · 모달 단독 확인 화면(print-output-selection).
+//   · 아무 항목도 고르지 않으면 [보고서 미리보기]가 눌리지 않는다.
+//   · 열 때마다 defaultSelected 로 되돌린다 — 지난번 미리보기 · 취소 때 고른 항목은 남기지 않는다.
+// 쓰는 곳: 웹 보고서 [보고서 다운로드](innovation-growth-report-document.tsx) · 모달 단독 확인 화면(print-output-selection).
 
 type KbigxPrintOutputSelectionDialogProps = {
-    /** 출력 대상 요약 — 기업명 · 조회기준일 등(항목명 · 값). [프론트엔드 연동] 조회 중인 보고서 정보로 채운다. */
+    /** 대상 요약 — 기업명 · 조회기준일 등(항목명 · 값). [프론트엔드 연동] 조회 중인 보고서 정보로 채운다. */
     summary: readonly {label: string; value: string}[]
     /** 열 때마다 골라 둘 항목. 기본은 아무것도 고르지 않음. */
     defaultSelected?: readonly PrintOutputSectionId[]
@@ -31,7 +31,7 @@ type KbigxPrintOutputSelectionDialogProps = {
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
-    /** [출력하기]를 눌렀을 때 — 고른 항목을 넘기고 모달을 닫는다. 없으면 모달만 열려 있다(모달 단독 확인 화면). */
+    /** [보고서 미리보기]를 눌렀을 때 — 고른 항목을 넘기고 모달을 닫는다. 없으면 모달만 열려 있다(모달 단독 확인 화면). */
     onPrint?: (selected: PrintOutputSectionId[]) => void
 }
 
@@ -92,7 +92,7 @@ const KbigxPrintOutputSelectionDialog = ({
                     {/* 체크박스는 radix 가 <button> 으로 그린다 — <label for> 만으로는 WAVE 가 이름 없는 버튼으로
                         보므로 aria-labelledby 로 글자를 이름에 직접 잇는다[5.1.1]. */}
                     <fieldset className="border-subtle-3 m-0 flex min-w-0 flex-col gap-4 rounded-lg border p-6">
-                        <legend className="sr-only">출력할 항목</legend>
+                        <legend className="sr-only">보고서에 넣을 내용</legend>
                         <div className="flex items-center gap-2">
                             <Checkbox
                                 id={`${idPrefix}-all`}
@@ -136,8 +136,8 @@ const KbigxPrintOutputSelectionDialog = ({
                 </div>
                 <DialogFooter className="sm:px-8">
                     <Button type="button" size="xl" disabled={!isSomeSelected} onClick={print}>
-                        <Printer aria-hidden="true" />
-                        출력하기
+                        <Eye aria-hidden="true" />
+                        보고서 미리보기
                     </Button>
                 </DialogFooter>
             </DialogContent>

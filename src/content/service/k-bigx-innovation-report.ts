@@ -5,13 +5,15 @@ import type {ScoreGaugeTone} from '@/components/custom/score-gauge'
 import type {RatingGaugeDetail} from '@/components/custom/semicircle-rating-gauge'
 import type {WordCloudItem} from '@/components/custom/word-cloud'
 import type {Viewport} from 'next'
+// [퍼블리싱 전용] 마이페이지 이력 카드별 보고서 목업 — API 연결 시 이 import 와 파일을 함께 지운다.
+import {findMockHistoryCard, withMockHistoryCard} from '@/content/service/k-bigx-report-history-mock-reports'
 
 // K-BIGx 기업혁신성장 보고서 — 보고서 한 건의 데이터 모양(타입) · 문구 · 목업 · 조회 함수를 모은 파일.
 // 화면: corp/org-k-bigx-report-innovation-growth-report-diagnostic-briefing(한 페이지 · 탭은 ?tab=).
 //
 // 보고서는 새 창으로 열리는 문서 한 장이고, 탭(진단브리핑 · 기업현황 · 기술혁신정보 · Tech-Index · 신용/재무정보 · 활동성정보)은
 // 모두 이 한 건의 데이터(InnovationGrowthReport)를 나눠 그린다. 목업(MOCK_INNOVATION_GROWTH_REPORT)도 보고서 한 건이며,
-// 지금은 어느 reportId 로 열어도 이 한 건을 돌려준다.
+// 지금은 이 한 건을 돌려준다(마이페이지 이력 카드의 id 로 열 때만 카드별 목업 — k-bigx-report-history-mock-reports.ts).
 //
 // ┌─ [프론트엔드 연동] 체크리스트 — 화면(components/custom/innovation-growth-report-*.tsx)은 고치지 않는다 ──────────────
 // │ 1. getInnovationGrowthReport(reportId) 의 목업 반환을 보고서 조회 API 호출로 바꾼다(파일 아래 '목업' 구역).
@@ -22,7 +24,11 @@ import type {Viewport} from 'next'
 // │    실제 값을 내려 주면 가려도 페이지 데이터에 남아 개발자 도구로 읽힌다. 뺄 범위는 redactForViewerCase 가 참고 구현이다.
 // │ 4. [퍼블리싱 확인용] 코드를 지운다.
 // │    - withPreviewCase · withPreviewCaseSample · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx · kbigx-print-page.tsx).
-// │    - 목업 구역 전체(MOCK_DELAY_MS · MOCK_INNOVATION_GROWTH_REPORT).
+// │    - ?empty= 미리보기: withPreviewEmpty 와 그 아래 withPreview* · PREVIEW_* 함수 · 상수, INNOVATION_REPORT_EMPTY_QUERY 와
+// │      미리보기 값 상수(INNOVATION_REPORT_EMPTY_* · *_LONG_TEXT · *_MIXED 등), 호출(위 두 페이지 파일).
+// │      모두 '[퍼블리싱 확인용]' 표식이 붙어 있다 — 이 표식으로 검색해 남김없이 지운다.
+// │    - 목업 구역 전체(MOCK_DELAY_MS · MOCK_INNOVATION_GROWTH_REPORT)와 이력 카드별 목업
+// │      (k-bigx-report-history-mock-reports.ts 파일 · 맨 위 import · getInnovationGrowthReport 안 호출).
 // │ 5. 문구(INNOVATION_REPORT_*) · 점수 구간(TECH_INDEX_GRADES) · 케이스 정의는 그대로 쓴다.
 // │ 참고: 점수에 따른 상태 · 색 · 칸 수, 비율, 합계 같은 파생 값은 화면이 계산한다 — 원래 값만 내려 준다.
 // │       기업현황(경영진 · 주주 · 관계기업) · 기술혁신정보 표는 노출 건수 제한이 있다 — 최대 10줄, 또는 10건 + '기타' 1줄 = 최대 11줄.
@@ -48,10 +54,84 @@ const INNOVATION_ISSUE_COLORS = [
     'var(--ds-report-series-3)',
     'var(--ds-blue-800)',
 ] as const
+// 정부 R&D사업 접수현황 칸 — 늘 4칸 이상(웹 보고서 진단브리핑 · 인쇄본 진단브리핑 공용). 받은 부처가 4곳보다 적거나 없으면
+// 빠진 부처명을 이 순서대로 채우고 건수는 비운다(null — 화면이 '-' 로 적는다). 받은 부처가 4곳을 넘으면 모두 그린다.
+// 부처는 이름(label)으로 맞춘다 — API 부처명이 이 문구와 다르면 같은 부처가 두 번 나온다.
+const RND_SLOT_COUNT = 4
+const RND_MINISTRIES = ['중소벤처기업부', '과학기술정보통신부', '산업통상부', '보건복지부'] as const
+const RND_UNIT = '건'
+const toRndSlots = (rnd: InnovationGrowthReport['innovation']['rnd']) =>
+    [
+        ...rnd,
+        ...RND_MINISTRIES.filter((label) => !rnd.some((item) => item.label === label)).map((label) => ({
+            label,
+            value: null,
+            unit: RND_UNIT,
+        })),
+    ].slice(0, Math.max(RND_SLOT_COUNT, rnd.length))
+// 기업현황 재무 표 줄 — 표마다 고정(웹 보고서 기업현황 탭 · 인쇄본 기업현황 장 공용). 받은 finance.* 에서 같은 key 로 찾고,
+// 받지 못한 줄도 이름은 두고 값은 비운다('-'). 이 목록에 없는 key 로 온 줄은 그리지 않는다.
+// [프론트엔드 연동] API 의 재무 줄 key 는 아래 key 와 같아야 한다.
+const FINANCE_ROW_LABELS = {
+    balance: [
+        {key: 'total-assets', label: '총자산'},
+        {key: 'liabilities', label: '부채총계'},
+        {key: 'equity', label: '자본총계'},
+    ],
+    income: [
+        {key: 'sales', label: '매출액'},
+        {key: 'operating-profit', label: '영업이익'},
+        {key: 'net-income', label: '당기순이익'},
+    ],
+    ratios: [
+        {key: 'operating-margin', label: '영업이익률'},
+        {key: 'debt-ratio', label: '부채비율'},
+        {key: 'receivables-turnover', label: '매출채권회전율'},
+        {key: 'sales-growth', label: '매출액증가율'},
+        {key: 'asset-growth', label: '총자산증가율'},
+    ],
+    cashFlows: [
+        {key: 'operating', label: '영업활동후 현금흐름'},
+        {key: 'financing', label: '재무활동후 현금흐름'},
+        {key: 'investing', label: '투자활동후 현금흐름'},
+        {key: 'net-change', label: '순현금변화'},
+        {key: 'cash-vs-income', label: '영업활동 현금흐름과 순이익 차이'},
+    ],
+} as const
+type FinanceRowLabels = (typeof FINANCE_ROW_LABELS)[keyof typeof FINANCE_ROW_LABELS]
+// 고정 줄 순서로 맞춘다 — 받지 못한 줄은 값 없는 줄(values: [])로 채운다.
+const toFixedFinanceRows = (labels: FinanceRowLabels, rows: readonly InnovationFinanceRow[]): InnovationFinanceRow[] =>
+    labels.map((item) => rows.find((row) => row.key === item.key) ?? {key: item.key, label: item.label, values: []})
+
+// R&D 이슈 워드클라우드 아래 안내 — 웹 보고서 진단브리핑 · 인쇄본 진단브리핑이 함께 쓴다.
+const INNOVATION_ISSUE_NOTE = '* 글자 크기는 키워드 중요도에 비례합니다.'
+// 매출 규모별 기업 및 특허 현황 — 5행 고정(웹 보고서 · 인쇄본 공용). 받은 rows 에서 같은 label 로 찾고, 없는 행 · 값은
+// 숫자 아님(NaN)으로 두어 화면이 '-' 로 적는다(0 은 0). 데이터가 하나도 없어도 5행을 모두 '-' 로 보인다.
+const MARKET_SCALE_LABELS = ['10억원 이하', '30억원 이하', '100억원 이하', '300억원 이하', '300억원 초과'] as const
+const toMarketScaleRows = (rows: InnovationTechDetail['marketScale']['rows']) =>
+    MARKET_SCALE_LABELS.map((label) => {
+        const row = rows.find((item) => item.label === label)
+        return {
+            id: row?.id ?? label,
+            label,
+            companies: row?.companies ?? Number.NaN,
+            patents: row?.patents ?? Number.NaN,
+        }
+    })
+
+// 웹 보고서 · 인쇄본(PDF 템플릿)이 함께 쓰는 표 · 막대 모양 값 — 한쪽만 바꾸면 웹과 PDF 의 줄 수 · 눈금이 어긋난다.
+// 점수 만점 — 혁신성장역량지수 탭의 점수 막대 · 레이더 공통 눈금.
+const INNOVATION_REPORT_SCORE_MAX = 100
+// 등급 이력(기업신용등급 · 현금흐름등급) — 그래프 · 표 모두 최근 3건, 표는 늘 3줄(모자라면 '-' 줄).
+const INNOVATION_REPORT_GRADE_HISTORY_COUNT = 3
+// 최근 재무 표 — 연도를 하나도 받지 못하면 연도 열을 3칸('-' 머리)으로 둔다.
+const INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT = 3
+// 이머징 기술 — 기간을 받지 못했을 때의 기간 칸 수(2년 단위 · 최근 10년).
+const INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT = 5
 
 const INNOVATION_REPORT_BADGE = 'K-BIGx - 기업혁신성장 보고서'
-const INNOVATION_REPORT_PRINT_LABEL = '보고서 출력'
-// 모바일(768 미만)에서 [보고서 출력] 대신 보이는 버튼 — 누르면 PC 화면(모든 탭)을 새 창으로 연다.
+const INNOVATION_REPORT_PRINT_LABEL = '보고서 다운로드'
+// 모바일(768 미만)에서 [보고서 다운로드] 대신 보이는 버튼 — 누르면 PC 화면(모든 탭)을 새 창으로 연다.
 const INNOVATION_REPORT_MORE_LABEL = '더보기'
 
 // 쿼리
@@ -112,6 +192,90 @@ const INNOVATION_REPORT_TAB_QUERY = 'tab'
 //   partner-corp   ② 타기업 · 협약기관(법인) — 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
 //   partner-person ③ 타기업 · 협약기관(개인) — 법인등기 · 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
 const INNOVATION_REPORT_CASE_QUERY = 'case'
+// [퍼블리싱 확인용] ?empty=briefing — 진단브리핑에 쓰는 값을 모두 비워 빈 데이터 화면('-' · 빈 상태)을 본다. 연동 후 지운다.
+const INNOVATION_REPORT_EMPTY_QUERY = 'empty'
+const INNOVATION_REPORT_EMPTY_BRIEFING = 'briefing'
+// ?empty=briefing-partial — 값이 있는 칸과 빈 칸을 섞어 일부만 빈 화면('-' 가 섞인 표 · 그래프)을 본다.
+const INNOVATION_REPORT_EMPTY_BRIEFING_PARTIAL = 'briefing-partial'
+// ?empty=company — 기업현황 탭에 쓰는 값을 모두 비운다(개요 줄 이름만 두고 값 · 표 · 그래프 데이터는 없음).
+const INNOVATION_REPORT_EMPTY_COMPANY = 'company'
+// ?empty=company-partial — 기업현황 탭에서 값이 있는 칸과 빈 칸을 섞어 본다.
+const INNOVATION_REPORT_EMPTY_COMPANY_PARTIAL = 'company-partial'
+// ?empty=company-overview-long · company-overview-short — PDF 템플릿 기업현황 첫 쪽에서 개요 글 길이에 따라
+// 경영진 · 주주(기준 5행) · 관계기업(기준 3행) 행 수가 줄고 느는 모습을 본다(경영진 · 주주는 10건을 받아 채운 행이 보인다).
+const INNOVATION_REPORT_COMPANY_OVERVIEW_LONG = 'company-overview-long'
+const INNOVATION_REPORT_COMPANY_OVERVIEW_SHORT = 'company-overview-short'
+// ?empty=company-edge · company-edge-short — 같은 첫 쪽의 경계 사례(경영진 1건 · 주주 10건 · 관계기업 10건 · 칸마다 아주 긴 글 · 큰 숫자).
+//   edge 는 개요를 길게, edge-short 는 짧게 둔다 — 쪽이 넘치지 않는지(빨간 점선 표시) 본다.
+const INNOVATION_REPORT_COMPANY_EDGE = 'company-edge'
+const INNOVATION_REPORT_COMPANY_EDGE_SHORT = 'company-edge-short'
+// ?empty=company-affiliates-many — 관계기업 25건(웹 최대 10줄 · PDF 템플릿 첫 쪽 기준 3줄을 넘는 경우).
+const INNOVATION_REPORT_COMPANY_AFFILIATES_MANY = 'company-affiliates-many'
+// ?empty=company-affiliates-one — 관계기업 1건(나머지 줄이 어떻게 보이는지).
+const INNOVATION_REPORT_COMPANY_AFFILIATES_ONE = 'company-affiliates-one'
+// ?empty=company-one-each — 경영진 · 주주 · 관계기업이 각각 1건.
+const INNOVATION_REPORT_COMPANY_ONE_EACH = 'company-one-each'
+// ?empty=tech-index — Tech-Index 탭에 쓰는 값을 모두 비운다(점수 · 평가일자 · 표준분포 · 유형별 · 4대 역량 · 부문별 지표).
+const INNOVATION_REPORT_EMPTY_TECH_INDEX = 'tech-index'
+// ?empty=tech-index-long-text — Tech-Index 의 글 칸(기업명 — 점수 문장 · 표준정보 요약 문장)을 길게 바꾼다.
+//   기업 유형 · 4대 역량 · 투입지표 이름은 고정값이라 그대로 둔다.
+const INNOVATION_REPORT_TECH_INDEX_LONG_TEXT = 'tech-index-long-text'
+// ?empty=tech-index-mixed — Tech-Index 에서 긴 기업명 · 빈 값 · 일부만 받은 목록을 섞는다.
+const INNOVATION_REPORT_TECH_INDEX_MIXED = 'tech-index-mixed'
+// ?empty=company-long-text — 기업현황 개요 · 경영진 및 주주 · 관계기업 · 매출처 · 매입처의 글 칸(숫자 · 일자 · 형식이 정해진 칸 제외)을 길게 바꾼다.
+//   태블릿 등 좁은 화면에서 긴 이름이 칸 안에서 어떻게 보이는지 본다. 줄 수 · 숫자 · 일자는 기본 목업 그대로.
+const INNOVATION_REPORT_COMPANY_LONG_TEXT = 'company-long-text'
+// ?empty=company-mixed — 기업현황에서 글 길이(아주 긴 · 적절한 · 짧은)와 빈 값 · 건수를 칸마다 섞어 한 화면에 본다.
+//   숫자 · 연도 칸은 company-partial 규칙으로 일부만 비우고, 글 칸 · 건수는 withPreviewCompanyMixed 가 정한다.
+const INNOVATION_REPORT_COMPANY_MIXED = 'company-mixed'
+// ?empty=tech-long-text — 기술혁신정보 특허기술 분석 · 경쟁기업 · 성장률 우수기업 이름 · 기술 보유현황 도넛 범례(긴 · 중간 · 짧은 이름 섞음) · 특허 보유현황 · 우수특허 · 이머징 기술 · R&D 전문기관 · 정부 R&D 사업 표의 글 칸을 길게 바꾼다
+//   (숫자 · 일자 · 번호 제외). 줄 수는 기본 목업 그대로.
+const INNOVATION_REPORT_TECH_LONG_TEXT = 'tech-long-text'
+// ?empty=tech — 기술혁신정보 탭에 쓰는 값을 모두 비운다(안내 문구 · 고정 줄 이름 · 구간 이름 · 소제목은 두고 값 · 목록은 없음).
+const INNOVATION_REPORT_EMPTY_TECH = 'tech'
+// ?empty=tech-mixed — 기술혁신정보에서 글 길이(아주 긴 · 적절한 · 짧은) · 빈 값 · 건수(0건 · 몇 건 · 넘침)를 구획마다 섞는다.
+const INNOVATION_REPORT_TECH_MIXED = 'tech-mixed'
+// ?empty=tech-mixed-2 — tech-mixed 와 반대로 섞은 경우(0건 · 많은 건수 · 빈 값 자리를 바꿔 둔다).
+const INNOVATION_REPORT_TECH_MIXED_2 = 'tech-mixed-2'
+// ?empty=briefing-long-text — 진단브리핑의 글 칸(날짜 · 숫자 · 고정 라벨 제외)을 길게 — 보고서 제목 · 기업명 · 세부분야명 ·
+//   기업 정보 값 · 보유기술 범례 · R&D 이슈 키워드 · 동일업종명. 웹 보고서 · PDF 템플릿 공용.
+//   정부 R&D 접수현황의 부처명은 고정값이라 바꾸지 않는다.
+const INNOVATION_REPORT_BRIEFING_LONG_TEXT = 'briefing-long-text'
+// ?empty=briefing-mixed — 진단브리핑에서 글 길이(아주 긴 · 적절한 · 짧은)와 빈 값을 칸마다 섞어 한 화면에 본다.
+//   글 칸은 칸마다 길이를 정해 두고(withPreviewBriefingMixed), 숫자 · 일자 칸은 일부만 비운다(briefing-partial 과 같은 규칙).
+const INNOVATION_REPORT_BRIEFING_MIXED = 'briefing-mixed'
+// ?empty=header — 보고서 머리(웹 보고서 맨 위) · PDF 템플릿 표지에 쓰는 값만 비운다 — 보고서 제목 · 기업명 · 발급일 · 대표자.
+const INNOVATION_REPORT_EMPTY_HEADER = 'header'
+// ?empty=header-long-text — 머리 · 표지의 글 값을 길게 — 보고서 제목 · 기업명 · 대표자(발급일은 날짜라 그대로).
+const INNOVATION_REPORT_HEADER_LONG_TEXT = 'header-long-text'
+// ?empty=header-mixed · header-mixed-2 — 머리 · 표지 값의 길이(아주 긴 · 적절한 · 짧은)와 빈 값을 칸마다 섞는다.
+//   header-mixed   — 제목 아주 긴 · 기업명 짧은 · 대표자 빈 값 · 발급일 있음
+//   header-mixed-2 — 제목 짧은 · 기업명 아주 긴 · 대표자 적절한 · 발급일 빈 값
+const INNOVATION_REPORT_HEADER_MIXED = 'header-mixed'
+const INNOVATION_REPORT_HEADER_MIXED_2 = 'header-mixed-2'
+// ?empty=activity — 활동성정보 탭에 쓰는 값을 모두 비운다(인적자원 · 분기 그래프 · 에너지 표 · 그래프 데이터 없음).
+const INNOVATION_REPORT_EMPTY_ACTIVITY = 'activity'
+// ?empty=activity-partial — 활동성정보 탭에서 값이 있는 칸과 빈 칸을 섞어 본다.
+const INNOVATION_REPORT_EMPTY_ACTIVITY_PARTIAL = 'activity-partial'
+// ?empty=activity-long-text — 활동성정보 탭의 숫자를 크게 — 인적자원 표 · 분기 그래프 · 에너지 사용량(가장 넓은 칸 · 축 글자 확인).
+//   항목 이름(연도 · 본사/공장/기타)은 고정이라 그대로. 분기 그래프는 진단브리핑과 같은 값이라 진단브리핑도 함께 바뀐다.
+const INNOVATION_REPORT_ACTIVITY_LONG_TEXT = 'activity-long-text'
+// ?empty=activity-mixed — 활동성정보에서 빈 값 · 일부 값 · 큰 값을 영역마다 섞어 한 화면에 본다(withPreviewActivityMixed).
+const INNOVATION_REPORT_ACTIVITY_MIXED = 'activity-mixed'
+// ?empty=activity-change — 인적자원 현황 전년대비 증감(율)을 해마다 번갈아 — 증가(▲ 빨강) · 감소(▼ 파랑) · 변동 없음(기호 없음).
+const INNOVATION_REPORT_ACTIVITY_CHANGE = 'activity-change'
+// ?empty=credit — 신용/재무정보 탭에 쓰는 값을 모두 비운다(등급 · 이력 · 기업신용정보 값 · 재무비율 · 차입금 · 담보 데이터 없음).
+const INNOVATION_REPORT_EMPTY_CREDIT = 'credit'
+// ?empty=credit-partial — 신용/재무정보 탭에서 값이 있는 칸과 빈 칸을 섞어 본다.
+const INNOVATION_REPORT_EMPTY_CREDIT_PARTIAL = 'credit-partial'
+// ?empty=credit-long-text — 신용/재무정보 탭의 긴 값 — 차입금 · 담보 금액(큰 수). 기업신용정보 표 값 · 상태는 정해진 명사라 그대로,
+//   등급 코드 · 일자 · 고정 항목명(재무비율 · 기관 · 담보 종류)도 그대로 둔다. 웹 보고서 · PDF 템플릿 공용.
+const INNOVATION_REPORT_CREDIT_LONG_TEXT = 'credit-long-text'
+// ?empty=credit-info-long-text — 기업신용정보 표 값 · 상태가 칸 폭을 넘는 경우(대개 짧은 정해진 명사라 드물다) — 한 줄 말줄임 확인용.
+//   상태 · 사유 · 기관 · 정보 · 여부 열은 긴 글, 금액 열은 큰 수. 일자 · 번호 열은 그대로. 웹 보고서 · PDF 템플릿 공용.
+const INNOVATION_REPORT_CREDIT_INFO_LONG_TEXT = 'credit-info-long-text'
+// ?empty=credit-mixed — 신용/재무정보에서 빈 값 · 일부 값 · 긴 값을 영역마다 섞어 한 화면에 본다(withPreviewCreditMixed).
+const INNOVATION_REPORT_CREDIT_MIXED = 'credit-mixed'
 const INNOVATION_REPORT_CASES = ['self', 'partner-corp', 'partner-person'] as const
 type InnovationReportCase = (typeof INNOVATION_REPORT_CASES)[number]
 const isInnovationReportCase = (value: unknown): value is InnovationReportCase =>
@@ -147,6 +311,10 @@ type InnovationCreditInfoTable = {
     title: string
     status: string
     columns: readonly string[]
+    /**
+     * 값 줄. [프론트엔드 연동] 웹 보고서는 받은 줄을 모두 그리고, 인쇄본(PDF 템플릿)은 표마다 첫 줄만 그린다
+     * (kbigx-print-credit.tsx 의 CREDIT_INFO_ROW_LIMIT — 쪽 높이 어림이 표마다 값 한 줄 기준이다).
+     */
     rows: readonly (readonly string[])[]
 }
 // 재무비율진단 한 묶음(성장성 · 수익성 · 안정성 · 활동성) — 표 · 선 그래프가 같은 줄을 쓴다. unit 은 표 위 '단위: …' 글자.
@@ -266,7 +434,7 @@ type InnovationTechIndexDetail = {
     capabilities: readonly InnovationTechIndexCapability[]
     /** 기업 유형별 4대 혁신역량 — 역량마다 유형별 점수. */
     capabilityByType: readonly {id: string; label: string; items: readonly InnovationTechIndexScoreItem[]}[]
-    /** 세부지표별 상대비교 — 지표 묶음마다 축(지표)별 신청기업 · 전체평균 점수. */
+    /** 혁신성장역량지수 부문별 지표 비교 — 지표 묶음마다 축(지표)별 신청기업 · 전체평균 점수. */
     indicators: readonly {
         id: string
         title: string
@@ -333,14 +501,16 @@ type InnovationGrowthReport = {
         comparison: readonly {label: string; company: number; industry: number}[]
         years: readonly string[]
         /**
-         * 최근 3개년 재무 현황 — values 는 years 와 같은 순서(백만원). 값이 없거나 0 이면 화면이 '-' 로 적는다.
+         * 최근 3개년 재무 현황 — values 는 years 와 같은 순서(백만원). 0 은 '0' 으로 적고, 값이 없으면(숫자 아님 · 연도 칸 없음) 화면이 '-' 로 적는다.
          * [프론트엔드 연동] 6항목 고정(총자산 · 자본총계 · 부채총계 · 매출액 · 영업이익 · 순이익). 인쇄본은 이 여섯 이름을
          * 고정 문구로 늘 그리고 label 로 값을 찾는다 — 없는 항목 · 없는 연도 값은 '-'.
          */
         statements: readonly {label: string; values: readonly number[]}[]
     }
     activity: {
+        /** 분기별 종업원수(명) — 오래된 → 최신. label 은 '25.09월' 형식. */
         employees: readonly {label: string; value: number}[]
+        /** 연도별 인당 매출액(천원) — 화면이 정수로 반올림해 적는다. label 은 '2024년' 형식. */
         salesPerEmployee: readonly {label: string; value: number}[]
     }
     /** 기업현황 탭. */
@@ -373,15 +543,21 @@ type InnovationCompanyStatus = {
     overview: readonly LabelValue[]
     /**
      * 경영진 현황 — 목록 수는 기업마다 다르다(가변).
-     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
+     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
      */
     executives: readonly {role: string; name: string; birthDate: string}[]
     /**
      * 주주 현황 — 지분율 높은 순으로 보낸다.
-     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
+     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
      */
     shareholders: readonly {name: string; shares: number; ratio: number; relation: string}[]
-    /** 관계기업 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). */
+    /**
+     * 관계기업 현황. [프론트엔드 연동 · 최대 10건] 웹 보고서는 앞에서부터 10건만 그린다(11번째부터 안 보임).
+     * 인쇄본(PDF 템플릿)은 기업현황 첫 쪽에 기본 3줄(모자라면 '-' 줄)을 그리고, 개요 글이 길면 1줄까지 줄인다
+     * (k-bigx-print-report.ts 의 COMPANY_AFFILIATE_ROWS · getKbigxCompanyFirstPageLayout). 목록은 자르지 않고 그대로 보낸다.
+     */
     affiliates: readonly {
         name: string
         ceo: string
@@ -419,7 +595,7 @@ type InnovationActivityDetail = {
         changeRate: number
         hires: number
         leavers: number
-        /** 인당 매출액(천원). */
+        /** 인당 매출액(천원) — 화면이 정수로 반올림해 적는다. */
         salesPerEmployee: number
     }[]
     energy: {
@@ -571,13 +747,13 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         // [프론트엔드 연동 · 정렬] 비중 큰 순 — 12시부터 시계 방향으로 이어지고 첫 조각이 가장 진한 색(기획: 진한 색부터 시계 방향).
         technologies: [
             {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24},
-            {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7},
-            {id: 't3', label: 'IoT 플랫폼', percentage: 10, count: 5},
+            {id: 't2', label: '이동통신 서비스', percentage: 15, count: 7},
+            {id: 't3', label: 'IoT 플랫폼', percentage: 11, count: 5},
             {id: 't4', label: '네트워크 보안', percentage: 8, count: 4},
             {id: 't5', label: '위성 통신', percentage: 6, count: 3},
-            {id: 't6', label: '광통신 부품', percentage: 5, count: 2},
+            {id: 't6', label: '광통신 부품', percentage: 4, count: 2},
             {id: 't7', label: '전파 계측', percentage: 4, count: 2},
-            {id: 't8', label: '기타', percentage: 3, count: 1},
+            {id: 't8', label: '기타', percentage: 2, count: 1},
         ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
         stats: [
             {id: 'companies', label: '총 기업수', value: 83960, unit: '개'},
@@ -588,7 +764,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         averages: [
             {label: '기업당 평균 특허수', value: '1.6', unit: '건'},
             {label: '고성장 기업당 평균 특허수', value: '2.4', unit: '건'},
-            {label: '조회기업 특허수', value: '5', unit: '건'},
+            {label: '조회기업 특허수', value: '48', unit: '건'},
         ],
         issues: [
             {text: '인공지능', weight: 40},
@@ -651,32 +827,32 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         ],
         years: ['2022년', '2023년', '2024년'],
         statements: [
-            {label: '총자산', values: [11826, 17168, 18768]},
-            {label: '자본총계', values: [5332, 5130, 5191]},
-            {label: '부채총계', values: [6494, 12038, 13577]},
-            {label: '매출액', values: [16329, 18115, 18243]},
-            {label: '영업이익', values: [1042, 497, 821]},
-            {label: '순이익', values: [821, 466, 60]},
+            {label: '총자산', values: [12450, 13690, 15020]},
+            {label: '자본총계', values: [7210, 8170, 9180]},
+            {label: '부채총계', values: [5240, 5520, 5840]},
+            {label: '매출액', values: [16330, 18120, 19870]},
+            {label: '영업이익', values: [1280, 1450, 1530]},
+            {label: '순이익', values: [820, 960, 1010]},
         ],
     },
     activity: {
         employees: [
-            {label: '23.03월', value: 39},
-            {label: '23.06월', value: 37},
-            {label: '23.09월', value: 37},
-            {label: '23.12월', value: 35},
-            {label: '24.03월', value: 34},
-            {label: '24.06월', value: 34},
-            {label: '24.09월', value: 31},
-            {label: '24.12월', value: 33},
-            {label: '25.03월', value: 27},
-            {label: '25.06월', value: 28},
-            {label: '25.09월', value: 25},
+            {label: '23.03월', value: 43},
+            {label: '23.06월', value: 42},
+            {label: '23.09월', value: 42},
+            {label: '23.12월', value: 41},
+            {label: '24.03월', value: 41},
+            {label: '24.06월', value: 40},
+            {label: '24.09월', value: 40},
+            {label: '24.12월', value: 40},
+            {label: '25.03월', value: 39},
+            {label: '25.06월', value: 40},
+            {label: '25.09월', value: 40},
         ],
         salesPerEmployee: [
-            {label: '2022년', value: 456.1},
-            {label: '2023년', value: 452.9},
-            {label: '2024년', value: 466.5},
+            {label: '2022년', value: 388810},
+            {label: '2023년', value: 441951},
+            {label: '2024년', value: 496750},
         ],
     },
     techInnovation: {
@@ -685,24 +861,24 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             description:
                 '기술 보유현황은 귀사의 특허(기술)를 AI로 분석하고, 분석결과에 따라 보유 기술을 국가과학기술표준분류체계(중분류, 세부분야)로 분류한 것입니다.',
             middleCategory: [
-                {id: 'm1', label: '무선 통신·네트워크', percentage: 55, count: 24},
-                {id: 'm2', label: '정보 보호', percentage: 12, count: 5},
-                {id: 'm3', label: '컴퓨팅 시스템', percentage: 9, count: 4},
-                {id: 'm4', label: '소프트웨어', percentage: 7, count: 3},
+                {id: 'm1', label: '무선 통신·네트워크', percentage: 52, count: 25},
+                {id: 'm2', label: '정보 보호', percentage: 15, count: 7},
+                {id: 'm3', label: '컴퓨팅 시스템', percentage: 11, count: 5},
+                {id: 'm4', label: '소프트웨어', percentage: 8, count: 4},
                 {id: 'm5', label: '반도체 소자', percentage: 6, count: 3},
-                {id: 'm6', label: '전자 부품', percentage: 5, count: 2},
-                {id: 'm7', label: '광 · 전파', percentage: 4, count: 2},
+                {id: 'm6', label: '전자 부품', percentage: 4, count: 2},
+                {id: 'm7', label: '광 · 전파', percentage: 2, count: 1},
                 {id: 'm8', label: '기타', percentage: 2, count: 1},
             ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
             smallCategory: [
-                {id: 's1', label: '무선·이동통신 서비스', percentage: 50, count: 22},
-                {id: 's2', label: '이동통신 네트워크', percentage: 14, count: 6},
-                {id: 's3', label: 'IoT 플랫폼', percentage: 10, count: 4},
+                {id: 's1', label: '무선·이동통신 서비스', percentage: 50, count: 24},
+                {id: 's2', label: '이동통신 네트워크', percentage: 15, count: 7},
+                {id: 's3', label: 'IoT 플랫폼', percentage: 11, count: 5},
                 {id: 's4', label: '네트워크 보안', percentage: 8, count: 4},
                 {id: 's5', label: '위성 통신', percentage: 6, count: 3},
-                {id: 's6', label: '광통신 부품', percentage: 5, count: 2},
+                {id: 's6', label: '광통신 부품', percentage: 4, count: 2},
                 {id: 's7', label: '전파 계측', percentage: 4, count: 2},
-                {id: 's8', label: '기타', percentage: 3, count: 1},
+                {id: 's8', label: '기타', percentage: 2, count: 1},
             ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
             // [프론트엔드 연동 · 최대 10건] 특허 보유현황 — 목업은 최대치 10건(출원일 최근순).
             patents: [
@@ -1150,10 +1326,10 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 title: '성장성',
                 unit: '%',
                 rows: [
-                    {key: 'growth-0', label: '매출액증가율', values: [7.15, 5.84, 7.42], comparison: '보통'},
-                    {key: 'growth-1', label: '총자산증가율', values: [12.36, 13.1, 12.52], comparison: '양호'},
-                    {key: 'growth-2', label: '순이익증가율', values: [15.02, 10.74, 16.37], comparison: '취약'},
-                    {key: 'growth-3', label: '영업이익증가율', values: [3.2, 4.1, 2.85], comparison: '취약'},
+                    {key: 'growth-0', label: '매출액증가율', values: [9.38, 10.96, 9.66], comparison: '보통'},
+                    {key: 'growth-1', label: '총자산증가율', values: [11.16, 9.96, 9.72], comparison: '양호'},
+                    {key: 'growth-2', label: '순이익증가율', values: [12.33, 17.07, 5.21], comparison: '취약'},
+                    {key: 'growth-3', label: '영업이익증가율', values: [7.56, 13.28, 5.52], comparison: '취약'},
                 ],
             },
             {
@@ -1161,18 +1337,18 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 title: '수익성',
                 unit: '%',
                 rows: [
-                    {key: 'profitability-0', label: '영업이익률', values: [7.15, 5.84, 7.42], comparison: '보통'},
-                    {key: 'profitability-1', label: '당기순이익률', values: [12.36, 13.1, 12.52], comparison: '양호'},
+                    {key: 'profitability-0', label: '영업이익률', values: [7.84, 8.0, 7.7], comparison: '보통'},
+                    {key: 'profitability-1', label: '당기순이익률', values: [5.02, 5.3, 5.08], comparison: '양호'},
                     {
                         key: 'profitability-2',
                         label: '자기자본이익률',
-                        values: [15.02, 10.74, 16.37],
+                        values: [11.37, 11.75, 11.0],
                         comparison: '취약',
                     },
                     {
                         key: 'profitability-3',
                         label: '총자본영업이익률',
-                        values: [7.15, 16.74, 6.37],
+                        values: [10.28, 10.59, 10.19],
                         comparison: '취약',
                     },
                 ],
@@ -1182,10 +1358,10 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 title: '안정성',
                 unit: '%, 배',
                 rows: [
-                    {key: 'stability-0', label: '자기자본비율', values: [7.15, 5.84, 7.42], comparison: '취약'},
-                    {key: 'stability-1', label: '부채비율', values: [12.36, 13.1, 12.52], comparison: '보통'},
-                    {key: 'stability-2', label: '이자보상비율 (배)', values: [15.02, 10.74, 16.37], comparison: '양호'},
-                    {key: 'stability-3', label: '차입금의존도', values: [3.2, 4.1, 2.85], comparison: '취약'},
+                    {key: 'stability-0', label: '자기자본비율', values: [57.91, 59.68, 61.12], comparison: '취약'},
+                    {key: 'stability-1', label: '부채비율', values: [72.68, 67.56, 63.62], comparison: '보통'},
+                    {key: 'stability-2', label: '이자보상비율 (배)', values: [8.0, 8.53, 8.5], comparison: '양호'},
+                    {key: 'stability-3', label: '차입금의존도', values: [25.7, 24.47, 23.44], comparison: '취약'},
                 ],
             },
             {
@@ -1193,10 +1369,10 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 title: '활동성',
                 unit: '회',
                 rows: [
-                    {key: 'activity-0', label: '총자본회전율', values: [7.15, 5.84, 7.42], comparison: '취약'},
-                    {key: 'activity-1', label: '매출채권회전율', values: [12.36, 13.1, 12.52], comparison: '보통'},
-                    {key: 'activity-2', label: '재고자산회전율', values: [15.02, 10.74, 16.37], comparison: '양호'},
-                    {key: 'activity-3', label: '순운전자본회전율', values: [3.2, 4.1, 2.85], comparison: '취약'},
+                    {key: 'activity-0', label: '총자본회전율', values: [1.31, 1.32, 1.32], comparison: '취약'},
+                    {key: 'activity-1', label: '매출채권회전율', values: [5.1, 5.21, 5.33], comparison: '보통'},
+                    {key: 'activity-2', label: '재고자산회전율', values: [11.26, 11.92, 12.34], comparison: '양호'},
+                    {key: 'activity-3', label: '순운전자본회전율', values: [6.05, 6.25, 6.31], comparison: '취약'},
                 ],
             },
         ],
@@ -1221,28 +1397,52 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     key: 'short',
                     label: '단기',
                     rows: [
-                        {key: 'short-loan', label: '단기차입금', cells: [null, null, {amount: 6081, ratio: 100.0}]},
+                        {
+                            key: 'short-loan',
+                            label: '단기차입금',
+                            cells: [
+                                {amount: 1200, ratio: 37.5},
+                                {amount: 1250, ratio: 37.31},
+                                {amount: 1320, ratio: 37.5},
+                            ],
+                        },
                         {key: 'current-long', label: '유동성장기부채', cells: [null, null, null]},
                         {key: 'short-bond', label: '단기사채', cells: [null, null, null]},
                         {key: 'securitized', label: '유동화채무', cells: [null, null, null]},
                     ],
-                    subtotal: {key: 'short-subtotal', label: '소계', cells: [null, null, {amount: 6081, ratio: 100.0}]},
+                    subtotal: {
+                        key: 'short-subtotal',
+                        label: '소계',
+                        cells: [
+                            {amount: 1200, ratio: 37.5},
+                            {amount: 1250, ratio: 37.31},
+                            {amount: 1320, ratio: 37.5},
+                        ],
+                    },
                 },
                 {
                     key: 'long',
                     label: '장기',
                     rows: [
-                        {key: 'long-loan', label: '장기차입금', cells: [null, null, {amount: 6081, ratio: 100.0}]},
                         {
-                            key: 'long-bond',
-                            label: '장기사채',
-                            cells: [{amount: 4500, ratio: 100.0}, {amount: 4690, ratio: 100.0}, null],
+                            key: 'long-loan',
+                            label: '장기차입금',
+                            cells: [
+                                {amount: 2000, ratio: 62.5},
+                                {amount: 2100, ratio: 62.69},
+                                {amount: 2200, ratio: 62.5},
+                            ],
                         },
+                        {key: 'long-bond', label: '장기사채', cells: [null, null, null]},
                     ],
                     subtotal: {
                         key: 'long-subtotal',
                         label: '소계',
-                        cells: [{amount: 4500, ratio: 100.0}, {amount: 4690, ratio: 100.0}, null],
+                        cells: [
+                            {amount: 2000, ratio: 62.5},
+                            {amount: 2100, ratio: 62.69},
+                            {amount: 2200, ratio: 62.5},
+                        ],
                     },
                 },
             ],
@@ -1250,19 +1450,19 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 key: 'total',
                 label: '차입금 합계',
                 cells: [
-                    {amount: 4500, ratio: 100.0},
-                    {amount: 4690, ratio: 100.0},
-                    {amount: 6081, ratio: 100.0},
+                    {amount: 3200, ratio: 100.0},
+                    {amount: 3350, ratio: 100.0},
+                    {amount: 3520, ratio: 100.0},
                 ],
             },
         },
         borrowingChanges: {
             years: ['2022년', '2023년', '2024년'],
             rows: [
-                {key: 'amount', label: '차입금(백만원)', values: [7.15, 16.74, 6.37]},
-                {key: 'to-sales', label: '차입금/매출액(%)', values: [7.15, 16.74, 6.37]},
-                {key: 'repayment', label: '차입금상환계수', values: [7.15, 16.74, 6.37]},
-                {key: 'change', label: '총차입금변동률(%)', values: [7.15, 16.74, 6.37]},
+                {key: 'amount', label: '차입금(백만원)', values: [3200, 3350, 3520]},
+                {key: 'to-sales', label: '차입금/매출액(%)', values: [19.6, 18.49, 17.72]},
+                {key: 'repayment', label: '차입금상환계수', values: [0.48, 0.64, 0.56]},
+                {key: 'change', label: '총차입금변동률(%)', values: [4.92, 4.69, 5.07]},
             ],
         },
         institutions: {
@@ -1403,24 +1603,32 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
     },
     activityDetail: {
         humanResources: [
-            {year: '2022년', employees: 42, change: 1, changeRate: 3.5, hires: 2, leavers: 4, salesPerEmployee: 456.1},
+            {
+                year: '2022년',
+                employees: 42,
+                change: 1,
+                changeRate: 2.44,
+                hires: 5,
+                leavers: 4,
+                salesPerEmployee: 388810,
+            },
             {
                 year: '2023년',
                 employees: 41,
                 change: -1,
-                changeRate: -3.5,
-                hires: 2,
+                changeRate: -2.38,
+                hires: 3,
                 leavers: 4,
-                salesPerEmployee: 452.9,
+                salesPerEmployee: 441951,
             },
             {
                 year: '2024년',
                 employees: 40,
                 change: -1,
-                changeRate: -3.5,
-                hires: 2,
+                changeRate: -2.44,
+                hires: 3,
                 leavers: 4,
-                salesPerEmployee: 466.5,
+                salesPerEmployee: 496750,
             },
         ],
         energy: {
@@ -1444,7 +1652,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '법인등록번호', value: '110111-1234567'},
             {label: '사업자등록번호', value: '123-45-67890'},
             {label: '설립일', value: '2010년 03월 15일'},
-            {label: '종업원수', value: '33명'},
+            {label: '종업원수', value: '40명'},
             {label: '기업유형/형태', value: '유가증권시장/법인기업'},
             {label: '기업규모', value: '중소기업'},
             {label: '주소', value: '(48400) 부산광역시 남구 문현금융로 33'},
@@ -1452,14 +1660,14 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '대표기술분야', value: '무선·이동통신 서비스'},
             {label: '주요제품', value: '5G통신 및 IoT 관련 서비스'},
         ],
-        // 경영진 현황 — 목업은 4건. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
+        // 경영진 현황 — 목업은 4건. 실제 연동 시 웹 5줄 · 인쇄본 최대 10행(타입 주석 참고).
         executives: [
             {role: '대표이사', name: '홍길동', birthDate: '71.02.03'},
             {role: '사내이사', name: '김이사', birthDate: '74.05.12'},
             {role: '감사', name: '이감사', birthDate: '69.11.28'},
             {role: '사외이사', name: '박이사', birthDate: '77.08.09'},
         ],
-        // 주주 현황 — 목업은 컨펌 화면이 깔끔하게 보이도록 4건만 둔다. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
+        // 주주 현황 — 목업은 컨펌 화면이 깔끔하게 보이도록 4건만 둔다. 실제 연동 시 웹 5줄 · 인쇄본 최대 10행(타입 주석 참고).
         shareholders: [
             {name: '홍길동', shares: 10000, ratio: 25, relation: '본인'},
             {name: '김이사', shares: 6000, ratio: 15, relation: '가족'},
@@ -1550,10 +1758,10 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             },
         ],
         intellectualProperty: [
-            {id: 'patent', label: '특허', count: 1106},
-            {id: 'utility-model', label: '실용신안', count: 334},
-            {id: 'design', label: '디자인', count: 545},
-            {id: 'trademark', label: '상표권', count: 58},
+            {id: 'patent', label: '특허', count: 48},
+            {id: 'utility-model', label: '실용신안', count: 6},
+            {id: 'design', label: '디자인', count: 9},
+            {id: 'trademark', label: '상표권', count: 14},
         ],
         certifications: [
             {id: 'venture', label: '벤처', isCertified: true},
@@ -1564,28 +1772,28 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         finance: {
             years: ['2022년', '2023년', '2024년'],
             balance: [
-                {key: 'total-assets', label: '총자산', values: [10000, 16761, 18981]},
-                {key: 'liabilities', label: '부채총계', values: [4200, 7300, 8100]},
-                {key: 'equity', label: '자본총계', values: [5800, 9461, 10881]},
+                {key: 'total-assets', label: '총자산', values: [12450, 13690, 15020]},
+                {key: 'liabilities', label: '부채총계', values: [5240, 5520, 5840]},
+                {key: 'equity', label: '자본총계', values: [7210, 8170, 9180]},
             ],
             income: [
-                {key: 'sales', label: '매출액', values: [12500, 14200, 16100]},
-                {key: 'operating-profit', label: '영업이익', values: [980, 1210, 1350]},
-                {key: 'net-income', label: '당기순이익', values: [610, -240, 820]},
+                {key: 'sales', label: '매출액', values: [16330, 18120, 19870]},
+                {key: 'operating-profit', label: '영업이익', values: [1280, 1450, 1530]},
+                {key: 'net-income', label: '당기순이익', values: [820, 960, 1010]},
             ],
             ratios: [
-                {key: 'operating-margin', label: '영업이익률', values: [7.84, 8.52, 8.39]},
-                {key: 'debt-ratio', label: '부채비율', values: [72.41, 77.16, 74.44]},
-                {key: 'receivables-turnover', label: '매출채권회전율', values: [5.12, 4.87, 5.33]},
-                {key: 'sales-growth', label: '매출액증가율', values: [9.35, 13.6, 13.38]},
-                {key: 'asset-growth', label: '총자산증가율', values: [11.2, 67.61, 13.25]},
+                {key: 'operating-margin', label: '영업이익률', values: [7.84, 8.0, 7.7]},
+                {key: 'debt-ratio', label: '부채비율', values: [72.68, 67.56, 63.62]},
+                {key: 'receivables-turnover', label: '매출채권회전율', values: [5.1, 5.21, 5.33]},
+                {key: 'sales-growth', label: '매출액증가율', values: [9.38, 10.96, 9.66]},
+                {key: 'asset-growth', label: '총자산증가율', values: [11.16, 9.96, 9.72]},
             ],
             cashFlows: [
                 {key: 'operating', label: '영업활동후 현금흐름', values: [1520, 2130, 1980]},
                 {key: 'financing', label: '재무활동후 현금흐름', values: [-420, 860, -310]},
                 {key: 'investing', label: '투자활동후 현금흐름', values: [-980, -1640, -1120]},
                 {key: 'net-change', label: '순현금변화', values: [120, 1350, 550]},
-                {key: 'cash-vs-income', label: '영업활동 현금흐름과 순이익 차이', values: [910, 2370, 1160]},
+                {key: 'cash-vs-income', label: '영업활동 현금흐름과 순이익 차이', values: [700, 1170, 970]},
             ],
         },
         customers: [
@@ -1640,14 +1848,140 @@ const getHumanResourceYearRows = (
         fallbackYears,
     ).map((year) => ({year, row: rows.find((row) => isSameYear(row.year, year)) ?? null}))
 
-// [퍼블리싱 전용] 보고서 조회(목업) — 어느 보고서 id 로 열어도 같은 목업을 돌려준다.
+// 재무비율 묶음 — 묶음 4개 · 묶음마다 지표 4개 고정(웹 보고서 · PDF 템플릿 공용). 받은 데이터는 묶음 id · 지표 label 로 찾아 넣고,
+// 없는 지표 · 값 · 업종평균 대비는 '-'. 연도는 늘 최근 3개년(getRecentYears). 단위는 받은 unit 이 없을 때만 spec.unit.
+// [프론트엔드 연동] 묶음 id 와 지표 label 은 아래 문자열과 정확히 같게 보낸다(다르면 그 줄이 '-').
+type RatioGroupSpec = {id: string; title: string; unit: string; labels: readonly string[]}
+const RATIO_GROUP_SPECS: readonly RatioGroupSpec[] = [
+    {
+        id: 'growth',
+        title: '성장성',
+        unit: '%',
+        labels: ['매출액증가율', '총자산증가율', '순이익증가율', '영업이익증가율'],
+    },
+    {
+        id: 'profitability',
+        title: '수익성',
+        unit: '%',
+        labels: ['영업이익률', '당기순이익률', '자기자본이익률', '총자본영업이익률'],
+    },
+    {
+        id: 'stability',
+        title: '안정성',
+        unit: '%, 배',
+        labels: ['자기자본비율', '부채비율', '이자보상비율 (배)', '차입금의존도'],
+    },
+    {
+        id: 'activity',
+        title: '활동성',
+        unit: '회',
+        labels: ['총자본회전율', '매출채권회전율', '재고자산회전율', '순운전자본회전율'],
+    },
+]
+// 차입금 변동현황 줄 — 4줄 고정(웹 · PDF 공용). 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 줄 · 연도는 '-'.
+const BORROWING_CHANGE_LABELS = ['차입금(백만원)', '차입금/매출액(%)', '차입금상환계수', '총차입금변동률(%)'] as const
+// 기관별 비중 표 줄 — 업권 5개 고정(웹 · PDF 공용). 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 업권 · 연도는 '-'.
+const INSTITUTION_LABELS = ['은행업권', '상호금융업권', '저축은행업권', '카드/캐피탈업권', '대부업권'] as const
+// 담보 현황 종류 — 3개 고정(웹 · PDF 공용). 받은 값을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 종류는 범례에 '-'.
+const COLLATERAL_LABELS = ['부동산', '특수저당', '보증'] as const
+// 차입금 현황 줄 — 묶음 · 항목 고정(웹 · PDF 공용). 받은 묶음은 key, 항목은 label 로 찾아 넣고, 없는 묶음 · 항목 · 칸은 '-'.
+// [프론트엔드 연동] 묶음 key 와 항목 label 은 아래 문자열과 정확히 같게 보낸다(다르면 그 줄이 '-').
+const BORROWING_GROUP_SPECS = [
+    {key: 'short', label: '단기', rows: ['단기차입금', '유동성장기부채', '단기사채', '유동화채무']},
+    {key: 'long', label: '장기', rows: ['장기차입금', '장기사채']},
+] as const
+const BORROWING_SUBTOTAL_LABEL = '소계'
+const BORROWING_TOTAL_LABEL = '차입금 합계'
+// 받은 차입금 현황을 고정 묶음 · 항목 줄로 다시 맞춘다 — 받지 못한 줄은 칸 없이(cells: []) 두어 화면이 '-' 로 적는다.
+const toFixedBorrowings = (borrowings: InnovationCreditDetail['borrowings']): InnovationCreditDetail['borrowings'] => ({
+    ...borrowings,
+    groups: BORROWING_GROUP_SPECS.map((spec) => {
+        const group = borrowings.groups.find((item) => item.key === spec.key)
+        return {
+            key: spec.key,
+            label: spec.label,
+            rows: spec.rows.map(
+                (label, index) =>
+                    group?.rows.find((row) => row.label === label) ?? {key: `${spec.key}-${index}`, label, cells: []},
+            ),
+            subtotal: group?.subtotal ?? {key: `${spec.key}-subtotal`, label: BORROWING_SUBTOTAL_LABEL, cells: []},
+        }
+    }),
+    total: {...borrowings.total, label: borrowings.total.label || BORROWING_TOTAL_LABEL},
+})
+// 연도별 값 찾기 — years(최근 3개년) 순서로 받은 값(receivedYears 순서)을 다시 맞춘다. 받지 못한 연도 · 숫자 아님은 undefined.
+const pickYearValue = (
+    values: readonly (number | null | undefined)[] | undefined,
+    receivedYears: readonly string[],
+    year: string,
+): number | undefined => {
+    const index = receivedYears.findIndex((received) => isSameYear(received, year))
+    const value = index < 0 ? undefined : values?.[index]
+    return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+// 에너지 사용량 구분 — 표는 늘 본사 · 공장 · 기타 세 줄(+ 합계)이다. 웹 보고서 · PDF 템플릿 공용.
+// [프론트엔드 연동] 구분 이름(label)은 정확히 '본사' · '공장' · '기타' 로 보낸다. 다른 이름의 줄은 그리지 않는다.
+const ENERGY_CATEGORIES = ['본사', '공장', '기타'] as const
+// 받은 에너지 줄을 본사 · 공장 · 기타 순으로 골라 values 를 years(최근 3개년) 순서로 다시 맞춘다 — 받지 못한 연도 · 값은 NaN.
+// 받지 않은 구분은 결과에 없다(그래프 계열 · 범례에서 빠지고, 표는 ENERGY_CATEGORIES 로 '-' 줄을 채운다).
+const toEnergyYearRows = (
+    rows: readonly InnovationEnergyRow[],
+    receivedYears: readonly string[],
+    years: readonly string[],
+): InnovationEnergyRow[] =>
+    ENERGY_CATEGORIES.flatMap((category) => rows.filter((row) => row.label === category)).map((row) => ({
+        ...row,
+        values: years.map((year) => {
+            const index = receivedYears.findIndex((received) => isSameYear(received, year))
+            return index < 0 ? Number.NaN : (row.values[index] ?? Number.NaN)
+        }),
+    }))
+
+// 우수특허 표 줄 — 웹 보고서 · PDF 템플릿 공용. 피인용 지수 높은 순으로 limit 건 + 나머지는 '기타' 줄 하나(피인용 횟수 합).
+// 정렬은 화면이 한다(받은 순서와 무관). 피인용 지수가 숫자가 아니면(값 없음) 맨 뒤로,
+// '기타' 합은 숫자인 값만 더한다(하나도 없으면 NaN → 칸에 '-').
+const citationRank = (value: number) => (Number.isFinite(value) ? value : Number.NEGATIVE_INFINITY)
+const toExcellentPatentRows = (patents: InnovationTechDetail['excellentPatents'], limit: number) => {
+    const sorted = [...patents].sort((a, b) => citationRank(b.citationIndex) - citationRank(a.citationIndex) || 0)
+    const rest = sorted.slice(limit)
+    const restCitations = rest.map((patent) => patent.citations).filter(Number.isFinite)
+    return {
+        patents: sorted.slice(0, limit),
+        /** '기타' 줄 피인용 횟수 합. limit 건을 넘을 때만 값이 있고, 넘지 않으면 null(기타 줄 없음). */
+        otherCitations: rest.length
+            ? restCitations.length
+                ? restCitations.reduce((sum, value) => sum + value, 0)
+                : Number.NaN
+            : null,
+    }
+}
+
+// 4대 혁신역량 — 받은 역량이 없어도 네 카드는 늘 이 순서 · 이름으로 그린다.
+// [프론트엔드 연동] capabilities 의 id 는 infra · input · activity · output 으로 보낸다. 다른 id 의 역량은 그리지 않는다.
+const TECH_INDEX_CAPABILITIES = [
+    {id: 'infra', label: '인프라'},
+    {id: 'input', label: '투입'},
+    {id: 'activity', label: '활동'},
+    {id: 'output', label: '성과'},
+] as const
+
+// 혁신성장역량지수 부문별 지표 비교 카드 제목 — 받은 지표가 없어도 두 카드는 늘 이 제목으로 그린다.
+// [프론트엔드 연동] indicators 의 title 은 정확히 '인프라·투입 부문' · '활동·성과 부문' 으로 보낸다. 다른 제목의 묶음은 그리지 않는다.
+const TECH_INDEX_INDICATOR_TITLES = ['인프라·투입 부문', '활동·성과 부문'] as const
+// Tech-Index 표준정보 비교 — 분포 평균 · 표준편차를 받지 못해도 곡선 모양은 남긴다(웹 보고서 · PDF 템플릿 공용).
+// 그때만 쓰는 모양용 값(점수 0~100 가운데 종 모양) — 화면에 숫자로 보이지 않는다(전체 평균은 '-').
+const TECH_INDEX_FALLBACK_STANDARD = {mean: 50, standardDeviation: 15} as const
+
+// [퍼블리싱 전용] 보고서 조회(목업) — 목업 한 건을 돌려주고, 이력 카드의 id 면 그 카드 값으로 바꾼다(withMockHistoryCard).
 // [프론트엔드 연동] reportId 로 보고서를 조회하는 API 로 바꾼다. 없는 보고서면 null 을 돌려주면 화면이 404(notFound)로 넘긴다.
 //   받는 동안은 라우트의 loading.tsx(InnovationGrowthReportDocumentSkeleton)가 같은 틀을 보여 준다 — MOCK_DELAY_MS 로 미리 볼 수 있다.
 const getInnovationGrowthReport = async (reportId?: string): Promise<InnovationGrowthReport | null> => {
     await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS))
     // 목업: 빈 id(?reportId=)만 없는 보고서로 본다 — 404 흐름을 미리 확인하는 용도.
     if (reportId === '') return null
-    return MOCK_INNOVATION_GROWTH_REPORT
+    const historyCard = await findMockHistoryCard(reportId)
+    return historyCard ? withMockHistoryCard(MOCK_INNOVATION_GROWTH_REPORT, historyCard) : MOCK_INNOVATION_GROWTH_REPORT
 }
 
 // [퍼블리싱 확인용] 주소의 ?case= 로 열람 케이스를 덮어써 본다. 값이 케이스가 아니면 받은 그대로 둔다. 연동 후 이 함수와 호출을 지운다.
@@ -1655,6 +1989,1433 @@ const withPreviewCase = (report: InnovationGrowthReport, previewCase: unknown): 
     isInnovationReportCase(previewCase)
         ? withPreviewCaseSample(redactForViewerCase({...report, viewerCase: previewCase}))
         : report
+
+// [퍼블리싱 확인용] ?empty=<모드> 로 데이터를 비우거나(빈 값) · 길게(긴 글) · 섞어(여러 경우) 본다 — 모든 탭 · 장 공용 진입점.
+// 모드별 동작은 아래 withPreview* 함수 · 위 INNOVATION_REPORT_EMPTY_* 상수 주석을 본다. 표 줄 이름 · 부처명 같은 틀은 두고 값만
+// 바꾼다 — 실제 API 가 보내는 모양을 흉내 낸다. 연동 후 이 함수와 호출을 지운다.
+const withPreviewEmpty = (report: InnovationGrowthReport, emptyParam: unknown): InnovationGrowthReport => {
+    if (emptyParam === INNOVATION_REPORT_EMPTY_BRIEFING_PARTIAL) return withPreviewPartialBriefing(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_COMPANY) return withPreviewEmptyCompany(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_COMPANY_PARTIAL) return withPreviewPartialCompany(report)
+    if (emptyParam === INNOVATION_REPORT_COMPANY_OVERVIEW_LONG) return withPreviewCompanyOverview(report, 'long')
+    if (emptyParam === INNOVATION_REPORT_COMPANY_OVERVIEW_SHORT) return withPreviewCompanyOverview(report, 'short')
+    if (emptyParam === INNOVATION_REPORT_COMPANY_EDGE) return withPreviewCompanyEdge(report, 'long')
+    if (emptyParam === INNOVATION_REPORT_COMPANY_EDGE_SHORT) return withPreviewCompanyEdge(report, 'short')
+    if (emptyParam === INNOVATION_REPORT_COMPANY_AFFILIATES_MANY) return withPreviewManyAffiliates(report)
+    if (emptyParam === INNOVATION_REPORT_COMPANY_LONG_TEXT) return withPreviewCompanyLongText(report)
+    if (emptyParam === INNOVATION_REPORT_COMPANY_MIXED) return withPreviewCompanyMixed(report)
+    if (emptyParam === INNOVATION_REPORT_TECH_LONG_TEXT) return withPreviewTechLongText(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_TECH) return withPreviewEmptyTech(report)
+    if (emptyParam === INNOVATION_REPORT_TECH_MIXED) return withPreviewTechMixed(report)
+    if (emptyParam === INNOVATION_REPORT_TECH_MIXED_2) return withPreviewTechMixed2(report)
+    if (emptyParam === INNOVATION_REPORT_BRIEFING_LONG_TEXT) return withPreviewBriefingLongText(report)
+    if (emptyParam === INNOVATION_REPORT_BRIEFING_MIXED) return withPreviewBriefingMixed(report)
+    if (emptyParam === INNOVATION_REPORT_HEADER_MIXED || emptyParam === INNOVATION_REPORT_HEADER_MIXED_2) {
+        const isFirst = emptyParam === INNOVATION_REPORT_HEADER_MIXED
+        const representative = isFirst ? '' : '김철수, 이영희(공동대표)'
+        return {
+            ...report,
+            title: isFirst
+                ? '인공지능 기반 의료 영상 분석 및 실시간 원격 판독 지원을 위한 차세대 멀티모달 진단 보조 시스템과 클라우드 연동 플랫폼'
+                : 'AI 영상 분석',
+            companyName: isFirst
+                ? '(주)에이아이'
+                : '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스',
+            issuedAt: isFirst ? report.issuedAt : '',
+            company: {
+                rows: report.company.rows.map((row) =>
+                    row.label === '대표자' ? {...row, value: representative} : row,
+                ),
+            },
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_HEADER_LONG_TEXT) {
+        return {
+            ...report,
+            title: '인공지능 기반 의료 영상 분석 및 실시간 원격 판독 지원을 위한 차세대 멀티모달 진단 보조 시스템과 클라우드 연동 플랫폼',
+            companyName: '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스',
+            company: {
+                rows: report.company.rows.map((row) =>
+                    row.label === '대표자'
+                        ? {...row, value: '남궁독고선우황보제갈, 알렉산더 크리스토퍼 김(공동대표)'}
+                        : row,
+                ),
+            },
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_EMPTY_HEADER) {
+        return {
+            ...report,
+            title: '',
+            companyName: '',
+            issuedAt: '',
+            // 표지의 대표자는 기업 정보 표의 '대표자' 줄에서 가져온다.
+            company: {rows: report.company.rows.map((row) => (row.label === '대표자' ? {...row, value: ''} : row))},
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_EMPTY_TECH_INDEX) return withPreviewEmptyTechIndex(report)
+    if (emptyParam === INNOVATION_REPORT_TECH_INDEX_MIXED) return withPreviewTechIndexMixed(report)
+    if (emptyParam === INNOVATION_REPORT_TECH_INDEX_LONG_TEXT) {
+        const longName = '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스'
+        const standard = report.techIndexDetail.standard
+        return {
+            ...report,
+            companyName: longName,
+            techIndexDetail: {
+                ...report.techIndexDetail,
+                standard: {
+                    ...standard,
+                    // 요약 문장 첫 조각의 기업명도 같은 이름으로 바꾼다(PDF 템플릿은 문장 속 기업명만 말줄임한다).
+                    summary: standard.summary.map((part) => ({
+                        ...part,
+                        text: part.text.replace(report.companyName, longName),
+                    })),
+                },
+            },
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_COMPANY_ONE_EACH) {
+        const status = report.companyStatus
+        return {
+            ...report,
+            companyStatus: {
+                ...status,
+                executives: status.executives.slice(0, 1),
+                shareholders: status.shareholders.slice(0, 1),
+                affiliates: status.affiliates.slice(0, 1),
+            },
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_COMPANY_AFFILIATES_ONE) {
+        return {
+            ...report,
+            companyStatus: {...report.companyStatus, affiliates: report.companyStatus.affiliates.slice(0, 1)},
+        }
+    }
+    if (emptyParam === INNOVATION_REPORT_EMPTY_ACTIVITY) return withPreviewEmptyActivity(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_ACTIVITY_PARTIAL) return withPreviewPartialActivity(report)
+    if (emptyParam === INNOVATION_REPORT_ACTIVITY_LONG_TEXT) return withPreviewActivityLongText(report)
+    if (emptyParam === INNOVATION_REPORT_ACTIVITY_MIXED) return withPreviewActivityMixed(report)
+    if (emptyParam === INNOVATION_REPORT_ACTIVITY_CHANGE) return withPreviewActivityChange(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_CREDIT) return withPreviewEmptyCredit(report)
+    if (emptyParam === INNOVATION_REPORT_EMPTY_CREDIT_PARTIAL) return withPreviewPartialCredit(report)
+    if (emptyParam === INNOVATION_REPORT_CREDIT_LONG_TEXT) return withPreviewCreditLongText(report)
+    if (emptyParam === INNOVATION_REPORT_CREDIT_INFO_LONG_TEXT) return withPreviewCreditInfoLongText(report)
+    if (emptyParam === INNOVATION_REPORT_CREDIT_MIXED) return withPreviewCreditMixed(report)
+    if (emptyParam !== INNOVATION_REPORT_EMPTY_BRIEFING) return report
+    const clearDetails = (details: readonly RatingGaugeDetail[]) => details.map((detail) => ({...detail, value: ''}))
+    return {
+        ...report,
+        createdAt: '',
+        subCategoryName: '',
+        company: {rows: report.company.rows.map((row) => ({...row, value: ''}))},
+        innovation: {
+            ...report.innovation,
+            technologies: [],
+            stats: report.innovation.stats.map((stat) => ({...stat, value: null})),
+            averages: report.innovation.averages.map((row) => ({...row, value: null})),
+            issues: [],
+            rnd: [],
+        },
+        techIndex: {
+            ...report.techIndex,
+            score: Number.NaN,
+            industryPercentile: Number.NaN,
+            industryLabel: '',
+            evaluationDate: '',
+        },
+        creditFinance: {
+            ...report.creditFinance,
+            rating: {grade: '', details: clearDetails(report.creditFinance.rating.details)},
+            ratios: [],
+            comparison: [],
+            years: [],
+            statements: [],
+        },
+        creditDetail: {
+            ...report.creditDetail,
+            cashFlow: {
+                ...report.creditDetail.cashFlow,
+                grade: '',
+                details: clearDetails(report.creditDetail.cashFlow.details),
+            },
+        },
+        activity: {employees: [], salesPerEmployee: []},
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=company — 기업현황 탭 데이터를 모두 비운다(웹 보고서 기업현황 탭 · 인쇄본 기업현황 장 공용).
+// 개요는 줄 이름만 두고 값을 비우고, 목록 · 건수 · 인증 · 재무 · 거래처는 받은 것이 없는 상태로 둔다.
+const withPreviewEmptyCompany = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    companyStatus: {
+        ...report.companyStatus,
+        overview: report.companyStatus.overview.map((row) => ({...row, value: ''})),
+        executives: [],
+        shareholders: [],
+        affiliates: [],
+        intellectualProperty: [],
+        certifications: [],
+        finance: {years: [], balance: [], income: [], ratios: [], cashFlows: []},
+        customers: [],
+        suppliers: [],
+    },
+})
+
+// [퍼블리싱 확인용] ?empty=company-overview-long · -short — 기업현황 첫 쪽 행 수 확인용(PDF 템플릿).
+//   long: 길이가 변하는 개요 값(기업명 · 대표자 · 주소 · 대표기술분야 · 주요제품)을 두 줄 넘게 → 표 행이 줄어든다.
+//   short: 개요 값을 모두 짧게 → 쪽에 남는 자리만큼 표 행이 늘어난다.
+//   두 경우 모두 경영진 · 주주를 10건 받아, 늘어난 행에도 실제 값이 보이게 한다. 웹 보고서는 늘 5행이다.
+const PREVIEW_PEOPLE_COUNT = 10
+const PREVIEW_LONG_OVERVIEW: Record<string, string> = {
+    기업명: '주식회사 프롬엑스테크놀로지 인공지능 의료영상 분석 연구개발 및 클라우드 서비스 사업본부',
+    대표자: '홍길동, 김공동대표, 이공동대표, 박공동대표, 최공동대표, 정공동대표, 강공동대표',
+    주소: '부산광역시 남구 문현금융로 33 부산국제금융센터 기술보증기금 본점 63층 6301호 (문현동) 인공지능 의료영상 연구소',
+    대표기술분야: '인공지능 기반 의료영상 판독 보조 소프트웨어 및 클라우드 기반 영상 데이터 관리 플랫폼 개발',
+    주요제품:
+        'AI 흉부 X-ray 판독 보조 솔루션, 클라우드 PACS 연동 모듈, 의료영상 비식별화 도구, 판독 리포트 자동 생성기',
+}
+const withPreviewCompanyOverview = (report: InnovationGrowthReport, kind: 'long' | 'short'): InnovationGrowthReport => {
+    const status = report.companyStatus
+    return {
+        ...report,
+        companyStatus: {
+            ...status,
+            overview: status.overview.map((row) =>
+                kind === 'long'
+                    ? {...row, value: PREVIEW_LONG_OVERVIEW[row.label] ?? row.value}
+                    : {...row, value: row.value.slice(0, 6)},
+            ),
+            executives: Array.from({length: PREVIEW_PEOPLE_COUNT}, (_, index) => ({
+                role: index === 0 ? '대표이사' : '사내이사',
+                name: `임원${index + 1}`,
+                birthDate: `7${index}.01.01`,
+            })),
+            shareholders: Array.from({length: PREVIEW_PEOPLE_COUNT}, (_, index) => ({
+                name: `주주${index + 1}`,
+                shares: 1000 * (PREVIEW_PEOPLE_COUNT - index),
+                ratio: PREVIEW_PEOPLE_COUNT - index,
+                relation: index === 0 ? '본인' : '타인',
+            })),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=company-edge · -edge-short — 기업현황 첫 쪽 경계 사례(PDF 템플릿 · 웹 공용).
+//   경영진 1건 vs 주주 10건(두 표 행 수가 같은지) · 관계기업 10건 · 칸마다 아주 긴 글(한 줄 말줄임) · 아주 큰 숫자.
+const PREVIEW_LONG_CELL = '아주 긴 이름이 들어와 칸 폭을 넘는 경우를 확인하기 위한 퍼블리싱 확인용 문구입니다'
+const withPreviewCompanyEdge = (report: InnovationGrowthReport, kind: 'long' | 'short'): InnovationGrowthReport => {
+    const base = withPreviewCompanyOverview(report, kind)
+    const status = base.companyStatus
+    return {
+        ...base,
+        companyStatus: {
+            ...status,
+            executives: [{role: PREVIEW_LONG_CELL, name: PREVIEW_LONG_CELL, birthDate: '1971.02.03'}],
+            shareholders: status.shareholders.map((row, index) => ({
+                ...row,
+                name: index === 0 ? PREVIEW_LONG_CELL : row.name,
+                shares: index === 0 ? 1234567890123 : row.shares,
+                ratio: index === 0 ? 100 : row.ratio,
+                relation: index === 0 ? PREVIEW_LONG_CELL : row.relation,
+            })),
+            affiliates: Array.from({length: PREVIEW_PEOPLE_COUNT}, (_, index) => ({
+                name: index === 0 ? PREVIEW_LONG_CELL : `(주)관계기업${index + 1}`,
+                ceo: index === 0 ? PREVIEW_LONG_CELL : `대표${index + 1}`,
+                industry: index === 0 ? PREVIEW_LONG_CELL : '전자부품 제조업',
+                fiscalYear: '2024',
+                totalAssets: index === 0 ? 987654321098 : 10000 + index,
+                sales: index === 0 ? 123456789012 : 200 + index,
+            })),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=company-long-text — 글 칸만 길게(숫자 · 일자 · 신용등급 코드는 그대로). 실제로 들어올 법한
+//   긴 이름 몇 가지를 줄마다 돌려 쓴다(길이가 서로 달라 줄마다 줄바꿈 · 말줄임 모양을 비교할 수 있다).
+const PREVIEW_LONG_COMPANY_NAMES = [
+    '주식회사 한국첨단바이오메디컬헬스케어솔루션',
+    '(주)글로벌스마트모빌리티앤에너지테크놀로지스',
+    '에이치엔티인터내셔널코리아유한회사',
+] as const
+const PREVIEW_LONG_PERSON_NAMES = ['남궁독고선우황보제갈', '알렉산더 크리스토퍼 김', '이수현(Lee Soo Hyun)'] as const
+const PREVIEW_LONG_ROLES = [
+    '대표이사 겸 최고기술책임자(CTO) 및 연구개발본부 총괄 부사장',
+    '사내이사 · 경영지원본부장',
+    '비상근 사외이사(감사위원장)',
+    '이사',
+] as const
+const PREVIEW_LONG_RELATIONS = [
+    '최대주주의 특수관계인(친인척) 및 그 배우자의 직계존비속',
+    '계열회사 임원 및 그 배우자',
+    '본인',
+] as const
+// 주주명 — 사람과 법인이 섞여 들어온다((주) 표기 · 띄어 쓴 '(주) ' 표기 포함).
+const PREVIEW_LONG_SHAREHOLDER_NAMES = [
+    '(주) 한국벤처캐피탈파트너스제일호투자조합',
+    '알렉산더 크리스토퍼 김',
+    '(주)글로벌스마트모빌리티앤에너지테크놀로지스',
+    '남궁독고선우황보제갈',
+] as const
+const PREVIEW_LONG_INDUSTRIES = [
+    '그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업',
+    '의료용 기기 제조업',
+    '전기, 가스, 증기 및 공기 조절 공급업 중 신재생에너지 발전업',
+] as const
+const pickPreview = <T>(items: readonly T[], index: number): T => items[index % items.length] ?? items[0]
+const PREVIEW_LONG_OVERVIEW_EXTRA: Record<string, string> = {
+    '기업유형/형태': '코스닥시장 상장법인 / 벤처기업 · 이노비즈 · 메인비즈 인증 중소기업(법인기업)',
+    기업규모: '중소기업(중소기업기본법 시행령 별표 1 기준 소기업 · 벤처기업 확인 기업)',
+    표준산업분류:
+        '(C26299) 그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업, 의료용 영상 진단 보조기기 제조업',
+}
+const withPreviewCompanyLongText = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const status = report.companyStatus
+    const toLongPartner = (partner: InnovationTradePartner, index: number) => ({
+        ...partner,
+        name: pickPreview(PREVIEW_LONG_COMPANY_NAMES, index),
+    })
+    return {
+        ...report,
+        companyStatus: {
+            ...status,
+            // 개요 — 글 칸만 길게(법인등록번호 · 사업자등록번호 · 설립일 · 종업원수처럼 형식이 정해진 칸은 그대로).
+            overview: status.overview.map((row) => ({
+                ...row,
+                value: PREVIEW_LONG_OVERVIEW[row.label] ?? PREVIEW_LONG_OVERVIEW_EXTRA[row.label] ?? row.value,
+            })),
+            executives: status.executives.map((row, index) => ({
+                ...row,
+                role: pickPreview(PREVIEW_LONG_ROLES, index),
+                name: pickPreview(PREVIEW_LONG_PERSON_NAMES, index),
+            })),
+            shareholders: status.shareholders.map((row, index) => ({
+                ...row,
+                name: pickPreview(PREVIEW_LONG_SHAREHOLDER_NAMES, index),
+                relation: pickPreview(PREVIEW_LONG_RELATIONS, index),
+            })),
+            affiliates: status.affiliates.map((row, index) => ({
+                ...row,
+                name: pickPreview(PREVIEW_LONG_COMPANY_NAMES, index),
+                ceo: pickPreview(PREVIEW_LONG_PERSON_NAMES, index),
+                industry: pickPreview(PREVIEW_LONG_INDUSTRIES, index),
+            })),
+            customers: status.customers.map(toLongPartner),
+            suppliers: status.suppliers.map((partner, index) => toLongPartner(partner, index + 1)),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=briefing-long-text — 진단브리핑 기업 정보 표 값만 길게(줄 이름 · 줄 수는 그대로).
+const PREVIEW_LONG_COMPANY_INFO: Record<string, string> = {
+    기업명: '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스',
+    대표자: '남궁독고선우황보제갈, 알렉산더 크리스토퍼 김(공동대표)',
+    '기업유형/형태': '코스닥시장 상장법인 / 벤처기업 · 이노비즈 · 메인비즈 인증 중소기업(법인기업)',
+    표준산업분류:
+        '(C26299) 그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업, 의료용 영상 진단 보조기기 제조업',
+    대표기술분야:
+        '무선·이동통신 서비스 및 차세대 네트워크 인프라 구축 기술 중 초저지연 5G 코어망 가상화와 위성통신 연계 기술',
+    주요제품:
+        '5G 통신 및 IoT 관련 서비스, AI 기반 의료 영상 분석 시스템, 스마트 헬스케어 웨어러블 디바이스 및 클라우드 플랫폼',
+}
+// 기업 보유기술 범례 — 긴 이름 · 중간 · 짧은 이름을 섞는다(조각 순서 · 비중 · 건수 · 색은 그대로, '기타'는 그대로).
+const PREVIEW_MIXED_TECH_LABELS = [
+    '무선·이동통신 서비스 및 차세대 네트워크 인프라 구축 기술',
+    'IoT',
+    '인공지능 기반 의료 영상 분석',
+    '5G',
+    '스마트 헬스케어 웨어러블 디바이스 및 클라우드 연동 플랫폼',
+    '광통신 부품',
+    '초저지연위성통신연계코어망가상화기술',
+] as const
+const toMixedDonutLabels = (items: readonly PercentageDonutItem[], offset: number) =>
+    items.map((item, index) => ({
+        ...item,
+        label: item.label === '기타' ? item.label : pickPreview(PREVIEW_MIXED_TECH_LABELS, index + offset),
+    }))
+// R&D 이슈 키워드 — 긴 · 중간 · 짧은 말을 섞는다(크기 순서 · 개수는 그대로, 원래 목업 키워드와 겹치지 않게).
+const PREVIEW_LONG_ISSUES = [
+    '초저지연영상전송',
+    '인공지능',
+    '의료영상분할알고리즘',
+    'AI',
+    '멀티모달 학습',
+    '디지털헬스케어플랫폼',
+    '5G',
+    '연합학습기반개인정보보호',
+] as const
+const withPreviewBriefingLongText = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    // 머리(보고서 제목 · 기업명) — 웹 보고서 머리 · PDF 템플릿 표지에 같이 쓰인다.
+    title: '인공지능 기반 의료 영상 분석 및 실시간 원격 판독 지원을 위한 차세대 멀티모달 진단 보조 시스템',
+    companyName: '주식회사 한국첨단바이오메디컬헬스케어솔루션',
+    // 기술혁신정보 구획 제목 옆 세부분야명.
+    subCategoryName: '무선·이동통신 서비스 및 차세대 네트워크 인프라 구축 기술 중 초저지연 5G 코어망 가상화',
+    innovation: {
+        ...report.innovation,
+        technologies: toMixedDonutLabels(report.innovation.technologies, 0),
+        // 앞에서부터 목록 개수만큼만 바꾼다 — 키워드는 겹치면 안 된다(워드클라우드가 키워드를 키로 쓴다).
+        issues: report.innovation.issues.map((issue, index) => ({
+            ...issue,
+            text: PREVIEW_LONG_ISSUES[index] ?? issue.text,
+        })),
+    },
+    // 혁신성장역량지수 카드의 동일업종명.
+    techIndex: {
+        ...report.techIndex,
+        industryLabel:
+            '그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업(의료용 영상 진단 보조기기 포함), 스마트 헬스케어 웨어러블 디바이스 및 클라우드 기반 원격 판독 플랫폼 서비스업',
+    },
+    company: {
+        rows: report.company.rows.map((row) => ({...row, value: PREVIEW_LONG_COMPANY_INFO[row.label] ?? row.value})),
+    },
+})
+
+// [퍼블리싱 확인용] ?empty=briefing-mixed — 칸마다 길이를 섞는다(아주 긴 · 적절한 · 짧은 · 빈 값). 숫자 · 일자는 briefing-partial 규칙으로
+//   일부만 비운 뒤, 글 칸을 아래 값으로 덮는다(기업 정보는 빈 줄도 여기서 정한다).
+const PREVIEW_MIXED_COMPANY_INFO: Record<string, string> = {
+    기업명: '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스', // 아주 긴
+    대표자: '김철수', // 짧은
+    '기업유형/형태': '', // 빈 값
+    표준산업분류: '(C26299) 그 외 기타 전자부품 제조업', // 적절한
+    대표기술분야:
+        '무선·이동통신 서비스 및 차세대 네트워크 인프라 구축 기술 중 초저지연 5G 코어망 가상화와 위성통신 연계 기술', // 아주 긴
+    주요제품: 'AI 영상 분석', // 짧은
+}
+const PREVIEW_MIXED_TECH_LABELS_BY_LENGTH = [
+    '스마트 헬스케어 웨어러블 디바이스 및 클라우드 연동 플랫폼', // 아주 긴
+    'IoT', // 짧은
+    '인공지능 기반 의료 영상 분석', // 적절한
+    '5G', // 짧은
+    '초저지연위성통신연계코어망가상화기술', // 띄어쓰기 없는 아주 긴
+    '광통신 부품', // 적절한
+    'AI', // 짧은
+] as const
+const PREVIEW_MIXED_ISSUES = ['연합학습기반개인정보보호', 'AI', '멀티모달 학습', '5G'] as const
+const withPreviewBriefingMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const partial = withPreviewPartialBriefing(report)
+    return {
+        ...partial,
+        title: '인공지능 기반 의료 영상 분석 및 실시간 원격 판독 지원을 위한 차세대 멀티모달 진단 보조 시스템', // 아주 긴
+        companyName: '(주)에이아이', // 짧은
+        subCategoryName: '무선 · 이동통신 서비스', // 적절한
+        company: {
+            rows: report.company.rows.map((row) => ({
+                ...row,
+                value: PREVIEW_MIXED_COMPANY_INFO[row.label] ?? row.value,
+            })),
+        },
+        innovation: {
+            ...partial.innovation,
+            technologies: partial.innovation.technologies.map((item, index) => ({
+                ...item,
+                label: item.label === '기타' ? item.label : pickPreview(PREVIEW_MIXED_TECH_LABELS_BY_LENGTH, index),
+            })),
+            // 앞 4개만 바꾼다(키워드는 겹치면 안 된다).
+            issues: partial.innovation.issues.map((issue, index) => ({
+                ...issue,
+                text: PREVIEW_MIXED_ISSUES[index] ?? issue.text,
+            })),
+        },
+        // 동일업종명은 아주 긴 값(웹 한 줄 · PDF 두 줄 말줄임 확인), 순위 · 평가일자는 partial 규칙으로 비어 있다.
+        techIndex: {
+            ...partial.techIndex,
+            industryLabel:
+                '그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업(의료용 영상 진단 보조기기 포함), 스마트 헬스케어 웨어러블 디바이스 및 클라우드 기반 원격 판독 플랫폼 서비스업',
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=tech-long-text — 기술혁신정보 표의 글 칸만 길게(번호 · 일자 · 숫자는 그대로). 줄마다 길이를 돌려 쓴다.
+const PREVIEW_LONG_PATENT_TITLES = [
+    '차세대무선통신네트워크환경에서인공지능기반트래픽예측모델을이용한기지국간부하분산및전송품질유지시스템',
+    '식물성 원료를 이용한 친환경 생분해성 바이오 플라스틱 조성물과 그 제조공정 및 이를 적용한 일회용 포장재의 성형 방법',
+    '무선 충전 지원 스마트폰 케이스',
+] as const
+const PREVIEW_LONG_HOLDERS = [
+    '(주)글로벌스마트모빌리티앤에너지테크놀로지스',
+    '(주) 한국벤처캐피탈파트너스제일호투자조합',
+    '한국전자통신연구원',
+] as const
+const PREVIEW_LONG_FIELDS = [
+    '무선·이동통신 서비스 및 차세대 네트워크 인프라 구축 기술 중 초저지연 5G 코어망 가상화와 위성통신 연계 기술',
+    '바이오 플라스틱',
+    '인공지능 기반 영상 분석 · 의료 영상 진단 보조 소프트웨어',
+] as const
+const PREVIEW_LONG_INSTITUTES = [
+    '한국과학기술연구원 차세대반도체융합연구단 및 첨단소재부품기술연구센터 공동 산학협력단 바이오헬스케어 융합연구본부 분원',
+    '(주)삼성전자종합기술원',
+    'KAIST',
+] as const
+const PREVIEW_LONG_RND_TITLES = [
+    '2026년도 산업기술혁신사업(소재부품기술개발) 신규지원 대상과제 공고 — 첨단 바이오 플라스틱 소재 상용화 기술개발',
+    '2026년 중소기업 기술혁신개발사업 시장확대형 시행계획 공고',
+    'AI 바우처 지원사업',
+] as const
+const PREVIEW_LONG_AGENCIES = [
+    ['과학기술정보통신부', '정보통신기획평가원(IITP) 디지털혁신본부'],
+    ['산업통상자원부', '한국산업기술기획평가원'],
+    ['중소벤처기업부', ''],
+] as const
+const PREVIEW_LONG_MANAGERS = ['홍길동 책임연구원(042-860-1234)', '김철수', '이영희 선임'] as const
+const withPreviewTechLongText = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const tech = report.techInnovation
+    const toLongPatent = <P extends InnovationPatentRow>(patent: P, index: number): P => ({
+        ...patent,
+        title: pickPreview(PREVIEW_LONG_PATENT_TITLES, index),
+        applicant: pickPreview(PREVIEW_LONG_HOLDERS, index),
+        rightHolder: pickPreview(PREVIEW_LONG_HOLDERS, index + 1),
+    })
+    const toLongInstitutes = (rows: readonly InnovationInstitute[], offset: number) =>
+        rows.map((row, index) => ({...row, name: pickPreview(PREVIEW_LONG_INSTITUTES, index + offset)}))
+    const toLongProjects = (projects: readonly InnovationRndProject[]) =>
+        projects.map((project, index) => {
+            const [ministry, agency] = pickPreview(PREVIEW_LONG_AGENCIES, index)
+            return {
+                ...project,
+                ministry,
+                agency,
+                title: pickPreview(PREVIEW_LONG_RND_TITLES, index),
+                manager: pickPreview(PREVIEW_LONG_MANAGERS, index),
+            }
+        })
+    // 경쟁기업 · 성장률 우수기업 이름 — 조회기업 · 평균 줄은 고정 이름이라 그대로 둔다.
+    const isFixedName = (name: string) => name === '평균' || name === report.companyName || name === '조회기업'
+    return {
+        ...report,
+        techInnovation: {
+            ...tech,
+            // 특허기술 분석 — 분석특허명 · 개요 · 기술분야(경로 · 설명) · 판단 근거.
+            analysis: {
+                ...tech.analysis,
+                patentTitle: PREVIEW_LONG_PATENT_TITLES[1],
+                summary: [
+                    ...tech.analysis.summary,
+                    '본 발명은 차세대 무선 통신 환경에서 인공지능 기반 트래픽 예측 모델을 이용하여 기지국 간 부하를 분산하고 전송 품질을 유지하는 방법에 관한 것으로, 초저지연 · 초고신뢰 통신이 필요한 원격 의료 · 자율 주행 · 스마트 팩토리 등 다양한 산업 분야에 적용될 수 있으며 위성 통신망과의 연계를 통해 음영 지역까지 서비스 범위를 넓힐 수 있다.',
+                ],
+                field: {
+                    name: '초저지연 5G 코어망 가상화 및 위성통신 연계 서비스',
+                    path: '(기술분야) 정보/통신 – 무선 통신·네트워크 및 차세대 이동통신 인프라 – 초저지연 5G 코어망 가상화 및 위성통신 연계 서비스',
+                    description:
+                        '무선·이동통신 환경에서 다양한 서비스 제공을 위해 이동통신 네트워크상의 망 장비 및 관련 서비스 제공 관련 기술 요소를 통칭하며, 코어망 가상화 · 네트워크 슬라이싱 · 위성-지상 통합망 연계 기술을 포함한다',
+                },
+                reasons: [
+                    ...tech.analysis.reasons,
+                    'IoT · 클라우드는 적용 분야로 언급될 뿐 청구항의 핵심 구성은 이동통신망의 서비스 제공을 위한 제어 절차와 기지국 간 협력 전송 방식이므로, 무선 통신 장비보다는 무선·이동통신 서비스 분류가 더 적합하다.',
+                ],
+            },
+            competitors: tech.competitors.map((item, index) =>
+                item.tone ? item : {...item, label: pickPreview(PREVIEW_LONG_COMPANY_NAMES, index)},
+            ),
+            growthLeaders: {
+                small: {
+                    ...tech.growthLeaders.small,
+                    items: tech.growthLeaders.small.items.map((item, index) =>
+                        isFixedName(item.name) ? item : {...item, name: pickPreview(PREVIEW_LONG_COMPANY_NAMES, index)},
+                    ),
+                },
+                large: {
+                    ...tech.growthLeaders.large,
+                    items: tech.growthLeaders.large.items.map((item, index) =>
+                        isFixedName(item.name)
+                            ? item
+                            : {...item, name: pickPreview(PREVIEW_LONG_COMPANY_NAMES, index + 1)},
+                    ),
+                },
+            },
+            holdings: {
+                ...tech.holdings,
+                // 기술 보유현황 도넛 범례(중분류 · 세부분야) — 긴 · 중간 · 짧은 이름을 섞는다('기타'는 그대로).
+                middleCategory: toMixedDonutLabels(tech.holdings.middleCategory, 0),
+                smallCategory: toMixedDonutLabels(tech.holdings.smallCategory, 1),
+                patents: tech.holdings.patents.map((patent, index) => ({
+                    ...toLongPatent(patent, index),
+                    field: pickPreview(PREVIEW_LONG_FIELDS, index),
+                })),
+            },
+            excellentPatents: tech.excellentPatents.map(toLongPatent),
+            emergingTech: {
+                ...tech.emergingTech,
+                rows: tech.emergingTech.rows.map((row, index) => ({
+                    ...row,
+                    // API 가 만드는 '기타' 줄 이름은 그대로 둔다.
+                    field: row.field === '기타' ? row.field : pickPreview(PREVIEW_LONG_FIELDS, index),
+                })),
+            },
+            rndInstitutes: {
+                government: {
+                    ...tech.rndInstitutes.government,
+                    rows: toLongInstitutes(tech.rndInstitutes.government.rows, 0),
+                },
+                academia: {...tech.rndInstitutes.academia, rows: toLongInstitutes(tech.rndInstitutes.academia.rows, 1)},
+            },
+            governmentRnd: {
+                ...tech.governmentRnd,
+                open: toLongProjects(tech.governmentRnd.open),
+                upcoming: toLongProjects(tech.governmentRnd.upcoming),
+            },
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=tech — 기술혁신정보 탭 데이터를 모두 비운다(웹 보고서 기술혁신정보 탭 · PDF 템플릿 기술혁신정보 장 공용).
+//   매출 규모 구간 · 성장률 우수기업 구간 이름처럼 고정된 이름은 두고 값만 비운다. R&D 이슈 키워드도 비운다(진단브리핑과 공용 데이터).
+const withPreviewEmptyTech = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const tech = report.techInnovation
+    const emptyInstitutes = {share: Number.NaN, rows: [], total: {patentCount: Number.NaN, ratio: Number.NaN}}
+    return {
+        ...report,
+        innovation: {...report.innovation, issues: []},
+        techInnovation: {
+            ...tech,
+            holdings: {...tech.holdings, middleCategory: [], smallCategory: [], patents: []},
+            analysis: {
+                patentTitle: '',
+                patentNumber: '',
+                summary: [],
+                field: {name: '', path: '', description: ''},
+                reasons: [],
+            },
+            marketScale: {
+                rows: tech.marketScale.rows.map((row) => ({...row, companies: Number.NaN, patents: Number.NaN})),
+                companyShare: [],
+                patentShare: [],
+            },
+            competitors: [],
+            growthLeaders: {
+                small: {...tech.growthLeaders.small, items: []},
+                large: {...tech.growthLeaders.large, items: []},
+            },
+            excellentPatents: [],
+            emergingTech: {periods: [], rows: []},
+            rndInstitutes: {government: emptyInstitutes, academia: emptyInstitutes},
+            governmentRnd: {baseDate: '', open: [], upcoming: []},
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=tech-mixed — 긴 글 모드(tech-long-text) 위에 구획마다 다른 경우를 얹는다.
+//   보유기술: 중분류 도넛 긴 · 짧은 이름 섞음 / 세부분야 도넛 0건 / 특허 3건(일부 칸 빈 값)
+//   특허기술 분석: 특허명 아주 긴 · 특허 개요 빈 값 · 판단 근거 긴 문단
+//   기업 · 특허 현황: 일부 구간 값 빈 값 · 특허수 비중 도넛 0건
+//   경쟁기업: 5건(이름 긴 · 짧은 · 빈 값, 영업이익률 일부 없음) / 성장률 우수기업: 100억원 이하 4건 · 초과 0건
+//   우수특허: 12건(기타 줄, 일부 피인용 · 출원인 빈 값) / 이머징 기술: 4줄(일부 등록건수 빈 값, 기타 없음)
+//   R&D 전문기관: 정부출연연구소 12곳(기타) · 산학협력단 0곳 / 정부 R&D: 접수중 3건(일부 칸 빈 값) · 접수기간 도래 0건
+const withPreviewTechMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const long = withPreviewTechLongText(report)
+    const tech = long.techInnovation
+    return {
+        ...long,
+        techInnovation: {
+            ...tech,
+            holdings: {
+                ...tech.holdings,
+                smallCategory: [],
+                patents: tech.holdings.patents
+                    .slice(0, 3)
+                    .map((patent, index) =>
+                        index === 1 ? {...patent, field: '', rightHolder: '', registrationDate: ''} : patent,
+                    ),
+            },
+            analysis: {...tech.analysis, summary: [], field: {...tech.analysis.field, name: '5G'}},
+            marketScale: {
+                ...tech.marketScale,
+                rows: tech.marketScale.rows.map((row, index) =>
+                    index % 2 === 1
+                        ? {...row, companies: Number.NaN}
+                        : index === 4
+                          ? {...row, patents: Number.NaN}
+                          : row,
+                ),
+                patentShare: [],
+            },
+            competitors: [
+                ...tech.competitors.slice(0, 2),
+                {id: 'mixed-short', label: '(주)이음', sales: 31.9, growthRate: null},
+                {id: 'mixed-empty', label: '', sales: 30.5, growthRate: 1.2},
+                ...tech.competitors.filter((item) => item.tone),
+            ],
+            growthLeaders: {
+                small: {...tech.growthLeaders.small, items: tech.growthLeaders.small.items.slice(0, 4)},
+                large: {...tech.growthLeaders.large, items: []},
+            },
+            excellentPatents: tech.excellentPatents.map((patent, index) =>
+                index === 2
+                    ? {...patent, citations: Number.NaN, citationIndex: Number.NaN}
+                    : index === 4
+                      ? {...patent, applicant: '', title: 'AI'}
+                      : patent,
+            ),
+            emergingTech: {
+                ...tech.emergingTech,
+                rows: tech.emergingTech.rows
+                    .filter((row) => row.field !== '기타')
+                    .slice(0, 4)
+                    .map((row, index) =>
+                        index === 2
+                            ? {
+                                  ...row,
+                                  field: 'IoT',
+                                  counts: row.counts.map((count, i) => (i === 1 ? Number.NaN : count)),
+                              }
+                            : row,
+                    ),
+            },
+            rndInstitutes: {
+                ...tech.rndInstitutes,
+                academia: {share: Number.NaN, rows: [], total: {patentCount: Number.NaN, ratio: Number.NaN}},
+            },
+            governmentRnd: {
+                ...tech.governmentRnd,
+                open: tech.governmentRnd.open
+                    .slice(0, 3)
+                    .map((project, index) => (index === 1 ? {...project, manager: '', period: ''} : project)),
+                upcoming: [],
+            },
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=tech-mixed-2 — tech-mixed 와 0건 · 많은 건수 · 빈 값 자리를 바꿔 섞는다.
+//   보유기술: 중분류 도넛 0건 / 세부분야 도넛 긴 이름 / 특허 10건(1건 특허명 짧은 · 1건 출원인 빈 값)
+//   특허기술 분석: 특허명 짧은 · 특허 개요 긴 문단 · 기술분야 경로 빈 값(소분류만) · 설명 빈 값 · 판단 근거 빈 값
+//   기업 · 특허 현황: 한 구간 전체 빈 값 · 기업수 비중 도넛 0건
+//   경쟁기업: 0건 / 성장률 우수기업: 100억원 이하 0건 · 초과 11건(1위 이름 아주 긴)
+//   우수특허: 5건(기타 없음, 1건 권리자 빈 값) / 이머징 기술: 11줄(기타 포함, 1줄 증가율 · 비중 빈 값)
+//   R&D 이슈: 키워드 3개 / R&D 전문기관: 정부출연연구소 0곳 · 산학협력단 12곳(기타) / 정부 R&D: 접수중 0건 · 접수기간 도래 5건
+const withPreviewTechMixed2 = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const long = withPreviewTechLongText(report)
+    const tech = long.techInnovation
+    const largeItems = tech.growthLeaders.large.items
+    return {
+        ...long,
+        innovation: {...long.innovation, issues: long.innovation.issues.slice(0, 3)},
+        techInnovation: {
+            ...tech,
+            holdings: {
+                ...tech.holdings,
+                middleCategory: [],
+                patents: tech.holdings.patents.map((patent, index) =>
+                    index === 0 ? {...patent, title: 'AI 진단'} : index === 3 ? {...patent, applicant: ''} : patent,
+                ),
+            },
+            analysis: {
+                ...tech.analysis,
+                patentTitle: 'AI 진단 보조 장치',
+                field: {...tech.analysis.field, path: '', description: ''},
+                reasons: [],
+            },
+            marketScale: {
+                ...tech.marketScale,
+                rows: tech.marketScale.rows.map((row, index) =>
+                    index === 2 ? {...row, companies: Number.NaN, patents: Number.NaN} : row,
+                ),
+                companyShare: [],
+            },
+            competitors: [],
+            growthLeaders: {
+                small: {...tech.growthLeaders.small, items: []},
+                large: {
+                    ...tech.growthLeaders.large,
+                    items: largeItems.map((item, index) =>
+                        index === 0
+                            ? {
+                                  ...item,
+                                  name: '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스',
+                              }
+                            : item,
+                    ),
+                },
+            },
+            excellentPatents: tech.excellentPatents
+                .slice(0, 5)
+                .map((patent, index) => (index === 1 ? {...patent, rightHolder: ''} : patent)),
+            emergingTech: {
+                ...tech.emergingTech,
+                rows: tech.emergingTech.rows.map((row, index) =>
+                    index === 3 ? {...row, growthRate: Number.NaN, share: Number.NaN} : row,
+                ),
+            },
+            rndInstitutes: {
+                ...tech.rndInstitutes,
+                government: {share: Number.NaN, rows: [], total: {patentCount: Number.NaN, ratio: Number.NaN}},
+            },
+            governmentRnd: {
+                ...tech.governmentRnd,
+                open: [],
+                upcoming: tech.governmentRnd.upcoming
+                    .slice(0, 5)
+                    .map((project, index) =>
+                        index === 2 ? {...project, ministry: '', agency: '', title: ''} : project,
+                    ),
+            },
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=tech-index-mixed — 긴 기업명(점수 · 요약 문장) 위에 구획마다 다른 경우를 섞는다.
+//   점수 있음 · 평가일자 빈 값 / 표준정보 있음 / 기업 유형별: 4유형만, 1유형 점수 빈 값
+//   4대 혁신역량: 인프라 · 성과만 받음(성과는 전체기업 점수 빈 값) / 유형별 4대 역량: 활동 없음, 투입 1유형 빈 값
+//   부문별 지표: 인프라·투입 부문만 받음(지표 1개 신청기업 점수 빈 값)
+const withPreviewTechIndexMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const longName = '주식회사 한국첨단바이오메디컬헬스케어솔루션앤글로벌스마트모빌리티에너지테크놀로지스'
+    const detail = report.techIndexDetail
+    return {
+        ...report,
+        companyName: longName,
+        techIndex: {...report.techIndex, evaluationDate: ''},
+        techIndexDetail: {
+            ...detail,
+            standard: {
+                ...detail.standard,
+                summary: detail.standard.summary.map((part) => ({
+                    ...part,
+                    text: part.text.replace(report.companyName, longName),
+                })),
+            },
+            companyTypes: detail.companyTypes
+                .slice(0, 4)
+                .map((item, index) => (index === 2 ? {...item, value: Number.NaN} : item)),
+            capabilities: detail.capabilities
+                .filter((item) => item.id === 'infra' || item.id === 'output')
+                .map((item) => (item.id === 'output' ? {...item, average: Number.NaN} : item)),
+            capabilityByType: detail.capabilityByType
+                .filter((item) => item.id !== 'activity')
+                .map((item) =>
+                    item.id === 'input'
+                        ? {
+                              ...item,
+                              items: item.items.map((row, index) => (index === 2 ? {...row, value: Number.NaN} : row)),
+                          }
+                        : item,
+                ),
+            indicators: detail.indicators
+                .filter((item) => item.title === '인프라·투입 부문')
+                .map((item) => ({
+                    ...item,
+                    items: item.items.map((row, index) => (index === 1 ? {...row, company: Number.NaN} : row)),
+                })),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=company-affiliates-many — 관계기업 25건. 웹은 앞 10건, PDF 템플릿은 첫 쪽에 들어가는 만큼만 그린다.
+const PREVIEW_AFFILIATE_COUNT = 25
+const withPreviewManyAffiliates = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    companyStatus: {
+        ...report.companyStatus,
+        affiliates: Array.from({length: PREVIEW_AFFILIATE_COUNT}, (_, index) => ({
+            name: `(주)관계기업${index + 1}`,
+            ceo: `대표${index + 1}`,
+            industry: '전자부품 제조업',
+            fiscalYear: '2024',
+            totalAssets: 10000 + index,
+            sales: 200 + index,
+        })),
+    },
+})
+
+// [퍼블리싱 확인용] ?empty=tech-index — Tech-Index 탭 데이터를 모두 비운다(웹 보고서 Tech-Index 탭 · PDF 템플릿 Tech-Index 장 공용).
+//   점수는 숫자 아님(NaN), 날짜 · 순위 문구는 빈 문자열, 목록은 받은 것이 없는 상태.
+const withPreviewEmptyTechIndex = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    techIndex: {...report.techIndex, score: Number.NaN, evaluationDate: ''},
+    techIndexDetail: {
+        ...report.techIndexDetail,
+        standard: {mean: Number.NaN, standardDeviation: Number.NaN, percentileLabel: '', summary: []},
+        companyTypes: [],
+        capabilities: [],
+        capabilityByType: [],
+        indicators: [],
+    },
+})
+
+// [퍼블리싱 확인용] ?empty=company-partial — 기업현황 탭에서 항목마다 홀수 번째 값만 비운다(일부 빈 칸).
+//   개요 · 경영진 · 주주 · 관계기업 · 거래처는 홀수 번째 줄의 칸 일부를, 재무 표는 홀수 번째 줄의 가운데 해를 비운다.
+//   특허 · 인증은 앞의 2개만 받은 경우(나머지는 '-'), 손익현황은 마지막 줄이 오지 않고 2023년 값이 모두 없는 경우를 함께 본다.
+const PARTIAL_KEEP_COUNT = 2
+const clearMiddleYear = (values: readonly number[]) => values.map((value, index) => (index === 1 ? Number.NaN : value))
+const clearOddRowsMiddleYear = (rows: readonly InnovationFinanceRow[]) =>
+    rows.map((row, index) => (isOddIndex(index) ? {...row, values: clearMiddleYear(row.values)} : row))
+const withPreviewPartialCompany = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const status = report.companyStatus
+    return {
+        ...report,
+        companyStatus: {
+            ...status,
+            overview: status.overview.map((row, index) => (isOddIndex(index) ? {...row, value: ''} : row)),
+            executives: status.executives.map((row, index) => (isOddIndex(index) ? {...row, birthDate: ''} : row)),
+            shareholders: status.shareholders.map((row, index) =>
+                isOddIndex(index) ? {...row, shares: Number.NaN, relation: ''} : row,
+            ),
+            affiliates: status.affiliates.map((row, index) =>
+                isOddIndex(index) ? {...row, ceo: '', totalAssets: Number.NaN} : row,
+            ),
+            intellectualProperty: status.intellectualProperty.slice(0, PARTIAL_KEEP_COUNT),
+            certifications: status.certifications.slice(0, PARTIAL_KEEP_COUNT),
+            finance: {
+                ...status.finance,
+                balance: clearOddRowsMiddleYear(status.finance.balance),
+                // 손익현황은 2023년을 모든 줄에서 비워 '막대가 모두 없는 해(가운데 '-' 하나)'도 본다.
+                income: status.finance.income
+                    .map((row) => ({...row, values: clearMiddleYear(row.values)}))
+                    .slice(0, -1),
+                ratios: clearOddRowsMiddleYear(status.finance.ratios),
+                cashFlows: clearOddRowsMiddleYear(status.finance.cashFlows),
+            },
+            customers: status.customers.map((row, index) =>
+                isOddIndex(index) ? {...row, grade: '', shares: clearMiddleYear(row.shares)} : row,
+            ),
+            suppliers: status.suppliers.map((row, index) =>
+                isOddIndex(index) ? {...row, evaluationDate: '', shares: clearMiddleYear(row.shares)} : row,
+            ),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=company-mixed — 칸마다 아주 긴 · 적절한 · 짧은 · 빈 값을 섞고, 표 건수도 섞는다
+//   (경영진 3건 · 주주 4건 · 관계기업 6건 · 매출처 4건 · 매입처 0건). 숫자 · 연도는 company-partial 규칙.
+const PREVIEW_MIXED_OVERVIEW: Record<string, string> = {
+    기업명: '주식회사 프롬엑스테크놀로지 인공지능 의료영상 분석 연구개발 및 클라우드 서비스 사업본부', // 아주 긴
+    대표자: '김철수', // 짧은
+    법인등록번호: '', // 빈 값
+    종업원수: '', // 빈 값
+    '기업유형/형태': '유가증권시장/법인기업', // 적절한
+    기업규모: '', // 빈 값
+    주소: '부산광역시 남구 문현금융로 33 부산국제금융센터 기술보증기금 본점 63층 6301호 (문현동) 인공지능 의료영상 연구소', // 아주 긴
+    표준산업분류: '(C26299) 그 외 기타 전자부품 제조업', // 적절한
+    대표기술분야: '5G', // 짧은
+    주요제품:
+        'AI 흉부 X-ray 판독 보조 솔루션, 클라우드 PACS 연동 모듈, 의료영상 비식별화 도구, 판독 리포트 자동 생성기', // 아주 긴
+}
+const withPreviewCompanyMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const partial = withPreviewPartialCompany(report)
+    const status = partial.companyStatus
+    return {
+        ...partial,
+        companyStatus: {
+            ...status,
+            overview: report.companyStatus.overview.map((row) => ({
+                ...row,
+                value: PREVIEW_MIXED_OVERVIEW[row.label] ?? row.value,
+            })),
+            executives: [
+                {
+                    role: '대표이사 겸 최고기술책임자(CTO) 및 연구개발본부 총괄 부사장',
+                    name: '홍길동',
+                    birthDate: '71.02.03',
+                },
+                {role: '이사', name: '', birthDate: ''},
+                {role: '사내이사 · 경영지원본부장', name: '남궁독고선우황보제갈', birthDate: '69.11.28'},
+            ],
+            shareholders: [
+                {
+                    name: '(주) 한국벤처캐피탈파트너스제일호투자조합',
+                    shares: 10000,
+                    ratio: 25,
+                    relation: '최대주주의 특수관계인(친인척) 및 그 배우자의 직계존비속',
+                },
+                {name: '홍길동', shares: 6000, ratio: 15, relation: '본인'},
+                {name: '', shares: Number.NaN, ratio: Number.NaN, relation: ''},
+                {name: '알렉산더 크리스토퍼 김', shares: 4000, ratio: 10, relation: '계열회사 임원'},
+            ],
+            affiliates: [
+                {
+                    name: '주식회사 한국첨단바이오메디컬헬스케어솔루션',
+                    ceo: '김철수',
+                    industry: '그 외 기타 전자부품 제조업 및 관련 소프트웨어 개발·공급업',
+                    fiscalYear: '2024',
+                    totalAssets: 18920,
+                    sales: 475,
+                },
+                {
+                    name: '(주)이음',
+                    ceo: '',
+                    industry: '의료용 기기 제조업',
+                    fiscalYear: '2023',
+                    totalAssets: Number.NaN,
+                    sales: 180,
+                },
+                {
+                    name: '',
+                    ceo: '남궁독고선우황보제갈',
+                    industry: '',
+                    fiscalYear: '',
+                    totalAssets: 5420,
+                    sales: Number.NaN,
+                },
+                {
+                    name: '에이치엔티인터내셔널코리아유한회사',
+                    ceo: '이수현(Lee Soo Hyun)',
+                    industry: '전자부품',
+                    fiscalYear: '2024',
+                    totalAssets: 12300,
+                    sales: 640,
+                },
+                {
+                    name: '(주)바른',
+                    ceo: '박',
+                    industry: '전기, 가스, 증기 및 공기 조절 공급업 중 신재생에너지 발전업',
+                    fiscalYear: '2023',
+                    totalAssets: 9870,
+                    sales: 295,
+                },
+                {
+                    name: '(주)글로벌스마트모빌리티앤에너지테크놀로지스',
+                    ceo: '최영희',
+                    industry: 'IT',
+                    fiscalYear: '2024',
+                    totalAssets: 0,
+                    sales: 0,
+                },
+            ],
+            customers: status.customers.slice(0, 4).map((row, index) => ({
+                ...row,
+                name: ['(주)글로벌스마트모빌리티앤에너지테크놀로지스', '(주)이음', '', '삼성전자'][index] ?? row.name,
+            })),
+            suppliers: [],
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=activity — 활동성정보 탭 데이터를 모두 비운다(웹 보고서 활동성정보 탭 · 인쇄본 활동성정보 장 공용).
+const withPreviewEmptyActivity = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    activity: {employees: [], salesPerEmployee: []},
+    activityDetail: {humanResources: [], energy: {years: [], electricity: [], gas: []}},
+})
+
+// [퍼블리싱 확인용] ?empty=activity-long-text — 활동성정보 숫자를 모두 큰 값으로(빈 칸 없이 가장 넓은 경우).
+//   종업원수 · 입사 · 퇴사는 십만 명대, 증감은 큰 음수, 인당 매출액은 백만 천원대, 에너지는 억 kWh대.
+const PREVIEW_LARGE_PEOPLE = 123456
+const PREVIEW_LARGE_CHANGE = -12345
+const PREVIEW_LARGE_CHANGE_RATE = -123.4
+const PREVIEW_LARGE_SALES_PER_EMPLOYEE = 1234567.8
+const PREVIEW_LARGE_ENERGY = 123456789.12
+const withPreviewActivityLongText = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const {humanResources, energy} = report.activityDetail
+    const toLargeEnergy = (rows: readonly InnovationEnergyRow[]) =>
+        rows.map((row) => ({...row, values: row.values.map(() => PREVIEW_LARGE_ENERGY)}))
+    return {
+        ...report,
+        activity: {
+            employees: report.activity.employees.map((item) => ({...item, value: PREVIEW_LARGE_PEOPLE})),
+            salesPerEmployee: report.activity.salesPerEmployee.map((item) => ({
+                ...item,
+                value: PREVIEW_LARGE_SALES_PER_EMPLOYEE,
+            })),
+        },
+        activityDetail: {
+            humanResources: humanResources.map((row) => ({
+                ...row,
+                employees: PREVIEW_LARGE_PEOPLE,
+                change: PREVIEW_LARGE_CHANGE,
+                changeRate: PREVIEW_LARGE_CHANGE_RATE,
+                hires: PREVIEW_LARGE_PEOPLE,
+                leavers: PREVIEW_LARGE_PEOPLE,
+                salesPerEmployee: PREVIEW_LARGE_SALES_PER_EMPLOYEE,
+            })),
+            energy: {...energy, electricity: toLargeEnergy(energy.electricity), gas: toLargeEnergy(energy.gas)},
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=activity-change — 전년대비 증감(율)을 해마다 증가 · 감소 · 변동 없음 순으로 둔다(색 · 기호 확인).
+//   종업원수는 증감과 맞게 40 → 45 → 42 → 42 로 이어진다(첫 해의 전년은 40명).
+const PREVIEW_CHANGE_ROWS = [
+    {employees: 45, change: 5, changeRate: 12.5},
+    {employees: 42, change: -3, changeRate: -6.7},
+    {employees: 42, change: 0, changeRate: 0},
+] as const
+const withPreviewActivityChange = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    activityDetail: {
+        ...report.activityDetail,
+        humanResources: report.activityDetail.humanResources.map((row, index) => ({
+            ...row,
+            ...PREVIEW_CHANGE_ROWS[index % PREVIEW_CHANGE_ROWS.length],
+        })),
+    },
+})
+
+// [퍼블리싱 확인용] ?empty=activity-mixed — 활동성정보 영역마다 다른 케이스를 섞는다.
+//   인적자원 현황 — 첫 해는 받지 못함('-' 줄) · 둘째 해는 큰 값 · 셋째 해는 증감 · 입사 · 퇴사만 빈 값
+//   분기별 종업원수 — 앞 절반만 받음(뒤 분기는 빈 값) · 마지막 받은 분기는 큰 값,  인당 매출액 — 가운데 해만 빈 값
+//   전기 사용량 — 본사 큰 값 · 공장 가운데 해 빈 값 · 기타 받지 못함,  가스 사용량 — 하나도 받지 못함(그래프 빈 상태)
+const withPreviewActivityMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const {humanResources, energy} = report.activityDetail
+    const employees = report.activity.employees
+    const half = Math.ceil(employees.length / 2)
+    return {
+        ...report,
+        activity: {
+            employees: employees.map((item, index) => {
+                if (index >= half) return {...item, value: Number.NaN}
+                return index === half - 1 ? {...item, value: PREVIEW_LARGE_PEOPLE} : item
+            }),
+            salesPerEmployee: report.activity.salesPerEmployee.map((item, index) =>
+                index === 1 ? {...item, value: Number.NaN} : item,
+            ),
+        },
+        activityDetail: {
+            humanResources: humanResources.flatMap((row, index) => {
+                if (index === 0) return []
+                if (index === 1)
+                    return [
+                        {
+                            ...row,
+                            employees: PREVIEW_LARGE_PEOPLE,
+                            change: PREVIEW_LARGE_CHANGE,
+                            changeRate: PREVIEW_LARGE_CHANGE_RATE,
+                            hires: PREVIEW_LARGE_PEOPLE,
+                            leavers: PREVIEW_LARGE_PEOPLE,
+                            salesPerEmployee: PREVIEW_LARGE_SALES_PER_EMPLOYEE,
+                        },
+                    ]
+                return [{...row, change: Number.NaN, changeRate: Number.NaN, hires: Number.NaN, leavers: Number.NaN}]
+            }),
+            energy: {
+                ...energy,
+                electricity: energy.electricity.flatMap((row, index) => {
+                    if (index === 0) return [{...row, values: row.values.map(() => PREVIEW_LARGE_ENERGY)}]
+                    if (index === 1) return [{...row, values: clearMiddleYear(row.values)}]
+                    return []
+                }),
+                gas: [],
+            },
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=activity-partial — 활동성정보 탭에서 일부 값만 비운다.
+//   인적자원 표는 홀수 번째 해의 입사 · 퇴사 · 인당 매출액을, 분기 그래프는 진단브리핑 부분 비움과 같은 자리를 비운다.
+//   전기는 홀수 번째 구분(공장)의 가운데 해를, 가스는 가운데 해(2024년)를 모든 구분에서 비워 '합계도 없는 해'를 함께 본다.
+const withPreviewPartialActivity = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const {humanResources, energy} = report.activityDetail
+    return {
+        ...report,
+        activity: {
+            employees: report.activity.employees.map((item, index) =>
+                index % 4 === 3 ? {...item, value: Number.NaN} : item,
+            ),
+            salesPerEmployee: report.activity.salesPerEmployee.map((item, index) =>
+                isOddIndex(index) ? {...item, value: Number.NaN} : item,
+            ),
+        },
+        activityDetail: {
+            humanResources: humanResources.map((row, index) =>
+                isOddIndex(index)
+                    ? {...row, hires: Number.NaN, leavers: Number.NaN, salesPerEmployee: Number.NaN}
+                    : row,
+            ),
+            energy: {
+                ...energy,
+                electricity: energy.electricity.map((row, index) =>
+                    isOddIndex(index) ? {...row, values: clearMiddleYear(row.values)} : row,
+                ),
+                gas: energy.gas.map((row) => ({...row, values: clearMiddleYear(row.values)})),
+            },
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=credit — 신용/재무정보 탭 데이터를 모두 비운다(웹 보고서 신용/재무정보 탭 · 인쇄본 신용/재무정보 장 공용).
+// 등급 코드 · 날짜는 빈 문자열, 목록은 받은 것이 없는 상태. 기업신용정보 표는 틀(제목 · 머리 · 상태)을 두고 값 줄만 비운다.
+const withPreviewEmptyCredit = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const detail = report.creditDetail
+    const clearDetails = (details: readonly RatingGaugeDetail[]) => details.map((item) => ({...item, value: ''}))
+    return {
+        ...report,
+        creditFinance: {
+            ...report.creditFinance,
+            rating: {grade: '', details: clearDetails(report.creditFinance.rating.details)},
+        },
+        creditDetail: {
+            ...detail,
+            ratingHistory: [],
+            cashFlow: {grade: '', details: clearDetails(detail.cashFlow.details), history: []},
+            creditInfo: detail.creditInfo.map((table) => ({...table, status: '', rows: []})),
+            ratioYears: [],
+            ratios: detail.ratios.map((group) => ({...group, rows: []})),
+            borrowingTrend: [],
+            borrowings: {
+                years: [],
+                groups: [],
+                total: {...detail.borrowings.total, cells: []},
+            },
+            borrowingChanges: {years: [], rows: []},
+            institutions: {years: [], rows: [], share: []},
+            creditCollateral: {points: [], current: {credit: Number.NaN, collateral: Number.NaN}},
+            collaterals: [],
+            collateralYear: '',
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=credit-long-text — 신용/재무정보 탭의 긴 값(금액)을 본다.
+//   차입금 현황은 고정 줄 · 연도 칸을 빠짐없이 큰 금액(조 단위 백만원) · 비중 100.0 으로 채운다 — 빈 칸('-') 없이 가장 넓은 경우.
+//   담보 현황 금액도 큰 수로. 기업신용정보 표 값 · 상태는 정해진 명사(코드값)로 들어오므로 그대로 둔다. 등급 코드 · 일자 · 고정 항목명도 그대로.
+const PREVIEW_LARGE_AMOUNT_SCALE = 100000
+const PREVIEW_FULL_BORROWING_CELL: InnovationBorrowingCell = {amount: 123456789012, ratio: 100}
+const withPreviewCreditLongText = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const detail = report.creditDetail
+    const fixed = toFixedBorrowings(detail.borrowings)
+    const fillRow = (row: InnovationBorrowingRow): InnovationBorrowingRow => ({
+        ...row,
+        cells: fixed.years.map(() => PREVIEW_FULL_BORROWING_CELL),
+    })
+    return {
+        ...report,
+        creditDetail: {
+            ...detail,
+            borrowings: {
+                ...fixed,
+                groups: fixed.groups.map((group) => ({
+                    ...group,
+                    rows: group.rows.map(fillRow),
+                    subtotal: fillRow(group.subtotal),
+                })),
+                total: fillRow(fixed.total),
+            },
+            collaterals: detail.collaterals.map((item) => ({
+                ...item,
+                amount: item.amount * PREVIEW_LARGE_AMOUNT_SCALE,
+            })),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=credit-info-long-text — 기업신용정보 표마다 칸 폭을 넘는 값 한 줄 · 긴 상태 문구.
+//   원래 행이 없는 표(해당없음)도 한 줄을 넣는다 — 일자 · 번호 칸은 받은 값(없으면 예시 일자).
+const PREVIEW_LONG_CREDIT_STATUS = '부가가치세 간이과세자(휴업 후 재개업 · 사업장 소재지 이전 신고 처리 중)'
+const PREVIEW_LONG_CREDIT_CELL = '퍼블리싱 확인용으로 넣은 아주 긴 글이 칸 폭을 넘는 경우'
+const PREVIEW_LONG_CREDIT_AMOUNT = '123,456,789,012,345'
+const PREVIEW_SAMPLE_DATE = '2024-01-01'
+const PREVIEW_LONG_TEXT_COLUMN = /(상태|사유|기관|정보|여부)$/
+const PREVIEW_AMOUNT_COLUMN = /금액$/
+const withPreviewCreditInfoLongText = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const toLongCell = (column: string, value: string) => {
+        if (PREVIEW_AMOUNT_COLUMN.test(column)) return PREVIEW_LONG_CREDIT_AMOUNT
+        return PREVIEW_LONG_TEXT_COLUMN.test(column) ? PREVIEW_LONG_CREDIT_CELL : value
+    }
+    return {
+        ...report,
+        creditDetail: {
+            ...report.creditDetail,
+            creditInfo: report.creditDetail.creditInfo.map((table) => ({
+                ...table,
+                status: PREVIEW_LONG_CREDIT_STATUS,
+                rows: [
+                    table.columns.map((column, index) =>
+                        toLongCell(column, table.rows[0]?.[index] || PREVIEW_SAMPLE_DATE),
+                    ),
+                ],
+            })),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=credit-mixed — 신용/재무정보 영역마다 다른 케이스를 섞는다.
+//   기업신용등급   — 등급 있음 · 평가일자 빈 값 · 이력 1건(나머지 '-' 줄)
+//   현금흐름등급   — 등급 · 결산일자 · 이력 모두 없음
+//   기업신용정보   — 표마다 다르게: 긴 글 · 행 없음(상태 없음) · 그대로 · 큰 금액 · 일부 칸 빈 값 · 해당없음
+//   재무비율진단   — 성장성 그대로 · 수익성 행 없음 · 안정성 가운데 해 빈 값 · 활동성 업종평균 대비만 빈 값
+//   차입금 변동률  — 홀수 번째 달 빈 값,  차입금 현황 — 단기 큰 금액 · 장기 가운데 해 빈 칸,  변동현황 — 행 없음
+//   기관별 비중    — 표 그대로 · 도넛 없음,  신용/담보 — 추이 없음 · 최근 비중만,  담보 — 1건 · 큰 금액
+const withPreviewCreditMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const detail = report.creditDetail
+    const clearCell = (cells: readonly string[], index: number) => cells.map((value, i) => (i === index ? '' : value))
+    const creditInfoCases: Record<number, (table: InnovationCreditInfoTable) => InnovationCreditInfoTable> = {
+        0: (table) => ({
+            ...table,
+            rows: table.rows.map((row) =>
+                row.map((value, index) =>
+                    PREVIEW_LONG_TEXT_COLUMN.test(table.columns[index] ?? '') ? PREVIEW_LONG_CREDIT_CELL : value,
+                ),
+            ),
+        }),
+        1: (table) => ({...table, status: '', rows: []}),
+        3: (table) => ({
+            ...table,
+            rows: table.rows.map((row) =>
+                row.map((value, index) =>
+                    PREVIEW_AMOUNT_COLUMN.test(table.columns[index] ?? '') ? PREVIEW_LONG_CREDIT_AMOUNT : value,
+                ),
+            ),
+        }),
+        4: (table) => ({...table, rows: table.rows.map((row) => clearCell(clearCell(row, 1), row.length - 1))}),
+        5: (table) => ({...table, status: '해당없음', rows: []}),
+    }
+    const scaleCell = (cell: InnovationBorrowingCell): InnovationBorrowingCell =>
+        cell ? {...cell, amount: cell.amount * PREVIEW_LARGE_AMOUNT_SCALE} : cell
+    const clearMiddleCell = (row: InnovationBorrowingRow): InnovationBorrowingRow => ({
+        ...row,
+        cells: row.cells.map((cell, index) => (index === 1 ? null : cell)),
+    })
+    const scaleRow = (row: InnovationBorrowingRow): InnovationBorrowingRow => ({
+        ...row,
+        cells: row.cells.map(scaleCell),
+    })
+    const [shortTerm, ...otherGroups] = detail.borrowings.groups
+    return {
+        ...report,
+        creditFinance: {
+            ...report.creditFinance,
+            rating: {
+                ...report.creditFinance.rating,
+                details: report.creditFinance.rating.details.map((item, index) =>
+                    index ? item : {...item, value: ''},
+                ),
+            },
+        },
+        creditDetail: {
+            ...detail,
+            ratingHistory: detail.ratingHistory.slice(-1),
+            cashFlow: {
+                grade: '',
+                details: detail.cashFlow.details.map((item) => ({...item, value: ''})),
+                history: [],
+            },
+            creditInfo: detail.creditInfo.map((table, index) => creditInfoCases[index]?.(table) ?? table),
+            ratios: detail.ratios.map((group, groupIndex) => {
+                if (groupIndex === 1) return {...group, rows: []}
+                if (groupIndex === 2)
+                    return {...group, rows: group.rows.map((row) => ({...row, values: clearMiddleYear(row.values)}))}
+                if (groupIndex === 3) return {...group, rows: group.rows.map((row) => ({...row, comparison: ''}))}
+                return group
+            }),
+            borrowingTrend: detail.borrowingTrend.map((item, index) =>
+                isOddIndex(index) ? {...item, value: Number.NaN} : item,
+            ),
+            borrowings: {
+                ...detail.borrowings,
+                groups: [
+                    ...(shortTerm
+                        ? [{...shortTerm, rows: shortTerm.rows.map(scaleRow), subtotal: scaleRow(shortTerm.subtotal)}]
+                        : []),
+                    ...otherGroups.map((group) => ({
+                        ...group,
+                        rows: group.rows.map(clearMiddleCell),
+                        subtotal: clearMiddleCell(group.subtotal),
+                    })),
+                ],
+                total: scaleRow(detail.borrowings.total),
+            },
+            borrowingChanges: {...detail.borrowingChanges, rows: []},
+            institutions: {...detail.institutions, share: []},
+            creditCollateral: {...detail.creditCollateral, points: []},
+            collaterals: detail.collaterals
+                .slice(0, 1)
+                .map((item) => ({...item, amount: item.amount * PREVIEW_LARGE_AMOUNT_SCALE})),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=credit-partial — 신용/재무정보 탭에서 일부 값만 비운다.
+//   이력은 1건만(나머지 '-' 줄), 기업신용정보는 홀수 번째 표의 홀수 번째 칸, 재무비율 · 차입금 · 기관별은 홀수 번째 줄의 가운데 해,
+//   차입금 변동률 · 신용/담보는 홀수 번째 점, 담보는 앞의 2개만 받은 경우를 본다.
+const withPreviewPartialCredit = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const detail = report.creditDetail
+    const clearMiddleCell = (row: InnovationBorrowingRow): InnovationBorrowingRow => ({
+        ...row,
+        cells: row.cells.map((cell, index) => (index === 1 ? null : cell)),
+    })
+    return {
+        ...report,
+        creditDetail: {
+            ...detail,
+            ratingHistory: detail.ratingHistory.slice(-1),
+            cashFlow: {...detail.cashFlow, history: detail.cashFlow.history.slice(-1)},
+            creditInfo: detail.creditInfo.map((table, tableIndex) =>
+                isOddIndex(tableIndex)
+                    ? {
+                          ...table,
+                          rows: table.rows.map((row) => row.map((value, index) => (isOddIndex(index) ? '' : value))),
+                      }
+                    : table,
+            ),
+            ratios: detail.ratios.map((group) => ({
+                ...group,
+                rows: group.rows.map((row, index) =>
+                    isOddIndex(index) ? {...row, values: clearMiddleYear(row.values), comparison: ''} : row,
+                ),
+            })),
+            borrowingTrend: detail.borrowingTrend.map((item, index) =>
+                isOddIndex(index) ? {...item, value: Number.NaN} : item,
+            ),
+            borrowings: {
+                ...detail.borrowings,
+                groups: detail.borrowings.groups.map((group) => ({
+                    ...group,
+                    rows: group.rows.map((row, index) => (isOddIndex(index) ? clearMiddleCell(row) : row)),
+                })),
+            },
+            borrowingChanges: {
+                ...detail.borrowingChanges,
+                rows: detail.borrowingChanges.rows.map((row, index) =>
+                    isOddIndex(index) ? {...row, values: clearMiddleYear(row.values)} : row,
+                ),
+            },
+            institutions: {
+                ...detail.institutions,
+                rows: detail.institutions.rows.map((row, index) =>
+                    isOddIndex(index) ? {...row, values: row.values.map((value, i) => (i === 1 ? null : value))} : row,
+                ),
+            },
+            creditCollateral: {
+                ...detail.creditCollateral,
+                points: detail.creditCollateral.points.map((point, index) =>
+                    isOddIndex(index) ? {...point, credit: Number.NaN, collateral: Number.NaN} : point,
+                ),
+            },
+            collaterals: detail.collaterals.slice(0, PARTIAL_KEEP_COUNT),
+        },
+    }
+}
+
+// [퍼블리싱 확인용] ?empty=briefing-partial — 항목마다 짝수 번째(0 · 2 · 4 …)는 두고 홀수 번째 값만 비운다(일부 빈 칸).
+// 그래프 · 등급처럼 한 값뿐인 항목은 섞어 둔다 — 점수는 있고 순위 · 평가일자는 없음, 기업신용등급은 있고 현금흐름등급은 없음.
+const isOddIndex = (index: number) => index % 2 === 1
+const withPreviewPartialBriefing = (report: InnovationGrowthReport): InnovationGrowthReport => ({
+    ...report,
+    company: {rows: report.company.rows.map((row, index) => (isOddIndex(index) ? {...row, value: ''} : row))},
+    innovation: {
+        ...report.innovation,
+        stats: report.innovation.stats.map((stat, index) => (isOddIndex(index) ? {...stat, value: null} : stat)),
+        averages: report.innovation.averages.map((row, index) => (isOddIndex(index) ? {...row, value: null} : row)),
+        // 부처는 2곳만 받은 경우 — 나머지 두 칸은 빠진 부처명 · '-' 로 채워진다.
+        rnd: report.innovation.rnd.slice(0, 2),
+    },
+    techIndex: {...report.techIndex, industryPercentile: Number.NaN, evaluationDate: ''},
+    creditFinance: {
+        ...report.creditFinance,
+        rating: {
+            ...report.creditFinance.rating,
+            details: report.creditFinance.rating.details.map((detail, index) =>
+                isOddIndex(index) ? {...detail, value: ''} : detail,
+            ),
+        },
+        ratios: report.creditFinance.ratios.map((row, index) => (isOddIndex(index) ? {...row, rating: null} : row)),
+        comparison: report.creditFinance.comparison.map((row, index) =>
+            isOddIndex(index) ? {...row, company: Number.NaN} : row,
+        ),
+        statements: report.creditFinance.statements.map((row, index) =>
+            isOddIndex(index)
+                ? {...row, values: row.values.map((value, valueIndex) => (valueIndex === 1 ? Number.NaN : value))}
+                : row,
+        ),
+    },
+    creditDetail: {...report.creditDetail, cashFlow: {...report.creditDetail.cashFlow, grade: ''}},
+    activity: {
+        employees: report.activity.employees.map((item, index) =>
+            index % 4 === 3 ? {...item, value: Number.NaN} : item,
+        ),
+        salesPerEmployee: report.activity.salesPerEmployee.map((item, index) =>
+            isOddIndex(index) ? {...item, value: Number.NaN} : item,
+        ),
+    },
+})
 
 // [퍼블리싱 확인용] 케이스별 확인 화면의 기업신용정보 표 상태 — 케이스마다 보여 줄 모양을 고정한다(목업 값만 바꾼다).
 //   partner-corp: 당좌거래정지정보를 '해당없음'(배지 [해당없음] + '해당사항 없음' 줄)으로 둬 비공개 표와 나란히 본다.
@@ -1701,12 +3462,34 @@ const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthRe
 // ── 목업 끝 ──
 
 export {
+    INNOVATION_REPORT_SCORE_MAX,
+    INNOVATION_REPORT_GRADE_HISTORY_COUNT,
+    INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT,
+    INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT,
+    toMarketScaleRows,
     getHumanResourceYearRows,
+    ENERGY_CATEGORIES,
+    TECH_INDEX_CAPABILITIES,
+    toExcellentPatentRows,
+    TECH_INDEX_FALLBACK_STANDARD,
+    TECH_INDEX_INDICATOR_TITLES,
+    toEnergyYearRows,
+    RATIO_GROUP_SPECS,
+    BORROWING_CHANGE_LABELS,
+    INSTITUTION_LABELS,
+    COLLATERAL_LABELS,
+    toFixedBorrowings,
+    pickYearValue,
     getRecentYears,
     isSameYear,
     getInnovationGrowthReport,
     innovationReportPath,
     withPreviewCase,
+    withPreviewEmpty,
+    toFixedFinanceRows,
+    FINANCE_ROW_LABELS,
+    toRndSlots,
+    INNOVATION_REPORT_EMPTY_QUERY,
     INNOVATION_CREDIT_VISIBILITY,
     INNOVATION_REPORT_CASE_QUERY,
     INNOVATION_REPORT_CASES,
@@ -1722,6 +3505,7 @@ export {
     INNOVATION_REPORT_PC_VIEW,
     INNOVATION_REPORT_VIEW_QUERY,
     INNOVATION_ISSUE_COLORS,
+    INNOVATION_ISSUE_NOTE,
     INNOVATION_REPORT_ID_QUERY,
     INNOVATION_REPORT_CREATED_TOAST,
     INNOVATION_REPORT_PRINT_LABEL,
@@ -1756,4 +3540,6 @@ export type {
     InnovationReportSectionId,
     InnovationStatId,
     InnovationTradePartner,
+    FinanceRowLabels,
+    RatioGroupSpec,
 }

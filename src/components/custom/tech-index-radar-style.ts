@@ -1,7 +1,7 @@
 // 'use client' 가 없는 파일 — 서버 컴포넌트(가이드 페이지 등)에서도 이 묶음을 펼쳐 쓸 수 있게 차트 파일과 떼어 둔다.
 import type {ComparisonRadarChartProps} from '@/components/custom/comparison-radar-chart'
 
-// K-BIGx 기업혁신성장 보고서 Tech-Index 탭 "세부지표별 상대비교분석" 카드(차트 칸 538×216) 모양 묶음 — 보고서와 가이드가 같이 쓴다.
+// K-BIGx 기업혁신성장 보고서 Tech-Index 탭 "혁신성장역량지수 부문별 지표 비교" 카드(차트 칸 538×216) 모양 묶음 — 보고서와 가이드가 같이 쓴다.
 //   동심원 격자 4고리(subtle-3) · 반지름 70 · 축 이름 12 Regular(label-foreground)
 //   신청기업: blue.500 실선 + 반투명 면(10%) + 속이 빈 점 8 / 전체평균: blue.200 반투명 면(50%) + 점선, 점 없음
 //   색은 모두 --ds-* 라 화면 테마(다크)를 따른다 — 격자 · 축 이름은 시맨틱, 계열 색은 단계 스케일(--ds-blue-*).

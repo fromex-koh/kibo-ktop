@@ -67,6 +67,16 @@ type ColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     isLoading?: boolean
     /** 불러오는 중에 화면 낭독기가 읽을 말. */
     loadingLabel?: string
+    /**
+     * cells: 값이 없는 항목(숫자가 아닌 value)을 자리에 남기고 막대 대신 이 글자를 적는다(예: '-').
+     * 주지 않으면 지금처럼 모든 value 를 숫자로 본다 — 값이 빠질 수 있는 화면만 넘긴다(K-BIGx 인당 매출액).
+     */
+    missingValueText?: string
+    /**
+     * cells: 6자를 넘는 값 글자를 '123.5만'으로 줄일지(기본 true — 옆 값과 겹치지 않게). 항목이 적어 자리가 넉넉하고
+     * 단위와 함께 정확한 값을 읽어야 하는 막대만 false 로 둔다(K-BIGx 인당 매출액 — '38.9만 천원' 으로 읽히지 않게).
+     */
+    compactValueLabels?: boolean
 }
 
 const numberFormatter = new Intl.NumberFormat('ko-KR')
@@ -90,6 +100,8 @@ const ColumnChart = ({
     maxValueRatio = CELLS_MAX_VALUE_RATIO,
     isLoading = false,
     loadingLabel = '그래프를 불러오는 중입니다.',
+    missingValueText,
+    compactValueLabels = true,
     ariaLabel,
     className,
     ...props
@@ -113,9 +125,15 @@ const ColumnChart = ({
     const isBare = isCells || isPlain
     // recharts 는 자료의 남는 값을 막대 요소의 속성으로 그대로 내보낸다 — id 를 그대로 넘기면 한 화면에
     // 같은 id 가 여러 번 생겨 마크업 오류가 된다[8.1.1]. 그림에 필요한 값만 넘기고 색은 Cell 이 정한다.
-    const chartData = data.map(({label, value}) => ({label, value}))
-    const maximumValue = Math.max(0, ...data.map(({value}) => Math.max(0, value)))
-    const minimumValue = Math.min(0, ...data.map(({value}) => Math.min(0, value)))
+    // missingValueText 를 주면 값이 없는 항목은 0 으로 자리만 만들고(막대는 투명) 값 글자 자리에 그 글자를 적는다.
+    const hasMissingText = missingValueText !== undefined
+    const isMissingAt = (index: number) => hasMissingText && !Number.isFinite(data[index]?.value)
+    const chartData = data.map(({label, value}, index) => ({label, value: isMissingAt(index) ? 0 : value}))
+    const finiteValues = data.map(({value}) => value).filter((value) => !hasMissingText || Number.isFinite(value))
+    const maximumValue = Math.max(0, ...finiteValues.map((value) => Math.max(0, value)))
+    const minimumValue = Math.min(0, ...finiteValues.map((value) => Math.min(0, value)))
+    const formatItemValue = (value: number, index: number) =>
+        isMissingAt(index) && missingValueText !== undefined ? missingValueText : valueFormatter.format(value)
     const normalizedStep = yAxisStep && yAxisStep > 0 ? yAxisStep : undefined
     const yAxisMaximum = normalizedStep
         ? Math.max(normalizedStep, Math.ceil(maximumValue / normalizedStep) * normalizedStep)
@@ -287,17 +305,19 @@ const ColumnChart = ({
                             minPointSize={isBare ? cellsMinPointSize : undefined}
                             activeBar={showTooltip && {filter: 'brightness(0.82)'}}
                         >
-                            {data.map((item) => (
-                                <Cell key={item.id} fill={item.color ?? color} />
+                            {data.map((item, index) => (
+                                // 값이 없는 항목(missingValueText)은 막대를 그리지 않는다 — 자리만 남기고 투명.
+                                <Cell key={item.id} fill={isMissingAt(index) ? 'transparent' : (item.color ?? color)} />
                             ))}
                             {showValueLabels && isCells ? (
                                 <LabelList
                                     dataKey="value"
                                     content={(labelProps) =>
-                                        renderCellsBarValueLabel(labelProps, (value) => valueFormatter.format(value), {
-                                            count: data.length,
-                                            values: data.map((item) => item.value),
-                                        })
+                                        renderCellsBarValueLabel(
+                                            labelProps,
+                                            (value) => formatItemValue(value, labelProps.index ?? 0),
+                                            {count: data.length, values: finiteValues, isCompact: compactValueLabels},
+                                        )
                                     }
                                 />
                             ) : null}
@@ -340,10 +360,10 @@ const ColumnChart = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item) => (
+                        {data.map((item, index) => (
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
-                                <td>{valueFormatter.format(item.value)}</td>
+                                <td>{formatItemValue(item.value, index)}</td>
                             </tr>
                         ))}
                     </tbody>

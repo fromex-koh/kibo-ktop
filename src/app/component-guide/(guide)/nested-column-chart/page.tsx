@@ -82,6 +82,12 @@ const MISSING_DATA = toData(BALANCE_KEYS, [
     [undefined, 7300, 8100],
     [undefined, 9461, 10881],
 ])
+// 일부만 빈 연도(2022 · 2024)와 모두 빈 연도(2023) — missingValueText 예시.
+const PARTIAL_MISSING_DATA = toData(INCOME_KEYS, [
+    [undefined, undefined, 16100],
+    [980, undefined, 1350],
+    [undefined, undefined, undefined],
+])
 const FIVE_YEARS = ['2020년', '2021년', '2022년', '2023년', '2024년'] as const
 const FIVE_YEAR_DATA = toData(
     BALANCE_KEYS,
@@ -151,6 +157,16 @@ const EDGE_CASES = [
         series: BALANCE_SERIES,
     },
     {
+        key: 'missing-text',
+        title: "값 없음 — missingValueText='-'",
+        description:
+            "값이 없는 막대 자리마다 바닥선 위에 '-' 를 적습니다. 2023년처럼 막대가 모두 없으면 가운데에 '-' 하나만 적습니다(PDF 템플릿 기업현황).",
+        data: PARTIAL_MISSING_DATA,
+        base: INCOME_BASE,
+        series: INCOME_SERIES,
+        missingValueText: '-',
+    },
+    {
         key: 'five-years',
         title: '항목이 다섯(5개년)',
         description: '항목 칸이 좁아져도 기준 막대 폭(108)은 그대로입니다. 칸 폭 112 까지 들어갑니다.',
@@ -192,7 +208,7 @@ const LOADING_CODE = `import {NestedColumnChartSkeleton} from '@/components/comp
   <NestedColumnChart data={balance} base={assets} series={parts} ariaLabel="연도별 재무상태" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 표 → 범례(오른쪽) → 그래프, 간격 16(kbigx-print-company.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 표 → 범례(오른쪽) → 그래프, 간격 16(kbigx-print-company.tsx).
 <KbxLegend density="compact" items={[{label: '총자산', swatchClassName: 'bg-kbx-chart-neutral'}, …]} />
 <NestedColumnChart
   data={…}
@@ -226,6 +242,13 @@ const PROPS_ITEMS = [
         'Partial<NestedColumnColors>',
     ],
     ['NestedColumnChart', 'formatValue', '값 글자 형식입니다.', '천 단위 쉼표', '(value: number) => string'],
+    [
+        'NestedColumnChart',
+        'missingValueText',
+        "값이 없는 막대(그 계열 값이 없거나 숫자가 아님) 자리에 적을 글자입니다(예: '-'). 막대 없이 값이 0 일 때 값 글자 자리(바닥선 바로 위)에 적고, 한 항목의 막대가 모두 없으면 가운데에 하나만 적습니다. 주지 않으면 그 자리를 비웁니다.",
+        '-',
+        'string',
+    ],
     ['NestedColumnSeries', 'key · label · color', '계열 식별자 · 이름 · 막대 색입니다.', '-', 'string'],
     ['NestedColumnItem', 'id · label', '항목 식별자와 이름(막대 아래 글자)입니다.', '-', 'string'],
     [
@@ -265,7 +288,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const NestedColumnChartGuidePage = () => (
     <GuidePageShell
         title="겹친 막대 (NestedColumnChart)"
-        description="항목마다 넓은 기준 막대 안에 구성 막대를 겹쳐 세우고 막대마다 값을 바로 적는 차트입니다. 세로축 없이 값 글자로 읽습니다. K-BIGx 보고서 인쇄본 기업현황의 재무상태 · 손익현황 그래프입니다."
+        description="항목마다 넓은 기준 막대 안에 구성 막대를 겹쳐 세우고 막대마다 값을 바로 적는 차트입니다. 세로축 없이 값 글자로 읽습니다. K-BIGx 보고서 PDF 템플릿 기업현황의 재무상태 · 손익현황 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="ncc-basic" className="flex flex-col gap-6">
@@ -312,7 +335,7 @@ const NestedColumnChartGuidePage = () => (
                         348(19px)입니다.
                     </li>
                     <li>
-                        범례는 그리지 않습니다 — 사용처가 그래프 위에 둡니다(인쇄본은 KbxLegend
+                        범례는 그리지 않습니다 — 사용처가 그래프 위에 둡니다(PDF 템플릿은 KbxLegend
                         density=&quot;compact&quot;).
                     </li>
                 </ul>
@@ -331,6 +354,7 @@ const NestedColumnChartGuidePage = () => (
                                 data={item.data}
                                 base={item.base}
                                 series={item.series}
+                                missingValueText={'missingValueText' in item ? item.missingValueText : undefined}
                                 ariaLabel={`${item.title} 예시`}
                             />
                         </Example>
@@ -342,8 +366,8 @@ const NestedColumnChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="ncc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="ncc-loading" title="4. 불러오는 중 (NestedColumnChartSkeleton)">
-                    차트와 같은 그림 범위(560 × 354)에 바닥선 · 기준 막대 · 구성 막대 · 글자 자리를 그립니다. 인쇄본은
-                    데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                    차트와 같은 그림 범위(560 × 354)에 바닥선 · 기준 막대 · 구성 막대 · 글자 자리를 그립니다. PDF
+                    템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -364,7 +388,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-print" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="ncc-print" title="5. K-BIGx PDF 템플릿에서">
                     재무현황 칸(폭 556) 안에서 표 → 범례 → 그래프 순서로 16 간격입니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=company"
@@ -372,7 +396,7 @@ const NestedColumnChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기업현황
+                        K-BIGx 보고서 PDF 템플릿 기업현황
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

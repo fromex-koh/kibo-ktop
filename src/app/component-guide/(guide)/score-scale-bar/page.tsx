@@ -28,7 +28,7 @@ const grade = getTechIndexGrade(score) // 73.8 → {label: '양호', tone: 'good
   fillClassName={SCORE_SCALE_BAR_TONE_CLASS[grade.tone]}
 />`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 색 · 크기를 kbx 클래스로 넘깁니다(.kbigx-print 안). kbigx-print-briefing.tsx
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 색 · 크기를 kbx 클래스로 넘깁니다(.kbigx-print 안). kbigx-print-briefing.tsx
 <ScoreScaleBar
   score={techIndex.score}
   ariaLabel="혁신성장역량지수"
@@ -106,7 +106,7 @@ const PROPS_ITEMS = [
     [
         'ScoreScaleBar',
         'tickPosition',
-        "눈금 숫자 자리입니다. 'bottom' 은 막대 아래, 'top' 은 막대 위(K-BIGx 인쇄본 혁신성장역량지수)입니다.",
+        "눈금 숫자 자리입니다. 'bottom' 은 막대 아래, 'top' 은 막대 위(K-BIGx PDF 템플릿 혁신성장역량지수)입니다.",
         "'bottom'",
         "'top' | 'bottom'",
     ],
@@ -193,7 +193,7 @@ const GradeSample = ({score}: {score: number}) => {
 const ScoreScaleBarGuidePage = () => (
     <GuidePageShell
         title="점수 눈금 막대 (ScoreScaleBar)"
-        description="0 ~ 최댓값 눈금 위에 점수만큼 채우고 점수 자리에 세로 표시선을 세우는 막대입니다. K-BIGx 보고서 인쇄본 진단브리핑의 혁신성장역량지수 막대입니다."
+        description="0 ~ 최댓값 눈금 위에 점수만큼 채우고 점수 자리에 세로 표시선을 세우는 막대입니다. K-BIGx 보고서 PDF 템플릿 진단브리핑의 혁신성장역량지수 막대입니다."
     >
         <BaseCard>
             <section aria-labelledby="ssb-basic" className="flex flex-col gap-6">
@@ -217,7 +217,7 @@ const ScoreScaleBarGuidePage = () => (
             <section aria-labelledby="ssb-grade" className="flex flex-col gap-6">
                 <SectionHeading id="ssb-grade" title="2. 등급별 색">
                     Tech-Index 점수 구간(<code>TECH_INDEX_GRADES</code>)마다 막대 채움과 등급 뱃지 색이 바뀝니다. 구간
-                    끝값 이하이면 그 구간입니다. 인쇄본 뱃지는 등급 색 바탕에 흰 글자라, 흰 글자가 읽히지 않는
+                    끝값 이하이면 그 구간입니다. PDF 템플릿 뱃지는 등급 색 바탕에 흰 글자라, 흰 글자가 읽히지 않는
                     보통(주황)만 한 단계 진한 색을 씁니다(괄호는 흰 글자 대비, 22px 굵은 글씨 기준 3:1 이상).
                 </SectionHeading>
                 <div className="overflow-x-auto">
@@ -235,7 +235,7 @@ const ScoreScaleBarGuidePage = () => (
                                     막대 채움
                                 </th>
                                 <th scope="col" className="px-4 py-3 text-start">
-                                    인쇄본 뱃지 바탕
+                                    PDF 템플릿 뱃지 바탕
                                 </th>
                             </tr>
                         </thead>
@@ -295,7 +295,7 @@ const ScoreScaleBarGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="ssb-loading" className="flex flex-col gap-6">
                 <SectionHeading id="ssb-loading" title="4. 불러오는 중 (ScoreScaleBarSkeleton)">
-                    띠 자리와 눈금 숫자 자리를 같은 배치로 그립니다. 인쇄본은 데이터를 받은 뒤 서버에서 바로 그려
+                    띠 자리와 눈금 숫자 자리를 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려
                     스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -319,8 +319,8 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-print" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-print" title="5. K-BIGx 인쇄본에서">
-                    인쇄본은 kbx 클래스로 템플릿 치수(띠 높이 26 · 표시선 폭 3 · 위아래 10 · 눈금 20px)를 넘깁니다.
+                <SectionHeading id="ssb-print" title="5. K-BIGx PDF 템플릿에서">
+                    PDF 템플릿은 kbx 클래스로 템플릿 치수(띠 높이 26 · 표시선 폭 3 · 위아래 10 · 눈금 20px)를 넘깁니다.
                 </SectionHeading>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
@@ -332,8 +332,8 @@ const ScoreScaleBarGuidePage = () => (
                         끝말(취약함 · 미흡함 · 보통 · 양호함 · 우수함)도 같은 구간에서 옵니다.
                     </li>
                     <li>
-                        인쇄본에서 넣어 본 점수: 0 · 10 · 20 · 20.5 · 21 · 40 · 55 · 60 · 73.8 · 80 · 81 · 99.9 · 100.0.
-                        모두 쪽 넘침 없이 블록 높이가 같고, 표시선이 띠 안에 섭니다.
+                        PDF 템플릿에서 넣어 본 점수: 0 · 10 · 20 · 20.5 · 21 · 40 · 55 · 60 · 73.8 · 80 · 81 · 99.9 ·
+                        100.0. 모두 쪽 넘침 없이 블록 높이가 같고, 표시선이 띠 안에 섭니다.
                     </li>
                 </ul>
                 <p className="typo-body-l-regular text-label-foreground">
@@ -344,7 +344,7 @@ const ScoreScaleBarGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 진단브리핑
+                        K-BIGx 보고서 PDF 템플릿 진단브리핑
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </p>

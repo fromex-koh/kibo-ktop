@@ -178,7 +178,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
         groups: [
             {
                 key: 'kbigx-print',
-                title: 'K-BIGx 보고서 인쇄본',
+                title: 'K-BIGx 보고서 PDF 템플릿',
                 description:
                     '표지 · 목차 그림입니다. 목차 그림은 템플릿의 잘린 영역과 두 겹 효과를 이미지에 미리 반영해 한 장으로 둡니다.',
                 folder: 'public/images/report/',

@@ -25,7 +25,12 @@ import {
     getKbxIssueWords,
     KbxUnitBelow,
 } from '@/components/custom/kbigx-print-parts'
-import {INNOVATION_ISSUE_COLORS, type InnovationGrowthReport} from '@/content/service/k-bigx-innovation-report'
+import {
+    INNOVATION_ISSUE_COLORS,
+    toMarketScaleRows,
+    type InnovationGrowthReport,
+    INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT,
+} from '@/content/service/k-bigx-innovation-report'
 import {
     getKbigxExcellentPatentRows,
     getKbigxPatentRows,
@@ -100,7 +105,7 @@ const HoldingGroup = ({
 )
 
 // 기술혁신정보 1 — 안내문 · 보유기술(기술 보유현황: 중분류 · 세부분야 기준 도넛을 위아래로).
-// 분류 색은 이름으로 정한다(kbxCategoryColor) — 같은 분류는 두 도넛에서 같은 색.
+// 분류 색은 받은 순서대로 매긴다(kbxCategoryColor, '기타'만 회색) — 두 도넛 모두 비중 큰 순으로 받아야 색 순서가 맞다.
 const KbigxPrintInnovationHoldings = ({report}: {report: InnovationGrowthReport}) => {
     const {notice, holdings} = report.techInnovation
 
@@ -260,8 +265,18 @@ const SurfaceBox = ({label, className, children}: {label: string; className?: st
 
 // 기업수 · 특허수 막대 색(범례와 같다).
 const MARKET_SCALE_BARS = {
-    left: {title: '기업수', color: 'var(--kbx-color-purple)', swatchClassName: 'bg-kbx-purple', unit: '기업수(개)'},
-    right: {title: '특허수', color: 'var(--kbx-color-blue)', swatchClassName: 'bg-kbx-blue', unit: '특허수(건)'},
+    left: {
+        title: '기업수',
+        color: 'var(--kbx-color-chart-series-1)',
+        swatchClassName: 'bg-kbx-chart-series-1',
+        unit: '기업수(개)',
+    },
+    right: {
+        title: '특허수',
+        color: 'var(--kbx-color-chart-series-2)',
+        swatchClassName: 'bg-kbx-chart-series-2',
+        unit: '특허수(건)',
+    },
 } as const
 
 // 매출 규모 구간 색 — 작은 구간부터 남색 → 옅은 파랑 5단계(분류 색 첫 단계를 뺀 것). 구간이 더 많으면 마지막 색을 이어 쓴다.
@@ -342,7 +357,8 @@ const MarketScaleBlock = ({
                 categoryTitle="매출 규모"
                 left={MARKET_SCALE_BARS.left}
                 right={MARKET_SCALE_BARS.right}
-                data={marketScale.rows.map((row) => ({
+                // 5행 고정 — 값이 없으면 막대 없이 '-'(toMarketScaleRows).
+                data={toMarketScaleRows(marketScale.rows).map((row) => ({
                     id: row.id,
                     label: row.label,
                     left: row.companies,
@@ -465,19 +481,22 @@ const PatentAnalysisBlock = ({
 
 // ── 맞춤형 기술정보 · 경쟁기업 및 우수기업 ──
 
-// 경쟁기업 사업실적 — 막대(매출액) 파랑 · 조회기업 민트 · 평균 보라, 선(영업이익률) 남색.
+// 경쟁기업 사업실적 — 흑백 인쇄에서도 갈리게 명도 3단계: 조회기업 진남(가장 진함) · 경쟁기업 파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리.
+// 선(영업이익률)은 진남 + 흰 바깥 테두리 — 진남 막대 위에서도 끊겨 보이지 않게.
 const COMPETITOR_CHART_COLORS = {
-    bar: 'var(--kbx-color-blue)',
-    subjectBar: 'var(--kbx-color-mint)',
-    averageBar: 'var(--kbx-color-purple)',
-    line: 'var(--kbx-color-navy)',
+    bar: 'var(--kbx-color-chart-general)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
+    line: 'var(--kbx-color-chart-trend)',
+    lineHalo: 'var(--kbx-color-chart-trend-halo)',
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
     value: 'var(--kbx-color-label)',
     lineValue: 'var(--kbx-color-paper)',
     category: 'var(--kbx-color-foreground)',
-    subject: 'var(--kbx-color-primary)',
+    subject: 'var(--kbx-color-chart-subject-label)',
 } as const
 
 // 경쟁기업 그래프 · 성장률 우수기업 목록의 회사 이름은 한 줄 — 칸보다 길면 말줄임(…).
@@ -506,10 +525,12 @@ const RANK_LIST_PROPS = {
     formatValue: formatGrowthRate,
 } as const satisfies Partial<RankBarListProps>
 
-// 순위 막대 색 — 100억원 이하는 남색 · 초과는 파랑(인자 bar). 평균(진보라) · 조회기업(초록)은 두 목록이 같다.
+// 순위 막대 색 — 100억원 이하는 남색 · 초과는 파랑(인자 bar). 평균(옅은 바탕 + 사선 · 테두리 — 같은 쪽 경쟁기업 그래프와
+// 같은 표현) · 조회기업(초록)은 두 목록이 같다. 조회기업을 진남으로 두면 100억원 이하 막대(남색)와 겹쳐 초록을 유지한다.
 const rankColors = (bar: string) => ({
     bar,
-    averageBar: 'var(--kbx-color-purple-strong)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
     subjectBar: 'var(--kbx-color-green)',
 })
 
@@ -551,7 +572,8 @@ const KbigxPrintInnovationCompetitors = ({report}: {report: InnovationGrowthRepo
                             formatValue={formatCompetitorValue}
                             data={competitors.map((item) => ({
                                 id: item.id,
-                                label: keepCorporatePrefix(item.label),
+                                // 기업명이 비면 '-'.
+                                label: item.label.trim() ? keepCorporatePrefix(item.label) : KBX_EMPTY_VALUE,
                                 value: item.sales,
                                 lineValue: item.growthRate,
                                 tone: item.tone,
@@ -679,6 +701,9 @@ const EMERGING_DESCRIPTION =
 const RND_ISSUE_DESCRIPTION =
     'R&D 이슈는 귀사의 기술이 속한 기술분야(세부분야)를 기준으로, 최근 3년 이내에 등록된 특허를 분석하여 제공되는 정보입니다.'
 const EMERGING_COUNT_GROUP = '특허 등록건수'
+// 이머징 기술을 하나도 받지 못했을 때 — 표 모양은 그대로 두고 칸을 '-' 로 채운다. 줄은 늘 그리는 최대치(10건 + '기타'),
+// 기간 열은 INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT 칸(2년 단위 · 10년)이며 머리도 '-'.
+const EMERGING_EMPTY_ROW_COUNT = KBIGX_PRINT_LIST_LIMIT + 1
 const TOTAL_LABEL = '합계'
 
 // 소제목 아래 안내문.
@@ -693,7 +718,12 @@ const Description = ({children}: {children: ReactNode}) => (
 // 늘 한 쪽 — 표 최대 12줄(10건 + 기타 + 합계) + R&D 이슈 상자 410 이 들어가고 바닥글 선과 40 이상 띄운다.
 // 그래서 기술분야 이름은 한 줄에서 말줄임한다(줄이 늘면 쪽을 넘는다).
 const KbigxPrintInnovationEmerging = ({report}: {report: InnovationGrowthReport}) => {
-    const {periods, rows} = report.techInnovation.emergingTech
+    const {periods: receivedPeriods, rows} = report.techInnovation.emergingTech
+    // 기간을 받지 못하면 머리 '-' 기간 칸을 둔다(key 만 다르고 값은 모두 '-').
+    const periods = receivedPeriods.length
+        ? receivedPeriods
+        : Array.from({length: INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT}, (_, index) => `empty-period-${index}`)
+    const periodHeader = (period: string) => (receivedPeriods.length ? period : KBX_EMPTY_VALUE)
     const issueWords = getKbxIssueWords(report.innovation.issues)
     // 열 — 기술분야 256 · 기간 칸(나머지를 똑같이 나눔) · 합계 80 · 증가율 80 · 비중 72.
     const columns: readonly KbxTableColumn[] = [
@@ -702,7 +732,7 @@ const KbigxPrintInnovationEmerging = ({report}: {report: InnovationGrowthReport}
         // 고정폭이면 글자가 넓어져 이웃 기간 머리와 붙는다.
         ...periods.map((period) => ({
             key: period,
-            header: period,
+            header: periodHeader(period),
             group: EMERGING_COUNT_GROUP,
             isNarrow: true,
             headerClassName: 'whitespace-nowrap normal-nums',
@@ -732,8 +762,22 @@ const KbigxPrintInnovationEmerging = ({report}: {report: InnovationGrowthReport}
                         caption="이머징 기술 — 기술분야별 특허 등록건수 · 증가율 · 비중"
                         columns={columns}
                         rows={[
-                            ...rows.map((row) => ({
-                                key: row.field,
+                            // 받은 줄이 없으면 '-' 줄을 최대치만큼(10건 + 기타) 그린다 — 표 높이 · 쪽 모양이 데이터 유무로 바뀌지 않는다.
+                            ...(rows.length
+                                ? []
+                                : Array.from({length: EMERGING_EMPTY_ROW_COUNT}, (_, index) => ({
+                                      key: `empty-${index}`,
+                                      cells: [
+                                          KBX_EMPTY_VALUE,
+                                          ...periods.map(() => KBX_EMPTY_VALUE),
+                                          KBX_EMPTY_VALUE,
+                                          KBX_EMPTY_VALUE,
+                                          KBX_EMPTY_VALUE,
+                                      ],
+                                  }))),
+                            ...rows.map((row, index) => ({
+                                // 순번을 붙인다 — 기술분야 이름이 겹쳐 와도 줄 키가 겹치지 않게.
+                                key: `${row.field}-${index}`,
                                 cells: [
                                     // 기술분야는 한 줄 — 넘치면 말줄임.
                                     <div key="field" className="truncate">
@@ -880,10 +924,10 @@ const KbigxPrintInnovationInstitutes = ({report}: {report: InnovationGrowthRepor
 
 const RND_PROJECT_UPCOMING_NOTE =
     '* 접수기간 도래 과제는 사업실시가 확정되지 않은 과제로, 보고서 조회시점 기준 전년 동기에 접수 중(예정 포함)인 과제임'
-// 열 — 부처명(전문기관) 300 · 공고명 나머지 · 접수기간 160 · 담당자 175. 부처명이 행 머리(th · 굵게)다.
+// 열 — 전문기관(부처명 · 전문기관 두 줄) 300 · 공고명 나머지 · 접수기간 160 · 담당자 175. 부처명이 행 머리(th · 굵게)다.
 // [주의] 열 폭 · 줄 수 상한을 바꾸면 k-bigx-print-report.ts 의 RND_PROJECT_AREA(행 높이 80)도 같이 확인한다.
 const RND_PROJECT_COLUMNS: readonly KbxTableColumn[] = [
-    {key: 'ministry', header: '부처명 (전문기관)', isRowHeader: true, className: 'w-75'},
+    {key: 'ministry', header: '전문기관', isRowHeader: true, className: 'w-75'},
     {key: 'title', header: '공고명'},
     {key: 'period', header: '접수기간', className: 'w-40'},
     {key: 'manager', header: '담당자', className: 'w-43.75'},

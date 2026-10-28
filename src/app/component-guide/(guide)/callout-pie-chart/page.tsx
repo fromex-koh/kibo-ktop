@@ -139,7 +139,7 @@ const LOADING_CODE = `import {CalloutPieChartSkeleton} from '@/components/compos
   <CalloutPieChart data={technologies} ariaLabel="기업 보유기술 소분류별 비중과 건수" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 조각 · 글자 · 선 색을 kbx 토큰으로 넘깁니다(.kbigx-print 안).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 조각 · 글자 · 선 색을 kbx 토큰으로 넘깁니다(.kbigx-print 안).
 <CalloutPieChart
   ariaLabel="기업 보유기술 소분류별 비중과 건수"
   data={technologies.map((item, index) => ({...item, color: KBX_PIE_COLORS[index]}))}
@@ -294,7 +294,7 @@ const PROPS_ITEMS = [
     [
         'CalloutPieChart',
         'maxLabelLines',
-        '바깥 라벨 줄 수 상한(비중 · 건수 줄 포함)입니다. 주면 이름이 그 줄 수를 넘을 때 마지막 줄 끝에서 말줄임해 그림 높이 · 원 크기가 이름 길이로 바뀌지 않습니다(인쇄본 진단브리핑은 2). 안 주면 줄 수 제한 없이 모두 보입니다.',
+        '바깥 라벨 줄 수 상한(비중 · 건수 줄 포함)입니다. 주면 이름이 그 줄 수를 넘을 때 마지막 줄 끝에서 말줄임해 그림 높이 · 원 크기가 이름 길이로 바뀌지 않습니다(PDF 템플릿 진단브리핑은 2). 안 주면 줄 수 제한 없이 모두 보입니다.',
         '-',
         'number',
     ],
@@ -337,7 +337,7 @@ const CalloutPieChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="cpc-basic" className="flex flex-col gap-6">
                 <SectionHeading id="cpc-basic" title="1. 기본 사용">
-                    K-BIGx 보고서 인쇄본의 기업 보유기술 차트입니다. 가운데가 빈 도넛과 범례 모양은{' '}
+                    K-BIGx 보고서 PDF 템플릿의 기업 보유기술 차트입니다. 가운데가 빈 도넛과 범례 모양은{' '}
                     <Link href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
                         PercentageDonutChart
                     </Link>
@@ -412,7 +412,7 @@ const CalloutPieChartGuidePage = () => (
                     </Example>
                     <Example
                         title="세로줄 배치 · 꺾은 지시선"
-                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 490, 인쇄본 칸 387 에서는 약 0.8배로 줄어듦)."
+                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 490, PDF 템플릿 칸 387 에서는 약 0.8배로 줄어듦)."
                     >
                         <CalloutPieChart data={CROWDED_LONG_DATA} ariaLabel="세로줄 배치 예시" />
                     </Example>
@@ -534,16 +534,16 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-print" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-print" title="7. K-BIGx 인쇄본에서">
-                    색을 값으로 받으므로 인쇄본은 kbx 토큰을 넘깁니다. 인쇄본은 데이터를 받은 뒤 서버에서 바로 그려
-                    스켈레톤 없이 나옵니다. 확인 화면:{' '}
+                <SectionHeading id="cpc-print" title="7. K-BIGx PDF 템플릿에서">
+                    색을 값으로 받으므로 PDF 템플릿은 kbx 토큰을 넘깁니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로
+                    그려 스켈레톤 없이 나옵니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=briefing"
                         target="_blank"
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 진단브리핑
+                        K-BIGx 보고서 PDF 템플릿 진단브리핑
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
@@ -556,14 +556,14 @@ const CalloutPieChartGuidePage = () => (
                         그대로 모두 보입니다.
                     </li>
                     <li>
-                        인쇄본 진단브리핑 1쪽은 위 줄(기업 보유기술 · 관련 기업 및 특허현황)을 템플릿 높이 450 으로
+                        PDF 템플릿 진단브리핑 1쪽은 위 줄(기업 보유기술 · 관련 기업 및 특허현황)을 템플릿 높이 450 으로
                         고정합니다(<code>h-kbx-450</code>). 이 높이가 차트의 최대 높이라, 조각 · 라벨이 많아져도 아래
                         R&amp;D 이슈 줄은 늘 같은 자리에 있고 차트만 그 안에서 줄어듭니다.
                     </li>
                     <li>
-                        가운데 맞춤 — 원은 늘 가로 가운데입니다. 인쇄본은 <code>areaHeight</code> 로 칸 높이(387)를 넘겨
-                        세로도 가운데에 맞춥니다. 라벨이 적으면(1 · 2 · 3개, 균형 등) 원이 칸 정중앙에 오고, 라벨이 위나
-                        아래로 길어 칸에 여유가 없으면 라벨이 칸 밖으로 나가지 않는 만큼만 비켜 있습니다.
+                        가운데 맞춤 — 원은 늘 가로 가운데입니다. PDF 템플릿은 <code>areaHeight</code> 로 칸 높이(387)를
+                        넘겨 세로도 가운데에 맞춥니다. 라벨이 적으면(1 · 2 · 3개, 균형 등) 원이 칸 정중앙에 오고, 라벨이
+                        위나 아래로 길어 칸에 여유가 없으면 라벨이 칸 밖으로 나가지 않는 만큼만 비켜 있습니다.
                     </li>
                     <li>
                         원 크기는 늘 반지름 112(지름 224)이고 칸을 채우려고 키우지 않습니다. 그림 높이가 칸(387)보다 길
@@ -571,10 +571,10 @@ const CalloutPieChartGuidePage = () => (
                         배치 예시(높이 490 → 0.79배)만 줄어들고, 나머지는 원래 크기 그대로입니다.
                     </li>
                     <li>
-                        인쇄본에서 넣어 본 데이터(모두 8개 이하): 표준 · 1개 · 2개 · 3개 · 편중 · 균형 · 긴 라벨 · 8조각
-                        + 긴 이름 · 원 돌리기(90%) · 세로줄 배치(80% + 긴 이름) · 고른 8개 · 작은 조각이 이어질 때 · 큰
-                        값 · 띄어쓰기 없는 이름 · 조각 안 긴 이름. 모두 R&amp;D 줄 위치가 같고, 쪽 넘침 · 선 엇갈림 ·
-                        라벨 겹침 없이 소제목과 라벨 사이 32 이상이 남습니다.
+                        PDF 템플릿에서 넣어 본 데이터(모두 8개 이하): 표준 · 1개 · 2개 · 3개 · 편중 · 균형 · 긴 라벨 ·
+                        8조각 + 긴 이름 · 원 돌리기(90%) · 세로줄 배치(80% + 긴 이름) · 고른 8개 · 작은 조각이 이어질 때
+                        · 큰 값 · 띄어쓰기 없는 이름 · 조각 안 긴 이름. 모두 R&amp;D 줄 위치가 같고, 쪽 넘침 · 선 엇갈림
+                        · 라벨 겹침 없이 소제목과 라벨 사이 32 이상이 남습니다.
                     </li>
                 </ul>
             </section>

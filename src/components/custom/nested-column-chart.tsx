@@ -59,6 +59,11 @@ type NestedColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> 
     colors?: Partial<NestedColumnColors>
     /** 값 글자 형식(기본: 천 단위 쉼표). */
     formatValue?: (value: number) => string
+    /**
+     * 값이 없는 막대(그 계열 값이 없거나 숫자가 아님) 자리에 적을 글자(예: '-'). 막대는 그리지 않고, 값이 0 일 때 값 글자가
+     * 놓이는 자리(바닥선 바로 위)에 적는다 — 웹 화면 OverlayColumnChart 와 같은 모양. 주지 않으면 지금처럼 자리를 비운다.
+     */
+    missingValueText?: string
 }
 
 const DEFAULT_COLORS: NestedColumnColors = {
@@ -140,6 +145,7 @@ const NestedColumnChart = ({
     ariaLabel,
     colors,
     formatValue = (value) => numberFormat.format(value),
+    missingValueText,
     className,
     ...props
 }: NestedColumnChartProps) => {
@@ -213,7 +219,15 @@ const NestedColumnChart = ({
             return [...acc, {y, x, width}]
         }, [])
 
-    const valueLabel = (key: string, value: number, x: number, width: number, isBase: boolean, labelY?: number) => {
+    const valueLabel = (
+        key: string,
+        value: number,
+        x: number,
+        width: number,
+        isBase: boolean,
+        labelY?: number,
+        text = formatValue(value),
+    ) => {
         const font = isBase ? FONT.base : {...FONT.bar, size: round(barFontSize)}
         const y = labelY ?? naturalLabelY(value, isBase)
         return (
@@ -226,7 +240,7 @@ const NestedColumnChart = ({
                 fontWeight={font.weight}
                 fill={color.value}
             >
-                {formatValue(value)}
+                {text}
             </text>
         )
     }
@@ -260,17 +274,31 @@ const NestedColumnChart = ({
                     const baseValue = item.values[base.key]
                     const hasBase = baseValue !== undefined && Number.isFinite(baseValue)
                     const labelYs = innerLabelYs(item, baseX)
+                    // 기준 · 구성 막대가 모두 값이 없으면 막대마다 적지 않고 가운데(기준 막대 자리)에 missingValueText 하나만.
+                    const isAllMissing = allSeries.every((line) => {
+                        const value = item.values[line.key]
+                        return value === undefined || !Number.isFinite(value)
+                    })
 
                     return (
                         <g key={item.id}>
                             {hasBase && baseValue !== 0 ? (
                                 <path d={barPath(baseX, BASE_WIDTH, zeroY, endYOf(baseValue))} fill={base.color} />
                             ) : null}
-                            {hasBase ? valueLabel(base.key, baseValue, baseX, BASE_WIDTH, true) : null}
+                            {hasBase
+                                ? valueLabel(base.key, baseValue, baseX, BASE_WIDTH, true)
+                                : missingValueText !== undefined
+                                  ? valueLabel(base.key, 0, baseX, BASE_WIDTH, true, undefined, missingValueText)
+                                  : null}
                             {series.map((line, index) => {
                                 const value = item.values[line.key]
-                                if (value === undefined || !Number.isFinite(value)) return null
                                 const x = baseX + INNER_INSET + index * (barWidth + barGap)
+                                if (value === undefined || !Number.isFinite(value)) {
+                                    // 값이 없으면 막대 없이 0 자리에 missingValueText(주지 않으면 비운다). 모두 없으면 가운데 하나뿐.
+                                    return missingValueText !== undefined && !isAllMissing
+                                        ? valueLabel(line.key, 0, x, barWidth, false, undefined, missingValueText)
+                                        : null
+                                }
                                 return (
                                     <g key={line.key}>
                                         {value !== 0 ? (

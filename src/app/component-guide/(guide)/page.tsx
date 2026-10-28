@@ -77,12 +77,15 @@ const HANDOFF_TREE = `frontend-handoff/
 ├── public/                             # 이미지·아이콘·정적 에셋
 ├── vendor/
 │   └── shadcn-baseline/                # [shadcn 원본] theme variant 비교 기준
+├── templates/
+│   └── kbigx-report-template.html      # K-BIGx 보고서 PDF 생성용 단독 HTML(백엔드 전달)
 └── src/
     ├── app/
     │   ├── layout.tsx                  # 전역 CSS·폰트·ThemeProvider 연결
     │   ├── page.tsx                    # 서비스 화면으로 교체할 최소 시작 화면
     │   ├── (user-type)/                # 기업(corp)·기관(org) 서비스 화면
     │   ├── publishing-guide/page.tsx   # 퍼블리싱 인덱스
+    │   ├── downloads/                  # 보고서 템플릿 HTML 다운로드 주소(templates/ 를 빌드 때 정적 응답으로)
     │   ├── component-guide/            # 토큰·컴포넌트 가이드와 예시 화면
     │   ├── globals.css                 # Tailwind·토큰·전역 스타일 진입점
     │   ├── tokens.css                  # 포함·재생성되는 디자인 토큰 결과물
@@ -124,6 +127,9 @@ src/constants/site.ts            # handoff/site.ts 로 교체
 src/constants/theme-routes.ts    # handoff/theme-routes.ts 로 교체
 public/og-image.png              # 원본 이미지 제거 (handoff/og-image.png 가 있으면 교체)
 src/components/custom/publishing-index.tsx   # 화면 링크를 경유 없이 화면 주소로
+src/app/downloads/kbigx-report-template.html/route.ts   # PDF 템플릿 생성 안내를 '원본 저장소에서 전달'로
+src/app/component-guide/(guide)/report-shell/page.tsx   # 〃
+src/constants/publishing-guide.ts                        # 〃
 
 # 전달용으로 추가
 src/app/publishing-guide/page.tsx`
@@ -344,7 +350,8 @@ const ComponentGuidePage = () => (
                         K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트
                     </h4>
                     <p className="typo-body-l-regular text-label-foreground">
-                        이 배지가 붙은 가이드의 컴포넌트를 고치면 인쇄본도 함께 확인합니다. 인쇄본 전용 부품 · 규칙은{' '}
+                        이 배지가 붙은 가이드의 컴포넌트를 고치면 PDF 템플릿도 함께 확인합니다. PDF 템플릿 전용 부품 ·
+                        규칙은{' '}
                         <Link
                             href="/component-guide/report-shell"
                             className="text-primary-strong underline underline-offset-4"

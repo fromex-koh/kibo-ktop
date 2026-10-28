@@ -46,6 +46,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: '명도 대비 확인', href: '/component-guide/contrast-check'},
             {label: '접근성 검사 예외사항', href: '/component-guide/accessibility-exceptions'},
             {label: '버전 업데이트 아카이브', href: '/component-guide/release-archive'},
+            {label: '오픈소스 라이선스', href: '/component-guide/licenses'},
         ],
     },
     {
@@ -579,6 +580,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             },
                             {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},
                             {label: 'EmptyState', href: '/component-guide/empty-state', layers: ['composite']},
+                            {label: 'TruncatedText', href: '/component-guide/truncated-text', layers: ['composite']},
                             {
                                 label: 'PrivateContent',
                                 href: '/component-guide/private-content',
@@ -623,6 +625,31 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {
                         label: 'SearchSelectDialog',
                         href: '/component-guide/search-select-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'ESignatureDialog',
+                        href: '/component-guide/e-signature-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'CertificateSelectDialog',
+                        href: '/component-guide/certificate-select-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'IdentityVerificationDialog',
+                        href: '/component-guide/identity-verification-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'KbigxPrintOutputSelectionDialog',
+                        href: '/component-guide/kbigx-print-output-selection-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'LoginFindAccountDialog · LoginAgencySignUpGuideDialog',
+                        href: '/component-guide/login-dialogs',
                         layers: ['composite'],
                     },
                     {label: 'HomeNoticePopup', href: '/component-guide/home-notice-popup', layers: ['custom']},
@@ -692,7 +719,8 @@ export const KBIGX_PRINT_BADGE = {
     label: 'bigx print template',
     color: 'navy',
     variant: 'solid',
-    description: 'K-BIGx 기업혁신성장 보고서 인쇄 템플릿에서 쓰는 컴포넌트입니다. 고치면 인쇄본도 함께 확인합니다.',
+    description:
+        'K-BIGx 기업혁신성장 보고서 인쇄 템플릿에서 쓰는 컴포넌트입니다. 고치면 인쇄본을 함께 확인합니다. PDF 템플릿 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
 } as const
 
 const collectNavItems = (group: {items?: GuideNavItem[]; groups?: GuideNavItemGroup[]}): GuideNavItem[] => [

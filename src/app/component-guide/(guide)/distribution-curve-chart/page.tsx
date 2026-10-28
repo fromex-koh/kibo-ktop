@@ -166,11 +166,11 @@ const CHOICE_ROWS = [
     {
         key: 'print',
         cells: [
-            '같은 분포 곡선을 고정 크기 · 큰 글자로(인쇄본)',
+            '같은 분포 곡선을 고정 크기 · 큰 글자로(PDF 템플릿)',
             <Link key="component" href="/component-guide/distribution-value-chart" className={LINK_CLASS}>
                 DistributionValueChart
             </Link>,
-            '서버에서 바로 그리는 SVG 입니다. K-BIGx 인쇄본 Tech-Index 표준정보 비교에 씁니다.',
+            '서버에서 바로 그리는 SVG 입니다. K-BIGx PDF 템플릿 Tech-Index 표준정보 비교에 씁니다.',
         ],
     },
 ] as const

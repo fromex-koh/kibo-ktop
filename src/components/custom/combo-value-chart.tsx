@@ -1,4 +1,4 @@
-import type {ComponentPropsWithoutRef} from 'react'
+import {useId, type ComponentPropsWithoutRef} from 'react'
 import {cn} from '@/lib/utils'
 
 // 막대 + 선 값 차트(ComboValueChart) — 항목마다 막대(예: 매출액) 하나와 선 위의 점(예: 영업이익률)을 함께 그리고,
@@ -10,8 +10,11 @@ import {cn} from '@/lib/utils'
 //   그림 폭 1168 × 높이 480. 항목 칸은 폭을 항목 수로 똑같이 나누고, 칸 사이에 세로 점선을 긋는다.
 //   막대 = 폭 60 · 위 모서리 둥글림 8. 바닥선(y 438)에서 가장 큰 값이 y 66.5 까지 선다(위 36.5 는 값 글자 자리).
 //     값 글자 = 막대 끝에서 9 위(17px). 조회기업(tone subject)은 막대 · 글자 색이 다르고 굵게, 평균(average)은 막대 색만 다르다.
+//     colors.averageLine 을 주면 평균 막대는 옅은 바탕(averageBar) + 45° 사선 · 테두리(averageLine) — 색을 빼도(흑백 인쇄)
+//     '사선 막대 = 평균'으로 읽힌다. 사선 1.5 · 간격 6.
 //   선 = 가장 큰 선 값이 y 220, 가장 작은 값이 y 383.4 — 막대 아래쪽 띠 안에서 오르내린다(막대 높이와 따로 된 눈금).
 //     점 = 흰 원(반지름 7 · 테두리 3), 값 글자 = 점에서 15 위 흰 글자(막대 위에 얹힌다).
+//     colors.lineHalo 를 주면 선 아래에 그 색 선(굵기 7)을 깔아 짙은 막대 위에서도 선이 끊겨 보이지 않게 한다.
 //   항목 이름 = 바닥선 아래(y 468 · 18px).
 // 데이터에 따라
 //   · 막대 바닥 — 값 차이가 작으면(예: 32.8 ~ 31.2) 0 부터 그리면 막대가 다 같아 보이므로, 가장 작은 값에서 차이의
@@ -20,6 +23,7 @@ import {cn} from '@/lib/utils'
 //   · 막대 값이 모두 같으면 0 부터 그려 모두 가장 큰 높이로 선다. 바닥보다 작거나 같은 값은 최소 높이로 세운다.
 //   · 선 값이 null 이면 그 점 · 글자를 비우고 선을 끊는다. 선 값이 모두 같으면 띠 가운데에 가로로 놓인다.
 //   · 점 글자가 막대 밖(막대 끝보다 위)에 오면 흰 글자가 안 보이므로 값 글자 색으로 바꾼다.
+//     사선 평균 막대(옅은 바탕) 위에 놓여도 값 글자 색 + 바깥 테두리(lineHalo 색, 없으면 marker 색)로 쓴다.
 //   · 점이나 점 글자가 막대 값 글자를 가리면 막대 값 글자를 점 글자 위로 올린다(위로 넘치면 점 글자를 점 아래로).
 //   · 항목이 많아 칸이 좁아지면 막대 폭을 칸의 62% 로 줄이고, 값 글자가 칸보다 넓으면 글자를 줄인다(최소 11px).
 //   · 항목 이름이 칸보다 길면 띄어쓰기 자리에서 줄을 바꾸고 그림 높이를 그만큼 늘린다. maxCategoryLines 를 주면 그 줄 수를
@@ -66,6 +70,10 @@ type ComboValueColors = {
     category: string
     /** 조회기업 값 글자 · 이름. */
     subject: string
+    /** 평균 막대 사선 · 테두리 — 주면 평균 막대가 averageBar 바탕 + 사선 무늬가 된다. */
+    averageLine?: string
+    /** 선 아래에 까는 바깥 테두리 선 — 주면 그린다. */
+    lineHalo?: string
 }
 
 type ComboValueChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -106,6 +114,8 @@ const WIDTH = 1168
 const HEIGHT = 480
 const PLOT_TOP = 30
 const BASELINE_Y = 438
+// 선 값이 없는 항목의 표시.
+const EMPTY_LINE_VALUE = '-'
 // 가장 큰 막대 끝 — 위 36.5 는 값 글자 자리.
 const BAR_TOP_Y = 66.5
 const BAR_WIDTH = 60
@@ -117,6 +127,14 @@ const VALUE_OFFSET = 9
 const LINE_TOP_Y = 220
 const LINE_BOTTOM_Y = 383.4
 const LINE_STROKE = 3
+// 선 바깥 테두리 — 선 굵기 + 양쪽 2.
+const LINE_HALO_STROKE = 7
+// 평균 사선 무늬 — 칸 6 · 선 1.5 · 45°, 막대 테두리 1.5. 사선 위 글자 테두리 4.
+const HATCH_SIZE = 6
+const HATCH_STROKE = 1.5
+const HATCH_ANGLE = 45
+const AVERAGE_BAR_STROKE = 1.5
+const ON_LIGHT_LABEL_STROKE = 4
 const MARKER_RADIUS = 7
 const LINE_VALUE_OFFSET = 15
 const CATEGORY_Y = 468
@@ -258,6 +276,9 @@ const ComboValueChart = ({
     ...props
 }: ComboValueChartProps) => {
     const color = {...DEFAULT_COLORS, ...colors}
+    // 사선 무늬 id — 한 문서에 그래프가 여럿이어도 겹치지 않게.
+    const hatchId = `combo-hatch-${useId().replace(/:/g, '')}`
+    const isAverageHatched = Boolean(color.averageLine)
     const columnWidth = WIDTH / Math.max(data.length, 1)
     const barWidth = Math.min(BAR_WIDTH, columnWidth * BAR_FILL_RATIO)
 
@@ -349,6 +370,27 @@ const ComboValueChart = ({
     return (
         <div className={cn('w-full', className)} {...props}>
             <svg role="img" aria-label={ariaLabel} viewBox={`0 0 ${WIDTH} ${height}`} className="block h-auto w-full">
+                {isAverageHatched ? (
+                    <defs>
+                        <pattern
+                            id={hatchId}
+                            patternUnits="userSpaceOnUse"
+                            width={HATCH_SIZE}
+                            height={HATCH_SIZE}
+                            patternTransform={`rotate(${HATCH_ANGLE})`}
+                        >
+                            <rect width={HATCH_SIZE} height={HATCH_SIZE} fill={color.averageBar} />
+                            <line
+                                x1={0}
+                                y1={0}
+                                x2={0}
+                                y2={HATCH_SIZE}
+                                stroke={color.averageLine}
+                                strokeWidth={HATCH_STROKE}
+                            />
+                        </pattern>
+                    </defs>
+                ) : null}
                 {data.slice(1).map((item, index) => (
                     <line
                         key={`divider-${item.id}`}
@@ -372,18 +414,25 @@ const ComboValueChart = ({
                 {data.map((item, index) => {
                     const center = columnWidth * (index + 0.5)
                     const isSubject = item.tone === 'subject'
-                    const fill =
-                        item.tone === 'subject'
-                            ? color.subjectBar
-                            : item.tone === 'average'
-                              ? color.averageBar
-                              : color.bar
+                    const isHatched = item.tone === 'average' && isAverageHatched
+                    const fill = isHatched
+                        ? `url(#${hatchId})`
+                        : item.tone === 'subject'
+                          ? color.subjectBar
+                          : item.tone === 'average'
+                            ? color.averageBar
+                            : color.bar
                     const endY = barEndY(item.value)
 
                     return (
                         <g key={item.id}>
                             {Number.isFinite(item.value) ? (
-                                <path d={barPath(center - barWidth / 2, barWidth, endY)} fill={fill} />
+                                <path
+                                    d={barPath(center - barWidth / 2, barWidth, endY)}
+                                    fill={fill}
+                                    stroke={isHatched ? color.averageLine : undefined}
+                                    strokeWidth={isHatched ? AVERAGE_BAR_STROKE : undefined}
+                                />
                             ) : null}
                             <text
                                 x={round(center)}
@@ -416,6 +465,21 @@ const ComboValueChart = ({
                         </g>
                     )
                 })}
+                {color.lineHalo
+                    ? segments
+                          .filter((segment) => segment.length > 1)
+                          .map((segment) => (
+                              <polyline
+                                  key={`halo-${segment[0].x}`}
+                                  points={segment.map((point) => `${round(point.x)},${round(point.y)}`).join(' ')}
+                                  fill="none"
+                                  stroke={color.lineHalo}
+                                  strokeWidth={LINE_HALO_STROKE}
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                              />
+                          ))
+                    : null}
                 {segments
                     .filter((segment) => segment.length > 1)
                     .map((segment) => (
@@ -429,9 +493,33 @@ const ComboValueChart = ({
                         />
                     ))}
                 {points.map((point, index) => {
-                    if (!point) return null
+                    // 선 값이 없는 항목 — 점 없이 '-' 를 적는다. 막대 안에 들어가면 막대 세로 가운데(흰 글자), 아니면 선 자리 가운데.
+                    if (!point) {
+                        const center = columnWidth * (index + 0.5)
+                        const barTop = barEndY(data[index].value)
+                        const isInsideBar = BASELINE_Y - barTop >= lineFontSize * 2
+                        return (
+                            <text
+                                key={`point-${data[index].id}`}
+                                x={round(center)}
+                                y={round(
+                                    isInsideBar
+                                        ? (barTop + BASELINE_Y) / 2 + (lineFontSize * CAP_HEIGHT_RATIO) / 2
+                                        : (LINE_TOP_Y + LINE_BOTTOM_Y) / 2,
+                                )}
+                                textAnchor="middle"
+                                fontSize={round(lineFontSize)}
+                                fontWeight={FONT.lineValue.weight}
+                                fill={isInsideBar ? color.lineValue : color.value}
+                            >
+                                {EMPTY_LINE_VALUE}
+                            </text>
+                        )
+                    }
                     const labelY = labels[index].lineY
                     const isOnBar = labelY - lineFontSize * CAP_HEIGHT_RATIO >= barEndY(data[index].value)
+                    // 사선 평균 막대(옅은 바탕) 위 — 흰 글자 대신 값 글자 색 + 바깥 테두리.
+                    const isOnLightBar = isOnBar && isAverageHatched && data[index].tone === 'average'
 
                     return (
                         <g key={`point-${data[index].id}`}>
@@ -449,7 +537,11 @@ const ComboValueChart = ({
                                 textAnchor="middle"
                                 fontSize={round(lineFontSize)}
                                 fontWeight={FONT.lineValue.weight}
-                                fill={isOnBar ? color.lineValue : color.value}
+                                fill={isOnBar && !isOnLightBar ? color.lineValue : color.value}
+                                stroke={isOnLightBar ? (color.lineHalo ?? color.marker) : undefined}
+                                strokeWidth={isOnLightBar ? ON_LIGHT_LABEL_STROKE : undefined}
+                                strokeLinejoin={isOnLightBar ? 'round' : undefined}
+                                paintOrder={isOnLightBar ? 'stroke' : undefined}
                             >
                                 {formatLineValue(point.value)}
                             </text>

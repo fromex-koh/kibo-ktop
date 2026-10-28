@@ -78,7 +78,7 @@ const LOADING_CODE = `import {InsideLabelPieChartSkeleton} from '@/components/co
   <InsideLabelPieChart data={shares} ariaLabel="최근 신용/담보 비중" className="max-w-82.5" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 조각 · 글자 · 사이 선을 kbx 색으로 넘깁니다(kbigx-print-credit.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 조각 · 글자 · 사이 선을 kbx 색으로 넘깁니다(kbigx-print-credit.tsx).
 <InsideLabelPieChart
   ariaLabel="최근 신용/담보 비중"
   data={[
@@ -128,7 +128,7 @@ const PROPS_ITEMS = [
     [
         'InsideLabelPieChart',
         'emptyClassName',
-        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx 인쇄본은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
+        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
         "'text-foreground-subtle py-10 text-center'",
         'string',
     ],
@@ -154,7 +154,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const InsideLabelPieChartGuidePage = () => (
     <GuidePageShell
         title="조각 안 라벨 원형 (InsideLabelPieChart)"
-        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. K-BIGx 보고서 인쇄본 신용/재무정보 차입금 현황의 신용/담보 비중 원형입니다."
+        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보 차입금 현황의 신용/담보 비중 원형입니다."
     >
         <BaseCard>
             <section aria-labelledby="ilp-basic" className="flex flex-col gap-6">
@@ -211,7 +211,8 @@ const InsideLabelPieChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="ilp-loading" className="flex flex-col gap-6">
                 <SectionHeading id="ilp-loading" title="4. 불러오는 중 (InsideLabelPieChartSkeleton)">
-                    같은 그림 범위(230 × 230)에 원 자리를 그립니다. 인쇄본은 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                    같은 그림 범위(230 × 230)에 원 자리를 그립니다. PDF 템플릿은 서버에서 바로 그려 스켈레톤 없이
+                    나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -230,7 +231,7 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-print" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="ilp-print" title="5. K-BIGx PDF 템플릿에서">
                     신용/담보 비중 소블록의 오른쪽 반에 330 크기로 가운데 둡니다(왼쪽 반은 DualLineChart 꺾은선). 확인
                     화면:{' '}
                     <Link
@@ -239,7 +240,7 @@ const InsideLabelPieChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 신용/재무정보
+                        K-BIGx 보고서 PDF 템플릿 신용/재무정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

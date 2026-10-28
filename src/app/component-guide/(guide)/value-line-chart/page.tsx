@@ -85,7 +85,7 @@ const EDGE_CASES = [
         key: 'missing',
         title: '값 없음',
         description:
-            '값이 없는 분기에서 선 · 면을 끊고 점 · 값 글자를 그리지 않습니다. 기간 이름 · 점선은 그대로입니다.',
+            "값이 없는 분기에서 선 · 면을 끊고 점을 그리지 않으며, 값 글자 자리(바닥선 위)에 '-' 를 적습니다. 기간 이름 · 점선은 그대로입니다.",
         data: MISSING_DATA,
     },
     {
@@ -131,7 +131,7 @@ const COMPACT_CODE = `// 높이 290 — 신용/재무정보 차입금 변동률(
 // 불러오는 중에도 같은 변형을 넘깁니다.
 <ValueLineChartSkeleton variant="compact" pointCount={12} />`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 선 색 · 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-briefing.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 선 색 · 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-briefing.tsx).
 <ValueLineChart
   data={employees.map((item) => ({id: item.label, label: item.label, value: item.value}))}
   color="var(--kbx-color-purple-strong)"
@@ -165,7 +165,13 @@ const PROPS_ITEMS = [
         "'default' | 'medium' | 'compact' | 'narrow'",
     ],
     ['ValueLineItem', 'id · label', '점 식별자와 기간 이름(아래 글자)입니다.', '-', 'string'],
-    ['ValueLineItem', 'value', '값입니다. 없으면(undefined) 그 자리에서 선을 끊습니다.', '-', 'number | undefined'],
+    [
+        'ValueLineItem',
+        'value',
+        "값입니다. 없으면(undefined · 숫자 아님) 그 자리에서 선을 끊고 바닥선 위에 '-' 를 적습니다.",
+        '-',
+        'number | undefined',
+    ],
     [
         'ValueLineChartSkeleton',
         'label',
@@ -203,7 +209,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const ValueLineChartGuidePage = () => (
     <GuidePageShell
         title="값 꺾은선 (ValueLineChart)"
-        description="한 계열의 추이를 면 + 꺾은선 + 점으로 그리고 점마다 값을 바로 적는 차트입니다. 세로축 없이 값 글자로 읽습니다. K-BIGx 보고서 인쇄본 진단브리핑의 분기별 종업원수(narrow) · 활동성정보의 분기별 종업원수(medium) · 신용/재무정보의 차입금 변동률(compact) 그래프입니다."
+        description="한 계열의 추이를 면 + 꺾은선 + 점으로 그리고 점마다 값을 바로 적는 차트입니다. 세로축 없이 값 글자로 읽습니다. K-BIGx 보고서 PDF 템플릿 진단브리핑의 분기별 종업원수(narrow) · 활동성정보의 분기별 종업원수(medium) · 신용/재무정보의 차입금 변동률(compact) 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="vlc-basic" className="flex flex-col gap-6">
@@ -307,7 +313,7 @@ const ValueLineChartGuidePage = () => (
             <section aria-labelledby="vlc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="vlc-loading" title="4. 불러오는 중 (ValueLineChartSkeleton)">
                     차트와 같은 그림 범위(1168 × 440)에 바닥선 · 선 · 점 · 값 글자 · 기간 이름 자리를 그립니다. 불러온
-                    뒤 자리 · 높이가 흔들리지 않습니다. 인쇄본은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이
+                    뒤 자리 · 높이가 흔들리지 않습니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이
                     나옵니다.
                 </SectionHeading>
                 <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -329,7 +335,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="vlc-print" title="5. K-BIGx PDF 템플릿에서">
                     진단브리핑은 소제목 아래 16 에 두고, 다음 소블록(인당 매출액)과는 168 띄웁니다. 신용/재무정보 차입금
                     분석은 compact 로 두고 선 색은 kbx 보라, 세로 점선은 chart-grid, 바닥선은 chart-line-subtle 입니다.
                     확인 화면:{' '}
@@ -339,7 +345,7 @@ const ValueLineChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 진단브리핑
+                        K-BIGx 보고서 PDF 템플릿 진단브리핑
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

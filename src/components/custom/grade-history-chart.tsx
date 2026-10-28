@@ -8,7 +8,7 @@ import {cn} from '@/lib/utils'
 import {CELLS_GRID_STROKE, CELLS_DIVIDER_DASH, CELLS_X_TICK, CELLS_X_TICK_MARGIN} from '@/components/custom/chart-cells'
 
 // 등급 이력(GradeHistoryChart) — 평가 시점마다 등급을 큰 원(지름 60, 원 안에 등급 글자)으로 찍고 선으로 잇는다.
-// 등급이 높을수록 원이 위에 선다. K-BIGx 기업혁신성장 보고서 신용/재무정보 탭 "이전평가이력" 카드에서 쓴다.
+// 등급이 높을수록 원이 위에 선다. K-BIGx 기업혁신성장 보고서 신용/재무정보 탭의 기업신용등급 "이전평가이력" · 현금흐름등급 "평가이력"에서 쓴다.
 //
 // 짜임: 높이 160 그릴 자리(바닥선 실선 · 점마다 세로 점선) → 8 → 시점 이름 12 Regular. 선 1.5(color) 아래를 위에서 아래로
 //   옅어지는 면으로 채운다. 원 = color 채움 · 등급 14 Bold 흰 글자. 양 끝 원은 원 사이 간격의 0.59 배만큼 안쪽(카드 538 · 시점 셋이면 100).

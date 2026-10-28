@@ -15,6 +15,8 @@ import {cn} from '@/lib/utils'
 // 칸 색 · 칸 글자 색은 데이터가 넘긴다(color · foreground). 다크에서 칸 색이 바뀌면 글자 색도 함께 바뀌어야 하므로
 // 둘 다 토큰으로 넘긴다(보고서 현금흐름등급 — cash-flow-cf-<n> · cash-flow-cf-<n>-foreground).
 // foreground 를 안 주면 흰 글자, isLightColor 면 짙은 글자(grade-scale-chip-foreground)다.
+// 원호 색은 기본으로 칸 색과 같고, arcColor · arcGradientTo 를 주면 원호만 따로 칠한다(보고서 현금흐름등급 — 라이트는
+// 그라데이션, 다크는 칸 색과 같은 단색: cash-flow-gauge-cf-<n>-from/-to).
 // 원호 트랙은 grade-scale-track — 다크에서 어두운 칸 색(CF5 등)이 트랙에 묻히지 않게 다른 게이지보다 밝다.
 // 현재 등급은 role="img" 이름과 숨김 문단으로 읽는다 — 칸 색만으로 구분하지 않는다[5.3.1].
 // 등급 칸 줄은 data-chart-reveal 이라 보고서에서 카드가 보이기 전에는 숨는다(chart-reveal.tsx).
@@ -30,6 +32,10 @@ type GradeScaleItem = {
     foreground?: string
     /** 밝은 칸이면 짙은 글자로 적는다(예: 주황). foreground 가 없을 때만 쓴다. */
     isLightColor?: boolean
+    /** 원호 색 — 주면 칸 색(color) 대신 원호에만 쓴다. arcGradientTo 와 짝이면 그라데이션(시작 색). */
+    arcColor?: string
+    /** 원호 그라데이션 끝 색(왼쪽 아래). 주지 않으면 단색 원호. */
+    arcGradientTo?: string
 }
 
 type GradeScaleGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -75,7 +81,8 @@ const GradeScaleGauge = ({
         <div {...props} className={cn('flex w-full flex-col gap-4', className)}>
             <ArcGauge
                 value={percentage}
-                color={currentGrade?.color ?? FALLBACK_COLOR}
+                color={currentGrade?.arcColor ?? currentGrade?.color ?? FALLBACK_COLOR}
+                gradientTo={currentGrade?.arcGradientTo}
                 size="md"
                 trackColor="var(--ds-grade-scale-track)"
                 ariaLabel={ariaLabel}

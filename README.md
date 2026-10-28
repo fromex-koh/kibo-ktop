@@ -8,6 +8,7 @@
 
 | 버전 | 원본 브랜치 | 원본 커밋 | 생성 시각 |
 | --- | --- | --- | --- |
+| v3.4.6 | main | `7e0e614079776b79b51203cf795dd20330a84e43` | 2026-10-28T08:34:27Z |
 | v3.4.5 | main | `c54ec978fceda48bcaa72c8b23cd01d508bbe198` | 2026-10-27T07:34:28Z |
 | v3.4.4 | main | `3745844a97f0ececdd4428fa00df72f71f10658e` | 2026-10-26T08:41:01Z |
 | v3.4.3 | main | `406406a025b59b9cda137a54501aa968dcc0082a` | 2026-10-23T08:19:08Z |
@@ -87,6 +88,13 @@ yarn dev
 `src/constants/site.ts`는 handoff 전용 사이트명, 설명, URL과 저장소 URL을 관리합니다. handoff 생성 전에는 저장소의 `handoff/site.ts`를 수정합니다.
 
 OG 이미지 경로는 `/og-image.png`로 유지하며, 디자인 작업 완료 후 `handoff/og-image.png`를 추가하면 자동으로 적용됩니다.
+
+## K-BIGx 보고서 PDF 템플릿
+
+`templates/kbigx-report-template.html`은 K-BIGx 기업혁신성장 보고서를 PDF 로 만드는 단독 HTML 한 장입니다. 글꼴 · 라이브러리 · 이미지가 파일 안에 모두 들어 있어 이 파일만 백엔드에 전달하면 됩니다. 데이터 넣는 법, PDF 저장 시점, 값 · 순서 · 개수 규칙은 파일 맨 위 주석에 있습니다.
+
+- 원본 퍼블리싱 저장소에서 만들어 전달하는 결과물입니다. **손으로 고치지 않습니다.** 인쇄 템플릿(`kbigx-print-*` 컴포넌트 · K-BIGx 목업)을 바꿔도 이 HTML 은 저절로 바뀌지 않으므로, 바뀐 HTML 이 필요하면 원본 저장소에 요청합니다.
+- 퍼블리싱 인덱스의 [보고서 템플릿 다운로드](`/downloads/kbigx-report-template.html`)는 빌드 때 이 파일을 읽어 정적 파일로 만듭니다. `templates/` 를 지우거나 옮기면 `yarn build` 가 실패합니다.
 
 ## 디자인 토큰
 

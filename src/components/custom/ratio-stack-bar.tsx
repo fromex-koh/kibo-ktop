@@ -11,11 +11,15 @@ import {cn} from '@/lib/utils'
 // 짜임: 막대 높이 16 · 양 끝 둥글림(full) · 항목 사이 흰 틈 2 → 8 → 범례(오른쪽 정렬, 16 칩 · 간격 8 · 14 Regular 이름 + 14 Bold 비율,
 //   항목 간격 16).
 // 비율은 값 합계로 나눠 계산한다 — 합이 100 이 아니어도(예: 반올림 오차 99.9) 막대는 끝까지 찬다. 0 이하 · 숫자가 아닌 값은
-//   막대에서 빼고(범례에는 0% 로 남김), 0 보다 크면 최소 4 는 칠해 보이게 한다. 합이 0 이면 빈 회색 막대만 둔다.
+//   막대에서 빼고(범례에는 0 이하는 0.0% · 숫자가 아닌 값은 '-'), 0 보다 크면 최소 4 는 칠해 보이게 한다. 합이 0 이면(자료 없음) 빈 회색 막대만 두고
+//   범례 비율은 모두 '-' — 0.0% 로 적으면 실제 값이 0 인 것처럼 읽힌다.
 // 막대는 장식이라 숨기고, 범례 글자가 비율을 읽어 준다[5.3.1].
 // 보고서 안에서는 카드가 화면에 들어올 때 막대가 왼쪽에서 오른쪽으로 차오른다(chart-reveal.tsx · --animate-chart-wipe-right).
 //
 // [프론트엔드 연동] value 는 비율(%) 또는 금액 어느 쪽이든 된다 — 범례 비율은 합계 대비로 다시 계산해 적는다.
+
+// 값이 없을 때 범례에 적는 글자.
+const EMPTY_VALUE = '-'
 
 type RatioStackItem = {
     id: string
@@ -43,6 +47,11 @@ const RatioStackBar = ({data, fractionDigits = 1, className, ...props}: RatioSta
     const items = data.map((item, index) => ({
         ...item,
         percentage: total ? (safeValues[index] / total) * 100 : 0,
+        // 합이 0 이거나 받지 못한 값이면 '-'.
+        percentageText:
+            total && Number.isFinite(item.value)
+                ? `${percentFormatter.format((safeValues[index] / total) * 100)}%`
+                : EMPTY_VALUE,
     }))
 
     return (
@@ -76,7 +85,7 @@ const RatioStackBar = ({data, fractionDigits = 1, className, ...props}: RatioSta
                         <span className="break-keep">
                             {item.label}{' '}
                             <strong className="typo-body-l-bold text-foreground tabular-nums">
-                                {percentFormatter.format(item.percentage)}%
+                                {item.percentageText}
                             </strong>
                         </span>
                     </li>

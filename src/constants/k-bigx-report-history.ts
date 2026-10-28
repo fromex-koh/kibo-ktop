@@ -35,7 +35,7 @@ export const K_BIGX_REPORT_SEARCH_TARGETS = [
     {value: 'inquiryOrganization', label: '조회 기관'},
 ] as const
 
-/** 카드 버튼이 하는 일 — 기업 카드·기업혁신성장은 보고서를 파일로 받는다(보고서 다운로드). 가는 주소는 content 가 정한다. */
+/** 카드 버튼 이름 — 기업 카드 · 기관 기업혁신성장 카드. 누르면 보고서 내용 선택 모달이 뜬다(k-bigx-report-download-button.tsx). */
 export const K_BIGX_REPORT_ACTION = {
     download: '보고서 다운로드',
 } as const
@@ -69,15 +69,25 @@ export const K_BIGX_REPORT_TYPE_FILTERS = [
     {value: 'bulk-info', label: K_BIGX_REPORT_TYPE['bulk-info'].label},
 ] as const
 
-/** 카드 한 장이 담는 값 — 시안의 항목 그대로다. */
+/**
+ * 카드 한 장이 담는 값 — 시안의 항목 그대로다.
+ *
+ * [프론트엔드 연동 · 카드 ↔ PDF 보고서] 카드는 보고서의 요약일 뿐, PDF 의 데이터 출처가 아니다.
+ *   · [보고서 다운로드] 는 id 하나만 넘기고, PDF(보고서 문서 화면)는 그 id 로 보고서 조회 API 를 다시 불러 그린다.
+ *     카드 값을 주소 · 상태로 넘겨 PDF 에 채우지 않는다 — PDF 의 나머지 수백 개 값과 출처가 갈라진다.
+ *   · 그래서 카드와 PDF 의 같은 정보는 백엔드가 같은 보고서에서 내려 줘야 맞는다. 짝은 각 필드 설명의 '= report.*' 다.
+ */
 export type KBigxReportHistoryItem = {
+    /** 보고서 id — 보고서 조회 API(getInnovationGrowthReport)의 id 와 같은 값이어야 한다. 대량정보조회는 결과 묶음 id. */
     id: string
+    /** 기업명 = report.companyName (PDF 표지 · 기업 정보 · 쪽 머리말). 대량정보조회는 묶음 이름. */
     companyName: string
     /** 이용권이 깎였는지. 카드 오른쪽 상자에 여/부 한 글자로 선다(시안). */
     isTicketDeducted: boolean
     inquiryType: KBigxReportInquiryType
-    /** 조회일시(YYYY-MM-DD). */
+    /** 조회일시(YYYY-MM-DD) = report.issuedAt (PDF 표지 발급일). 보고서 내용 선택 모달의 조회기준일 자리에도 쓴다. */
     inquiredAt: string
+    /** 특허명 = report.title (웹 보고서 머리 제목 — PDF 에는 나오지 않는다). 대량정보조회는 조회 결과 요약. */
     patentName: string
     /** 보고서 유형 — 기관 화면에만 있다. 없으면(기업) 배지를 그리지 않고 버튼은 [보고서 다운로드] 다. */
     reportType?: KBigxReportType

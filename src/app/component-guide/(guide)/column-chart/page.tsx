@@ -62,6 +62,21 @@ const MANY_ITEMS_DATA = toItems([
     ['2024년', 466.5],
 ])
 const SINGLE_DATA = toItems([['2024년', 466.5]])
+// 값이 빠진 해 — missingValueText 예시(2023년 값 없음).
+const MISSING_DATA = toItems([
+    ['2022년', 456.1],
+    ['2023년', Number.NaN],
+    ['2024년', 466.5],
+])
+
+const MISSING_CODE = `// 값이 빠질 수 있는 화면만 missingValueText 를 넘긴다 — 빠진 해도 자리를 남기고 막대 대신 '-' 를 적는다.
+// 넘기지 않으면 지금처럼 모든 value 를 숫자로 본다(다른 화면은 바뀌지 않는다).
+<ColumnChart
+  variant="cells"
+  data={salesPerEmployee.map((item) => ({id: item.label, label: item.label, value: item.value}))} // 빈 값은 NaN
+  missingValueText="-"
+  ariaLabel="연도별 인당 매출액"
+/>`
 
 const USAGE_CODE = `import {ColumnChart} from '@/components/custom/column-chart'
 
@@ -164,7 +179,7 @@ const CHOICE_ROWS = [
     {
         key: 'value',
         cells: [
-            '축 없이 막대 위 값 글자로(인쇄본)',
+            '축 없이 막대 위 값 글자로(PDF 템플릿)',
             <Link key="c" href="/component-guide/value-column-chart" className={LINK_CLASS}>
                 ValueColumnChart
             </Link>,
@@ -247,6 +262,20 @@ const PROPS_ITEMS = [
         '불러오는 중에 화면 낭독기가 읽을 말입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
+    ],
+    [
+        'ColumnChart',
+        'missingValueText',
+        "cells: 값이 없는 항목(NaN)을 자리에 남기고 막대 대신 적을 글자입니다(예: '-'). 주지 않으면 모든 값을 숫자로 봅니다.",
+        '-',
+        'string',
+    ],
+    [
+        'ColumnChart',
+        'compactValueLabels',
+        "cells: 6자를 넘는 값 글자를 '123.5만'으로 줄일지입니다. 항목이 적어 자리가 넉넉하고 정확한 값을 읽어야 하는 막대만 false 로 둡니다(예: 천원 단위 인당 매출액).",
+        'true',
+        'boolean',
     ],
     ['ColumnChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['ColumnChartItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
@@ -353,6 +382,27 @@ const ColumnChartGuidePage = () => (
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                    <div className={BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">값 없음 — missingValueText (cells)</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            숫자가 아닌 값(<code>NaN</code>)을 받은 항목은 자리를 남기고 막대 대신{' '}
+                            <code>missingValueText</code> 를 적습니다. 숨김 표도 같은 글자로 읽힙니다. 넘기지 않으면
+                            모든 값을 숫자로 봅니다 — K-BIGx 활동성정보 인당 매출액처럼 값이 빠질 수 있는 화면만 켭니다.
+                        </p>
+                        <div className="border-subtle-3 bg-card max-w-96 rounded-sm border p-6">
+                            <ColumnChart
+                                variant="cells"
+                                data={MISSING_DATA}
+                                missingValueText="-"
+                                color={REPORT_COLOR}
+                                barWidth={48}
+                                valueFractionDigits={1}
+                                showTooltip={false}
+                                ariaLabel="연도별 인당 매출액 — 2023년 값 없음"
+                            />
+                        </div>
+                        <CodeBlock code={MISSING_CODE} language="tsx" copyLabel="값 없음 코드 복사" />
                     </div>
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">로딩 — cells</h3>

@@ -37,6 +37,18 @@ import {chartTooltipClassName, chartTooltipTitleClassName} from '@/components/th
 // 그리지 않을 수 있다. 배경을 깔 때(showTrack)만 쓴다.
 const BarRectangle = (props: RectangleProps) => (props.height ? <Rectangle {...props} /> : null)
 
+// 값이 없는 막대 표시(missingValueText) — 차트 자료에서 그 값을 0 으로 두고 이 표시를 함께 단다.
+// 0 으로 두어야 recharts 가 막대 자리(와 값 글자 자리)를 만든다. 막대는 그리지 않고, 값 글자 자리에 missingValueText 를 적는다.
+const MISSING_FLAG_PREFIX = '__missing__'
+const missingFlagKey = (seriesKey: string) => `${MISSING_FLAG_PREFIX}${seriesKey}`
+// LabelList 의 기본 값 읽기와 같다 — 막대 값은 숫자, 쌓인 막대는 [아래, 위] 배열이라 마지막 값을 쓴다.
+const toLabelValue = (value: unknown): string | number | undefined => {
+    const last: unknown = Array.isArray(value) ? value.at(-1) : value
+    return typeof last === 'number' || typeof last === 'string' ? last : undefined
+}
+const isMissingEntry = (payload: unknown, seriesKey: string) =>
+    typeof payload === 'object' && payload !== null && Reflect.get(payload, missingFlagKey(seriesKey)) === true
+
 type GroupedColumnSeries = {
     color: string
     key: string
@@ -85,6 +97,12 @@ type GroupedColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'>
     variant?: 'default' | 'cells'
     valueFractionDigits?: number
     yAxisStep?: number
+    /**
+     * 값이 없는 막대(data.values 에 그 계열 값이 없거나 숫자가 아님) 자리에 막대 대신 적을 글자(예: '-').
+     * 값 글자와 같은 자리 · 모양으로 적고, 말풍선 · 숨김 표도 이 글자로 읽는다.
+     * 주지 않으면 지금처럼 그 막대 자리를 비운다(숨김 표는 0) — 이 값을 넘기는 화면만 바뀐다.
+     */
+    missingValueText?: string
 }
 
 const numberFormatter = new Intl.NumberFormat('ko-KR')
@@ -111,6 +129,7 @@ const GroupedColumnChart = ({
     variant = 'default',
     valueFractionDigits = 0,
     yAxisStep,
+    missingValueText,
     ariaLabel,
     className,
     ...props
@@ -129,7 +148,30 @@ const GroupedColumnChart = ({
     // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 배경 막대·계열 막대가
     // 모두 같은 id 를 달아 문서에 같은 id 가 여러 번 생긴다[8.1.1]. id 는 아래 숨김 표의 key 로만 쓰므로
     // 차트로는 넘기지 않는다.
-    const chartData = data.map((item) => ({label: item.label, ...item.values}))
+    // missingValueText 를 주면 값이 없는 계열을 0 + 표시(MISSING_FLAG_PREFIX)로 채운다 — 막대 자리를 만들어 그 자리에 글자를 적는다.
+    const hasMissingText = missingValueText !== undefined
+    const isMissingValue = (value: number | undefined) => typeof value !== 'number' || !Number.isFinite(value)
+    const chartData = data.map((item) => ({
+        label: item.label,
+        ...item.values,
+        ...(hasMissingText
+            ? Object.fromEntries(
+                  series
+                      .filter(({key}) => isMissingValue(item.values[key]))
+                      .flatMap(({key}) => [
+                          [key, 0],
+                          [missingFlagKey(key), true],
+                      ]),
+              )
+            : {}),
+    }))
+    // 값이 없는 막대는 그리지 않는다(배경 기둥은 showTrack 규칙 그대로).
+    const renderBarShape = (shapeProps: RectangleProps & {payload?: unknown}, seriesKey: string) => {
+        if (isMissingEntry(shapeProps.payload, seriesKey)) return null
+        return showTrack ? <BarRectangle {...shapeProps} /> : <Rectangle {...shapeProps} />
+    }
+    const formatValue = (value: number, seriesKey: string, payload: unknown) =>
+        hasMissingText && isMissingEntry(payload, seriesKey) ? missingValueText : valueFormatter.format(value)
     const maximumValue = Math.max(
         0,
         ...data.flatMap((item) => series.map(({key}) => Math.max(0, item.values[key] ?? 0))),
@@ -293,13 +335,21 @@ const GroupedColumnChart = ({
                                         labelClassName={chartTooltipTitleClassName}
                                         indicator="dot"
                                         labelKey="label"
-                                        formatter={(value, name) => (
-                                            <ChartTooltipRow
-                                                color={config[String(name)]?.color}
-                                                name={config[String(name)]?.label}
-                                                value={`${valueFormatter.format(Number(value))}${unit ? ` ${unit}` : ''}`}
-                                            />
-                                        )}
+                                        formatter={(value, name, item) => {
+                                            const isMissing =
+                                                hasMissingText && isMissingEntry(item.payload, String(name))
+                                            return (
+                                                <ChartTooltipRow
+                                                    color={config[String(name)]?.color}
+                                                    name={config[String(name)]?.label}
+                                                    value={
+                                                        isMissing
+                                                            ? missingValueText
+                                                            : `${valueFormatter.format(Number(value))}${unit ? ` ${unit}` : ''}`
+                                                    }
+                                                />
+                                            )
+                                        }}
                                     />
                                 }
                             />
@@ -311,7 +361,14 @@ const GroupedColumnChart = ({
                                 name={item.key}
                                 fill={`var(--color-${item.key})`}
                                 background={showTrack ? {fill: 'var(--ds-accent-subtle)'} : undefined}
-                                shape={showTrack ? BarRectangle : undefined}
+                                shape={
+                                    hasMissingText
+                                        ? (shapeProps: RectangleProps & {payload?: unknown}) =>
+                                              renderBarShape(shapeProps, item.key)
+                                        : showTrack
+                                          ? BarRectangle
+                                          : undefined
+                                }
                                 activeBar={
                                     showTooltip && {
                                         fill: `color-mix(in srgb, var(--color-${item.key}) 78%, var(--ds-foreground))`,
@@ -332,7 +389,7 @@ const GroupedColumnChart = ({
                                         dataKey={item.key}
                                         content={(labelProps) =>
                                             renderCellsBarValueLabel(labelProps, (value) =>
-                                                valueFormatter.format(value),
+                                                formatValue(value, item.key, chartData[labelProps.index ?? -1]),
                                             )
                                         }
                                     />
@@ -344,7 +401,20 @@ const GroupedColumnChart = ({
                                         fill="var(--ds-foreground)"
                                         fontSize={11}
                                         fontWeight={600}
-                                        formatter={(value) => valueFormatter.format(Number(value ?? 0))}
+                                        // missingValueText 를 줄 때만 값 읽기를 바꾼다(주지 않으면 recharts 기본 그대로).
+                                        valueAccessor={
+                                            hasMissingText
+                                                ? (entry, index) =>
+                                                      isMissingEntry(chartData[index], item.key)
+                                                          ? missingValueText
+                                                          : toLabelValue(entry.value)
+                                                : undefined
+                                        }
+                                        formatter={(value) =>
+                                            typeof value === 'string'
+                                                ? value
+                                                : valueFormatter.format(Number(value ?? 0))
+                                        }
                                     />
                                 ) : null}
                             </Bar>
@@ -388,7 +458,11 @@ const GroupedColumnChart = ({
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
                                 {series.map(({key}) => (
-                                    <td key={key}>{valueFormatter.format(item.values[key] ?? 0)}</td>
+                                    <td key={key}>
+                                        {hasMissingText && isMissingValue(item.values[key])
+                                            ? missingValueText
+                                            : valueFormatter.format(item.values[key] ?? 0)}
+                                    </td>
                                 ))}
                             </tr>
                         ))}

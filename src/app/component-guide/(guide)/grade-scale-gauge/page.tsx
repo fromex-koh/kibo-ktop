@@ -22,11 +22,13 @@ const RECHARTS_LICENSE: LicenseLink = {
 }
 
 // 현금흐름등급 척도(낮은 등급부터 CF6 → CF1) — 보고서와 같은 현금흐름등급표(cash-flow-grades.ts)와
-// cash-flow-cf-<n> 토큰(칸 색 · 칸 글자 색, 다크에서 함께 바뀜).
+// cash-flow-cf-<n> 토큰(칸 색 · 칸 글자 색, 다크에서 함께 바뀜) · cash-flow-gauge-cf-<n> 토큰(원호 — 라이트 그라데이션 · 다크 단색).
 const CASH_FLOW_GRADES: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.map((item) => ({
     label: item.grade,
     color: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)})`,
     foreground: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)}-foreground)`,
+    arcColor: `var(--ds-cash-flow-gauge-cf-${cashFlowLevel(item.grade)}-from)`,
+    arcGradientTo: `var(--ds-cash-flow-gauge-cf-${cashFlowLevel(item.grade)}-to)`,
 }))
 // 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급만 둔다(description="").
 // 양 끝 이름은 등급표의 가장 낮은 · 높은 등급내용(CF6 부실 · CF1 우수)이다.
@@ -52,6 +54,9 @@ const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.ma
   label: item.grade,
   color: \`var(--ds-cash-flow-cf-\${cashFlowLevel(item.grade)})\`,
   foreground: \`var(--ds-cash-flow-cf-\${cashFlowLevel(item.grade)}-foreground)\`,
+  // 원호만 따로 — 라이트는 2색 그라데이션(혁신성장역량지수 게이지와 같은 색), 다크는 칸 색과 같은 단색.
+  arcColor: \`var(--ds-cash-flow-gauge-cf-\${cashFlowLevel(item.grade)}-from)\`,
+  arcGradientTo: \`var(--ds-cash-flow-gauge-cf-\${cashFlowLevel(item.grade)}-to)\`,
 }))
 
 <GradeScaleGauge
@@ -166,6 +171,20 @@ const PROPS_ITEMS = [
         'foreground 가 없을 때 — 밝은 칸이면 흰 글자 대신 짙은 글자(grade-scale-chip-foreground)를 씁니다.',
         'false',
         'boolean',
+    ],
+    [
+        'GradeScaleItem',
+        'arcColor',
+        '원호 색(토큰 변수)입니다. 주면 칸 색(color) 대신 원호에만 쓰고, arcGradientTo 와 짝이면 그라데이션의 시작 색입니다.',
+        'color',
+        'string',
+    ],
+    [
+        'GradeScaleItem',
+        'arcGradientTo',
+        '원호 그라데이션 끝 색(왼쪽 아래)입니다. 주지 않으면 단색 원호입니다(예: var(--ds-cash-flow-gauge-cf-1-to)).',
+        '-',
+        'string',
     ],
     [
         'GradeScaleGaugeSkeleton',

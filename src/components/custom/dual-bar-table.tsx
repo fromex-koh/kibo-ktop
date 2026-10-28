@@ -66,6 +66,8 @@ const BAR_MAX_RATIO = 0.78
 const PERCENT = 100
 
 const numberFormat = new Intl.NumberFormat('ko-KR')
+// 값이 없는 칸.
+const EMPTY_VALUE = '-'
 
 // 값 → 막대 길이(%) — 열의 가장 큰 값 기준. 0 이하는 0.
 const barPercent = (value: number, max: number) => (max > 0 && value > 0 ? (value / max) * BAR_MAX_RATIO * PERCENT : 0)
@@ -86,8 +88,9 @@ const DualBarTable = ({
     barClassName,
     valueClassName,
 }: DualBarTableProps) => {
-    const maxLeft = Math.max(0, ...data.map((item) => item.left))
-    const maxRight = Math.max(0, ...data.map((item) => item.right))
+    // 값이 없으면(숫자 아님) 막대 없이 '-'. 0 은 0. 끝 값 계산에서도 뺀다.
+    const maxLeft = Math.max(0, ...data.map((item) => item.left).filter((value) => Number.isFinite(value)))
+    const maxRight = Math.max(0, ...data.map((item) => item.right).filter((value) => Number.isFinite(value)))
     const headCell = cn('text-center', headClassName ?? 'bg-muted text-primary py-2.5 font-bold')
     const rowCell = rowClassName ?? 'border-subtle-3 border-b py-2'
     // 값 칸 왼쪽 여백 = 열 사이 간격(32).
@@ -95,10 +98,12 @@ const DualBarTable = ({
         <td className={cn(rowCell, 'pl-8')}>
             <div className="flex items-center gap-2.5">
                 <svg aria-hidden="true" className={cn('block min-w-0 flex-1', barClassName ?? 'h-4')}>
-                    {percent > 0 ? <rect width={`${percent}%`} height="100%" fill={color} /> : null}
+                    {Number.isFinite(value) && percent > 0 ? (
+                        <rect width={`${percent}%`} height="100%" fill={color} />
+                    ) : null}
                 </svg>
                 <span className={cn('shrink-0 text-right', valueClassName ?? 'w-20')}>
-                    {numberFormat.format(value)}
+                    {Number.isFinite(value) ? numberFormat.format(value) : EMPTY_VALUE}
                 </span>
             </div>
         </td>

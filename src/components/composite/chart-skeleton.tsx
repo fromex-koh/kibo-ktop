@@ -43,14 +43,14 @@ type ChartSkeletonProps = Omit<React.ComponentProps<'div'>, 'children'> & {
 
 const skeletonPartClassName = chartSkeletonPartVariants()
 
-// PercentageDonutChart 와 같은 짜임 — 지름 260 도넛(구멍 40%) · 간격 60 · 16 사각 칩 범례 8줄(간격 16).
+// PercentageDonutChart 와 같은 짜임 — 지름 260 도넛(구멍 40%) · 간격 30 · 16 사각 칩 범례 8줄(간격 16).
 // 좁은 폭에서는 범례가 도넛 아래로 내려간다. 링은 viewBox 100 기준 반지름 20~50(중심 35 · 굵기 30)이다.
 const DONUT_SKELETON_LEGEND_COUNT = 8
 
-// 실제 도넛처럼 칸 폭 384~511 에서는 도넛 208 · 간격 24 로 줄어 범례가 옆에 남는다(384 미만 · 512 이상은 260 · 60).
+// 실제 도넛처럼 칸 폭 384~511 에서는 도넛 208 · 간격 24 로 줄어 범례가 옆에 남는다(384 미만 · 512 이상은 260 · 30).
 const DonutChartSkeleton = () => (
     <div className="@container h-full min-h-0">
-        <div className="flex h-full min-h-0 flex-wrap items-center justify-center gap-x-15 gap-y-6 @sm:gap-x-6 @lg:gap-x-15">
+        <div className="flex h-full min-h-0 flex-wrap items-center justify-center gap-x-7.5 gap-y-6 @sm:gap-x-6 @lg:gap-x-7.5">
             <div className="aspect-square w-full max-w-65 shrink-0 @sm:max-w-52 @lg:max-w-65">
                 <svg viewBox="0 0 100 100" className="text-muted size-full" aria-hidden="true">
                     <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="30" />

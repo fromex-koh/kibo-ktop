@@ -1,13 +1,15 @@
-import type {ReactNode} from 'react'
+import {Fragment, type ReactNode} from 'react'
 import {DonutListChart} from '@/components/custom/donut-list-chart'
 import {DualLineChart} from '@/components/custom/dual-line-chart'
 import {InsideLabelPieChart} from '@/components/custom/inside-label-pie-chart'
 import {
     KBX_CASH_FLOW_TAG_CLASS,
+    KBX_CREDIT_TAG_CLASS,
     KBX_CHART_EMPTY_CLASS,
     KBX_CHART_EMPTY_TEXT,
     KbxBlock,
     KbxChartBox,
+    KbxChartEmpty,
     KbxFitName,
     KbxPrivateContent,
     KbxSubBlock,
@@ -18,12 +20,19 @@ import {MarkerLineChart, MarkerLineLegend} from '@/components/custom/marker-line
 import {RatingTrendChart} from '@/components/custom/rating-trend-chart'
 import {ValueLineChart} from '@/components/custom/value-line-chart'
 import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
-import {criGradePercentage, findCriGrade, getCriGradeTone} from '@/content/service/cri-grades'
+import {criGradePercentage, findCriGrade, getCriGradeBand} from '@/content/service/cri-grades'
 import {
+    BORROWING_CHANGE_LABELS,
+    toFixedBorrowings,
     getRecentYears,
+    INSTITUTION_LABELS,
+    COLLATERAL_LABELS,
+    RATIO_GROUP_SPECS,
+    type RatioGroupSpec,
     INNOVATION_CREDIT_VISIBILITY,
     isSameYear,
     type InnovationGrowthReport,
+    INNOVATION_REPORT_GRADE_HISTORY_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 import type {KbigxPrintPage} from '@/content/service/k-bigx-print-report'
 import {cn} from '@/lib/utils'
@@ -58,14 +67,6 @@ const CASH_FLOW_DETAIL_LABELS = ['결산일자'] as const
 // [프론트엔드 연동] 이력은 평가일자 최근 것부터(화면과 같다). date 문자열 비교라 'YYYY-MM-DD' 처럼 자릿수가 고정된 형식이어야 한다.
 const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
 
-// 기업신용등급 알약 색 — getCriGradeTone 결과별 kbx grade-tag 색. tone 이 없으면 GradePill 기본(남색 테두리).
-const GRADE_TAG_CLASS = {
-    weak: 'bg-kbx-grade-tag-weak border-kbx-grade-tag-weak text-kbx-paper',
-    poor: 'bg-kbx-grade-tag-poor border-kbx-grade-tag-poor text-kbx-paper',
-    normal: 'bg-kbx-grade-tag-normal border-kbx-grade-tag-normal text-kbx-paper',
-    good: 'bg-kbx-grade-tag-good border-kbx-grade-tag-good text-kbx-paper',
-    excellent: 'bg-kbx-grade-tag-excellent border-kbx-grade-tag-excellent text-kbx-paper',
-} as const
 const GradePill = ({className, children}: {className?: string; children: string}) => (
     <span
         className={cn(
@@ -129,9 +130,19 @@ const GradeHeader = ({
     children: ReactNode
 }) => (
     <div className="flex items-center gap-14">
-        <div className="flex w-110 shrink-0 flex-col gap-4">
-            <div className="text-kbx-primary gap-kbx-18 flex items-baseline">
-                <span className="kbx-text-116 font-kbx-black leading-kbx-90 tracking-kbx-tight">{grade}</span>
+        {/* 왼쪽 칸은 440 이 기본 — 코드 · 알약이 그보다 길면(예: CCC0 + 보통 이하) 줄바꿈 없이 칸만 넓어지고 설명 상자가 그만큼 좁아진다.
+            한 줄을 지켜 옆 설명 상자와의 세로 정렬이 흐트러지지 않는다. */}
+        <div className="flex min-w-110 shrink-0 flex-col gap-4">
+            <div className="text-kbx-primary gap-kbx-18 flex items-baseline whitespace-nowrap">
+                {/* 등급이 없으면 '-' — 등급 글자 크기(116 Black)로 그리면 굵은 막대처럼 보여 72 Regular 로 줄인다(줄 높이 90 은 같아 아래가 밀리지 않는다). */}
+                <span
+                    className={cn(
+                        'leading-kbx-90 tracking-kbx-tight',
+                        grade === KBX_EMPTY_VALUE ? 'kbx-text-72 font-kbx-regular' : 'kbx-text-116 font-kbx-black',
+                    )}
+                >
+                    {grade}
+                </span>
                 {name ? <GradePill className={tagClassName}>{name}</GradePill> : null}
             </div>
             {children}
@@ -140,9 +151,6 @@ const GradeHeader = ({
         {definition ? <div className={DEFINITION_BOX_CLASS}>{definition}</div> : null}
     </div>
 )
-
-// 이력 건수 — 표 · 그래프 모두 최근 3건. 표는 늘 3줄이고 모자라면 '-' 줄로 채운다(전체 이력은 웹 화면에서 본다).
-const HISTORY_ROW_COUNT = 3
 
 // 이력 — 왼쪽 그래프(오래된 것부터) · 오른쪽 표(최근 것부터, 3줄). chart · rows 는 같은 3건을 순서만 달리 넘긴다.
 // 값이 없으면 그래프 자리는 빈 상태(KbxChartBox).
@@ -175,7 +183,7 @@ const GradeHistory = ({
                     {key: 'date', header: dateHeader},
                 ]}
                 emptyText={emptyText}
-                rows={Array.from({length: HISTORY_ROW_COUNT}, (_, index) => {
+                rows={Array.from({length: INNOVATION_REPORT_GRADE_HISTORY_COUNT}, (_, index) => {
                     const item = rows[index]
                     return item
                         ? {key: item.date, cells: [item.grade, item.date]}
@@ -192,10 +200,11 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
     const {rating} = report.creditFinance
     const {ratingHistory, cashFlow} = report.creditDetail
     const criGrade = findCriGrade(rating.grade)
-    const tone = getCriGradeTone(rating.grade)
+    // 알약 색 — 등급 단계(9단계)별 KBX_CREDIT_TAG_CLASS. 표에 없는 코드는 GradePill 기본(남색 테두리).
+    const band = getCriGradeBand(rating.grade)
     // 이력은 받은 순서와 관계없이 날짜로 정렬해 최근 3건만 쓴다(이전평가이력은 지금 등급 포함).
-    const previousRatings = [...ratingHistory].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
-    const cashFlowHistory = [...cashFlow.history].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
+    const previousRatings = [...ratingHistory].sort(byLatestDate).slice(0, INNOVATION_REPORT_GRADE_HISTORY_COUNT)
+    const cashFlowHistory = [...cashFlow.history].sort(byLatestDate).slice(0, INNOVATION_REPORT_GRADE_HISTORY_COUNT)
     const cashFlowGrade = findCashFlowGrade(cashFlow.grade)
     // level 은 CF1 = 1 … CF6 = 6(클수록 낮은 등급) — 배지 색 단계. 등급표에 없는 코드 · 빈 값이면 0.
     const level = cashFlowLevel(cashFlow.grade)
@@ -206,7 +215,7 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
                 <GradeHeader
                     grade={rating.grade || KBX_EMPTY_VALUE}
                     name={criGrade?.name}
-                    tagClassName={tone ? GRADE_TAG_CLASS[tone] : undefined}
+                    tagClassName={band ? KBX_CREDIT_TAG_CLASS[band] : undefined}
                     definition={rating.grade && !criGrade ? UNKNOWN_GRADE_TEXT : criGrade?.definition}
                 >
                     <GradeDetails details={rating.details} labels={RATING_DETAIL_LABELS} />
@@ -264,9 +273,26 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
 
 // 표 하나 — 제목 + 상태 알약 → 표(값 한 줄). 웹 보고서(innovation-growth-report-credit.tsx CreditInfoTable)와 같은 규칙.
 //   · 비공개 표(열람 케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '비공개' 한 줄('해당사항 없음' 줄과 같은 모양),
-//     상태 알약은 뺀다(알약으로 내용을 짐작할 수 없게).
+//     상태 알약은 뺀다(알약으로 내용을 짐작할 수 없게). 상태 값이 비어 있어도 알약을 뺀다.
 //   · 상태가 '해당없음' 인 표: 비공개 케이스여도 알약 + '해당사항 없음' 줄을 그대로 보인다.
 // [주의] 제목 줄 · 간격을 바꾸면 k-bigx-print-report.ts 의 CREDIT_INFO_PAGE.blockHeight 도 고친다.
+// 숫자 값(금액 1,200,000 · 일자 2023-11-06 · 번호 123-45-67890) — 말줄임하지 않고 다 보인다(웹 보고서와 같다).
+const CREDIT_NUMBER_VALUE = /^[-+]?\d[\d,.-]*$/
+// 숫자 값이 칸보다 길면 쉼표 뒤에서 줄을 바꾼다(묶음 중간에서 끊기지 않게). 그래도 넘치면 아무 곳에서나(wrap-anywhere).
+const CreditNumberValue = ({value}: {value: string}) => (
+    <div className="wrap-anywhere">
+        {value.split(',').map((part, index) => (
+            <Fragment key={index}>
+                {index ? (
+                    <>
+                        ,<wbr />
+                    </>
+                ) : null}
+                {part}
+            </Fragment>
+        ))}
+    </div>
+)
 const CreditInfoBlock = ({
     table,
     visibility,
@@ -286,7 +312,8 @@ const CreditInfoBlock = ({
         <section aria-label={table.title} className="flex flex-col gap-2.5">
             <div className="flex items-center gap-3">
                 <h4 className="kbx-text-23 font-kbx-extrabold">{table.title}</h4>
-                {isRowPrivate ? null : (
+                {/* 상태 알약 — 비공개 표 · 상태 값이 없는 표(데이터 없음)는 뺀다(빈 알약이 남지 않게). */}
+                {isRowPrivate || !table.status.trim() ? null : (
                     <span className="kbx-text-18 font-kbx-extrabold kbx-border-regular border-kbx-primary text-kbx-primary rounded-full px-3 py-0.5">
                         {table.status}
                     </span>
@@ -303,7 +330,17 @@ const CreditInfoBlock = ({
                         ? []
                         : table.rows.slice(0, CREDIT_INFO_ROW_LIMIT).map((row, rowIndex) => ({
                               key: `${table.id}-${rowIndex}`,
-                              cells: row.map((value) => value || KBX_EMPTY_VALUE),
+                              // 글 값은 대개 짧은 정해진 명사지만 칸 폭을 넘으면 한 줄 말줄임(행 높이 고정 — 쪽 높이 어림과 맞물린다).
+                              // 숫자 값(금액 · 일자 · 번호)은 자르지 않는다 — 칸보다 길면 줄을 바꿔 다 보인다.
+                              cells: row.map((value, index) =>
+                                  CREDIT_NUMBER_VALUE.test(value) ? (
+                                      <CreditNumberValue key={index} value={value} />
+                                  ) : (
+                                      <div key={index} className="truncate">
+                                          {value || KBX_EMPTY_VALUE}
+                                      </div>
+                                  ),
+                              ),
                           }))
                 }
             />
@@ -353,37 +390,8 @@ const RATIO_CHART_COLORS = {
 // 재무비율 그래프 폭 — 쪽 본문 폭 1168 전체.
 const RATIO_CHART_WIDTH = 1168
 
-// 재무비율 묶음 — 묶음 4개 · 묶음마다 지표 4개 고정. 받은 데이터는 묶음 id · 지표 label 로 찾아 넣고,
-// 없는 지표 · 값 · 업종평균 대비는 '-'. 연도는 늘 최근 3개년(getRecentYears). 단위는 받은 unit 이 없을 때만 spec.unit.
-// [프론트엔드 연동] 묶음 id 와 지표 label 은 아래 문자열과 정확히 같게 보낸다(다르면 그 줄이 '-').
+// 재무비율 묶음 · 지표 — RATIO_GROUP_SPECS(k-bigx-innovation-report.ts, 웹 보고서와 공용). 없는 지표 · 값 · 업종평균 대비는 '-'.
 // 배열 순서대로 2개씩 쪽을 나눈다 — 앞 두 묶음은 credit-finance-3 쪽, 뒤 두 묶음은 credit-finance-4 쪽.
-type RatioGroupSpec = {id: string; title: string; unit: string; labels: readonly string[]}
-const RATIO_GROUP_SPECS: readonly RatioGroupSpec[] = [
-    {
-        id: 'growth',
-        title: '성장성',
-        unit: '%',
-        labels: ['매출액증가율', '총자산증가율', '순이익증가율', '영업이익증가율'],
-    },
-    {
-        id: 'profitability',
-        title: '수익성',
-        unit: '%',
-        labels: ['영업이익률', '당기순이익률', '자기자본이익률', '총자본영업이익률'],
-    },
-    {
-        id: 'stability',
-        title: '안정성',
-        unit: '%, 배',
-        labels: ['자기자본비율', '부채비율', '이자보상비율 (배)', '차입금의존도'],
-    },
-    {
-        id: 'activity',
-        title: '활동성',
-        unit: '회',
-        labels: ['총자본회전율', '매출채권회전율', '재고자산회전율', '순운전자본회전율'],
-    },
-]
 const RATIO_GROUPS_PER_PAGE = 2
 
 // 재무비율 한 묶음 — 소제목 → 단위 → 표(재무비율 · 연도 · 업종평균 대비) → 꺾은선 → 범례.
@@ -518,105 +526,126 @@ const BORROWING_LINE = 'border-kbx-border kbx-border-b-hairline'
 type BorrowingRow = InnovationGrowthReport['creditDetail']['borrowings']['total']
 
 // 한 줄의 연도별 금액 · 비중 칸 — 값이 없거나 숫자가 아니면 '-'(0 은 0 · 0.0). row.cells 순서 = borrowings.years.
-const borrowingCells = (row: BorrowingRow, className?: string) =>
-    row.cells.flatMap((cell, index) => [
-        <td key={`${row.key}-${index}-amount`} className={cn(BORROWING_CELL, BORROWING_LINE, className)}>
-            {isKbxNumber(cell?.amount) ? kbxNumberFormat.format(cell.amount) : KBX_EMPTY_VALUE}
-        </td>,
-        <td key={`${row.key}-${index}-ratio`} className={cn(BORROWING_CELL, BORROWING_LINE, className)}>
-            {isKbxNumber(cell?.ratio) ? kbxFixed1Format.format(cell.ratio) : KBX_EMPTY_VALUE}
-        </td>,
-    ])
+const borrowingCells = (row: BorrowingRow, years: readonly string[], className?: string) =>
+    years.flatMap((_, index) => {
+        const cell = row.cells[index]
+        return [
+            <td key={`${row.key}-${index}-amount`} className={cn(BORROWING_CELL, BORROWING_LINE, className)}>
+                {isKbxNumber(cell?.amount) ? kbxNumberFormat.format(cell.amount) : KBX_EMPTY_VALUE}
+            </td>,
+            <td key={`${row.key}-${index}-ratio`} className={cn(BORROWING_CELL, BORROWING_LINE, className)}>
+                {isKbxNumber(cell?.ratio) ? kbxFixed1Format.format(cell.ratio) : KBX_EMPTY_VALUE}
+            </td>,
+        ]
+    })
 
 // 차입금 현황 — 두 단 머리(항목 / 연도 → 금액 · 비중) · 묶음(단기 · 장기 등) 칸 세로 합침 · 묶음별 소계 줄 · 합계 줄.
-// 묶음 · 줄 · 연도 수는 받은 데이터대로 늘어난다(고정 줄 없음) — 줄이 많으면 한 쪽을 넘칠 수 있다.
-const BorrowingTable = ({borrowings}: {borrowings: InnovationGrowthReport['creditDetail']['borrowings']}) => (
-    <table className="border-kbx-primary kbx-text-20 leading-kbx-140 kbx-border-t-strong w-full table-fixed tabular-nums">
-        <caption className="sr-only">차입금 현황(단위: 백만원, %)</caption>
-        <colgroup>
-            <col className="w-1/14" />
-            <col className="w-2/11" />
-            {borrowings.years.flatMap((year) => [<col key={`${year}-amount`} />, <col key={`${year}-ratio`} />])}
-        </colgroup>
-        <thead className="text-kbx-primary">
-            <tr>
-                <th scope="col" colSpan={2} rowSpan={2} className={cn(BORROWING_CELL, BORROWING_HEAD)}>
-                    항목
-                </th>
-                {borrowings.years.map((year) => (
-                    <th key={year} scope="colgroup" colSpan={2} className={cn(BORROWING_CELL, BORROWING_HEAD)}>
-                        {year}
+// 연도 수는 받은 데이터대로 늘어난다.
+// years — 머리 연도. 받은 연도가 없으면 바깥에서 최근 3개년을 넘긴다(칸은 '-').
+// 줄은 고정 묶음 · 항목(toFixedBorrowings — 웹과 공용)이라 데이터가 없어도 줄 이름은 남고 칸만 '-'.
+const BorrowingTable = ({
+    borrowings,
+    years,
+}: {
+    borrowings: InnovationGrowthReport['creditDetail']['borrowings']
+    years: readonly string[]
+}) => {
+    return (
+        <table className="border-kbx-primary kbx-text-20 leading-kbx-140 kbx-border-t-strong w-full table-fixed tabular-nums">
+            <caption className="sr-only">차입금 현황(단위: 백만원, %)</caption>
+            {/* 비중 칸은 '100.0' 까지만 들어가면 돼 좁게(1/12) 두고, 남는 폭을 금액 칸이 나눠 갖는다 — 같은 폭으로 나누면
+                큰 금액(123,456,789,012 등)이 옆 비중 칸에 붙는다. 종이 폭이 고정이라 좌우로 넘길 수 없다. */}
+            <colgroup>
+                <col className="w-1/14" />
+                <col className="w-2/11" />
+                {years.flatMap((year) => [
+                    <col key={`${year}-amount`} />,
+                    <col key={`${year}-ratio`} className="w-1/12" />,
+                ])}
+            </colgroup>
+            <thead className="text-kbx-primary">
+                <tr>
+                    <th scope="col" colSpan={2} rowSpan={2} className={cn(BORROWING_CELL, BORROWING_HEAD)}>
+                        항목
                     </th>
-                ))}
-            </tr>
-            <tr>
-                {borrowings.years.flatMap((year) =>
-                    ['금액', '비중'].map((label) => (
-                        <th
-                            key={`${year}-${label}`}
-                            scope="col"
-                            className={cn(BORROWING_CELL, BORROWING_HEAD, 'bg-kbx-surface-subtle')}
-                        >
-                            {label}
+                    {years.map((year) => (
+                        <th key={year} scope="colgroup" colSpan={2} className={cn(BORROWING_CELL, BORROWING_HEAD)}>
+                            {year}
                         </th>
-                    )),
-                )}
-            </tr>
-        </thead>
-        <tbody>
-            {borrowings.groups.flatMap((group) => {
-                const groupRows = [...group.rows, group.subtotal]
-                return groupRows.map((row, rowIndex) => {
-                    const isSubtotal = row === group.subtotal
-                    return (
-                        <tr key={row.key} className={cn(isSubtotal && 'bg-kbx-surface-faint font-kbx-bold')}>
-                            {rowIndex === 0 ? (
-                                <th
-                                    scope="rowgroup"
-                                    rowSpan={groupRows.length}
-                                    className={cn(
-                                        BORROWING_CELL,
-                                        'bg-kbx-surface-subtle border-kbx-border kbx-border-r-hairline kbx-border-b-thin font-kbx-bold px-1',
-                                    )}
-                                >
-                                    {group.label}
-                                </th>
-                            ) : null}
-                            <th scope="row" className={cn(BORROWING_CELL, BORROWING_LINE, 'font-kbx-bold px-1')}>
-                                {row.label}
+                    ))}
+                </tr>
+                <tr>
+                    {years.flatMap((year) =>
+                        ['금액', '비중'].map((label) => (
+                            <th
+                                key={`${year}-${label}`}
+                                scope="col"
+                                className={cn(BORROWING_CELL, BORROWING_HEAD, 'bg-kbx-surface-subtle')}
+                            >
+                                {label}
                             </th>
-                            {borrowingCells(row)}
-                        </tr>
-                    )
-                })
-            })}
-            {/* 차입금 합계 — 위 남색 선 · 남색 가장 굵은 글자(소계보다 한 단계 강조). */}
-            <tr className="bg-kbx-surface text-kbx-primary font-kbx-extrabold">
-                <th
-                    scope="row"
-                    colSpan={2}
-                    className={cn(
-                        BORROWING_CELL,
-                        BORROWING_LINE,
-                        'border-t-kbx-primary kbx-border-t-regular font-kbx-extrabold',
+                        )),
                     )}
-                >
-                    {borrowings.total.label}
-                </th>
-                {borrowingCells(borrowings.total, 'border-t-kbx-primary kbx-border-t-regular')}
-            </tr>
-        </tbody>
-    </table>
-)
+                </tr>
+            </thead>
+            <tbody>
+                {borrowings.groups.flatMap((group) => {
+                    const groupRows = [...group.rows, group.subtotal]
+                    return groupRows.map((row, rowIndex) => {
+                        const isSubtotal = row === group.subtotal
+                        return (
+                            <tr key={row.key} className={cn(isSubtotal && 'bg-kbx-surface-faint font-kbx-bold')}>
+                                {rowIndex === 0 ? (
+                                    <th
+                                        scope="rowgroup"
+                                        rowSpan={groupRows.length}
+                                        className={cn(
+                                            BORROWING_CELL,
+                                            'bg-kbx-surface-subtle border-kbx-border kbx-border-r-hairline kbx-border-b-thin font-kbx-bold px-1',
+                                        )}
+                                    >
+                                        {group.label}
+                                    </th>
+                                ) : null}
+                                <th scope="row" className={cn(BORROWING_CELL, BORROWING_LINE, 'font-kbx-bold px-1')}>
+                                    {row.label}
+                                </th>
+                                {borrowingCells(row, years)}
+                            </tr>
+                        )
+                    })
+                })}
+                {/* 차입금 합계 — 위 남색 선 · 남색 가장 굵은 글자(소계보다 한 단계 강조). */}
+                <tr className="bg-kbx-surface text-kbx-primary font-kbx-extrabold">
+                    <th
+                        scope="row"
+                        colSpan={2}
+                        className={cn(
+                            BORROWING_CELL,
+                            BORROWING_LINE,
+                            'border-t-kbx-primary kbx-border-t-regular font-kbx-extrabold',
+                        )}
+                    >
+                        {borrowings.total.label}
+                    </th>
+                    {borrowingCells(borrowings.total, years, 'border-t-kbx-primary kbx-border-t-regular')}
+                </tr>
+            </tbody>
+        </table>
+    )
+}
 
-// 차입금 변동현황 줄 — 4줄 고정. 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 줄 · 연도는 '-'.
-const BORROWING_CHANGE_LABELS = ['차입금(백만원)', '차입금/매출액(%)', '차입금상환계수', '총차입금변동률(%)'] as const
+// 차입금 변동현황 줄 — BORROWING_CHANGE_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용) 4줄 고정. 없는 줄 · 연도는 '-'.
 
 // 차입금 분석 쪽 — 변동률(그래프) → 차입금 현황(표) → 차입금 변동현황(표). 소블록 사이 40.
 const KbigxPrintCreditBorrowing = ({report}: PageProps) => {
     const {borrowingTrend, borrowings, borrowingChanges} = report.creditDetail
+    // 차입금 현황 연도 — 받은 연도 그대로. 하나도 없으면 재무현황 최근 3개년(칸은 '-').
+    const borrowingYears = borrowings.years.length
+        ? borrowings.years
+        : getRecentYears([], report.companyStatus.finance.years)
     // 변동현황 연도 — 최근 3개년 고정. 받은 연도가 없으면 차입금 현황 연도를 쓴다.
-    const changeYears = getRecentYears(borrowingChanges.years, borrowings.years)
+    const changeYears = getRecentYears(borrowingChanges.years, borrowingYears)
 
     return (
         <KbxBlock title="차입금 분석">
@@ -639,7 +668,7 @@ const KbigxPrintCreditBorrowing = ({report}: PageProps) => {
             </KbxSubBlock>
             <KbxSubBlock title="차입금 현황" className="mt-2">
                 <KbxUnitBelow unit="단위: 백만원, %">
-                    <BorrowingTable borrowings={borrowings} />
+                    <BorrowingTable borrowings={toFixedBorrowings(borrowings)} years={borrowingYears} />
                 </KbxUnitBelow>
             </KbxSubBlock>
             {/* 단위는 줄 이름에 들어 있어(차입금(백만원) 등) 소제목 단위가 없다. */}
@@ -699,9 +728,8 @@ const shareFormat = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 const BaseYearCaption = ({year}: {year?: string}) =>
     year ? <p className="kbx-text-18 text-kbx-foreground-subtle text-center">{year} 기준</p> : null
 
-// 기관별 비중 표 줄 — 업권 5개 고정. 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 업권 · 연도는 '-'.
+// 기관별 비중 표 줄 — INSTITUTION_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용) 업권 5개 고정. 없는 업권 · 연도는 '-'.
 // 표는 institutions.rows(연도별), 도넛은 institutions.share(최근 연도)로 따로 받는다.
-const INSTITUTION_LABELS = ['은행업권', '상호금융업권', '저축은행업권', '카드/캐피탈업권', '대부업권'] as const
 
 const InstitutionShare = ({
     institutions,
@@ -765,6 +793,12 @@ const InstitutionShare = ({
     </div>
 )
 
+// 신용/담보 비중이 통째로 비었는지 — 시점(추이)이 없고 최근 비중 두 값의 합도 0 보다 크지 않다.
+const isCreditCollateralEmpty = ({points, current}: InnovationGrowthReport['creditDetail']['creditCollateral']) => {
+    const total = current.credit + current.collateral
+    return !points.length && !(Number.isFinite(total) && total > 0)
+}
+
 // 신용/담보 비중 — 시점별 꺾은선(왼쪽 반, points) · 최근 비중 원형(오른쪽 반 가운데, 330px, current). 사이 56.
 const CreditCollateral = ({
     creditCollateral,
@@ -773,6 +807,9 @@ const CreditCollateral = ({
 }) => {
     const {current} = creditCollateral
     const total = current.credit + current.collateral
+
+    // 추이 · 최근 비중이 모두 없으면 크기가 다른 빈 상태 둘 대신 영역 전체에 빈 상태 하나(원형 칸 높이 330 = h-82.5).
+    if (isCreditCollateralEmpty(creditCollateral)) return <KbxChartEmpty className="h-82.5" />
 
     return (
         <div className="grid grid-cols-2 items-start gap-14">
@@ -827,8 +864,7 @@ const CreditCollateral = ({
 
 // 담보 현황 — 도넛 + 기준 연도(왼쪽 반) · 단위 + 목록(오른쪽 반). 사이 56.
 const COLLATERAL_UNIT = '단위: 백만원'
-// 담보 종류 3개 고정 — 받은 값을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다.
-const COLLATERAL_LABELS = ['부동산', '특수저당', '보증'] as const
+// 담보 종류 3개 고정 — COLLATERAL_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용).
 const Collaterals = ({
     collaterals,
     year,
@@ -925,7 +961,10 @@ const PLACEHOLDER_BORROWING_STATUS: Pick<
 const KbigxPrintCreditBorrowingStatus = ({report}: PageProps) => {
     const {institutions, creditCollateral, collaterals, collateralYear, borrowings} = report.creditDetail
     // 기관별 비중 연도 — 최근 3개년 고정. 받은 연도가 없으면 차입금 현황 연도를 쓴다.
-    const institutionYears = getRecentYears(institutions.years, borrowings.years)
+    const institutionYears = getRecentYears(
+        institutions.years,
+        borrowings.years.length ? borrowings.years : report.companyStatus.finance.years,
+    )
     const isHidden = INNOVATION_CREDIT_VISIBILITY[report.viewerCase].isBorrowingStatusHidden
     // 가린 케이스 — 웹 보고서처럼 가짜 값(PLACEHOLDER_BORROWING_STATUS)으로 같은 모양을 그려 흐리게 깔고 안내를 얹는다.
     // 실제 값은 쓰지 않는다. 단위는 그대로 둔다(웹과 같다).
@@ -944,11 +983,15 @@ const KbigxPrintCreditBorrowingStatus = ({report}: PageProps) => {
             >
                 {content(<InstitutionShare institutions={source.institutions} years={source.institutions.years} />)}
             </KbxSubBlock>
-            {/* 꺾은선 칸 = (전체 − 사이 56)의 1/2. */}
+            {/* 꺾은선 칸 = (전체 − 사이 56)의 1/2. 통째로 비어 빈 상태 하나만 그리면 단위는 그 상자 오른쪽 끝(소제목 줄 전체 폭). */}
             <KbxSubBlock
                 title="신용/담보 비중"
                 unit={<CreditUnit>단위: %</CreditUnit>}
-                headerClassName="w-[calc((100%-var(--spacing)*14)/2)]"
+                headerClassName={
+                    !isHidden && isCreditCollateralEmpty(source.creditCollateral)
+                        ? undefined
+                        : 'w-[calc((100%-var(--spacing)*14)/2)]'
+                }
                 className="mt-13.25"
             >
                 {content(<CreditCollateral creditCollateral={source.creditCollateral} />)}

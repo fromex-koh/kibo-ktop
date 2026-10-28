@@ -92,7 +92,7 @@ const LOADING_CODE = `import {DualLineChartSkeleton} from '@/components/composit
   <DualLineChart data={points} series={series} ariaLabel="신용/담보 비중 추이" />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 계열 · 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-credit.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 계열 · 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-credit.tsx).
 <DualLineChart
   data={points}
   series={[
@@ -179,7 +179,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const DualLineChartGuidePage = () => (
     <GuidePageShell
         title="두 계열 꺾은선 (DualLineChart)"
-        description="두 값의 추이를 두 선으로 그리고 점마다 값을 바로 적는 차트입니다. 첫 계열은 실선 + 빈 원, 둘째 계열은 파선 + 마름모라 색 없이도 구분됩니다. K-BIGx 보고서 인쇄본 신용/재무정보의 신용/담보 비중 그래프입니다."
+        description="두 값의 추이를 두 선으로 그리고 점마다 값을 바로 적는 차트입니다. 첫 계열은 실선 + 빈 원, 둘째 계열은 파선 + 마름모라 색 없이도 구분됩니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보의 신용/담보 비중 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="dlc-basic" className="flex flex-col gap-6">
@@ -242,7 +242,7 @@ const DualLineChartGuidePage = () => (
             <section aria-labelledby="dlc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="dlc-loading" title="4. 불러오는 중 (DualLineChartSkeleton)">
                     차트와 같은 그림 범위(560 × 290)에 바닥선 · 두 선 · 점 · 값 글자 · 항목 이름 자리를, 아래에 범례
-                    자리를 그립니다. 인쇄본은 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                    자리를 그립니다. PDF 템플릿은 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -258,7 +258,7 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="dlc-print" title="5. K-BIGx PDF 템플릿에서">
                     차입금 현황 신용/담보 비중 소블록의 왼쪽 반(폭 556)에 두고, 오른쪽 반에는 최근 비중을
                     InsideLabelPieChart 원형으로 둡니다. 확인 화면:{' '}
                     <Link
@@ -267,7 +267,7 @@ const DualLineChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 신용/재무정보
+                        K-BIGx 보고서 PDF 템플릿 신용/재무정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>

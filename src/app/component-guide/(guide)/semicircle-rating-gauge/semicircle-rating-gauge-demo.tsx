@@ -4,10 +4,11 @@
 import {useState} from 'react'
 import {SemicircleRatingGauge} from '@/components/custom/semicircle-rating-gauge'
 import {Button} from '@/components/ui/button'
-import {CRI_GRADES, toCriRatingData} from '@/content/service/cri-grades'
+import {toCreditGaugeData} from '@/components/custom/credit-gauge-data'
+import {CRI_GRADES} from '@/content/service/cri-grades'
 
-// 등급 원호 게이지 가이드의 등급별 데모 — 버튼으로 CRI 24개 등급을 바꿔 채움 길이 · 등급 · 등급명을 확인한다.
-// 색은 등급과 무관하게 파랑 하나이고, 채움 길이만 달라진다. R(유보) · NR(평가 제외)은 채움 없이 등급명만 보인다.
+// 등급 원호 게이지 가이드의 등급별 데모 — 버튼으로 CRI 24개 등급을 바꿔 채움 길이 · 색 · 등급 · 등급명을 확인한다.
+// 색은 등급 단계(우량 ~ 위험 · 유보)마다 바뀐다. R(유보)은 절반 회색, NR(평가 제외)은 채움 없이 등급명만 보인다.
 const DEMO_DETAILS = [
     {label: '평가일자', value: '2025-05-20'},
     {label: '결산일자', value: '2024-12-31'},
@@ -16,7 +17,7 @@ const DEFAULT_GRADE = 'A0'
 
 const RatingScenarioDemo = () => {
     const [grade, setGrade] = useState(DEFAULT_GRADE)
-    const data = toCriRatingData(grade, DEMO_DETAILS)
+    const data = toCreditGaugeData(grade, DEMO_DETAILS)
     const definition = CRI_GRADES.find((item) => item.grade === grade)?.definition
 
     return (

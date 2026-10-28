@@ -84,7 +84,8 @@
    장마다 두 쪽이 잡힌다(5장 → 10쪽).
 
    그래서 인쇄 직전에만 화면 레이아웃을 A4 한 쪽으로 접는다. html[data-print-fit] 은
-   report-print-shell.tsx 가 beforeprint 에 붙이고 afterprint 에 뗀다.
+   report-print-shell.tsx 가 붙이고(자동 인쇄 · [인쇄하기]는 print() 전에 미리, 메뉴 · 단축키 인쇄는 beforeprint 에서)
+   afterprint 에 뗀다.
    처음부터 접으면 안 된다 — Safari 는 차트가 폭을 잴 때 줄어든 크기를 돌려주어 그래프만 작게 그려진다.
 
    값의 근거(모두 Safari 미리보기에서 확인) —

@@ -1,9 +1,9 @@
 {
-    "version": "v3.4.5",
+    "version": "v3.4.6",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "isCurrent": true
         },
         {
@@ -18,12 +18,12 @@
         },
         {
             "name": "src/components/composite",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "isCurrent": true
         },
         {
@@ -33,18 +33,18 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.4.3",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.4.4",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "src/lib",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "src/hooks",
@@ -58,8 +58,8 @@
         },
         {
             "name": "tokens.json",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "src/app/tokens.css",
@@ -73,8 +73,8 @@
         },
         {
             "name": "src/app/globals.css",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "postcss.config.mjs",
@@ -98,18 +98,18 @@
         },
         {
             "name": "package.json",
-            "version": "v3.2.3",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "yarn.lock",
-            "version": "v0.1.10",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "THIRD_PARTY_LICENSES.md",
-            "version": "v0.1.10",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "name": "next.config.ts",
@@ -135,6 +135,11 @@
             "name": "src/app/fonts",
             "version": "v0.1.4",
             "isCurrent": false
+        },
+        {
+            "name": "templates/kbigx-report-template.html",
+            "version": "v3.4.6",
+            "isCurrent": true
         }
     ],
     "commonLayouts": [

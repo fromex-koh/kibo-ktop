@@ -242,7 +242,7 @@ const COMPONENT_ROWS = [
                 href="/component-guide/chart-reveal"
                 className="text-primary-strong underline underline-offset-4"
             >
-                K-BIGx 보고서 · 인쇄본(ChartReveal 가이드)
+                K-BIGx 보고서 · PDF 템플릿(ChartReveal 가이드)
             </Link>,
         ],
     },

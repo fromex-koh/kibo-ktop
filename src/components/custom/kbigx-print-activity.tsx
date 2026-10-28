@@ -10,9 +10,10 @@ import {
 import {MarkerLineChart, MarkerLineLegend} from '@/components/custom/marker-line-chart'
 import {ValueLineChart} from '@/components/custom/value-line-chart'
 import {
+    ENERGY_CATEGORIES,
     getHumanResourceYearRows,
     getRecentYears,
-    isSameYear,
+    toEnergyYearRows,
     type InnovationGrowthReport,
 } from '@/content/service/k-bigx-innovation-report'
 import {cn} from '@/lib/utils'
@@ -20,7 +21,7 @@ import {
     isKbxNumber,
     KBX_EMPTY_VALUE,
     KBX_NOT_APPLICABLE_TEXT,
-    kbxFixed1Format,
+    kbxIntegerFormat,
     kbxFixed2Format,
     kbxNumberFormat,
 } from '@/components/custom/kbigx-print-format'
@@ -33,6 +34,8 @@ import {
 type PageProps = {report: InnovationGrowthReport}
 
 const rateFormat = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
+const formatOrEmpty = (value: number, format: Intl.NumberFormat) =>
+    isKbxNumber(value) ? format.format(value) : KBX_EMPTY_VALUE
 
 // ── 활동성정보 1 — 인적자원 현황(표) · 분기별 종업원수(꺾은선) · 인당 매출액(막대 목록) ──
 
@@ -94,14 +97,19 @@ const KbigxPrintActivityHumanResources = ({report}: PageProps) => {
                 emptyClassName="bg-kbx-surface-subtle py-kbx-10"
                 rows={yearRows.map(({year, row}) => ({
                     key: year,
+                    // 값이 숫자가 아닌 칸은 '-'. 증감은 증감 인원 · 증감률이 모두 숫자일 때만 적는다.
                     cells: row
                         ? [
                               year,
-                              kbxNumberFormat.format(row.employees),
-                              <ChangeCell key="change" change={row.change} changeRate={row.changeRate} />,
-                              kbxNumberFormat.format(row.hires),
-                              kbxNumberFormat.format(row.leavers),
-                              kbxFixed1Format.format(row.salesPerEmployee),
+                              formatOrEmpty(row.employees, kbxNumberFormat),
+                              isKbxNumber(row.change) && isKbxNumber(row.changeRate) ? (
+                                  <ChangeCell key="change" change={row.change} changeRate={row.changeRate} />
+                              ) : (
+                                  KBX_EMPTY_VALUE
+                              ),
+                              formatOrEmpty(row.hires, kbxNumberFormat),
+                              formatOrEmpty(row.leavers, kbxNumberFormat),
+                              formatOrEmpty(row.salesPerEmployee, kbxIntegerFormat), // 천원 단위 — 정수
                           ]
                         : [year, KBX_EMPTY_VALUE, KBX_EMPTY_VALUE, KBX_EMPTY_VALUE, KBX_EMPTY_VALUE, KBX_EMPTY_VALUE],
                 }))}
@@ -159,14 +167,12 @@ const ENERGY_CHART_HEIGHT = 240
 // [프론트엔드 연동] 전기 · 가스 모두 kWh 로 적는다 — 가스 단위가 따로 오면 이 값을 데이터에서 받도록 바꾼다.
 const ENERGY_UNIT = 'kWh'
 const ENERGY_TOTAL_LABEL = '합계'
-// 구분은 늘 본사 · 공장 · 기타 세 줄(+ 합계) — 받은 줄을 label 로 찾아 넣고, 없는 구분은 '-'.
-// [프론트엔드 연동] 구분 이름(label)은 정확히 '본사' · '공장' · '기타' 로 보낸다. 다른 이름의 줄은 그리지 않는다.
-const ENERGY_CATEGORIES = ['본사', '공장', '기타'] as const
+// 구분은 늘 본사 · 공장 · 기타 세 줄(+ 합계) — ENERGY_CATEGORIES(k-bigx-innovation-report.ts, 웹 보고서와 공용). 없는 구분은 '-'.
 const formatEnergy = (value: number | undefined) =>
     isKbxNumber(value) ? kbxFixed2Format.format(value) : KBX_EMPTY_VALUE
 
 // 에너지 한 묶음(전기 또는 가스) — 소제목 → 단위 → 표(구분 3줄 + 합계) → 꺾은선 → 범례.
-// rows 는 KbigxPrintActivityEnergy 의 toYears 로 3개년 · 세 구분에 맞춘 값이다(값 자리 순서 = years).
+// rows 는 KbigxPrintActivityEnergy 의 toYears(toEnergyYearRows) 로 3개년 · 세 구분에 맞춘 값이다(값 자리 순서 = years).
 const EnergyGroup = ({
     title,
     years,
@@ -254,14 +260,7 @@ const KbigxPrintActivityEnergy = ({report}: PageProps) => {
     // 연도는 늘 최근 3개년 — 받은 연도가 없으면 재무현황 연도를 쓴다. 받지 못한 연도 값은 '-'(그래프는 그 점을 비운다).
     const years = getRecentYears(receivedYears, report.companyStatus.finance.years)
     // 받은 줄을 본사 · 공장 · 기타 순으로 골라 values 를 years 순서로 다시 맞춘다(없는 연도 = NaN). 표 · 그래프가 같이 쓴다.
-    const toYears = (rows: typeof electricity) =>
-        ENERGY_CATEGORIES.flatMap((category) => rows.filter((row) => row.label === category)).map((row) => ({
-            ...row,
-            values: years.map((year) => {
-                const index = receivedYears.findIndex((received) => isSameYear(received, year))
-                return index < 0 ? Number.NaN : (row.values[index] ?? Number.NaN)
-            }),
-        }))
+    const toYears = (rows: typeof electricity) => toEnergyYearRows(rows, receivedYears, years)
 
     return (
         <KbxBlock title="에너지 사용 현황">

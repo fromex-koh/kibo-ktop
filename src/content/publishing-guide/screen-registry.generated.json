@@ -125,14 +125,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-individual",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-certificate-select",
@@ -146,14 +146,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature-certify-error",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
@@ -887,8 +887,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
@@ -957,63 +957,49 @@
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-k-bigx-report-report-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-k-bigx-report-report-history-report-print",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1224,13 +1210,6 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-mypage-k-bigx-report-history-report-view",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -2112,8 +2091,8 @@
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-company-overview",
@@ -2182,50 +2161,43 @@
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
-            "key": "org-k-bigx-report-report-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.4.6",
+            "isCurrent": true
         },
         {
             "key": "org-carbon-neutrality",
@@ -2414,13 +2386,6 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": false
-        },
-        {
-            "key": "org-mypage-k-bigx-report-history-report-print",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -2778,13 +2743,6 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
-            "key": "org-k-bigx-report-report-history-report-print",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
             "isCurrent": false
         },
         {

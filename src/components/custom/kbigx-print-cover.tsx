@@ -41,8 +41,8 @@ const COVER_INFO_STEPS = [
 ] as const
 // 일러스트 표시 폭(w-257 = 1028px)에 맞는 해상도로 받는다 — 폭 클래스를 바꾸면 같이 고친다.
 const COVER_ILLUSTRATION_SIZES = '1028px'
-// 인쇄본 이미지는 바로 불러온다 — next/image 기본값(lazy)은 화면에 들어올 때 불러오는데, [출력하기]로 연 탭은 스크롤 없이
-// 바로 인쇄하므로 첫 화면 아래(목차 · 뒷표지)의 이미지가 빈 채로 찍힌다.
+// 인쇄본 이미지는 바로 불러온다 — next/image 기본값(lazy)은 화면에 들어올 때 불러오는데, [PDF 다운로드] · 인쇄는 스크롤 없이
+// 문서 전체를 찍으므로 첫 화면 아래(목차 · 뒷표지)의 이미지가 빈 채로 찍힌다.
 const PRINT_IMAGE_LOADING = 'eager'
 // 아래 띠 자리(위 선 + 좌우 76) — 표지 정보 띠와 뒷표지 로고 띠가 같은 자리에 놓인다.
 const COVER_BOTTOM_BAND_CLASS = 'top-kbx-1737 kbx-border-t-regular border-kbx-cover-rule pt-kbx-39 absolute inset-x-19'
@@ -66,7 +66,7 @@ const KbigxPrintCover = ({report}: CoverProps) => {
     const info = [
         {label: '기업명', value: report.companyName || KBX_EMPTY_VALUE},
         {label: REPRESENTATIVE_LABEL, value: representative || KBX_EMPTY_VALUE},
-        {label: '발급일', value: formatKbigxPrintDate(report.issuedAt)},
+        {label: '발급일', value: report.issuedAt.trim() ? formatKbigxPrintDate(report.issuedAt) : KBX_EMPTY_VALUE},
     ]
 
     return (

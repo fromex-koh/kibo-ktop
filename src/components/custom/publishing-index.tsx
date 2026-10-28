@@ -5,6 +5,7 @@ import {
     Check,
     ChevronUp,
     CircleCheckBig,
+    Download,
     ExternalLink,
     File,
     Folder,
@@ -195,6 +196,8 @@ type FlatLeaf = {
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
     // 외부 프로젝트 화면의 주소(탄소) — 있으면 화면명을 새 창 링크로 연다.
     externalHref?: string
+    // 화면 대신 파일을 내려받는 항목(보고서 템플릿 HTML 등) — 있으면 화면명을 다운로드 링크로 그린다.
+    downloadHref?: string
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
@@ -239,6 +242,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           ...(node.screen.isRestored ? {isRestored: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
                           ...(node.screen.externalHref !== undefined ? {externalHref: node.screen.externalHref} : {}),
+                          ...(node.screen.downloadHref !== undefined ? {downloadHref: node.screen.downloadHref} : {}),
                       },
                   ]
                 : []
@@ -268,6 +272,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
                 ...(node.externalHref !== undefined ? {externalHref: node.externalHref} : {}),
+                ...(node.downloadHref !== undefined ? {downloadHref: node.downloadHref} : {}),
             },
         ]
     }
@@ -1047,6 +1052,9 @@ const PublishingIndex = () => {
                                                     // 외부 프로젝트 화면(탄소)은 이 저장소에 경로가 없어 새 창으로 연다.
                                                     const externalHref =
                                                         depth === leaf.path.length - 1 ? leaf.externalHref : undefined
+                                                    // 파일 다운로드 항목은 화면이 아니라 파일을 받는다(같은 사이트 주소라 download 속성이 먹는다).
+                                                    const downloadHref =
+                                                        depth === leaf.path.length - 1 ? leaf.downloadHref : undefined
                                                     // 묶기만 한 행은 뎁스로 세지 않는다 — 앞쪽의 묶음 수만큼 번호를 당긴다.
                                                     const depthNumber =
                                                         depth +
@@ -1135,6 +1143,25 @@ const PublishingIndex = () => {
                                                                             화면으로 이동 (새 창)
                                                                         </span>
                                                                     </Link>
+                                                                ) : downloadHref !== undefined ? (
+                                                                    // NA-006 예외: 파일 다운로드는 페이지 이동이 아니라 next/link 대신 <a download> 를 쓴다.
+                                                                    <a
+                                                                        href={downloadHref}
+                                                                        download
+                                                                        className={`${
+                                                                            isRedLabel ? 'text-error' : 'text-primary'
+                                                                        } focus-visible:ring-ring inline-flex items-center gap-1 rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
+                                                                    >
+                                                                        {displayLabel}
+                                                                        <Download
+                                                                            aria-hidden="true"
+                                                                            className="size-3.5 shrink-0"
+                                                                        />
+                                                                        <span className="sr-only">
+                                                                            {' '}
+                                                                            (파일 다운로드)
+                                                                        </span>
+                                                                    </a>
                                                                 ) : externalHref !== undefined ? (
                                                                     <a
                                                                         href={externalHref}

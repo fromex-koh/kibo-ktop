@@ -104,6 +104,12 @@ const RAMP_CODE = `import {donutColorsFor} from '@/components/custom/percentage-
 // 비중 내림차순으로 정렬한 뒤 항목 수에 맞는 색 단계를 차례로 입힙니다 — 첫 항목이 가장 진한 색.
 const data = sorted.map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]}))`
 
+const EMPTY_CODE = `// 데이터가 없어도 그대로 넘깁니다 — 조각이 없으면(빈 배열 · 비중이 모두 0) 도넛 자리에 같은 높이의 빈 상태가 보입니다.
+<PercentageDonutChart data={[]} caption="중분류 기준" ariaLabel="중분류 기준 보유기술 비중과 건수" />
+
+// 안내 글자를 바꿀 때
+<PercentageDonutChart data={[]} emptyText="보유기술 정보가 없습니다." ariaLabel="…" />`
+
 const LOADING_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
 <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />`
@@ -134,6 +140,13 @@ const PROPS_ITEMS = [
     ],
     [
         'PercentageDonutChart',
+        'emptyText',
+        '그릴 조각이 없을 때(빈 배열 · 비중이 모두 0) 도넛 자리의 빈 상태 안내입니다.',
+        "'조회된 데이터가 없습니다.'",
+        'string',
+    ],
+    [
+        'PercentageDonutChart',
         'className · div props',
         '바깥 div 에 전달됩니다. children 은 받지 않습니다.',
         '-',
@@ -156,7 +169,7 @@ const PROPS_ITEMS = [
 const PercentageDonutChartGuidePage = () => (
     <GuidePageShell
         title="기업 보유기술 도넛 (PercentageDonutChart)"
-        description="분류별 비중을 도넛과 범례로 함께 보여 주는 차트입니다. 도넛 옆에 구분선이 있는 줄 목록을 두는 인쇄본용은 DonutListChart 입니다."
+        description="분류별 비중을 도넛과 범례로 함께 보여 주는 차트입니다. 도넛 옆에 구분선이 있는 줄 목록을 두는 PDF 템플릿용은 DonutListChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="pdc-basic" className="flex flex-col gap-6">
@@ -170,7 +183,7 @@ const PercentageDonutChartGuidePage = () => (
                         넘깁니다.
                     </p>
                     <p className="typo-body-l-regular text-label-foreground">
-                        범례 없이 꽉 찬 원형에 지시선 라벨을 다는 모양(K-BIGx 보고서 인쇄본)은{' '}
+                        범례 없이 꽉 찬 원형에 지시선 라벨을 다는 모양(K-BIGx 보고서 PDF 템플릿)은{' '}
                         <Link
                             href="/component-guide/callout-pie-chart"
                             className="text-primary-strong underline underline-offset-4"
@@ -223,8 +236,10 @@ const PercentageDonutChartGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">배치와 폭</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            도넛과 범례는 나란히 가운데 정렬됩니다. 분류명이 길면 어절 단위로 접히고, 남은 폭이 좁아지면
-                            범례가 도넛 아래로 내려갑니다. 컨테이너 폭이 384~511 이면 도넛을 줄여 범례를 옆에 둡니다.
+                            도넛과 범례는 나란히 가운데 정렬됩니다. 분류명은 한 줄이고, &apos;비중%·건수개&apos;가
+                            차지하고 남은 폭을 넘으면 말줄임(…)합니다 — 잘린 이름은 마우스를 올리거나 탭하면 툴팁으로
+                            전체 이름이 보입니다(TruncatedText). 남은 폭이 좁아지면 범례가 도넛 아래로 내려갑니다.
+                            컨테이너 폭이 384~511 이면 도넛을 줄여 범례를 옆에 둡니다.
                         </p>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="flex flex-col gap-2">
@@ -293,6 +308,39 @@ const PercentageDonutChartGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">데이터가 없을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            그릴 조각이 없으면(빈 배열 · 비중이 모두 0) 도넛 자리에 같은 높이의 빈 상태(EmptyState)를
+                            두고 <code>caption</code> 은 남깁니다. 카드 높이가 그대로이고, 나란한 도넛 중 어느 쪽이
+                            비었는지 보입니다. 사용처에서 따로 분기하지 않습니다.
+                        </p>
+                        <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-2">
+                                <p className="typo-body-xl-bold text-foreground">한쪽만 빈 경우</p>
+                                <div className="border-subtle-3 bg-card grid gap-12 rounded-sm border p-6 md:grid-cols-2">
+                                    <PercentageDonutChart
+                                        data={REPORT_DATA}
+                                        caption="중분류 기준"
+                                        ariaLabel="중분류 기준 보유기술 예시"
+                                    />
+                                    <PercentageDonutChart
+                                        data={[]}
+                                        caption="세부분야 기준"
+                                        ariaLabel="세부분야 기준 보유기술 예시"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <p className="typo-body-xl-bold text-foreground">caption 없이</p>
+                                <div className="border-subtle-3 bg-card rounded-sm border p-6 md:max-w-1/2">
+                                    <PercentageDonutChart data={[]} ariaLabel="기업 보유기술 빈 예시" />
+                                </div>
+                            </div>
+                        </div>
+                        <CodeBlock code={EMPTY_CODE} language="tsx" copyLabel="빈 상태 코드 복사" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">불러오는 중 (ChartSkeleton)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             로딩 prop 이 없어 같은 자리에 스켈레톤을 둡니다. 도넛 · 범례 8줄의 짜임이 같아 불러온 뒤
@@ -338,6 +386,9 @@ const PercentageDonutChartGuidePage = () => (
                         읽힙니다[5.1.1].
                     </li>
                     <li>범례에 분류명과 값이 글자로 있어 색만으로 분류를 구분하지 않습니다[5.3.1].</li>
+                    <li>
+                        빈 상태는 <code>role=&quot;status&quot;</code> 로 안내 글자를 읽어 줍니다(EmptyState)[8.2.1].
+                    </li>
                     <li>
                         움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
                         <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}

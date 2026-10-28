@@ -4,12 +4,12 @@
 import {useEffect, useState} from 'react'
 import {LoadingState} from '@/components/composite/loading-state'
 
-// K-BIGx 인쇄 준비 안내 — [출력하기]로 연 새 탭(?print=1)에서 보고서를 그리고 인쇄 대화상자가 뜰 때까지 화면을 덮는다.
+// K-BIGx PDF 준비 안내 — [PDF 다운로드]로 연 새 탭(?print=1)에서 보고서를 그리고 인쇄 대화상자가 뜰 때까지 화면을 덮는다.
 // 빈 탭이나 그려지는 중인 문서가 보이지 않게 한다. 인쇄물에는 나오지 않는다(print:hidden).
 // 쓰는 곳: report-print 화면 page.tsx(?print=1 일 때 — 서버 HTML 이 오자마자 보이고, 차트가 그려지는 동안 덮는다).
 // 인쇄가 끝나면 탭은 스스로 닫힌다. 팝업 차단으로 같은 탭에서 열린 경우만 남으므로 그때 안내를 걷어 문서를 보인다.
-const KBIGX_PRINT_PREPARING_TITLE = '인쇄할 보고서를 준비하고 있습니다.'
-const KBIGX_PRINT_PREPARING_HINT = '인쇄 창이 열릴 때까지 이 창을 닫지 말고 기다려 주세요.'
+const KBIGX_PRINT_PREPARING_TITLE = 'PDF로 받을 보고서를 준비하고 있습니다.'
+const KBIGX_PRINT_PREPARING_HINT = '저장 창이 열릴 때까지 이 창을 닫지 말고 기다려 주세요.'
 
 const KbigxPrintPreparing = () => {
     const [isVisible, setIsVisible] = useState(true)

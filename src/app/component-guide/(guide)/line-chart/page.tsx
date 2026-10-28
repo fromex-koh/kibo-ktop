@@ -302,7 +302,13 @@ const PROPS_COLUMNS = [
 ] as const
 
 const PROPS_ITEMS = [
-    ['LineChart', 'data', '기간별 고유 id · 표시명과 series key 에 대응하는 값입니다.', '-', 'LineChartItem[]'],
+    [
+        'LineChart',
+        'data',
+        "기간별 고유 id · 표시명과 series key 에 대응하는 값입니다. 숫자가 아닌 값(NaN)은 값 없음 — 선을 끊고, 값 글자를 적는 cells 는 그 자리 바닥 위에 '-'(숨김 표도 '-').",
+        '-',
+        'LineChartItem[]',
+    ],
     [
         'LineChart',
         'series',
@@ -410,7 +416,7 @@ const FRAME_CLASS = 'border-subtle-3 bg-card rounded-sm border p-6'
 const LineChartGuidePage = () => (
     <GuidePageShell
         title="선 그래프 (LineChart)"
-        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다. 세로축 없이 점마다 값을 바로 적는 인쇄본용 한 계열 선 그래프는 ValueLineChart 입니다. 계열마다 선 · 점 모양을 바꾸는 인쇄본용 여러 계열 선 그래프는 MarkerLineChart 입니다."
+        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다. 세로축 없이 점마다 값을 바로 적는 PDF 템플릿용 한 계열 선 그래프는 ValueLineChart 입니다. 계열마다 선 · 점 모양을 바꾸는 PDF 템플릿용 여러 계열 선 그래프는 MarkerLineChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="lc-usage" className="flex flex-col gap-6">

@@ -112,6 +112,69 @@ const EmptyStateGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="empty-state-report" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="empty-state-report" className="typo-h4-bold">
+                        차트 · 표 자리에 쓸 때 (K-BIGx 웹 보고서)
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        데이터가 없으면 차트 · 표 대신 같은 높이로 둡니다 — 카드 높이와 옆 카드와의 줄이 흔들리지
+                        않습니다.
+                    </p>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <Link href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
+                            PercentageDonutChart
+                        </Link>{' '}
+                        — 컴포넌트가 스스로 빈 상태를 둡니다(사용처 분기 없음).
+                    </li>
+                    <li>
+                        <Link href="/component-guide/word-cloud" className={LINK_CLASS}>
+                            WordCloud
+                        </Link>{' '}
+                        — 사용처에서 분기합니다. 키워드가 0개면 WordCloud 대신 <code>EmptyState</code>(같은{' '}
+                        <code>min-h-*</code>).
+                    </li>
+                    <li>
+                        고정 줄 수 표(경영진 · 주주 현황 5줄) — 0건이면 5줄 높이(<code>min-h-56</code>)의 빈 상태, 1건
+                        이상이면 남는 줄을 &apos;-&apos; 로 채웁니다.
+                    </li>
+                    <li>
+                        수치 칸(관련 기업 및 특허현황 · 정부 R&amp;D사업 접수현황)은 빈 상태를 쓰지 않습니다 — 칸은 두고
+                        값만 &apos;-&apos;(단위 없음). 실제 0 은 &apos;0건&apos; 으로 구분됩니다.
+                    </li>
+                    <li>
+                        <Link href="/component-guide/score-gauge" className={LINK_CLASS}>
+                            ScoreGauge
+                        </Link>{' '}
+                        ·{' '}
+                        <Link href="/component-guide/rank-pyramid-chart" className={LINK_CLASS}>
+                            RankPyramidChart
+                        </Link>{' '}
+                        — 점수 · 순위가 숫자가 아니면 컴포넌트가 &apos;-&apos; 로 그립니다(빈 상태 없이 모양 유지). 요약
+                        문장은 사용처에서 &apos;평가 점수가 없습니다.&apos; 로 바꿉니다.
+                    </li>
+                    <li>
+                        신용/재무 현황 — 기업신용등급 · 부문별 비교 · 최근 3개년 재무 현황은 모두 비면 빈 상태, 일부만
+                        비면 그 칸만 &apos;-&apos;.{' '}
+                        <Link href="/component-guide/rating-matrix" className={LINK_CLASS}>
+                            재무비율진단
+                        </Link>
+                        은 5줄을 늘 두고 없는 줄은 &apos;-&apos;, 5줄 모두 &apos;-&apos; 면 빈 상태입니다(PDF 템플릿도
+                        같은 규칙 · PDF 템플릿 빈 상태 모양).
+                    </li>
+                    <li>
+                        Tech-Index — 표준정보 비교는 분포 곡선을 두고 점만 숨기며 전체 평균은 &apos;-&apos;, 요약 상자는
+                        &apos;표준정보 비교 결과가 없습니다.&apos;. 부문별 지표 비교(2장) · 4대 혁신역량(4장) 카드는
+                        제목을 늘 두고, 값이 없는 카드만 그래프 대신 빈 상태(그래프 높이 그대로). 막대 일부만 비면 그
+                        자리 &apos;-&apos;.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="empty-state-choice" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="empty-state-choice" className="typo-h4-bold">

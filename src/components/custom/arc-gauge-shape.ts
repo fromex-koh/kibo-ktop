@@ -21,6 +21,13 @@ const gaugeGradient = (name: string): ArcGaugeGradient => ({
     from: `var(--ds-gauge-${name}-from)`,
     to: `var(--ds-gauge-${name}-to)`,
 })
+// 기업신용등급 게이지(SemicircleRatingGauge)의 단계별 그라데이션 · 트랙 — tokens.json 의 credit-gauge-<단계>-from/-to · credit-gauge-track.
+// 라이트는 2색 그라데이션, 다크는 단색(from · to 가 같은 값). 단계는 cri-grades.ts 의 getCriGradeBand.
+const creditGaugeGradient = (band: string): ArcGaugeGradient => ({
+    from: `var(--ds-credit-gauge-${band}-from)`,
+    to: `var(--ds-credit-gauge-${band}-to)`,
+})
+const CREDIT_GAUGE_TRACK = 'var(--ds-credit-gauge-track)'
 const ARC_GAUGE_TONE_GRADIENTS: Record<ArcGaugeTone, ArcGaugeGradient> = {
     excellent: gaugeGradient('excellent'),
     good: gaugeGradient('good'),
@@ -90,5 +97,14 @@ const arcGaugeTrackPath = (size: ArcGaugeSize) => {
     return `M ${round(outer - x)} ${round(y)} A ${round(center)} ${round(center)} 0 1 1 ${round(outer + x)} ${round(y)}`
 }
 
-export {ARC_GAUGE_SIZES, ARC_GAUGE_TONE_COLORS, ARC_GAUGE_TONE_GRADIENTS, arcGaugeTrackPath, arcGeometry, gaugeGradient}
+export {
+    ARC_GAUGE_SIZES,
+    ARC_GAUGE_TONE_COLORS,
+    ARC_GAUGE_TONE_GRADIENTS,
+    arcGaugeTrackPath,
+    arcGeometry,
+    CREDIT_GAUGE_TRACK,
+    creditGaugeGradient,
+    gaugeGradient,
+}
 export type {ArcGaugeGradient, ArcGaugeSize, ArcGaugeTone}

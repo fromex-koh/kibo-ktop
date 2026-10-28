@@ -127,7 +127,7 @@ const USAGE_CODE = `import {ComboBarLineChart} from '@/components/custom/combo-b
   ]}
 />`
 
-const DATA_CODE = `// 화면 순서대로 넘긴다. 선 값이 없으면 null — 점을 비우고 선을 끊는다(0 으로 채우지 않는다).
+const DATA_CODE = `// 화면 순서대로 넘긴다. 선 값이 없으면 null — 점 대신 '-' 를 적고 선을 끊는다(0 으로 채우지 않는다).
 const data = rows.map((row) => ({
   id: row.companyId,
   label: row.isTarget ? '조회기업' : row.companyName,
@@ -147,7 +147,7 @@ const CHOICE_ROWS = [
     {
         key: 'combo-value',
         cells: [
-            '같은 막대 + 선을 축 없이 값 글자로(인쇄본)',
+            '같은 막대 + 선을 축 없이 값 글자로(PDF 템플릿)',
             <Link key="c" href="/component-guide/combo-value-chart" className={LINK_CLASS}>
                 ComboValueChart
             </Link>,
@@ -206,8 +206,20 @@ const PROPS_ITEMS = [
     ['ComboBarLineChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['ComboBarLineItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['ComboBarLineItem', 'label', '항목 이름입니다.', '-', 'string'],
-    ['ComboBarLineItem', 'value', '막대 값입니다.', '-', 'number'],
-    ['ComboBarLineItem', 'lineValue', '선 값입니다. 없으면 null — 점을 비우고 선을 끊습니다.', '-', 'number | null'],
+    [
+        'ComboBarLineItem',
+        'value',
+        "막대 값입니다. 숫자가 아니면(NaN) 값 없음 — 막대 없이 바닥선 위에 '-'(숨김 표도 '-'). 0 은 '0'.",
+        '-',
+        'number',
+    ],
+    [
+        'ComboBarLineItem',
+        'lineValue',
+        "선 값입니다. 없으면 null — 점 대신 '-'(막대 안이면 막대 세로 가운데)를 적고 선을 끊습니다.",
+        '-',
+        'number | null',
+    ],
     [
         'ComboBarLineItem',
         'tone',
@@ -295,13 +307,14 @@ const SPECIAL_CASES: readonly SpecialCase[] = [
     },
     {
         title: '선 값이 없을 때',
-        description: '값이 null 인 항목은 점 · 글자를 비우고 선을 끊습니다. 숨김 표에는 “값 없음”으로 적힙니다.',
+        description:
+            "값이 null 인 항목은 점 대신 '-'(막대 안이면 막대 세로 가운데 흰 글자)를 적고 선을 끊습니다. 항목 이름이 비면 이름 자리에 '-'. 숨김 표에는 “값 없음”으로 적힙니다.",
         data: MISSING_LINE_DATA,
     },
     {
         title: '긴 항목 이름 · 긴 숫자',
         description:
-            '7자 이상 값은 “123.5만”처럼 줄입니다. 항목 이름은 6자까지 적고 줄임표(…)로 자르며 전체 이름은 title · 숨김 표에 남습니다.',
+            '7자 이상 값은 “123.5만”처럼 줄입니다. 항목 이름은 6자까지 적고 줄임표(…)로 자릅니다. 잘린 이름에 마우스를 올리거나 탭하면 전체 이름이 말줄임 툴팁(TruncationTooltip)으로 뜨고, 스크린리더는 숨김 표로 전체 이름을 읽습니다.',
         data: LONG_LABEL_DATA,
     },
     {

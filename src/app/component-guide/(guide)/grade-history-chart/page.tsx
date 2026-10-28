@@ -123,7 +123,15 @@ const data = history.map((item) => {
     grade: item.grade,
     value: grade ? criGradePercentage(grade) : 0,
   }
-})`
+})
+
+// 현금흐름등급(CF1 ~ CF6)은 높은 등급(CF1)이 위 — 여섯 단계를 0~100 으로 고르게 나눈다.
+import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel} from '@/content/service/cash-flow-grades'
+
+const toCashFlowValue = (grade: string) => {
+  const level = cashFlowLevel(grade) // CF1 = 1 … CF6 = 6, 표에 없으면 0
+  return level ? ((CASH_FLOW_GRADES_LOW_FIRST.length - level) / (CASH_FLOW_GRADES_LOW_FIRST.length - 1)) * 100 : 0
+}`
 
 const LOADING_CODE = `import {GradeHistoryChartSkeleton} from '@/components/composite/grade-history-chart-skeleton'
 

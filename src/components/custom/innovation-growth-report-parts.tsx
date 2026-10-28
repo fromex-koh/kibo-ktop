@@ -1,3 +1,4 @@
+import {TruncatedText} from '@/components/composite/truncated-text'
 import {ChartReveal} from '@/components/custom/chart-reveal'
 import type {ReactNode} from 'react'
 import {cn} from '@/lib/utils'
@@ -25,6 +26,14 @@ const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; 
     </div>
 )
 
+// 구획 안 소구획 제목 줄 — 구획 제목(h3) 아래 여러 카드를 다시 묶을 때(예: Tech-Index '혁신성장역량지수 비교' 아래 세 묶음).
+// 이 제목 아래 카드 제목은 titleAs="h5" 로 한 단계 내린다.
+const SubSectionTitle = ({title, id}: {title: string; id?: string}) => (
+    <h4 id={id} className="typo-title-m-bold text-foreground break-after-avoid break-keep">
+        {title}
+    </h4>
+)
+
 // 흰 카드 — 제목(title) · 제목 줄 오른쪽 보조(aside: 범례 · 기준 문구 등 — 단위는 아래 WithUnit) · 제목 아래 설명(description).
 // 제목이 있을 때만 section 으로 그린다 — 제목 없는 section 은 구획 이름을 알 수 없어 마크업 경고가 된다[8.1.1].
 const Card = ({
@@ -33,10 +42,13 @@ const Card = ({
     description,
     className,
     revealGroup,
+    titleAs: TitleTag = 'h4',
     children,
 }: {
     /** 없으면 div 로 그린다. aside 만 있으면 제목 줄에 보조 문구만 오른쪽에 둔다. */
     title?: string
+    /** 제목 태그 — 소구획 제목(SubSectionTitle · h4) 아래 카드만 'h5'. 글자 모양은 같다. */
+    titleAs?: 'h4' | 'h5'
     aside?: ReactNode
     /** 제목 아래 설명 글. */
     description?: ReactNode
@@ -61,7 +73,9 @@ const Card = ({
                 {title || aside ? (
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                            {title ? <h4 className="typo-body-xl-bold text-foreground break-keep">{title}</h4> : null}
+                            {title ? (
+                                <TitleTag className="typo-body-xl-bold text-foreground break-keep">{title}</TitleTag>
+                            ) : null}
                             {aside ? (
                                 <div className="typo-body-l-regular text-foreground-subtle ms-auto shrink-0 text-end">
                                     {aside}
@@ -245,6 +259,7 @@ const ReportTable = ({
     footerCells,
     minWidthClassName = 'min-w-120',
     emptyText,
+    emptyClassName,
     className,
 }: {
     /** 화면 낭독기용 표 이름(단위 포함 권장). */
@@ -257,6 +272,8 @@ const ReportTable = ({
     minWidthClassName?: string
     /** 줄이 없을 때 모든 열을 합친 한 줄에 적을 문구(예: 해당사항 없음). 없으면 빈 몸통을 둔다. */
     emptyText?: string
+    /** 빈 줄(emptyText) 칸 모양 — 주지 않으면 값 칸과 같은 흰 면. 기업신용정보 표는 옅은 면(bg-surface-subtle)으로 구분한다. */
+    emptyClassName?: string
     className?: string
 }) => {
     const hasGroup = columns.some((column) => column.group)
@@ -328,6 +345,7 @@ const ReportTable = ({
                                 className={cn(
                                     REPORT_TABLE_CELL_CLASS_NAME,
                                     'bg-card typo-body-l-regular text-label-foreground',
+                                    emptyClassName,
                                 )}
                             >
                                 {emptyText}
@@ -383,15 +401,52 @@ const GradeBadge = ({grade}: {grade: string}) => (
     </span>
 )
 
+// 표의 긴 글 칸(이름 · 직위 · 업종 · 공고명 등) — 기업현황 · 기술혁신정보 표 공용.
+//   · 띄어 쓴 글은 낱말 단위로(break-keep) 줄을 바꾸고, 띄어쓰기 없는 이름은 글자 단위로 바꾼다 — 띄어쓰기 없는 이름에
+//     break-keep 을 걸면 강제 줄바꿈(wrap-anywhere)이 닫는 괄호 앞에서도 일어나 ')' 만 다음 줄로 떨어진다(표 칸의 break-keep 을
+//     물려받지 않게 break-normal 을 직접 준다).
+//   · lines 줄(기본 2)을 넘으면 말줄임(…). 잘렸을 때만 마우스 올리기 · 탭 · Tab 초점으로 전체 글을 툴팁으로 본다(TruncatedText).
+//   · 법인 표기('(주)' · '㈜' · '(유)' 등 · 앞머리 '주식회사')와 뒤 이름 사이에서는 줄이 바뀌지 않는다 —
+//     붙어 있으면 WORD JOINER(U+2060), 띄어 있으면 줄바꿈 없는 공백(U+00A0). 화면에는 똑같이 보인다.
+//   · suffix(예: 괄호로 감싼 권리자의 ')') 를 주면 잘려도 끝에 남긴다 — '(한국전자통신연구…)'.
+//   · 값이 없으면 '-'.
+const CORP_MARK_PATTERN = /(\((?:주|유|사|재|합)\)|㈜)( ?)/g
+const CORP_PREFIX_PATTERN = /^주식회사 /
+const WORD_JOINER = '\u2060'
+const NO_BREAK_SPACE = '\u00A0'
+const REPORT_TEXT_CELL_EMPTY = '-'
+const keepCorpMark = (text: string) =>
+    text
+        .replace(
+            CORP_MARK_PATTERN,
+            (_, mark: string, space: string) => `${mark}${space ? NO_BREAK_SPACE : WORD_JOINER}`,
+        )
+        .replace(CORP_PREFIX_PATTERN, `주식회사${NO_BREAK_SPACE}`)
+const ReportTextCell = ({children, lines = 2, suffix}: {children: string; lines?: 1 | 2; suffix?: string}) => {
+    if (!children.trim()) return REPORT_TEXT_CELL_EMPTY
+    const text = keepCorpMark(children)
+    return (
+        <TruncatedText
+            lines={lines}
+            suffix={suffix}
+            className={cn('wrap-anywhere', text.includes(' ') ? 'break-keep' : 'break-normal')}
+        >
+            {text}
+        </TruncatedText>
+    )
+}
+
 export {
     Card,
     GradeBadge,
     NoticeBox,
     REPORT_LINE_STYLES,
     ReportTable,
+    ReportTextCell,
     SectionTitle,
     StatBox,
     SubBlock,
+    SubSectionTitle,
     TableNote,
     UnitLine,
     WithUnit,

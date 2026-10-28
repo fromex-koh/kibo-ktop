@@ -86,7 +86,7 @@ const EDGE_CASES = [
         key: 'null',
         title: '선 값 없음(null)',
         description:
-            '그 점 · 글자를 비우고 선을 끊습니다. 혼자 남은 점은 선 없이 점만 찍습니다. 점이 막대 값 글자 자리에 오면(평균) 막대 값 글자를 위로 올립니다.',
+            "그 점 대신 '-'(막대 안이면 막대 세로 가운데)를 적고 선을 끊습니다. 혼자 남은 점은 선 없이 점만 찍습니다. 점이 막대 값 글자 자리에 오면(평균) 막대 값 글자를 위로 올립니다.",
         data: NULL_LINE_DATA,
     },
     {
@@ -122,7 +122,7 @@ const USAGE_CODE = `import {ComboValueChart} from '@/components/custom/combo-val
     id: item.id,
     label: item.label,
     value: item.sales,
-    lineValue: item.growthRate, // null 이면 점을 비우고 선을 끊는다
+    lineValue: item.growthRate, // null 이면 점 대신 '-' 를 적고 선을 끊는다
     tone: item.tone,            // 'subject'(조회기업) · 'average'(평균)
   }))}
 />`
@@ -136,23 +136,42 @@ const LOADING_CODE = `import {ComboValueChartSkeleton} from '@/components/compos
   <ComboValueChart {...chartProps} />
 )}`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 색만 kbx 변수로 넘깁니다(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 색만 kbx 변수로 넘깁니다(kbigx-print-innovation.tsx).
 <ComboValueChart
   {...chartProps}
   colors={{
-    bar: 'var(--kbx-color-blue)',
-    subjectBar: 'var(--kbx-color-mint)',
-    averageBar: 'var(--kbx-color-purple)',
-    line: 'var(--kbx-color-navy)',
+    bar: 'var(--kbx-color-chart-general)',               // 경쟁기업 파랑
+    subjectBar: 'var(--kbx-color-chart-subject)',        // 조회기업 진남
+    averageBar: 'var(--kbx-color-chart-average-base)',   // 평균 바탕
+    averageLine: 'var(--kbx-color-chart-average-line)',  // 평균 사선 · 테두리
+    line: 'var(--kbx-color-chart-trend)',
+    lineHalo: 'var(--kbx-color-chart-trend-halo)',       // 선 흰 테두리
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
     value: 'var(--kbx-color-label)',
     lineValue: 'var(--kbx-color-paper)',
     category: 'var(--kbx-color-foreground)',
-    subject: 'var(--kbx-color-primary)',
+    subject: 'var(--kbx-color-chart-subject-label)',     // 조회기업 글자 남색
   }}
 />`
+
+// PDF 템플릿 색 — kbigx-print-innovation.tsx 의 COMPETITOR_CHART_COLORS 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
+const PRINT_COLORS = {
+    bar: 'var(--kbx-color-chart-general)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
+    averageBar: 'var(--kbx-color-chart-average-base)',
+    averageLine: 'var(--kbx-color-chart-average-line)',
+    line: 'var(--kbx-color-chart-trend)',
+    lineHalo: 'var(--kbx-color-chart-trend-halo)',
+    marker: 'var(--kbx-color-paper)',
+    baseline: 'var(--kbx-color-foreground-subtle)',
+    divider: 'var(--kbx-color-chart-grid)',
+    value: 'var(--kbx-color-label)',
+    lineValue: 'var(--kbx-color-paper)',
+    category: 'var(--kbx-color-foreground)',
+    subject: 'var(--kbx-color-chart-subject-label)',
+} as const
 
 const PROPS_ITEMS = [
     ['ComboValueChart', 'data', '항목 목록입니다. 화면에 그릴 순서로 넘깁니다.', '-', 'readonly ComboValueItem[]'],
@@ -172,6 +191,14 @@ const PROPS_ITEMS = [
         'Partial<ComboValueColors>',
     ],
     [
+        'ComboValueColors',
+        'averageLine',
+        '평균 막대 사선 · 테두리 색입니다. 주면 평균 막대가 averageBar 바탕 + 45° 사선이 됩니다.',
+        '없음(단색)',
+        'string',
+    ],
+    ['ComboValueColors', 'lineHalo', '선 아래에 까는 바깥 테두리 색입니다.', '없음', 'string'],
+    [
         'ComboValueChart',
         'formatValue · formatLineValue',
         '막대 · 선 값 글자 형식입니다.',
@@ -188,7 +215,7 @@ const PROPS_ITEMS = [
     [
         'ComboValueChart',
         'isCategoryTruncated',
-        '항목 이름을 원래 크기 한 줄로 두고, 칸보다 길면 뒤를 말줄임(…)합니다(그림 높이 그대로). 화면에 보이지 않는 목록은 전체 이름을 읽어 줍니다. 인쇄본 경쟁기업 사업실적이 씁니다.',
+        '항목 이름을 원래 크기 한 줄로 두고, 칸보다 길면 뒤를 말줄임(…)합니다(그림 높이 그대로). 화면에 보이지 않는 목록은 전체 이름을 읽어 줍니다. PDF 템플릿 경쟁기업 사업실적이 씁니다.',
         'false',
         'boolean',
     ],
@@ -196,7 +223,7 @@ const PROPS_ITEMS = [
     [
         'ComboValueItem',
         'value · lineValue',
-        "막대 값 · 선 값입니다. 선 값이 null · 숫자가 아니면 점을 비우고 선을 끊습니다. 막대 값이 숫자가 아니면 막대 없이 값 글자만 적습니다(글자는 formatValue 로 — 인쇄본은 '-').",
+        "막대 값 · 선 값입니다. 선 값이 null · 숫자가 아니면 점 대신 '-' 를 적고 선을 끊습니다. 막대 값이 숫자가 아니면 막대 없이 값 글자만 적습니다(글자는 formatValue 로 — PDF 템플릿은 '-').",
         '-',
         'number · number | null',
     ],
@@ -239,7 +266,7 @@ const chartLabels = {barLabel: '매출액', barUnit: '백만원', lineLabel: '�
 const ComboValueChartGuidePage = () => (
     <GuidePageShell
         title="막대 + 선 값 차트 (ComboValueChart)"
-        description="항목마다 막대 하나와 선 위의 점을 함께 그리고, 값을 막대 위 · 점 위에 바로 적는 차트입니다. K-BIGx 보고서 인쇄본 기술혁신정보의 경쟁기업 사업실적(매출액, 영업이익률) 그래프입니다."
+        description="항목마다 막대 하나와 선 위의 점을 함께 그리고, 값을 막대 위 · 점 위에 바로 적는 차트입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 경쟁기업 사업실적(매출액, 영업이익률) 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="cvc-basic" className="flex flex-col gap-6">
@@ -252,7 +279,7 @@ const ComboValueChartGuidePage = () => (
                 </SectionHeading>
                 <Example
                     title="템플릿 데이터"
-                    description="조회기업은 민트 막대 · 굵은 남색 글자, 평균은 보라 막대. 막대는 30 부터 섭니다(값 차이가 작음)."
+                    description="웹 기본 색 — 조회기업은 민트 막대 · 굵은 남색 글자, 평균은 보라 막대(PDF 템플릿 색은 5절). 막대는 30 부터 섭니다(값 차이가 작음)."
                 >
                     <ComboValueChart {...chartLabels} data={STANDARD_DATA} ariaLabel="경쟁기업 사업실적 예시" />
                 </Example>
@@ -282,7 +309,7 @@ const ComboValueChartGuidePage = () => (
                         위 15 에 흰 글자를 얹습니다. 점 글자가 막대 밖으로 나가면 값 글자 색으로 바꿉니다.
                     </li>
                     <li>
-                        범례 · 단위는 그리지 않습니다 — 제목 줄 오른쪽에 둡니다(인쇄본 &apos;단위: 백만원, %&apos;).
+                        범례 · 단위는 그리지 않습니다 — 제목 줄 오른쪽에 둡니다(PDF 템플릿 &apos;단위: 백만원, %&apos;).
                     </li>
                 </ul>
             </section>
@@ -306,7 +333,7 @@ const ComboValueChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="cvc-loading" className="flex flex-col gap-6">
                 <SectionHeading id="cvc-loading" title="4. 불러오는 중 (ComboValueChartSkeleton)">
-                    같은 그림 범위(1168 × 480)에 막대 · 값 글자 · 이름 자리를 그립니다. 인쇄본은 데이터를 받은 뒤
+                    같은 그림 범위(1168 × 480)에 막대 · 값 글자 · 이름 자리를 그립니다. PDF 템플릿은 데이터를 받은 뒤
                     서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -323,7 +350,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-print" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-print" title="5. K-BIGx 인쇄본에서">
+                <SectionHeading id="cvc-print" title="5. K-BIGx PDF 템플릿에서">
                     기술혁신정보 4쪽 — 소제목 오른쪽에 &apos;단위: 백만원, %&apos;, 그 아래 16 간격에 차트를 둡니다.
                     확인 화면:{' '}
                     <Link
@@ -332,10 +359,38 @@ const ComboValueChartGuidePage = () => (
                         rel="noopener noreferrer"
                         className={LINK_CLASS}
                     >
-                        K-BIGx 보고서 인쇄본 기술혁신정보
+                        K-BIGx 보고서 PDF 템플릿 기술혁신정보
                         <span className="sr-only"> (새 창)</span>
                     </Link>
                 </SectionHeading>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        흑백 인쇄에서도 갈리게 색이 아니라 명도 3단계로 나눕니다 — 조회기업 진남(가장 진함) · 경쟁기업
+                        파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리(가장 밝음, <code>averageLine</code>).
+                    </li>
+                    <li>
+                        선(영업이익률)은 진남, 아래에 흰 바깥 테두리(<code>lineHalo</code>, 굵기 7)를 깔아 진남 막대
+                        위에서도 끊겨 보이지 않습니다. 사선 평균 막대 위 점 글자는 흰 글자 대신 진한 글자 + 흰
+                        테두리입니다.
+                    </li>
+                    <li>
+                        조회기업 값 · 이름 글자는 남색(chart-subject-label) 굵게 — 막대 색을 글자에 그대로 쓰지
+                        않습니다.
+                    </li>
+                </ul>
+                <Example
+                    title="PDF 템플릿 색"
+                    description="kbx 색을 넘긴 모습입니다(.kbigx-print 안 · 다크에서도 흰 바탕)."
+                >
+                    <div className="kbigx-print bg-kbx-paper rounded-sm p-4">
+                        <ComboValueChart
+                            {...chartLabels}
+                            data={STANDARD_DATA}
+                            colors={PRINT_COLORS}
+                            ariaLabel="경쟁기업 사업실적 PDF 템플릿 색 예시"
+                        />
+                    </div>
+                </Example>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>

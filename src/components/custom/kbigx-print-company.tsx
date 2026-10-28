@@ -13,10 +13,14 @@ import {
 } from '@/components/custom/kbigx-print-parts'
 import {MarkerLineChart, MarkerLineLegend} from '@/components/custom/marker-line-chart'
 import {NestedColumnChart} from '@/components/custom/nested-column-chart'
-import type {
-    InnovationFinanceRow,
-    InnovationGrowthReport,
-    InnovationTradePartner,
+import {
+    FINANCE_ROW_LABELS,
+    toFixedFinanceRows,
+    type FinanceRowLabels,
+    type InnovationFinanceRow,
+    type InnovationGrowthReport,
+    type InnovationTradePartner,
+    INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 import {
     COMPANY_OVERVIEW_FIT_LABELS,
@@ -87,6 +91,20 @@ const AFFILIATE_COLUMNS = [
 
 // 인증 카드 — 높이 80(h-20). 테두리 색은 인증 여부에 따라 사용처에서 붙인다.
 const CERT_BOX_CLASS = 'kbx-border-regular flex h-20 items-center justify-between px-6'
+// 특허 및 인증현황 — 건수 4칸 · 인증 4칸 고정. 받은 목록에서 같은 id 로 찾고, 없거나 값이 없으면
+// 건수 칸은 라벨 아래 '-'(단위 없음), 인증 칸은 상자 안에 '-' 만 적는다(인증 · 미인증 대신).
+const IP_ITEMS = [
+    {id: 'patent', label: '특허'},
+    {id: 'utility-model', label: '실용신안'},
+    {id: 'design', label: '디자인'},
+    {id: 'trademark', label: '상표권'},
+] as const
+const CERTIFICATION_ITEMS = [
+    {id: 'venture', label: '벤처'},
+    {id: 'innobiz', label: '이노비즈'},
+    {id: 'mainbiz', label: '메인비즈'},
+    {id: 'research-lab', label: '연구소'},
+] as const
 
 // 관계기업 현황 · 특허 및 인증현황 — 기업현황 첫 쪽(company-1) 아래 두 블록.
 const CompanyAffiliateBlocks = ({
@@ -121,47 +139,58 @@ const CompanyAffiliateBlocks = ({
             {/* 건수 카드 · 인증 카드 각 4칸. 카드 높이(80)는 첫 쪽 높이 어림(COMPANY_FIRST_PAGE.baseBottom)에 포함돼 있다. */}
             <div className="flex flex-col gap-4">
                 <div className="gap-kbx-14 grid grid-cols-4">
-                    {status.intellectualProperty.map((item) => (
-                        <KbxStatCard
-                            key={item.id}
-                            size="xl"
-                            label={item.label}
-                            value={formatKbxNumber(item.count)}
-                            unit={COUNT_UNIT}
-                        />
-                    ))}
+                    {IP_ITEMS.map(({id, label}) => {
+                        const count = status.intellectualProperty.find((item) => item.id === id)?.count
+                        const hasCount = typeof count === 'number' && Number.isFinite(count)
+                        return (
+                            <KbxStatCard
+                                key={id}
+                                size="xl"
+                                label={label}
+                                value={formatKbxNumber(count)}
+                                unit={hasCount ? COUNT_UNIT : undefined}
+                            />
+                        )
+                    })}
                 </div>
                 {/* 인증은 남색 실선 · 미인증은 옅은 점선 — 색과 함께 글자(인증 · 미인증)와 아이콘으로도 구분한다[5.3.1]. */}
                 <ul className="gap-kbx-14 grid grid-cols-4">
-                    {status.certifications.map((item) => (
-                        <li
-                            key={item.id}
-                            className={cn(
-                                CERT_BOX_CLASS,
-                                item.isCertified ? 'border-kbx-primary' : 'border-kbx-border-muted border-dashed',
-                            )}
-                        >
-                            <span
+                    {CERTIFICATION_ITEMS.map(({id, label}) => {
+                        const isCertified = status.certifications.find((item) => item.id === id)?.isCertified
+                        return (
+                            <li
+                                key={id}
                                 className={cn(
-                                    'kbx-text-26 font-kbx-bold',
-                                    !item.isCertified && 'text-kbx-foreground-subtle',
+                                    CERT_BOX_CLASS,
+                                    isCertified ? 'border-kbx-primary' : 'border-kbx-border-muted border-dashed',
                                 )}
                             >
-                                {item.label}
-                            </span>
-                            {item.isCertified ? (
-                                <span className="text-kbx-primary kbx-text-34 font-kbx-extrabold flex items-center gap-2 whitespace-nowrap">
-                                    <Check aria-hidden="true" strokeWidth={3} className="size-7.5" />
-                                    {CERTIFIED_LABEL}
+                                <span
+                                    className={cn(
+                                        'kbx-text-26 font-kbx-bold',
+                                        !isCertified && 'text-kbx-foreground-subtle',
+                                    )}
+                                >
+                                    {label}
                                 </span>
-                            ) : (
-                                <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold flex items-center gap-2 whitespace-nowrap">
-                                    <Minus aria-hidden="true" strokeWidth={3} className="size-6.5" />
-                                    {NOT_CERTIFIED_LABEL}
-                                </span>
-                            )}
-                        </li>
-                    ))}
+                                {isCertified === undefined ? (
+                                    <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold">
+                                        {KBX_EMPTY_VALUE}
+                                    </span>
+                                ) : isCertified ? (
+                                    <span className="text-kbx-primary kbx-text-34 font-kbx-extrabold flex items-center gap-2 whitespace-nowrap">
+                                        <Check aria-hidden="true" strokeWidth={3} className="size-7.5" />
+                                        {CERTIFIED_LABEL}
+                                    </span>
+                                ) : (
+                                    <span className="text-kbx-foreground-subtle kbx-text-34 font-kbx-bold flex items-center gap-2 whitespace-nowrap">
+                                        <Minus aria-hidden="true" strokeWidth={3} className="size-6.5" />
+                                        {NOT_CERTIFIED_LABEL}
+                                    </span>
+                                )}
+                            </li>
+                        )
+                    })}
                 </ul>
             </div>
         </KbxBlock>
@@ -239,35 +268,8 @@ const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) =
 // ── 기업현황 2(company-2) — 재무현황(재무상태 · 손익 · 주요재무비율 · 현금흐름) ──
 // 2 × 2 칸. 칸 안은 소제목 → 표 → 그래프(겹친 막대는 범례가 위, 꺾은선은 범례가 아래).
 
-// 재무 표의 구분 — 행 이름 · 순서 고정. 값은 finance.<표>[].key 로 찾고, 없는 구분 · 연도 칸은 '-'(0 은 0).
-// [프론트엔드 연동] API 행 key 를 이 key 와 맞춘다. 그래프는 이 목록이 아니라 받은 행 순서 · label 을 그대로 쓴다.
-const FINANCE_ROW_LABELS = {
-    balance: [
-        {key: 'total-assets', label: '총자산'},
-        {key: 'liabilities', label: '부채총계'},
-        {key: 'equity', label: '자본총계'},
-    ],
-    income: [
-        {key: 'sales', label: '매출액'},
-        {key: 'operating-profit', label: '영업이익'},
-        {key: 'net-income', label: '당기순이익'},
-    ],
-    ratios: [
-        {key: 'operating-margin', label: '영업이익률'},
-        {key: 'debt-ratio', label: '부채비율'},
-        {key: 'receivables-turnover', label: '매출채권회전율'},
-        {key: 'sales-growth', label: '매출액증가율'},
-        {key: 'asset-growth', label: '총자산증가율'},
-    ],
-    cashFlows: [
-        {key: 'operating', label: '영업활동후 현금흐름'},
-        {key: 'financing', label: '재무활동후 현금흐름'},
-        {key: 'investing', label: '투자활동후 현금흐름'},
-        {key: 'net-change', label: '순현금변화'},
-        {key: 'cash-vs-income', label: '영업활동 현금흐름과 순이익 차이'},
-    ],
-} as const
-type FinanceRowLabels = (typeof FINANCE_ROW_LABELS)[keyof typeof FINANCE_ROW_LABELS]
+// 재무 표의 구분 — 행 이름 · 순서 고정(FINANCE_ROW_LABELS · 웹 보고서와 공용). 값은 finance.<표>[].key 로 찾고, 없는 구분 · 연도 칸은 '-'(0 은 0).
+// 겹친 막대 그래프도 이 목록으로 자리를 만든다(받지 못한 줄은 막대 자리마다 '-'). 꺾은선 그래프는 받은 행만 그린다.
 
 // 재무 표 props(구분 + 연도 열). values[i] 가 years[i] 의 값. 구분 열 폭은 행 이름 길이에 맞춰 사용처가 정한다.
 const financeTableProps = (
@@ -280,7 +282,12 @@ const financeTableProps = (
     density: 'snug' as const,
     columns: [
         {key: 'label', header: '구분', isRowHeader: true, className: labelClassName},
-        ...years.map((year) => ({key: year, header: year})),
+        ...(years.length
+            ? years.map((year) => ({key: year, header: year}))
+            : Array.from({length: INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT}, (_, index) => ({
+                  key: `empty-year-${index}`,
+                  header: KBX_EMPTY_VALUE,
+              }))),
     ],
     rows: labels.map((item) => {
         const values = rows.find((row) => row.key === item.key)?.values
@@ -288,10 +295,12 @@ const financeTableProps = (
             key: item.key,
             cells: [
                 item.label,
-                ...years.map((_, index) => {
-                    const value = values?.[index]
-                    return isKbxNumber(value) ? format(value) : KBX_EMPTY_VALUE
-                }),
+                ...(years.length
+                    ? years.map((_, index) => {
+                          const value = values?.[index]
+                          return isKbxNumber(value) ? format(value) : KBX_EMPTY_VALUE
+                      })
+                    : Array<string>(INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT).fill(KBX_EMPTY_VALUE)),
             ],
         }
     }),
@@ -350,13 +359,15 @@ const NestedFinance = ({
     rows: readonly InnovationFinanceRow[]
     ariaLabel: string
 }) => {
-    const [base, ...series] = rows
+    // 그래프 계열도 표와 같은 고정 줄(labels)로 만든다 — 받지 못한 줄도 범례 · 막대 자리를 갖고, 각 자리에 '-' 가 따로 보인다.
+    const chartRows = toFixedFinanceRows(labels, rows)
+    const [base, ...series] = chartRows
     return (
         <KbxSubBlock title={title}>
             <KbxUnitBelow unit="단위: 백만원">
                 <KbxTable caption={title} {...financeTableProps(years, labels, rows, formatKbxNumber, 'w-1/4')} />
             </KbxUnitBelow>
-            {base ? (
+            {rows.length && base ? (
                 <>
                     <KbxLegend
                         density="compact"
@@ -371,7 +382,7 @@ const NestedFinance = ({
                     <KbxChartBox isEmpty={!hasFinanceValues(rows)} emptyClassName="h-88">
                         <NestedColumnChart
                             ariaLabel={ariaLabel}
-                            data={financeChartData(years, rows)}
+                            data={financeChartData(years, chartRows)}
                             base={{key: base.key, label: base.label, color: NESTED_BASE_COLOR.value}}
                             series={series.map((row, index) => ({
                                 key: row.key,
@@ -379,10 +390,17 @@ const NestedFinance = ({
                                 color: NESTED_SERIES_COLORS[index % NESTED_SERIES_COLORS.length].value,
                             }))}
                             colors={NESTED_CHART_COLORS}
+                            // 값이 없는 해는 막대 없이 '-'(표 · 웹 화면 그래프와 같다).
+                            missingValueText={KBX_EMPTY_VALUE}
                         />
                     </KbxChartBox>
                 </>
-            ) : null}
+            ) : (
+                // 행을 하나도 받지 못하면 범례 없이 그래프 자리에 빈 상태.
+                <KbxChartBox isEmpty emptyClassName="h-88">
+                    {null}
+                </KbxChartBox>
+            )}
         </KbxSubBlock>
     )
 }

@@ -7,6 +7,8 @@ import {
     INNOVATION_REPORT_ID_QUERY,
     INNOVATION_REPORT_CASE_QUERY,
     withPreviewCase,
+    withPreviewEmpty,
+    INNOVATION_REPORT_EMPTY_QUERY,
 } from '@/content/service/k-bigx-innovation-report'
 
 // K-BIGx 기업혁신성장 보고서 페이지 본문 — 한 페이지에 탭(진단브리핑 · 기업현황 · 기술혁신정보 · Tech-Index · 신용/재무정보 ·
@@ -20,6 +22,8 @@ import {
 //   ?view=pc       — PC 화면으로 보기(모바일 [더보기]가 여는 새 창). 뷰포트를 PC 폭(1280)으로 고정한다 — generateViewport.
 //   ?tab=<id>      — 열 탭(company · innovation · tech-index · credit-finance · activity). 없으면 진단브리핑.
 //   ?case=<id>     — [퍼블리싱 확인용] 열람 케이스(report.viewerCase)를 덮어쓴다(self · partner-corp · partner-person).
+//   ?empty=<모드>  — [퍼블리싱 확인용] 값을 비우거나 · 길게 · 섞어 본다. 모드 목록은 INNOVATION_REPORT_EMPTY_* 상수 ·
+//                    withPreviewEmpty(content/service/k-bigx-innovation-report.ts).
 // 받는 동안은 loading.tsx 가 ?tab= 에 맞는 탭 모양의 스켈레톤을 보여 준다.
 // [프론트엔드 연동] 이 화면은 보고서를 받아 그리기만 한다 — 목업 · API 의 교체 지점은 content/service/k-bigx-innovation-report.ts 다.
 //   지금 getInnovationGrowthReport 는 어느 reportId 로 열어도 같은 목업을 돌려준다(빈 id 만 404).
@@ -28,7 +32,7 @@ type InnovationReportSearchParams = Promise<Record<string, string | string[] | u
 
 type InnovationGrowthReportPageProps = {
     searchParams: InnovationReportSearchParams
-    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH) — 주면 [보고서 출력]이 동작한다. */
+    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH) — 주면 [보고서 다운로드]가 동작한다. */
     printPath?: string
 }
 
@@ -38,8 +42,11 @@ const InnovationGrowthReportPage = async ({searchParams, printPath}: InnovationG
     const reportId = typeof reportIdParam === 'string' ? reportIdParam : undefined
     const fetchedReport = await getInnovationGrowthReport(reportId)
     if (!fetchedReport) notFound()
-    // [퍼블리싱 확인용] ?case= 로 열람 케이스를 바꿔 본다 — 연동 후 fetchedReport 를 그대로 쓴다.
-    const report = withPreviewCase(fetchedReport, params[INNOVATION_REPORT_CASE_QUERY])
+    // [퍼블리싱 확인용] ?case= · ?empty= 로 열람 케이스 · 값 모양을 바꿔 본다 — 연동 후 fetchedReport 를 그대로 쓴다.
+    const report = withPreviewEmpty(
+        withPreviewCase(fetchedReport, params[INNOVATION_REPORT_CASE_QUERY]),
+        params[INNOVATION_REPORT_EMPTY_QUERY],
+    )
 
     return (
         <InnovationGrowthReportDocument

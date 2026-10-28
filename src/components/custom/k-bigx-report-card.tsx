@@ -1,15 +1,14 @@
 import type {ReactNode} from 'react'
 import {BaseCard} from '@/components/composite/base-card'
 import {Badge} from '@/components/ui/badge'
+import {KBigxReportDownloadButton} from '@/components/custom/k-bigx-report-download-button'
 import {Button} from '@/components/ui/button'
 import {
-    K_BIGX_REPORT_ACTION,
     K_BIGX_BULK_REPORT_ACTION,
     K_BIGX_REPORT_INQUIRY_TYPE,
     K_BIGX_REPORT_TYPE,
     TICKET_DEDUCTION_LABEL,
     TICKET_DEDUCTION_MARK,
-    type KBigxReportAction,
     type KBigxBulkReportAction,
     type KBigxReportHistoryItem,
 } from '@/constants/k-bigx-report-history'
@@ -44,8 +43,10 @@ const ReportDetail = ({
 
 type KBigxReportCardProps = {
     item: KBigxReportHistoryItem
-    /** 버튼이 가는 곳 — [보고서 다운로드] 는 보고서 파일, [엑셀 결과]·[HTML 압축파일] 은 대량정보조회 결과 파일이다. */
-    routes: Record<KBigxReportAction | KBigxBulkReportAction, string>
+    /** 대량정보조회 [엑셀 결과]·[HTML 압축파일] 이 가는 곳(결과 파일). */
+    routes: Record<KBigxBulkReportAction, string>
+    /** [보고서 다운로드] 의 보고서 문서 화면 주소 — 기업 · 기관 report-print(k-bigx-print-report.ts 의 KBIGX_PRINT_*_PATH). */
+    printPath: string
 }
 
 const BULK_REPORT_ACTIONS: readonly {action: KBigxBulkReportAction; label: string}[] = [
@@ -53,7 +54,7 @@ const BULK_REPORT_ACTIONS: readonly {action: KBigxBulkReportAction; label: strin
     {action: 'htmlArchive', label: K_BIGX_BULK_REPORT_ACTION.htmlArchive},
 ]
 
-const KBigxReportCard = ({item, routes}: KBigxReportCardProps) => {
+const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
     const inquiryType = K_BIGX_REPORT_INQUIRY_TYPE[item.inquiryType]
     const reportType = item.reportType ? K_BIGX_REPORT_TYPE[item.reportType] : undefined
     // 버튼 — 대량정보조회만 결과 파일 둘이고, 나머지(기업 카드·기업혁신성장)는 [보고서 다운로드] 하나다.
@@ -129,12 +130,12 @@ const KBigxReportCard = ({item, routes}: KBigxReportCardProps) => {
                             </Button>
                         ))
                     ) : (
-                        <Button asChild variant="tertiary" size="sm" className="max-sm:w-full sm:w-45">
-                            <a href={routes.download}>
-                                {K_BIGX_REPORT_ACTION.download}
-                                <span className="sr-only">{` (${item.companyName})`}</span>
-                            </a>
-                        </Button>
+                        // 웹 보고서와 같은 흐름 — 보고서 내용 선택 모달 → 새 탭 미리보기 → [PDF 다운로드](k-bigx-report-download-button.tsx).
+                        <KBigxReportDownloadButton
+                            item={item}
+                            printPath={printPath}
+                            className="max-sm:w-full sm:w-45"
+                        />
                     )}
                 </div>
             </div>

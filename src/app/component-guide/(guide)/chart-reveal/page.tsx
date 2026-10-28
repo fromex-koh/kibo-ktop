@@ -36,7 +36,7 @@ const MyChart = ({animate}: {animate?: boolean}) => {
   …
 }`
 
-const PRINT_CODE = `// K-BIGx 인쇄본 — 종이에는 움직임이 없으므로 'off' 로 감싸 모든 차트를 바로 그린다(kbigx-print-document.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 종이에는 움직임이 없으므로 'off' 로 감싸 모든 차트를 바로 그린다(kbigx-print-document.tsx).
 <ChartRevealProvider mode="off">
   {pages.map((page) => …)}
 </ChartRevealProvider>`
@@ -61,7 +61,7 @@ const MODE_ROWS = [
         cells: [
             <code key="m">&apos;off&apos;</code>,
             '움직임 없이 바로 그립니다.',
-            'K-BIGx 웹 보고서 — 다시 들어간 탭 · K-BIGx 인쇄본',
+            'K-BIGx 웹 보고서 — 다시 들어간 탭 · K-BIGx PDF 템플릿',
         ],
     },
     {
