@@ -54,11 +54,16 @@ const PROPS_ROWS = (
     [
         [
             'percentile',
-            '상위 %(0~100)입니다. 이 값이 속한 단이 강조됩니다. 범위를 벗어나면 0 · 100 으로 맞춥니다.',
+            "상위 %(0~100)입니다. 이 값이 속한 단이 강조됩니다. 범위를 벗어나면 0 · 100 으로 맞춥니다. 숫자가 아니면(NaN) 순위 없음 — '-' · 강조 없음.",
             '-',
             'number',
         ],
-        ['groupLabel', '비교 집단 이름입니다. 왼쪽 글자 묶음에 적힙니다.', '-', 'string'],
+        [
+            'groupLabel',
+            '비교 집단 이름입니다. 왼쪽 글자 묶음에 적힙니다. 빈 글자면 그 줄을 두지 않습니다.',
+            '-',
+            'string',
+        ],
         ['ariaLabel', '집단과 상위 % 를 한 문장으로 읽어 줍니다.', '-', 'string'],
         ['title', '왼쪽 글자 묶음의 제목입니다.', "'동일업종 기준'", 'string'],
     ] as const
@@ -133,6 +138,21 @@ const RankPyramidChartGuidePage = () => (
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                    <div className={BLOCK_CLASS}>
+                        <h3 className="typo-title-m-bold text-foreground">순위가 없을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            <code>percentile</code> 이 숫자가 아니면(NaN) &apos;상위 %&apos; 자리에 &apos;-&apos; 를
+                            적고 어느 단도 강조하지 않습니다(왕관은 보라). <code>groupLabel</code> 이 비면 그 줄을 두지
+                            않습니다. ariaLabel 도 &apos;순위 정보가 없습니다&apos; 로 바꿔 넘깁니다.
+                        </p>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <RankPyramidChart
+                                percentile={Number.NaN}
+                                groupLabel=""
+                                ariaLabel="동일업종 기준 순위 정보가 없습니다."
+                            />
+                        </div>
                     </div>
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">로딩</h3>

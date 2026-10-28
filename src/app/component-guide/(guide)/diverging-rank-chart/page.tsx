@@ -212,11 +212,11 @@ const CHOICE_ROWS = [
     {
         key: 'rank-bar-list',
         cells: [
-            '순위 목록을 따로 세워 나란히(인쇄본)',
+            '순위 목록을 따로 세워 나란히(PDF 템플릿)',
             <Link key="c" href="/component-guide/rank-bar-list" className={LINK_CLASS}>
                 RankBarList
             </Link>,
-            '목록 하나가 컴포넌트 하나 — 두 목록을 나란히 놓고 막대 끝 값을 같게 넘깁니다. K-BIGx 인쇄본 성장률 우수기업에 씁니다.',
+            '목록 하나가 컴포넌트 하나 — 두 목록을 나란히 놓고 막대 끝 값을 같게 넘깁니다. K-BIGx PDF 템플릿 성장률 우수기업에 씁니다.',
         ],
     },
 ] as const
@@ -248,6 +248,13 @@ const PROPS_ITEMS = [
         'boolean',
     ],
     ['DivergingRankChart', 'emptyText', '목록이 비었을 때 칸에 적는 글자입니다.', "'자료가 없습니다.'", 'string'],
+    [
+        'DivergingRankChart',
+        'highlightValueClassName',
+        "별 표시 행(isHighlighted)의 값 글자 모양입니다(예: 'typo-micro-bold' — 고성장 % 를 굵게). 주지 않으면 다른 행과 같습니다.",
+        '-',
+        'string',
+    ],
     ['DivergingRankChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['DivergingRankLegend', 'label', '범례 글자입니다.', "'고성장 기업'", 'string'],
     ['DivergingRankLegend', 'className', '범례에 덧붙일 클래스입니다.', '-', 'string'],
@@ -284,14 +291,14 @@ const SPECIAL_CASES = [
     {
         title: '막대가 이름보다 짧을 때',
         description:
-            '막대 안 이름은 흰 글자라 막대보다 길면 보이지 않습니다. 이름이 들어가지 않는 줄은 이름을 막대 밖으로 옮깁니다.',
+            '막대 안 이름은 흰 글자라 막대보다 길면 보이지 않습니다. 이름이 들어가지 않는 줄은 이름을 막대 밖으로 옮깁니다 — 밖 남은 폭에 다 들어갈 때만 옮기고, 밖에도 안 들어가면(줄을 거의 다 차지하는 1위 막대 등) 막대 안에서 한 줄 말줄임합니다. 막대 길이는 이름 때문에 줄지 않습니다.',
         left: SHORT_BAR_LEFT,
         right: SHORT_BAR_RIGHT,
     },
     {
         title: '이름이 막대보다 길 때',
         description:
-            '막대 밖에서도 자리가 모자라면 말줄임(…)하고 전체 이름은 title · 숨김 표에 둡니다. 폭은 그릴 때 · 크기가 바뀔 때마다 다시 잽니다.',
+            '막대 밖에서도 자리가 모자라면 말줄임(…)합니다. 잘린 이름은 마우스를 올리거나 탭하면 말줄임 툴팁(TruncatedText)으로 전체 이름을 보이고, 스크린리더는 숨김 표로 읽습니다. 폭은 그릴 때 · 크기가 바뀔 때마다 다시 잽니다.',
         left: LONG_NAME_LEFT,
         right: LONG_NAME_RIGHT,
     },
