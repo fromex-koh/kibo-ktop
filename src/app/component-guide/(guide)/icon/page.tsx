@@ -92,6 +92,7 @@ import buildingIcon from '@public/images/icons/building.webp'
 import coinsIcon from '@public/images/icons/coins.webp'
 import documentCheckIcon from '@public/images/icons/document-check.webp'
 import gaugeIcon from '@public/images/icons/gauge.webp'
+import documentChartIcon from '@public/images/icons/document-chart.webp'
 import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 import reportSectionMark from '@public/images/report/section-mark.webp'
 import faqQuestionMark from '@public/images/faq/faq-question-mark.webp'
@@ -120,6 +121,23 @@ import medalB from '@public/images/grade-medal/b.webp'
 import medalCcc from '@public/images/grade-medal/ccc.webp'
 import medalCc from '@public/images/grade-medal/cc.webp'
 import medalC from '@public/images/grade-medal/c.webp'
+import ktrsFmIcon from '@public/images/platform-technology-evaluation/ktrs-fm-icon.webp'
+import economicUseIcon from '@public/images/platform-patent-evaluation/economic-use.webp'
+import patentTradeIcon from '@public/images/platform-patent-evaluation/patent-trade.webp'
+import patentedKnowledgeIcon from '@public/images/platform-patent-evaluation/patented-knowledge.webp'
+import kbigxAiAnalysisReportIcon from '@public/images/platform-k-bigx-report/ai-analysis-report.webp'
+import carbonEmissionDiagnosisIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis.webp'
+import carbonReductionPlanIcon from '@public/images/platform-carbon-neutrality/reduction-plan.webp'
+import carbonKeywordSearchIcon from '@public/images/platform-carbon-neutrality/keyword-search.webp'
+import carbonSelfDiagnosisIcon from '@public/images/platform-carbon-neutrality/self-diagnosis.webp'
+import kbigxApplicantIcon from '@public/images/platform-k-bigx-report/applicant.webp'
+import kbigxCompanyInfoIcon from '@public/images/platform-k-bigx-report/company-info.webp'
+import kbigxIndustryTrendIcon from '@public/images/platform-k-bigx-report/industry-trend.webp'
+import kbigxInsightIcon from '@public/images/platform-k-bigx-report/insight.webp'
+import kbigxReportIcon from '@public/images/platform-k-bigx-report/k-bigx-report.webp'
+import kbigxLlmIcon from '@public/images/platform-k-bigx-report/llm.webp'
+import kbigxPatentInfoIcon from '@public/images/platform-k-bigx-report/patent-info.webp'
+import kbigxPeerComparisonIcon from '@public/images/platform-k-bigx-report/peer-comparison.webp'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
 
@@ -133,7 +151,9 @@ export const metadata: Metadata = {title: '아이콘 (Icon)'}
 //   light : 'light' 범위 클래스로 늘 라이트 테마의 카드 면 — 가이드를 다크로 바꿔도 라이트 화면 그대로 보인다.
 //   dark  : 'dark' 범위 클래스로 늘 다크 테마의 카드 면 — 가이드를 라이트로 바꿔도 다크 화면 그대로 보인다.
 //   (원시 색 bg-gray-* 는 다크 테마에서 반전되므로 고정 바탕으로 쓰지 않는다.)
-//   blue · purple : 그 그림이 놓이는 칸 색(보고서 탭 띠 · 왕관).
+//   blue · purple : 흰 그림이 놓이는 칸 색(보고서 탭 띠 · 왕관 · K-BIGx 신청기업) — 바탕이 없으면 흰 그림이 보이지 않을 때만 쓴다.
+// 화면에서 그림 뒤에 따로 칠하는 칸(옅은 남색 아이콘 칸 등)은 미리보기에 그리지 않는다 — 칸까지 그림 파일로 오해하지 않도록
+// 그림 파일만 보이고, 놓이는 칸은 묶음 설명 · 표시 크기에 글로 적는다.
 type ImageIconSurface = 'card' | 'light' | 'dark' | 'blue' | 'purple'
 const IMAGE_ICON_SURFACE_CLASS: Record<ImageIconSurface, string> = {
     card: '',
@@ -175,7 +195,7 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
             'K-BIGx 기업혁신성장 보고서 탭 제목 띠의 파란 칸(40 · 반경 8) 안 흰 그림입니다. 제목이 옆에 있어 장식입니다.',
         folder: 'public/images/icons/',
         usedIn: 'custom/innovation-growth-report-document.tsx (TAB_BANNER_ICONS)',
-        size: 'h-5.5 w-auto · 계기판만 size-6.5',
+        size: 'h-5.5 w-auto · 계기판 size-6.5 · 참고자료 h-6(20 × 24)',
         items: [
             {
                 file: 'document-check.webp',
@@ -200,13 +220,26 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
                 surface: 'blue',
             },
             {file: 'coins.webp', label: '신용/재무정보', src: coinsIcon, className: 'h-5.5 w-auto', surface: 'blue'},
-            {file: 'gauge.webp', label: '활동성정보', src: gaugeIcon, className: 'mt-1.5 size-6.5', surface: 'blue'},
+            {
+                file: 'gauge.webp',
+                label: '활동성정보',
+                src: gaugeIcon,
+                className: 'mt-1.5 size-6.5',
+                surface: 'blue',
+            },
+            {
+                file: 'document-chart.webp',
+                label: '참고자료',
+                src: documentChartIcon,
+                className: 'h-6 w-auto',
+                surface: 'blue',
+            },
         ],
     },
     {
         key: 'report-section-mark',
         title: '보고서 구획 표시',
-        description: '인쇄형 보고서 구획 제목 앞의 16 표식입니다. 쪽마다 되풀이되어 늦게 불러오지 않습니다(priority).',
+        description: '인쇄형 보고서 구획 제목 앞의 16 표식입니다. 쪽마다 되풀이되어 늦게 불러오지 않습니다(preload).',
         folder: 'public/images/report/',
         usedIn: 'custom/report-document.tsx (ReportSectionMark)',
         size: 'size-icon-sm',
@@ -290,6 +323,107 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         items: [
             {file: 'crown.webp', label: '흰 왕관', src: crownImage, className: 'h-4.5 w-5', surface: 'purple'},
             {file: 'crown-purple.webp', label: '보라 왕관', src: crownPurpleImage, className: 'size-6'},
+        ],
+    },
+    {
+        key: 'evaluation-model',
+        title: '평가모형 아이콘',
+        description:
+            "플랫폼 소개 > 기술평가 모형 구조도 맨 위의 모형 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(120 · 반경 40 · model-icon-surface — 라이트 · 다크 모두 navy.100. 그림 아이콘은 색을 바꿀 수 없어 다크에서도 밝은 칸에 둔다) 가운데 60 으로 놓습니다. 아래 모형명과 같은 글이라 장식(alt='')입니다. 글자가 든 그림이라 무손실 webp(표시 크기의 3배 180×180)로 두었습니다. Tech-Index · 투자모형 아이콘은 받으면 이 묶음에 추가합니다.",
+        folder: 'public/images/platform-technology-evaluation/',
+        usedIn: 'custom/ktrs-fm-structure-diagram.tsx (기업 /platform/technology-evaluation)',
+        size: 'size-15 (칸 size-30 · rounded-3xl · bg-model-icon-surface)',
+        items: [{file: 'ktrs-fm-icon.webp', label: 'KTRS-FM', src: ktrsFmIcon, className: 'size-15'}],
+    },
+    {
+        key: 'patent-evaluation',
+        title: '특허평가 관점 아이콘',
+        description:
+            "플랫폼 소개 > 특허평가 구조도의 세 관점(특허화된 기술지식 · 특허 매매 · 경제적 활용) 아이콘입니다. 회색 묶음(panel-inset) 안에 60 으로 놓고, 바로 아래 제목이 같은 뜻이라 장식(alt='')입니다. 원본 180×180(표시 크기의 3배)이고 무손실 webp 가 일반 압축보다 작아 무손실로 두었습니다(1~1.4KB).",
+        folder: 'public/images/platform-patent-evaluation/',
+        usedIn: 'custom/platform-patent-evaluation.tsx (기업 /platform/patent-evaluation) · custom/platform-carbon-neutrality.tsx(수준 진단 · 전문평가 — 탄소중립 기능 아이콘)',
+        size: 'size-15',
+        items: [
+            {
+                file: 'patented-knowledge.webp',
+                label: '특허화된 기술지식',
+                src: patentedKnowledgeIcon,
+                className: 'size-15',
+            },
+            {file: 'patent-trade.webp', label: '특허 매매', src: patentTradeIcon, className: 'size-15'},
+            {file: 'economic-use.webp', label: '경제적 활용', src: economicUseIcon, className: 'size-15'},
+        ],
+    },
+    {
+        key: 'k-bigx-feature',
+        title: 'K-BIGx 보고서 분석 기능 아이콘',
+        description:
+            "플랫폼 소개 > K-BIGx 보고서 '분석 기능' 목록의 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(80 · model-icon-surface) 가운데 40 으로 놓고, 옆 제목이 같은 뜻이라 장식(alt='')입니다. 원본 120×120(3배) · 무손실 webp(0.2~0.9KB).",
+        folder: 'public/images/platform-k-bigx-report/',
+        usedIn: 'custom/platform-k-bigx-report.tsx (기업 /platform/k-bigx-report)',
+        size: 'size-10 (칸 size-20 · rounded-2xl · bg-model-icon-surface)',
+        items: [
+            {
+                file: 'ai-analysis-report.webp',
+                label: 'AI 기반 종합 분석 보고서',
+                src: kbigxAiAnalysisReportIcon,
+                className: 'size-10',
+            },
+            {
+                file: 'peer-comparison.webp',
+                label: '동종업계 비교 분석',
+                src: kbigxPeerComparisonIcon,
+                className: 'size-10',
+            },
+            {file: 'industry-trend.webp', label: '산업 동향 정보', src: kbigxIndustryTrendIcon, className: 'size-10'},
+            {file: 'insight.webp', label: '인사이트 제공', src: kbigxInsightIcon, className: 'size-10'},
+        ],
+    },
+    {
+        key: 'k-bigx-flow',
+        title: 'K-BIGx 보고서 흐름도 아이콘',
+        description:
+            "K-BIGx 보고서 생성 흐름도의 아이콘입니다. 신청기업은 파랑 칸 위 흰 그림 32, 특허정보 · 기업정보 · LLM 은 흰 원(80) 가운데 40, 보고서는 옅은 남색 둥근 칸(120 · model-icon-surface) 가운데 60 으로 놓습니다. 미리보기는 그림 파일만 보입니다(원 · 둥근 칸은 화면에서 따로 칠하는 면 — 신청기업만 흰 그림이라 파랑 바탕 위에 보임). 옆 이름이 같은 뜻이라 장식(alt='')입니다. 원본은 표시 크기의 3배 · 무손실 webp.",
+        folder: 'public/images/platform-k-bigx-report/',
+        usedIn: 'custom/k-bigx-report-flow-diagram.tsx (기업 /platform/k-bigx-report)',
+        size: '신청기업 size-8 · 원 아이콘 size-10 · 보고서 size-15',
+        items: [
+            {
+                file: 'applicant.webp',
+                label: '신청기업 (96)',
+                src: kbigxApplicantIcon,
+                className: 'size-8',
+                surface: 'blue',
+            },
+            {file: 'patent-info.webp', label: '특허정보 (120)', src: kbigxPatentInfoIcon, className: 'size-10'},
+            {file: 'company-info.webp', label: '기업정보 (120)', src: kbigxCompanyInfoIcon, className: 'size-10'},
+            {file: 'llm.webp', label: 'LLM (120)', src: kbigxLlmIcon, className: 'size-10'},
+            {
+                file: 'k-bigx-report.webp',
+                label: '보고서 (180)',
+                src: kbigxReportIcon,
+                className: 'size-15',
+            },
+        ],
+    },
+    {
+        key: 'carbon-feature',
+        title: '탄소중립 분석 기능 아이콘',
+        description:
+            "플랫폼 소개 > 탄소중립 '분석 기능' 목록의 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(80 · model-icon-surface) 가운데 40 으로 놓고, 옆 제목이 같은 뜻이라 장식(alt='')입니다. 원본 120×120(3배) · 무손실 webp(0.8~1.1KB). '탄소중립 수준 진단' · 택소노미 '전문평가'는 특허평가 관점 아이콘(수준 진단 · 전문평가 그림)을 함께 씁니다. '키워드 검색' · '자가진단'은 시안 아이콘을 3배로 내보냈습니다.",
+        folder: 'public/images/platform-carbon-neutrality/',
+        usedIn: 'custom/platform-carbon-neutrality.tsx (기업 /platform/carbon-neutrality)',
+        size: 'size-10 (칸 size-20 · rounded-2xl · bg-model-icon-surface)',
+        items: [
+            {
+                file: 'emission-diagnosis.webp',
+                label: '배출량 진단',
+                src: carbonEmissionDiagnosisIcon,
+                className: 'size-10',
+            },
+            {file: 'reduction-plan.webp', label: '감축계획 수립', src: carbonReductionPlanIcon, className: 'size-10'},
+            {file: 'keyword-search.webp', label: '키워드 검색', src: carbonKeywordSearchIcon, className: 'size-10'},
+            {file: 'self-diagnosis.webp', label: '자가진단', src: carbonSelfDiagnosisIcon, className: 'size-10'},
         ],
     },
     {

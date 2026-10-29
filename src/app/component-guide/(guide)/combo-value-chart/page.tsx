@@ -144,8 +144,7 @@ const PRINT_CODE = `// K-BIGx PDF 템플릿 — 색만 kbx 변수로 넘깁니�
     subjectBar: 'var(--kbx-color-chart-subject)',        // 조회기업 진남
     averageBar: 'var(--kbx-color-chart-average-base)',   // 평균 바탕
     averageLine: 'var(--kbx-color-chart-average-line)',  // 평균 사선 · 테두리
-    line: 'var(--kbx-color-chart-trend)',
-    lineHalo: 'var(--kbx-color-chart-trend-halo)',       // 선 흰 테두리
+    line: 'var(--kbx-color-chart-trend)',                // 선 — 흰 테두리(lineHalo) 없음
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
@@ -163,7 +162,6 @@ const PRINT_COLORS = {
     averageBar: 'var(--kbx-color-chart-average-base)',
     averageLine: 'var(--kbx-color-chart-average-line)',
     line: 'var(--kbx-color-chart-trend)',
-    lineHalo: 'var(--kbx-color-chart-trend-halo)',
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
@@ -369,9 +367,8 @@ const ComboValueChartGuidePage = () => (
                         파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리(가장 밝음, <code>averageLine</code>).
                     </li>
                     <li>
-                        선(영업이익률)은 진남, 아래에 흰 바깥 테두리(<code>lineHalo</code>, 굵기 7)를 깔아 진남 막대
-                        위에서도 끊겨 보이지 않습니다. 사선 평균 막대 위 점 글자는 흰 글자 대신 진한 글자 + 흰
-                        테두리입니다.
+                        선(영업이익률)은 진남 한 줄이고 흰 바깥 테두리(<code>lineHalo</code>)는 두지 않습니다(PDF
+                        템플릿). 사선 평균 막대 위 점 글자는 흰 글자 대신 진한 글자 + 흰 테두리(marker 색)입니다.
                     </li>
                     <li>
                         조회기업 값 · 이름 글자는 남색(chart-subject-label) 굵게 — 막대 색을 글자에 그대로 쓰지

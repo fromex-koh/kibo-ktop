@@ -31,8 +31,8 @@ const EASINGS = [
         name: 'ease-roll',
         value: 'cubic-bezier(0.22, 1, 0.36, 1)',
         points: [0.22, 1, 0.36, 1],
-        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환',
-        source: 'theme/hero-stats-roller.variants.ts',
+        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환, 카드 캐러셀의 카드 줄 밀기 · 카드 면 색 · 흐림 전환(0.5초)',
+        source: 'theme/hero-stats-roller.variants.ts · custom/card-carousel.tsx',
     },
 ] as const
 
@@ -87,10 +87,31 @@ const ANIMATIONS = [
         preview: 'enter',
     },
     {
+        name: 'animate-ambient-drift-a',
+        value: 'ambient-drift-a 14s ease-in-out infinite alternate',
+        usage: '배경 번짐 원이 천천히 떠다님(왼쪽 위 원) — 동작 줄이기면 멈춤',
+        source: 'custom/platform-k-bigx-report.tsx',
+        preview: 'drift',
+    },
+    {
+        name: 'animate-ambient-drift-b',
+        value: 'ambient-drift-b 18s ease-in-out infinite alternate',
+        usage: '배경 번짐 원이 천천히 떠다님(오른쪽 아래 원 · a 와 다른 경로 · 주기)',
+        source: 'custom/platform-k-bigx-report.tsx',
+        preview: 'drift',
+    },
+    {
+        name: 'animate-marquee',
+        value: 'marquee 60s linear infinite',
+        usage: '칩 줄이 왼쪽으로 끊김 없이 계속 흐름(목록 여러 벌을 이어 붙여 -50% 이동 · 가속 없음) — 마우스 · 터치 · 포커스 때 멈추고, 동작 줄이기면 줄바꿈 목록',
+        source: 'custom/chip-marquee.tsx',
+        preview: 'marquee',
+    },
+    {
         name: 'animate-chart-wipe-right',
         value: 'chart-wipe-right 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
         usage: '가로 막대가 왼쪽 → 오른쪽으로 자람',
-        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx',
+        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx · custom/ktrs-fm-structure-diagram.tsx',
         preview: 'wipe-right',
     },
     {
@@ -101,10 +122,17 @@ const ANIMATIONS = [
         preview: 'wipe-left',
     },
     {
+        name: 'animate-chart-draw',
+        value: 'chart-draw 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '원 그래프 호 · 선이 처음부터 끝까지 그려짐(pathLength={1} · strokeDasharray="1 2" 와 함께)',
+        source: 'custom/ktrs-fm-structure-diagram.tsx',
+        preview: 'draw',
+    },
+    {
         name: 'animate-chart-label',
         value: 'chart-label 300ms ease-out 600ms both',
-        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남',
-        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx',
+        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남 · 원 그래프 호가 다 그려진 뒤 끝 점이 나타남',
+        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx · custom/ktrs-fm-structure-diagram.tsx',
         preview: 'label',
     },
     {
@@ -218,6 +246,17 @@ const RULE_ROWS = [
             </span>,
         ],
     },
+    {
+        key: 'hide',
+        cells: [
+            '즉시 감추기',
+            <span key="n">
+                등장 애니메이션의 <code>duration-*</code>(tw-animate)는 transition 시간도 함께 정합니다. 탭 전환처럼
+                감춰야 하는 칸에 붙으면 물려받은 감춤(<code>invisible</code>)이 그 시간만큼 늦게 적용돼 이전 내용이 남아
+                보이므로, 그런 칸에는 <code>transition-none</code> 을 함께 붙입니다.
+            </span>,
+        ],
+    },
 ] as const
 
 // 3. 컴포넌트 모션
@@ -255,6 +294,35 @@ const COMPONENT_ROWS = [
                 <li>벗어났다 다시 들어오면 반복됩니다.</li>
             </ul>,
             '메인 기술평가 섹션(custom/reveal.tsx)',
+        ],
+    },
+    {
+        key: 'scroll-reveal',
+        cells: [
+            <code key="c">ScrollReveal</code>,
+            <ul key="h" className="flex list-disc flex-col gap-1 pl-5">
+                <li>
+                    윗부분이 화면 아래 15% 선을 넘으면 아래에서 떠오르며 나타납니다(0.9초 · ease-roll). 키가 화면보다 큰
+                    덩어리도 나타납니다.
+                </li>
+                <li>한 번만 나타납니다 — 읽는 화면에서 내용이 사라졌다 나타나기를 반복하지 않습니다.</li>
+                <li>
+                    안쪽은 <code>group-data-[revealed=true]/reveal:</code> 로 나타나는 순간에 맞춰 움직입니다(예: 막대가
+                    자람 — animate-chart-wipe-right).
+                </li>
+                <li>
+                    <code>hasRise={'{false}'}</code> 면 래퍼는 움직이지 않고 나타나는 시점만 알립니다 — 안쪽 조각이 따로
+                    움직입니다(예: 특허평가 평가절차 단계가 왼쪽에서 0.12초 간격으로 밀려옴).
+                </li>
+                <li>동작 줄이기 설정이면 처음부터 제자리에 보입니다.</li>
+            </ul>,
+            <Link
+                key="w"
+                href="/corp/platform/technology-evaluation"
+                className="text-primary-strong underline underline-offset-4"
+            >
+                플랫폼 소개 &gt; 기술평가 · 특허평가(custom/scroll-reveal.tsx)
+            </Link>,
         ],
     },
 ] as const

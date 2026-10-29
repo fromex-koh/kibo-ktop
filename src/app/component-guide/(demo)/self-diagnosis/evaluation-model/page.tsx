@@ -124,7 +124,7 @@ const EvaluationModelPage = () => (
                                         alt=""
                                         draggable={false}
                                         {...model.illustrationSize}
-                                        priority
+                                        preload
                                         style={model.illustrationSize}
                                     />
                                 </span>

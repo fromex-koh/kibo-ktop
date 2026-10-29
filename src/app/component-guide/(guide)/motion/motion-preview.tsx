@@ -18,6 +18,9 @@ export type MotionPreviewKind =
     | 'wipe-left'
     | 'pop'
     | 'label'
+    | 'draw'
+    | 'drift'
+    | 'marquee'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -92,6 +95,55 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
                     13,547
                 </span>
             </span>
+        )
+    }
+    if (kind === 'marquee') {
+        // 칩 두 벌을 이어 붙여 왼쪽으로 흐르는 실제 조합(-50% 이동이면 처음 모습과 같아진다).
+        return (
+            <span className="block w-24 overflow-hidden">
+                <span data-paused={isPaused} className={`animate-marquee flex w-max gap-1 ${PAUSABLE}`}>
+                    {['A', 'B', 'C', 'A', 'B', 'C'].map((label, index) => (
+                        <span
+                            key={`${label}-${index}`}
+                            className="border-navy-200 typo-caption-bold text-navy-600 bg-blue-10 rounded-xs border px-2 py-1"
+                        >
+                            {label}
+                        </span>
+                    ))}
+                </span>
+            </span>
+        )
+    }
+    if (kind === 'drift') {
+        // 번진 원이 천천히 떠다니는 실제 조합(옅은 남색 띠 위 radial 원). 끝없이 오가므로 정지/재생 버튼이 붙는다.
+        return (
+            <span className="bg-navy-100 relative isolate block h-12 w-24 overflow-hidden rounded-md">
+                <span
+                    data-paused={isPaused}
+                    className={`animate-ambient-drift-a absolute -top-4 -left-4 size-16 rounded-full bg-radial from-blue-200 to-transparent to-70% ${PAUSABLE}`}
+                />
+                <span
+                    data-paused={isPaused}
+                    className={`animate-ambient-drift-b absolute -right-4 -bottom-4 size-16 rounded-full bg-radial from-purple-200 to-transparent to-70% ${PAUSABLE}`}
+                />
+            </span>
+        )
+    }
+    if (kind === 'draw') {
+        // 원 그래프 호가 12시부터 시계 방향으로 그려지는 실제 조합(pathLength 1 · dasharray "1 2").
+        return (
+            <svg aria-hidden="true" viewBox="0 0 48 48" className="size-12">
+                <circle cx={24} cy={24} r={18} strokeWidth={6} className="stroke-gauge-track fill-none" />
+                <path
+                    d="M 24 6 A 18 18 0 1 1 6 24"
+                    strokeWidth={6}
+                    strokeLinecap="round"
+                    pathLength={1}
+                    strokeDasharray="1 2"
+                    data-paused={isPaused}
+                    className={`stroke-primary animate-chart-draw fill-none ${PAUSABLE}`}
+                />
+            </svg>
         )
     }
     if (kind === 'pop') {

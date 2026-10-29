@@ -439,7 +439,7 @@ const KBX_FILE_ROWS = [
         key: 'reference',
         cells: [
             <code key="f">kbigx-print-reference.tsx</code>,
-            '참고자료 — 신용 · 현금흐름등급 정의(cri-grades.ts · cash-flow-grades.ts)',
+            '참고자료 — 신용 · 현금흐름등급 정의(cri-grades.ts · cash-flow-grades.ts). 웹 보고서 참고자료 탭(innovation-growth-report-reference.tsx)도 같은 표를 씁니다.',
             '-',
         ],
     },
