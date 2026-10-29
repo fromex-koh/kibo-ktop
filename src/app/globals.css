@@ -85,6 +85,18 @@
         }
     }
 
+    /* 호 · 선이 처음부터 끝까지 그려짐 — SVG 선(path · circle)에 pathLength={1} · strokeDasharray="1 2" 를 함께 준다.
+       선 길이를 1 로 두어 어떤 길이의 선이든 같은 키프레임으로 그린다. */
+    --animate-chart-draw: chart-draw 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    @keyframes chart-draw {
+        0% {
+            stroke-dashoffset: 1;
+        }
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
     /* 값 글자 — 막대가 다 자란 뒤(지연 600ms = chart-reveal.tsx 의 CHART_ANIMATION_MS) 옅게 나타난다. 지연을 바꾸면 함께 고친다. */
     --animate-chart-label: chart-label 300ms ease-out 600ms both;
     @keyframes chart-label {
@@ -174,6 +186,63 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    /* 칩 줄이 왼쪽으로 끊김 없이 계속 흐름(마퀴) — 같은 목록을 여러 벌 이어 붙이고 절반(-50%)만큼 같은 속도로 옮긴 뒤 처음으로
+       돌아가 이음매가 보이지 않는다(가속 없음 — 멈췄다 다시 시작하는 느낌이 없다). 멈춤 · 동작 줄이기는 사용처가 맡는다.
+       사용처: custom/chip-marquee.tsx(네 벌 — 절반이 두 벌 길이라 넓은 화면에서도 끝 빈자리가 없음). */
+    --animate-marquee: marquee 60s linear infinite;
+    @keyframes marquee {
+        from {
+            translate: 0 0;
+        }
+        to {
+            translate: -50% 0;
+        }
+    }
+
+    /* 배경 번짐 원이 천천히 떠다님(앰비언트) — 위치가 크게 옮겨 가고 크기가 커졌다 작아진다. 끝없이 오가지만
+       느리고(14 · 18초) 꾸밈 배경이라 정지 버튼 대신 동작 줄이기 설정(motion-safe)에서만 움직인다.
+       두 원을 다른 경로 · 주기로 두어 같은 박자로 움직여 보이지 않게 한다. 오른쪽 원(b)은 중심이 카드 뒤라
+       카드 밖 빈 공간(왼쪽 위)으로 더 크게 돈다. 사용처: custom/platform-k-bigx-report.tsx 히어로. */
+    --animate-ambient-drift-a: ambient-drift-a 14s ease-in-out infinite alternate;
+    @keyframes ambient-drift-a {
+        0% {
+            translate: 0 0;
+            scale: 1;
+        }
+        33% {
+            translate: 14% 10%;
+            scale: 1.15;
+        }
+        66% {
+            translate: 4% 22%;
+            scale: 0.9;
+        }
+        100% {
+            translate: 18% -6%;
+            scale: 1.1;
+        }
+    }
+
+    --animate-ambient-drift-b: ambient-drift-b 18s ease-in-out infinite alternate;
+    @keyframes ambient-drift-b {
+        0% {
+            translate: 0 0;
+            scale: 1;
+        }
+        33% {
+            translate: -22% -14%;
+            scale: 1.15;
+        }
+        66% {
+            translate: -8% -30%;
+            scale: 0.9;
+        }
+        100% {
+            translate: -28% -4%;
+            scale: 1.1;
         }
     }
 }
