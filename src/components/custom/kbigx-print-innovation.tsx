@@ -482,14 +482,13 @@ const PatentAnalysisBlock = ({
 // ── 맞춤형 기술정보 · 경쟁기업 및 우수기업 ──
 
 // 경쟁기업 사업실적 — 흑백 인쇄에서도 갈리게 명도 3단계: 조회기업 진남(가장 진함) · 경쟁기업 파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리.
-// 선(영업이익률)은 진남 + 흰 바깥 테두리 — 진남 막대 위에서도 끊겨 보이지 않게.
+// 선(영업이익률)은 진남 한 줄 — 흰 바깥 테두리(lineHalo)는 요청으로 뺐다.
 const COMPETITOR_CHART_COLORS = {
     bar: 'var(--kbx-color-chart-general)',
     subjectBar: 'var(--kbx-color-chart-subject)',
     averageBar: 'var(--kbx-color-chart-average-base)',
     averageLine: 'var(--kbx-color-chart-average-line)',
     line: 'var(--kbx-color-chart-trend)',
-    lineHalo: 'var(--kbx-color-chart-trend-halo)',
     marker: 'var(--kbx-color-paper)',
     baseline: 'var(--kbx-color-foreground-subtle)',
     divider: 'var(--kbx-color-chart-grid)',
