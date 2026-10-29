@@ -170,6 +170,8 @@ const INNOVATION_REPORT_SECTIONS = [
     {id: 'tech-index', label: 'Tech-Index', title: 'Tech-Index (혁신성장 역량지수)'},
     {id: 'credit-finance', label: '신용/재무정보'},
     {id: 'activity', label: '활동성정보'},
+    // 참고자료 — 등급정의 표(API 연동 없음 · PDF 템플릿 참고자료와 같은 내용).
+    {id: 'reference', label: '참고자료'},
 ] as const
 
 type InnovationReportSectionId = (typeof INNOVATION_REPORT_SECTIONS)[number]['id']
