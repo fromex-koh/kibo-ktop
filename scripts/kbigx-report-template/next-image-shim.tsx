@@ -6,13 +6,14 @@ type StaticImageData = {src: string; width?: number; height?: number}
 type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
     src: string | StaticImageData
     priority?: boolean
+    preload?: boolean
     fill?: boolean
     placeholder?: string
     quality?: number
 }
 
 // next/image 전용 props — <img> 에 넘기면 알 수 없는 속성이 되므로 뺀다.
-const NEXT_IMAGE_ONLY_PROPS = new Set(['priority', 'fill', 'placeholder', 'quality', 'sizes'])
+const NEXT_IMAGE_ONLY_PROPS = new Set(['priority', 'preload', 'fill', 'placeholder', 'quality', 'sizes'])
 
 const Image = ({src, alt, ...props}: ImageProps) => {
     const imgProps = Object.fromEntries(Object.entries(props).filter(([key]) => !NEXT_IMAGE_ONLY_PROPS.has(key)))
