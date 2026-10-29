@@ -82,9 +82,11 @@ const createPatentEvaluationLink = (userType: UserType): HeaderNavLink => ({
     label: '특허평가',
     href: `/${userType}/patent-evaluation/patent-grade-list`,
 })
+// 탄소중립 플랫폼(외부) 주소 — 헤더 메뉴와 플랫폼 소개 > 탄소중립의 '진단 시작하기'가 함께 쓴다.
+export const CARBON_NEUTRAL_HOME_URL = 'https://www.kibo.or.kr/carbon/home'
 const CARBON_NEUTRAL_LINK: HeaderNavLink = {
     label: '탄소중립',
-    href: 'https://www.kibo.or.kr/carbon/home',
+    href: CARBON_NEUTRAL_HOME_URL,
     external: true,
 }
 
