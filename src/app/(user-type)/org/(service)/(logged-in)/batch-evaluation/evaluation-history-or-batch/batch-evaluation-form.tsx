@@ -153,7 +153,7 @@ const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, chi
                                         alt=""
                                         draggable={false}
                                         {...evaluationModel.illustrationSize}
-                                        priority
+                                        preload
                                         style={evaluationModel.illustrationSize}
                                     />
                                 </span>

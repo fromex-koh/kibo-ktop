@@ -119,7 +119,7 @@ const TechIndexModelForm = ({labelledBy, children}: TechIndexModelFormProps) => 
                                         alt=""
                                         draggable={false}
                                         {...evaluationModel.illustrationSize}
-                                        priority
+                                        preload
                                         style={evaluationModel.illustrationSize}
                                     />
                                 </span>

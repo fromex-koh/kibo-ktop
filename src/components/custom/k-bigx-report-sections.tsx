@@ -69,7 +69,7 @@ const KbigxReportIntro = ({title, homeHref, moreHref}: KbigxReportIntroProps) =>
                     height={720}
                     sizes="440px"
                     draggable={false}
-                    priority
+                    preload
                     className="h-auto w-full"
                 />
             }

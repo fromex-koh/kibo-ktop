@@ -28,7 +28,7 @@ const FullPageServiceStatus = ({titleId, title, description, panel}: FullPageSer
                 <Image
                     src={serviceStatusIllustration}
                     alt=""
-                    priority
+                    preload
                     sizes="320px"
                     className="h-auto w-full max-w-80"
                 />

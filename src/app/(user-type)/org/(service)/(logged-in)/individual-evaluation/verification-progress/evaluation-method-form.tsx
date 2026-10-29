@@ -115,7 +115,7 @@ const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps)
                                         alt=""
                                         draggable={false}
                                         {...evaluationMethod.illustrationSize}
-                                        priority
+                                        preload
                                         style={evaluationMethod.illustrationSize}
                                     />
                                 </span>
