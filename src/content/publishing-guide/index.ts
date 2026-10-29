@@ -163,9 +163,28 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (value.statusNote !== undefined && statusDates.length !== 1) {
         throw new Error(`[content] ${where}: statusNote 는 statusDate 한 건과 함께 지정해야 합니다.`)
     }
-    if (typeof value.version !== 'string') {
+    // 다운로드 행은 화면 버전이 없다 — versionAsset(assetVersions 의 name)을 주면 그 파일의 자산 버전을 그대로 쓴다.
+    if (value.versionAsset !== undefined) {
+        if (typeof value.versionAsset !== 'string' || value.downloadHref === undefined) {
+            throw new Error(`[content] ${where}: versionAsset 은 downloadHref 와 함께 쓰는 문자열이어야 합니다.`)
+        }
+        if (!publishingIndexJson.assetVersions.some((asset) => asset.name === value.versionAsset)) {
+            throw new Error(
+                `[content] ${where}: versionAsset "${value.versionAsset}" 이(가) assetVersions 에 없습니다.`,
+            )
+        }
+        if (value.version !== undefined) {
+            throw new Error(`[content] ${where}: versionAsset 을 쓰면 version 은 적지 않습니다(자동 계산).`)
+        }
+    } else if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
     }
+    const version =
+        typeof value.versionAsset === 'string'
+            ? findGeneratedVersion(value.versionAsset).version
+            : typeof value.version === 'string'
+              ? value.version
+              : '-'
     if (value.isRed !== undefined && typeof value.isRed !== 'boolean') {
         throw new Error(`[content] ${where}: isRed 는 boolean 이어야 합니다.`)
     }
@@ -195,7 +214,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         ...(typeof value.application2Status === 'string' && isStatus(value.application2Status)
             ? {application2Status: value.application2Status}
             : {}),
-        version: value.version,
+        version,
         ...(value.isRed === true ? {isRed: true} : {}),
         ...(value.isRestored === true ? {isRestored: true} : {}),
         ...(userType !== undefined ? {userType} : {}),

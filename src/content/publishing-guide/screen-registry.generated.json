@@ -954,6 +954,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-reference",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -2154,6 +2161,13 @@
             "key": "org-k-bigx-report-innovation-growth-report-activity-info",
             "implemented": false,
             "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-reference",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
