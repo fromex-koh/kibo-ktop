@@ -58,6 +58,8 @@ const eslintConfig = defineConfig([
         'out/**',
         'build/**',
         'next-env.d.ts',
+        // Claude 세션이 만드는 작업 폴더(git worktree) — 저장소 사본이라 검사하면 같은 파일을 두 번 보고, 진행 중인 작업이 섞인다.
+        '.claude/worktrees/**',
         // shadcn vendored 중 "순정" 파일만 면제한다(SC-02) — 순정 코드는 as·기본 팔레트 등 프로젝트
         // 컨벤션과 다를 수 있다. cva 를 theme/ 로 추출한 "수정 셸"은 프로젝트가 유지보수하는 코드라
         // 검사 대상이다(목록은 위 vanillaUiFiles 가 theme import 여부로 자동 판별).
