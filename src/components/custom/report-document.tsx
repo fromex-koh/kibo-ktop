@@ -107,7 +107,7 @@ const ReportSectionMark = () => (
         alt=""
         width={16}
         height={16}
-        priority
+        preload
         className="size-icon-sm shrink-0 self-center"
     />
 )

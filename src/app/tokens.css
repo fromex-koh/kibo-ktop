@@ -207,6 +207,7 @@
   --raw-extra-oxblood: #6b0f22;
   --raw-extra-graphite: #5c6170;
   --raw-extra-fog: #8a8eb0;
+  --raw-extra-ink: #000e43;
 
   /* scale (라이트 = raw identity) */
   --ds-blue-10: var(--raw-blue-10);
@@ -445,6 +446,9 @@
   --ds-credit-gauge-risk-to: var(--raw-extra-raspberry);
   --ds-credit-gauge-hold-from: var(--raw-extra-steel);
   --ds-credit-gauge-hold-to: var(--raw-gray-200);
+  --ds-platform-banner: var(--raw-extra-ink);
+  --ds-platform-banner-foreground: var(--raw-common-white);
+  --ds-platform-hero-overlay: var(--raw-gray-900);
   --ds-credit-gauge-track: var(--raw-gray-50);
   --ds-cash-flow-gauge-cf-1-from: var(--raw-blue-500);
   --ds-cash-flow-gauge-cf-1-to: var(--raw-extra-cyan);
@@ -476,6 +480,24 @@
   --ds-icon-solid-subtle: var(--raw-gray-200);
   --ds-accent-subtle: var(--raw-gray-50);
   --ds-surface-subtle: var(--raw-gray-10);
+  --ds-panel-subtle: var(--raw-gray-10);
+  --ds-panel-raised: var(--raw-common-white);
+  --ds-panel-inset: var(--raw-gray-50);
+  --ds-model-icon-surface: var(--raw-navy-100);
+  --ds-icon-surface-raised: var(--raw-common-white);
+  --ds-service-accent-green: var(--raw-mint-800);
+  --ds-service-hero-green-band: var(--raw-green-100);
+  --ds-service-hero-green-glow-left: var(--raw-mint-100);
+  --ds-service-hero-green-glow-right: var(--raw-warning-50);
+  --ds-service-target-band: var(--raw-blue-50);
+  --ds-chip-marquee-surface: var(--raw-blue-10);
+  --ds-chip-marquee-border: var(--raw-navy-200);
+  --ds-chip-marquee-foreground: var(--raw-navy-600);
+  --ds-pill-tab-track: var(--raw-green-50);
+  --ds-pill-tab-active: var(--raw-mint-800);
+  --ds-pill-tab-active-foreground: var(--raw-common-white);
+  --ds-brand-solid: var(--raw-blue-500);
+  --ds-brand-solid-foreground: var(--raw-common-white);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
   --ds-icon-solid-error: var(--raw-error-500);
@@ -814,6 +836,9 @@
   --ds-credit-gauge-risk-to: var(--raw-extra-raspberry);
   --ds-credit-gauge-hold-from: var(--raw-extra-steel);
   --ds-credit-gauge-hold-to: var(--raw-gray-200);
+  --ds-platform-banner: var(--raw-extra-ink);
+  --ds-platform-banner-foreground: var(--raw-common-white);
+  --ds-platform-hero-overlay: var(--raw-gray-900);
   --ds-credit-gauge-track: var(--raw-gray-50);
   --ds-cash-flow-gauge-cf-1-from: var(--raw-blue-500);
   --ds-cash-flow-gauge-cf-1-to: var(--raw-extra-cyan);
@@ -845,6 +870,24 @@
   --ds-icon-solid-subtle: var(--raw-gray-200);
   --ds-accent-subtle: var(--raw-gray-50);
   --ds-surface-subtle: var(--raw-gray-10);
+  --ds-panel-subtle: var(--raw-gray-10);
+  --ds-panel-raised: var(--raw-common-white);
+  --ds-panel-inset: var(--raw-gray-50);
+  --ds-model-icon-surface: var(--raw-navy-100);
+  --ds-icon-surface-raised: var(--raw-common-white);
+  --ds-service-accent-green: var(--raw-mint-800);
+  --ds-service-hero-green-band: var(--raw-green-100);
+  --ds-service-hero-green-glow-left: var(--raw-mint-100);
+  --ds-service-hero-green-glow-right: var(--raw-warning-50);
+  --ds-service-target-band: var(--raw-blue-50);
+  --ds-chip-marquee-surface: var(--raw-blue-10);
+  --ds-chip-marquee-border: var(--raw-navy-200);
+  --ds-chip-marquee-foreground: var(--raw-navy-600);
+  --ds-pill-tab-track: var(--raw-green-50);
+  --ds-pill-tab-active: var(--raw-mint-800);
+  --ds-pill-tab-active-foreground: var(--raw-common-white);
+  --ds-brand-solid: var(--raw-blue-500);
+  --ds-brand-solid-foreground: var(--raw-common-white);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
   --ds-icon-solid-error: var(--raw-error-500);
@@ -1183,6 +1226,9 @@
   --ds-credit-gauge-risk-to: var(--raw-extra-mauve);
   --ds-credit-gauge-hold-from: var(--raw-extra-ash);
   --ds-credit-gauge-hold-to: var(--raw-extra-ash);
+  --ds-platform-banner: var(--raw-extra-ink);
+  --ds-platform-banner-foreground: var(--raw-common-white);
+  --ds-platform-hero-overlay: var(--raw-gray-900);
   --ds-credit-gauge-track: var(--raw-gray-500);
   --ds-cash-flow-gauge-cf-1-from: var(--raw-blue-300);
   --ds-cash-flow-gauge-cf-1-to: var(--raw-blue-300);
@@ -1214,6 +1260,24 @@
   --ds-icon-solid-subtle: var(--raw-gray-600);
   --ds-accent-subtle: var(--raw-gray-800);
   --ds-surface-subtle: var(--raw-gray-900);
+  --ds-panel-subtle: var(--raw-gray-800);
+  --ds-panel-raised: var(--raw-gray-900);
+  --ds-panel-inset: var(--raw-gray-700);
+  --ds-model-icon-surface: var(--raw-navy-100);
+  --ds-icon-surface-raised: var(--raw-navy-100);
+  --ds-service-accent-green: var(--raw-mint-400);
+  --ds-service-hero-green-band: var(--raw-gray-800);
+  --ds-service-hero-green-glow-left: var(--raw-mint-900);
+  --ds-service-hero-green-glow-right: var(--raw-warning-800);
+  --ds-service-target-band: var(--raw-gray-800);
+  --ds-chip-marquee-surface: var(--raw-gray-700);
+  --ds-chip-marquee-border: var(--raw-gray-600);
+  --ds-chip-marquee-foreground: var(--raw-gray-10);
+  --ds-pill-tab-track: var(--raw-gray-700);
+  --ds-pill-tab-active: var(--raw-mint-800);
+  --ds-pill-tab-active-foreground: var(--raw-common-white);
+  --ds-brand-solid: var(--raw-blue-600);
+  --ds-brand-solid-foreground: var(--raw-common-white);
   --ds-field-error-foreground: var(--raw-error-200);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
   --ds-icon-solid-error: var(--raw-error-300);
@@ -1552,6 +1616,9 @@
   --ds-credit-gauge-risk-to: var(--raw-extra-mauve);
   --ds-credit-gauge-hold-from: var(--raw-extra-ash);
   --ds-credit-gauge-hold-to: var(--raw-extra-ash);
+  --ds-platform-banner: var(--raw-extra-ink);
+  --ds-platform-banner-foreground: var(--raw-common-white);
+  --ds-platform-hero-overlay: var(--raw-gray-900);
   --ds-credit-gauge-track: var(--raw-gray-500);
   --ds-cash-flow-gauge-cf-1-from: var(--raw-blue-300);
   --ds-cash-flow-gauge-cf-1-to: var(--raw-blue-300);
@@ -1583,6 +1650,24 @@
   --ds-icon-solid-subtle: var(--raw-gray-600);
   --ds-accent-subtle: var(--raw-gray-800);
   --ds-surface-subtle: var(--raw-gray-700);
+  --ds-panel-subtle: var(--raw-gray-700);
+  --ds-panel-raised: var(--raw-gray-800);
+  --ds-panel-inset: var(--raw-gray-600);
+  --ds-model-icon-surface: var(--raw-navy-100);
+  --ds-icon-surface-raised: var(--raw-navy-100);
+  --ds-service-accent-green: var(--raw-mint-400);
+  --ds-service-hero-green-band: var(--raw-gray-800);
+  --ds-service-hero-green-glow-left: var(--raw-mint-900);
+  --ds-service-hero-green-glow-right: var(--raw-warning-800);
+  --ds-service-target-band: var(--raw-gray-800);
+  --ds-chip-marquee-surface: var(--raw-gray-700);
+  --ds-chip-marquee-border: var(--raw-gray-600);
+  --ds-chip-marquee-foreground: var(--raw-gray-10);
+  --ds-pill-tab-track: var(--raw-gray-700);
+  --ds-pill-tab-active: var(--raw-mint-800);
+  --ds-pill-tab-active-foreground: var(--raw-common-white);
+  --ds-brand-solid: var(--raw-blue-600);
+  --ds-brand-solid-foreground: var(--raw-common-white);
   --ds-field-error-foreground: var(--raw-error-300);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
   --ds-icon-solid-error: var(--raw-error-300);
@@ -1812,6 +1897,9 @@
   --color-credit-gauge-risk-to: var(--ds-credit-gauge-risk-to);
   --color-credit-gauge-hold-from: var(--ds-credit-gauge-hold-from);
   --color-credit-gauge-hold-to: var(--ds-credit-gauge-hold-to);
+  --color-platform-banner: var(--ds-platform-banner);
+  --color-platform-banner-foreground: var(--ds-platform-banner-foreground);
+  --color-platform-hero-overlay: var(--ds-platform-hero-overlay);
   --color-credit-gauge-track: var(--ds-credit-gauge-track);
   --color-cash-flow-gauge-cf-1-from: var(--ds-cash-flow-gauge-cf-1-from);
   --color-cash-flow-gauge-cf-1-to: var(--ds-cash-flow-gauge-cf-1-to);
@@ -1833,6 +1921,24 @@
   --color-icon-solid-subtle: var(--ds-icon-solid-subtle);
   --color-accent-subtle: var(--ds-accent-subtle);
   --color-surface-subtle: var(--ds-surface-subtle);
+  --color-panel-subtle: var(--ds-panel-subtle);
+  --color-panel-raised: var(--ds-panel-raised);
+  --color-panel-inset: var(--ds-panel-inset);
+  --color-model-icon-surface: var(--ds-model-icon-surface);
+  --color-icon-surface-raised: var(--ds-icon-surface-raised);
+  --color-service-accent-green: var(--ds-service-accent-green);
+  --color-service-hero-green-band: var(--ds-service-hero-green-band);
+  --color-service-hero-green-glow-left: var(--ds-service-hero-green-glow-left);
+  --color-service-hero-green-glow-right: var(--ds-service-hero-green-glow-right);
+  --color-service-target-band: var(--ds-service-target-band);
+  --color-chip-marquee-surface: var(--ds-chip-marquee-surface);
+  --color-chip-marquee-border: var(--ds-chip-marquee-border);
+  --color-chip-marquee-foreground: var(--ds-chip-marquee-foreground);
+  --color-pill-tab-track: var(--ds-pill-tab-track);
+  --color-pill-tab-active: var(--ds-pill-tab-active);
+  --color-pill-tab-active-foreground: var(--ds-pill-tab-active-foreground);
+  --color-brand-solid: var(--ds-brand-solid);
+  --color-brand-solid-foreground: var(--ds-brand-solid-foreground);
   --color-field-error-foreground: var(--ds-field-error-foreground);
   --color-icon-solid-subtle-foreground: var(--ds-icon-solid-subtle-foreground);
   --color-icon-solid-error: var(--ds-icon-solid-error);
@@ -2088,6 +2194,7 @@
   --ds-radius-lg: var(--ds-radius-base);
   --ds-radius-xl: calc(var(--ds-radius-base) + 0.25rem);
   --ds-radius-2xl: calc(var(--ds-radius-base) + 0.5rem);
+  --ds-radius-glass: calc(var(--ds-radius-base) + 1rem);
   --ds-radius-3xl: calc(var(--ds-radius-base) + 1.5rem);
   --ds-radius-full: 999px;
   /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */
@@ -2384,6 +2491,9 @@
     --ds-credit-gauge-risk-to: var(--raw-extra-raspberry);
     --ds-credit-gauge-hold-from: var(--raw-extra-steel);
     --ds-credit-gauge-hold-to: var(--raw-gray-200);
+    --ds-platform-banner: var(--raw-extra-ink);
+    --ds-platform-banner-foreground: var(--raw-common-white);
+    --ds-platform-hero-overlay: var(--raw-gray-900);
     --ds-credit-gauge-track: var(--raw-gray-50);
     --ds-cash-flow-gauge-cf-1-from: var(--raw-blue-500);
     --ds-cash-flow-gauge-cf-1-to: var(--raw-extra-cyan);
@@ -2415,6 +2525,24 @@
     --ds-icon-solid-subtle: var(--raw-gray-200);
     --ds-accent-subtle: var(--raw-gray-50);
     --ds-surface-subtle: var(--raw-gray-10);
+    --ds-panel-subtle: var(--raw-gray-10);
+    --ds-panel-raised: var(--raw-common-white);
+    --ds-panel-inset: var(--raw-gray-50);
+    --ds-model-icon-surface: var(--raw-navy-100);
+    --ds-icon-surface-raised: var(--raw-common-white);
+    --ds-service-accent-green: var(--raw-mint-800);
+    --ds-service-hero-green-band: var(--raw-green-100);
+    --ds-service-hero-green-glow-left: var(--raw-mint-100);
+    --ds-service-hero-green-glow-right: var(--raw-warning-50);
+    --ds-service-target-band: var(--raw-blue-50);
+    --ds-chip-marquee-surface: var(--raw-blue-10);
+    --ds-chip-marquee-border: var(--raw-navy-200);
+    --ds-chip-marquee-foreground: var(--raw-navy-600);
+    --ds-pill-tab-track: var(--raw-green-50);
+    --ds-pill-tab-active: var(--raw-mint-800);
+    --ds-pill-tab-active-foreground: var(--raw-common-white);
+    --ds-brand-solid: var(--raw-blue-500);
+    --ds-brand-solid-foreground: var(--raw-common-white);
     --ds-field-error-foreground: var(--raw-error-500);
     --ds-icon-solid-subtle-foreground: var(--raw-common-white);
     --ds-icon-solid-error: var(--raw-error-500);
@@ -2562,6 +2690,7 @@
   --radius-lg: var(--ds-radius-lg);
   --radius-xl: var(--ds-radius-xl);
   --radius-2xl: var(--ds-radius-2xl);
+  --radius-glass: var(--ds-radius-glass);
   --radius-3xl: var(--ds-radius-3xl);
   --radius-full: var(--ds-radius-full);
   --shadow-1: var(--ds-shadow-1);
@@ -2599,6 +2728,21 @@
   --raw-font-size-display-s: 2.25rem;
   --raw-font-size-display-s-tablet: var(--raw-font-size-display-s);
   --raw-font-size-display-s-pc: var(--raw-font-size-display-s-tablet);
+  --raw-font-size-hero-title: 1.125rem;
+  --raw-font-size-hero-title-tablet: 2.5rem;
+  --raw-font-size-hero-title-pc: var(--raw-font-size-hero-title-tablet);
+  --raw-font-size-hero-description: 0.8125rem;
+  --raw-font-size-hero-description-tablet: 1.125rem;
+  --raw-font-size-hero-description-pc: var(--raw-font-size-hero-description-tablet);
+  --raw-font-size-callout: 1rem;
+  --raw-font-size-callout-tablet: 1.25rem;
+  --raw-font-size-callout-pc: var(--raw-font-size-callout-tablet);
+  --raw-font-size-display-hero: 2rem;
+  --raw-font-size-display-hero-tablet: 3rem;
+  --raw-font-size-display-hero-pc: 3.75rem;
+  --raw-font-size-lead-title: 1.75rem;
+  --raw-font-size-lead-title-tablet: 2rem;
+  --raw-font-size-lead-title-pc: var(--raw-font-size-lead-title-tablet);
   --raw-font-size-h1: 2rem;
   --raw-font-size-h1-tablet: var(--raw-font-size-h1);
   --raw-font-size-h1-pc: var(--raw-font-size-h1-tablet);
@@ -2757,6 +2901,78 @@
     }
     @media (min-width: 1280px) {
       font-size: var(--raw-font-size-display-s-pc);
+    }
+  }
+  .typo-hero-title-bold {
+    font-size: var(--raw-font-size-hero-title);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-tight);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-hero-title-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-hero-title-pc);
+    }
+  }
+  .typo-hero-description-medium {
+    font-size: var(--raw-font-size-hero-description);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-hero-description-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-hero-description-pc);
+    }
+  }
+  .typo-callout-bold {
+    font-size: var(--raw-font-size-callout);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-callout-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-callout-pc);
+    }
+  }
+  .typo-callout-medium {
+    font-size: var(--raw-font-size-callout);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-callout-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-callout-pc);
+    }
+  }
+  .typo-display-hero-black {
+    font-size: var(--raw-font-size-display-hero);
+    font-weight: var(--raw-font-weight-black);
+    line-height: var(--raw-line-height-tight);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-display-hero-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-display-hero-pc);
+    }
+  }
+  .typo-lead-title-bold {
+    font-size: var(--raw-font-size-lead-title);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-tight);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-lead-title-tablet);
+    }
+    @media (min-width: 1280px) {
+      font-size: var(--raw-font-size-lead-title-pc);
     }
   }
   .typo-h1-bold {
@@ -3327,7 +3543,6 @@
   --kbx-color-chart-series-2: var(--raw-blue-500);
   --kbx-color-chart-track: var(--raw-extra-frost);
   --kbx-color-chart-trend: var(--raw-navy-500);
-  --kbx-color-chart-trend-halo: var(--raw-common-white);
   --kbx-color-navy: var(--raw-navy-500);
   --kbx-color-blue: var(--raw-blue-500);
   --kbx-color-blue-strong: var(--raw-blue-700);
@@ -3539,7 +3754,6 @@
   --color-kbx-chart-series-2: var(--kbx-color-chart-series-2);
   --color-kbx-chart-track: var(--kbx-color-chart-track);
   --color-kbx-chart-trend: var(--kbx-color-chart-trend);
-  --color-kbx-chart-trend-halo: var(--kbx-color-chart-trend-halo);
   --color-kbx-navy: var(--kbx-color-navy);
   --color-kbx-blue: var(--kbx-color-blue);
   --color-kbx-blue-strong: var(--kbx-color-blue-strong);

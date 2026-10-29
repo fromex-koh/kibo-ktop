@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -111,7 +112,15 @@ const AccordionGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>type=&quot;single&quot;</code>과 <code>collapsible</code>을 함께 주면 한 번에 하나만
-                        펼쳐지고, 열린 항목을 다시 누르면 닫힙니다.
+                        펼쳐지고, 열린 항목을 다시 누르면 닫힙니다. 회색 상자 안에서 일정 시간마다 다음 항목이 열리고 옆
+                        그림이 함께 바뀌어야 하면{' '}
+                        <Link
+                            href="/component-guide/rolling-accordion"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            RollingAccordion
+                        </Link>
+                        을 씁니다(플랫폼 소개 &gt; 기술평가).
                     </p>
                 </div>
                 <Accordion type="single" collapsible>

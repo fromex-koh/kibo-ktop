@@ -240,6 +240,24 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'icon-solid-error': 'bg-icon-solid-error',
     'accent-subtle': 'bg-accent-subtle',
     'surface-subtle': 'bg-surface-subtle',
+    'panel-subtle': 'bg-panel-subtle',
+    'panel-raised': 'bg-panel-raised',
+    'panel-inset': 'bg-panel-inset',
+    'model-icon-surface': 'bg-model-icon-surface',
+    'icon-surface-raised': 'bg-icon-surface-raised',
+    'service-accent-green': 'bg-service-accent-green',
+    'service-hero-green-band': 'bg-service-hero-green-band',
+    'service-hero-green-glow-left': 'bg-service-hero-green-glow-left',
+    'service-hero-green-glow-right': 'bg-service-hero-green-glow-right',
+    'service-target-band': 'bg-service-target-band',
+    'chip-marquee-surface': 'bg-chip-marquee-surface',
+    'chip-marquee-border': 'bg-chip-marquee-border',
+    'chip-marquee-foreground': 'bg-chip-marquee-foreground',
+    'pill-tab-track': 'bg-pill-tab-track',
+    'pill-tab-active': 'bg-pill-tab-active',
+    'pill-tab-active-foreground': 'bg-pill-tab-active-foreground',
+    'brand-solid': 'bg-brand-solid',
+    'brand-solid-foreground': 'bg-brand-solid-foreground',
     'field-error-foreground': 'bg-field-error-foreground',
     'icon-interactive-hover': 'bg-icon-interactive-hover',
     'step-progress-inactive': 'bg-step-progress-inactive',
@@ -264,6 +282,9 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'main-intro-foreground-subtle': 'bg-main-intro-foreground-subtle',
     'main-intro-accent': 'bg-main-intro-accent',
     'main-intro-border': 'bg-main-intro-border',
+    'platform-banner': 'bg-platform-banner',
+    'platform-banner-foreground': 'bg-platform-banner-foreground',
+    'platform-hero-overlay': 'bg-platform-hero-overlay',
     'menu-overlay': 'bg-menu-overlay',
     'menu-overlay-foreground': 'bg-menu-overlay-foreground',
     'menu-overlay-foreground-subtle': 'bg-menu-overlay-foreground-subtle',
@@ -429,6 +450,28 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'field (입력 칸 바탕)', match: (n) => n === 'field'},
     // 카드 안에 한 단계 들어간 옅은 면 — 공지 상세의 첨부파일 줄처럼 흰 카드 위 영역을 구분한다.
     {name: 'surface-subtle', match: (n) => n === 'surface-subtle'},
+    {
+        name: 'panel-subtle / panel-raised / panel-inset',
+        match: (n) => n === 'panel-subtle' || n === 'panel-raised' || n === 'panel-inset',
+    },
+    {
+        name: 'model-icon-surface / icon-surface-raised',
+        match: (n) => n === 'model-icon-surface' || n === 'icon-surface-raised',
+    },
+    {name: 'service-accent-green', match: (n) => n === 'service-accent-green'},
+    {name: 'service-hero-green (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-green-')},
+    {
+        name: 'service-target-band / chip-marquee (면 / 테두리 / 글자)',
+        match: (n) => n === 'service-target-band' || n.startsWith('chip-marquee-'),
+    },
+    {
+        name: 'pill-tab (트랙 / 고른 면 / 글자)',
+        match: (n) => n.startsWith('pill-tab-'),
+    },
+    {
+        name: 'brand-solid / brand-solid-foreground',
+        match: (n) => n === 'brand-solid' || n === 'brand-solid-foreground',
+    },
     // 토스트 면은 디자인이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자 + 초록 체크 원)이라 세 테마 값이 모두 같다.
     {
         name: 'toast / toast-foreground / toast-icon',
@@ -496,6 +539,7 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
+    {name: 'platform-* (플랫폼 소개)', match: (n) => n.startsWith('platform-')},
     {name: 'menu-overlay (서비스 헤더 전체 메뉴)', match: (n) => n.startsWith('menu-overlay')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
@@ -678,6 +722,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             제목·레이블, foreground-subtle은 본문, border는 진행 레일입니다. 세 테마 값이 같습니다.
         </>
     ),
+    'platform-* (플랫폼 소개)': (
+        <>
+            플랫폼 소개 화면 전용입니다. platform-banner 는 남색 소개 배너 바탕(배너 사진의 남색과 같아 사진을 못
+            불러와도 같은 띠로 보임), -foreground 는 배너 글자, platform-hero-overlay 는 상단 대표 사진 위 어두운
+            막(60%)이자 사진 칸 바탕(사진을 못 불러와도 흰 글자가 읽히고, 대비 검사기도 이 색으로 계산)입니다. 모두 사진
+            위에 놓여 세 테마 값이 같습니다.
+        </>
+    ),
     'menu-overlay (서비스 헤더 전체 메뉴)': (
         <>서비스 헤더의 햄버거 버튼으로 여는 전체 메뉴 전용입니다. Header 컴포넌트 안에서만 사용합니다.</>
     ),
@@ -734,6 +786,61 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'surface-subtle': (
         <>카드 안에서 한 단계 들어간 옅은 면입니다. 첨부파일 줄·모달 안내 상자처럼 흰 카드 위 영역을 구분합니다.</>
+    ),
+    'panel-subtle / panel-raised / panel-inset': (
+        <>
+            panel-subtle 은 본문 바탕(page) 위에 바로 놓이는 옅은 회색 상자입니다. 라이트는 surface-subtle 과 같은
+            색이지만, 다크는 바탕(gray.900)보다 한 단계 밝은 gray.800 이라 바탕에 묻히지 않습니다. panel-raised 는 그
+            회색 상자 위에 다시 놓이는 흰 판입니다 — 다크에서는 한 단계 어두운 gray.900 으로 뒤집혀 회색 상자와
+            구분됩니다(흰 판 → 회색 칸 → 흰 칸처럼 번갈아 겹칠 때 두 토큰을 번갈아 씁니다). panel-inset 은 panel-subtle
+            판 위에 바로 놓이는 한 단계 진한 회색 묶음(라이트 gray.50 · 다크 gray.700)입니다. 롤링 아코디언 상자 ·
+            기술평가 모형 구조도.
+        </>
+    ),
+    'model-icon-surface / icon-surface-raised': (
+        <>
+            그림 아이콘(이미지)이 놓이는 칸입니다. 그림은 색을 바꿀 수 없어 다크에서도 밝은 navy.100 으로 두어 파랑
+            그림이 묻히지 않게 합니다. model-icon-surface 는 라이트도 옅은 남색 칸(기술평가 모형 구조도 머리 · K-BIGx
+            분석 기능 · 흐름도 보고서), icon-surface-raised 는 라이트가 흰 원인 칸(K-BIGx 흐름도 특허정보 · 기업정보 ·
+            LLM)입니다.
+        </>
+    ),
+    'service-accent-green': (
+        <>
+            탄소중립 화면의 초록 강조 글자입니다 — 히어로 큰 제목 둘째 줄 · &apos;진단 시작하기&apos; 링크의 hover ·
+            포커스. 라이트는 시안 mint.800 이고, 다크는 팔레트 반사로 거의 흰색(mint.50)이 되어 평소 글자와 구분되지
+            않으므로 또렷한 mint.400 을 씁니다.
+        </>
+    ),
+    'service-hero-green (띠 / 번진 원)': (
+        <>
+            플랫폼 소개 &gt; 탄소중립 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 시안
+            값(green.100 · mint.100 · warning.50)이고, 다크는 팔레트 반사로 진한 초록 · 짙은 원색이 되어 강렬하므로
+            본문보다 한 단계 밝은 gray.800 띠 위에 라이트와 같은 톤 짝으로 은은하게 번지게 합니다 — 왼쪽 깊은
+            초록(mint.900) · 오른쪽 깊은 호박색(warning.800).
+        </>
+    ),
+    'service-target-band / chip-marquee (면 / 테두리 / 글자)': (
+        <>
+            탄소중립 &apos;이런 기업에 적합합니다&apos; 띠(service-target-band)와 그 위 칩 마퀴(ChipMarquee)의 칩 면 ·
+            테두리 · 글자입니다. 라이트는 시안(blue.50 띠 · blue.10 칩 · navy.200 테두리 · navy.600 글자). 다크는 팔레트
+            반사로 띠와 칩 면이 같은 blue.900 이 되어 칩이 묻히므로, gray.800 띠 위에 gray.700 칩 · gray.600 테두리 ·
+            밝은 글자로 둡니다.
+        </>
+    ),
+    'pill-tab (트랙 / 고른 면 / 글자)': (
+        <>
+            알약 전환 탭(theme/pill-tabs.variants.ts)의 트랙(track) · 고른 항목 면(active) ·
+            글자(active-foreground)입니다 — 플랫폼 소개 &gt; 탄소중립의 플랫폼 전환. 라이트는 시안(트랙 green.50 · 고른
+            면 mint.800 · 흰 굵은 글자). 다크는 트랙을 중립 gray.700 으로 두어 고른 진한 초록 면이 또렷하게 드러나고,
+            고른 면은 같은 mint.800 이라 흰 글자 대비가 유지됩니다.
+        </>
+    ),
+    'brand-solid / brand-solid-foreground': (
+        <>
+            흰 그림 아이콘이 얹히는 진한 파랑 면과 그 위 글자입니다(K-BIGx 흐름도 신청기업 칸). primary 는 다크에서 옅은
+            blue.300 으로 바뀌어 흰 그림이 사라지므로, 다크에서도 진한 blue.600 을 유지하고 글자는 늘 흰색입니다.
+        </>
     ),
     'toast / toast-foreground / toast-icon': (
         <>토스트의 면·글자·아이콘 원입니다. 테마와 무관하게 한 벌이라 세 테마 값이 같습니다.</>

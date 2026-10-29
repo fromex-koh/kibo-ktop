@@ -55,7 +55,7 @@ const PatentReportHeader = ({
             )}
         </div>
         {/* 쪽마다 되풀이되는 로고라 늦게 불러오지 않는다 — 인쇄 때 비어 나갈 여지를 없앤다. */}
-        <Image src={kiboLogo} alt="기술보증기금" priority className="h-8 w-auto shrink-0" />
+        <Image src={kiboLogo} alt="기술보증기금" preload className="h-8 w-auto shrink-0" />
     </header>
 )
 

@@ -1,6 +1,581 @@
 {
     "releases": [
         {
+            "version": "v3.4.7",
+            "releasedAt": "2026-10-29",
+            "changes": [
+                "카드는 위에서부터 작업할 순서대로 나열했습니다. '한 번에 적용'이 적힌 카드는 함께 넣어야 빌드됩니다.",
+                {"type": "group", "title": "디자인 토큰 · 공용 애니메이션 추가"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[토큰] tokens.json — 플랫폼 소개 화면 색 · 타이포 · 반경 추가(적용 후 yarn tokens)",
+                    "details": [
+                        {"label": "대상", "value": "tokens.json"},
+                        {
+                            "label": "변경",
+                            "value": "색(semantic): 플랫폼 배너 · 히어로 막(platform-banner* · platform-hero-overlay) · 구조도 판(panel-subtle · panel-raised · panel-inset) · 아이콘 바탕(model-icon-surface · icon-surface-raised) · 신청기업 칸(brand-solid*) · 탄소중립(service-accent-green · service-hero-green-* · service-target-band) · 칩 띠(chip-marquee-_) · 알약 탭(pill-tab-_)\n단일 색(extra): ink(배너 바탕) · fog\n타이포: hero-title-bold · hero-description-medium · callout-bold/medium · display-hero-black · lead-title-bold(모바일 · 태블릿 · PC 크기)\n반경: glass(32)\nPDF 템플릿 색: chart-trend-halo 삭제(추이선 흰 테두리를 없애 쓰는 곳 없음)"
+                        },
+                        {"label": "결과", "value": "플랫폼 소개 화면들이 라이트 · 다크 모두 토큰 색으로 칠해짐"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[시맨틱 색상](/component-guide/semantic-color)\n[라운드](/component-guide/radius)"
+                        },
+                        {"label": "적용", "value": "tokens.json 반영 후 yarn tokens 실행(tokens.css 재생성)"},
+                        {"label": "함께 작업", "value": "이 카드 먼저 — 아래 화면 카드들이 새 유틸리티를 씀"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/88bba3dff4be0d9a38a824d36bc08858c0a89af1)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[스타일] globals.css — 공용 애니메이션 4종 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/app/globals.css"},
+                        {
+                            "label": "변경",
+                            "value": "animate-chart-draw: 선 · 연결선이 그려지는 모션\nanimate-ambient-drift-a · b: 배경 번진 원이 천천히 떠다니는 모션(14 · 18초)\nanimate-marquee: 칩 줄이 끊김 없이 흐르는 모션(60초)"
+                        },
+                        {"label": "결과", "value": "구조도 연결선 · 히어로 배경 · 칩 띠가 움직임(동작 줄이기면 없음)"},
+                        {"label": "영향 화면", "value": "[모션](/component-guide/motion)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c8b462ab28d8d22f64568cef54176fecaa628cfa)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "이미지 우선 로딩 속성 변경(priority → preload)"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] next/image 의 priority 를 preload 로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/header.tsx\nsrc/components/custom/auth-flow-page.tsx\nsrc/components/custom/full-page-service-status.tsx\nsrc/components/custom/k-bigx-report-sections.tsx\nsrc/components/custom/patent-grade-sections.tsx\nsrc/components/custom/patent-report-document.tsx\nsrc/components/custom/patent-report-metric-page.tsx\nsrc/components/custom/report-document.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/tech-index-model-form.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/selection/tech-index-model-form.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/batch-evaluation-form.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/verification-progress/evaluation-method-form.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "Image 의 priority 속성 → preload(Next.js 16 에서 priority 가 지원 중단됨)"
+                        },
+                        {"label": "결과", "value": "화면 변화 없음 · 지원 중단 경고 제거"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/32c64dc35417b8465178525b4f15bc9413047583)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "자동 롤링 멈춤 공통 규칙(useAutoplayPause)"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[기능] 새 훅 — 자동으로 넘어가는 콘텐츠를 보는 동안 멈춤(useAutoplayPause)",
+                    "details": [
+                        {"label": "대상", "value": "src/hooks/use-autoplay-pause.ts"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "마우스: 올리면 멈추고 벗어나면 재생\n터치: 누르면 멈춘 채로, 영역 밖을 누르면 재생\n키보드: 포커스가 안에 있는 동안 멈춤\n사용: const {isPaused, pauseHandlers} = useAutoplayPause() → 영역에 {...pauseHandlers}"
+                        },
+                        {"label": "함께 작업", "value": "아래 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a212da7074721ce14e5fa2ab611784a6d2554b70)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 메인 공지 팝업 · 메인 기술평가 목차 — 터치로도 자동 넘김 멈춤",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/home-notice-popup.tsx\nsrc/components/custom/tech-eval-section.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "공지 팝업: 마우스 · 초점 처리 코드 → useAutoplayPause(터치 추가)\n기술평가 목차: 버튼마다 걸던 hover · focus 처리 → 롤링 영역 전체에 useAutoplayPause(터치 추가)"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "모바일에서 카드 · 목차를 터치하면 멈추고, 다른 곳을 누르면 다시 넘어감"
+                        },
+                        {"label": "영향 화면", "value": "[메인 공지 팝업](/component-guide/home-notice-popup)"},
+                        {"label": "함께 작업", "value": "위 훅 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/7224029241167b314bdc1d5d1b85f574197ca6c6)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "평가모형 카드 분리(선택 화면 · 플랫폼 소개 공용)"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] 새 파일 — 평가모형 카드 겉모습(EvaluationModelCardContent)",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/evaluation-model-card.tsx"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "평가모형 선택(라디오)과 플랫폼 소개 기술평가(탭)가 함께 쓰는 카드 면 · 내용 · 모형별 색(EVALUATION_MODEL_TONE_CLASS)"
+                        },
+                        {"label": "함께 작업", "value": "아래 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/93d9a93ed74d90be99e360932798d18b671095dc)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 평가모형 선택 — 카드 겉모습을 공용 파일로 이전",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/evaluation-model-selection.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "카드 면 · 내용 · 색 정의 삭제 → evaluation-model-card.tsx import(라디오 동작은 그대로)"
+                        },
+                        {"label": "결과", "value": "화면 변화 없음"},
+                        {"label": "영향 화면", "value": "[평가모형 카드](/component-guide/evaluation-model-card)"},
+                        {"label": "함께 작업", "value": "위 신규 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/37883c403285a7d6545f702759e8faef0786592b)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 화면(/platform)"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 플랫폼 소개 본문 · 등장 연출 · 카드 캐러셀",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/platform-intro.tsx\nsrc/components/custom/platform-intro-motion.tsx\nsrc/components/custom/card-carousel.tsx\nsrc/content/service/platform-intro.ts\nsrc/styles/platform-intro.css\npublic/images/platform-intro/(6장)"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "본문: 기업 · 기관 공용(PlatformIntro userType) · 문구는 platform-intro.ts\n상단 연출: 열면 1단계, 첫 스크롤 · 누름 · 포커스로 2단계(platform-intro.css) · 동작 줄이기면 바로 완성 모습\nCardCarousel: 이전 · 다음 버튼으로 카드 줄이 한 칸씩 밀리며 고른 카드가 첫 칸에 옴"
+                        },
+                        {"label": "함께 작업", "value": "토큰 카드 다음 · 아래 page 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e2c94fac467f1824bc583796e81e3469754c54b4)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 플랫폼 소개 page — 임시 화면을 본문으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/platform/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "'내용 추후 업데이트' 칸 → PlatformIntro · platform-intro.css import"
+                        },
+                        {"label": "결과", "value": "플랫폼 소개 화면이 열림"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[플랫폼 소개 (기업)](/corp/platform)\n[플랫폼 소개 (기관)](/org/platform)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c763e531f5210311cea5b4a4c224b96feafed840)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 서비스 화면 공용 부품"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] 새 파일 — 스크롤 등장 · 절차 단계 · 롤링 아코디언 · 히어로 · 칩 띠",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/scroll-reveal.tsx\nsrc/components/custom/procedure-steps.tsx\nsrc/components/composite/rolling-accordion.tsx\nsrc/components/custom/platform-service-intro.tsx\nsrc/components/custom/chip-marquee.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "ScrollReveal: 화면에 들어올 때 한 번 떠오름\nProcedureSteps: 번호 단계 + 화살표, 왼쪽에서 차례로 밀려옴\nRollingAccordion: 아코디언 + 옆 그림이 일정 시간마다 다음 항목으로(보는 동안 멈춤)\nPlatformServiceHero · ServiceGlassCard · ServiceFeatureList: 히어로 띠 · 반투명 카드 · 기능 목록(tone navy · green)\nChipMarquee: 칩 줄이 끊김 없이 흐름(마우스 · 터치 · 포커스로 멈춤)"
+                        },
+                        {"label": "함께 작업", "value": "토큰 · globals.css · useAutoplayPause 카드 다음에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/eed75768668b00736bf92ad804bcfd77e64ce1f1)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[스타일] 새 파일 — 알약 전환 탭 스타일",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/pill-tabs.variants.ts"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "트랙 · 고른 항목 클래스 상수(PILL_TAB_LIST_CLASS_NAME · PILL_TAB_TRIGGER_CLASS_NAME) — Radix Tabs 원형에 얹어 씀"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/980749f0497225833c60c3da243fb25c01817906)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 > 기술평가"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 평가모형 탭 · 모형 구조도 3종",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/evaluation-model-tabs.tsx\nsrc/components/custom/ktrs-fm-structure-diagram.tsx\nsrc/components/custom/tech-index-structure-diagram.tsx\nsrc/components/custom/investment-model-structure-diagram.tsx\nsrc/content/service/platform-technology-evaluation.ts\npublic/images/platform-technology-evaluation/(4장)"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "카드 3장이 탭 · 처음엔 아무것도 고르지 않음 · 고르면 소개 · 구조도 · 결과정보 아코디언\n구조도: 그림 대신 글 · 도형(화면 낭독기가 읽음) · 막대 · 선이 그려지는 모션"
+                        },
+                        {
+                            "label": "함께 작업",
+                            "value": "공용 부품 · 평가모형 카드 분리 카드 다음 · 아래 page 카드와 한 번에 적용"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4a82aa99ddeaf50a1652adad88c1cd046e95149d)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 기술평가 소개 page — 임시 화면을 본문으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/platform/technology-evaluation/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/technology-evaluation/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "'내용 추후 업데이트' 칸 → 안내 제목(줄마다 떠오름) + EvaluationModelTabs"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기술평가 소개 (기업)](/corp/platform/technology-evaluation)\n[기술평가 소개 (기관)](/org/platform/technology-evaluation)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6c232e046753c9632ed22508ce7966bba337cd58)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 > 특허평가"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 특허평가 소개 본문",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/platform-patent-evaluation.tsx\nsrc/content/service/platform-patent-evaluation.ts\npublic/images/platform-patent-evaluation/(3장)"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {"label": "내용", "value": "KPAS 소개 · 특허평가 구조도 · 평가절차(ProcedureSteps)"},
+                        {"label": "함께 작업", "value": "아래 page 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/99c35cbb3e4ab7b03761129cbf67c641e858d519)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 특허평가 소개 page — 임시 화면을 본문으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/platform/patent-evaluation/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/patent-evaluation/page.tsx"
+                        },
+                        {"label": "변경", "value": "'내용 추후 업데이트' 칸 → PlatformPatentEvaluation"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[특허평가 소개 (기업)](/corp/platform/patent-evaluation)\n[특허평가 소개 (기관)](/org/platform/patent-evaluation)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/156bd897e0960e88a17efd52fb610905a22e15f4)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 > K-BIGx 보고서"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] K-BIGx 보고서 소개 본문 · 보고서 생성 흐름도",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/platform-k-bigx-report.tsx\nsrc/components/custom/k-bigx-report-flow-diagram.tsx\nsrc/content/service/platform-k-bigx-report.ts\npublic/images/platform-k-bigx-report/(11장)"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "히어로(카드 3장) · 분석 기능 · 생성 흐름도 · 절차 · 결과정보 아코디언"
+                        },
+                        {"label": "함께 작업", "value": "아래 page 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8dc0a9bec33d6d23bba49ab005c8de47f5bf3ccf)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] K-BIGx 보고서 소개 page — 임시 화면을 본문으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/platform/k-bigx-report/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/k-bigx-report/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "'내용 추후 업데이트' 칸 → PlatformKBigxReport(화면 제목 줄은 히어로 띠 안으로)"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[K-BIGx 보고서 소개 (기업)](/corp/platform/k-bigx-report)\n[K-BIGx 보고서 소개 (기관)](/org/platform/k-bigx-report)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fa2d31336f23e326bbd013802774c10afb80a941)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "플랫폼 소개 > 탄소중립"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[설정] 탄소중립 플랫폼 주소를 상수로 분리",
+                    "details": [
+                        {"label": "대상", "value": "src/constants/header-navigation.ts"},
+                        {"label": "변경", "value": "헤더 메뉴의 탄소중립 주소 → CARBON_NEUTRAL_HOME_URL 상수(export)"},
+                        {"label": "결과", "value": "화면 변화 없음 · 탄소중립 소개의 진단 바로가기가 같은 주소를 씀"},
+                        {"label": "함께 작업", "value": "아래 탄소중립 본문 카드보다 먼저"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0a6d2a3186d968f54481d395baff83ac881370a3)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 탄소중립 소개 본문",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/platform-carbon-neutrality.tsx\nsrc/content/service/platform-carbon-neutrality.ts\npublic/images/platform-carbon-neutrality/(8장)"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "알약 탭으로 두 플랫폼(선도중소기업확인 · K-택소노미) 전환 — 카드 · 기능 · 아래 묶음이 바뀜\n이런 기업에 적합합니다: 칩 띠(ChipMarquee) · 진단 바로가기(외부 · 새 탭)\n[프론트엔드 연동] K-택소노미 진단 주소는 임시값(#k-taxonomy) — 받으면 platform-carbon-neutrality.ts 의 startHref 교체"
+                        },
+                        {"label": "함께 작업", "value": "아래 page 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/83cd1392a5a8dd7ee3ca3f4c69c874211a0d5e44)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 탄소중립 소개 page — 임시 화면을 본문으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/platform/carbon-neutrality/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/carbon-neutrality/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "'내용 추후 업데이트' 칸 → PlatformCarbonNeutrality(화면 제목 줄은 히어로 띠 안으로)"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[탄소중립 소개 (기업)](/corp/platform/carbon-neutrality)\n[탄소중립 소개 (기관)](/org/platform/carbon-neutrality)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0c0f5417eb619b63524c2c56e7598b0a5b18da0)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "K-BIGx 웹 보고서 — 참고자료 탭 추가"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 참고자료 탭 본문 · 탭 아이콘",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/innovation-growth-report-reference.tsx\npublic/images/icons/document-chart.webp"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "등급정의 — 신용등급(24줄) · 현금흐름등급(6줄) 표(ReportTable) · API 연동 없음(등급표 상수)"
+                        },
+                        {"label": "함께 작업", "value": "아래 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/7c9c205c8f6a5cd2f8555d135a5dd79a01f04d9f)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 보고서 탭 목록 · 본문 — 참고자료 탭 연결",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/k-bigx-innovation-report.ts\nsrc/components/custom/innovation-growth-report-document.tsx\nsrc/content/service/cri-grades.ts\nsrc/content/service/cash-flow-grades.ts\nsrc/components/custom/kbigx-print-reference.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "탭 목록(INNOVATION_REPORT_SECTIONS): 활동성정보 뒤에 reference(참고자료) 추가\n보고서 본문: 탭 제목 띠 아이콘 · 본문 분기 · 불러오는 중 화면에 참고자료 추가\ncri-grades · cash-flow-grades · kbigx-print-reference: 주석만(웹 탭도 같은 표를 씀)"
+                        },
+                        {"label": "결과", "value": "보고서 탭 끝에 '참고자료'가 생기고 ?tab=reference 로 열림"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[K-BIGx 웹 보고서 참고자료 (기업)](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=reference)\n[K-BIGx 웹 보고서 참고자료 (기관)](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=reference)"
+                        },
+                        {"label": "함께 작업", "value": "위 신규 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8a1e6f311d1567e78bb397a1b354606a4ef93542)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "K-BIGx PDF 템플릿 — 경쟁기업 추이선 흰 테두리 삭제"},
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 경쟁기업 사업실적 그래프 — 추이선 흰 테두리 삭제",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/kbigx-print-innovation.tsx"},
+                        {"label": "변경", "value": "그래프 색(COMPETITOR_CHART_COLORS)에서 lineHalo 삭제"},
+                        {"label": "결과", "value": "영업이익률 선이 흰 테두리 없이 진남 한 줄로 그려짐"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[K-BIGx 보고서 미리보기 (기업)](/corp/k-bigx-report/innovation-growth-report/report-print)"
+                        },
+                        {"label": "함께 작업", "value": "토큰 카드(chart-trend-halo 삭제)와 같은 릴리스에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/670fe45ab076b0de6891e127f7dc239514542f8b)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[자산] K-BIGx PDF 템플릿 HTML 재생성",
+                    "details": [
+                        {"label": "대상", "value": "templates/kbigx-report-template.html"},
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {"label": "내용", "value": "추이선 흰 테두리 삭제 · 최신 스타일 반영(손으로 고치지 않음)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/60422d7ce678ebc04034f1e8c5d42e2af4f9e9d4)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "컴포넌트 가이드 · 퍼블리싱 인덱스"},
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 새 가이드 9종 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/component-guide/(guide)/card-carousel/\nsrc/app/component-guide/(guide)/chip-marquee/\nsrc/app/component-guide/(guide)/evaluation-model-card/\nsrc/app/component-guide/(guide)/model-structure-diagram/\nsrc/app/component-guide/(guide)/pill-tabs/\nsrc/app/component-guide/(guide)/platform-service-intro/\nsrc/app/component-guide/(guide)/procedure-steps/\nsrc/app/component-guide/(guide)/rolling-accordion/\nsrc/app/component-guide/(guide)/version-select-panel/\nsrc/constants/publishing-guide.ts"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체(새 폴더는 추가)"},
+                        {
+                            "label": "내용",
+                            "value": "[카드 캐러셀](/component-guide/card-carousel): 사용법 · 모션 · props\n[칩 마퀴](/component-guide/chip-marquee): 흐름 · 멈춤 규칙 · props\n[평가모형 카드](/component-guide/evaluation-model-card): 라디오 · 탭에서 함께 쓰는 법\n[평가모형 구조도](/component-guide/model-structure-diagram): KTRS-FM · Tech-Index · 투자모형 · 특허평가 · K-BIGx 흐름도\n[알약 전환 탭](/component-guide/pill-tabs): 스타일 · 내용 전환 방식\n[서비스 소개 틀](/component-guide/platform-service-intro): 히어로 · 유리 카드 · 기능 목록\n[절차 단계](/component-guide/procedure-steps): 사용법 · 모션\n[롤링 아코디언](/component-guide/rolling-accordion): 자동 전환 · 멈춤 규칙\n[버전 선택 본문](/component-guide/version-select-panel): 개정 이력 문서의 버전 셀렉트 · 본문 전환 사용법\n사이드바 메뉴(publishing-guide.ts): 위 가이드 등록"
+                        },
+                        {
+                            "label": "함께 작업",
+                            "value": "가이드 폴더와 publishing-guide.ts 를 한 번에 적용(메뉴가 가리키는 페이지가 있어야 함)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/bd3dbe5dca19d9ef2668cb7046d83e9e77f16c01)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 기존 가이드 10종 갱신",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/component-guide/(guide)/accordion/page.tsx\nsrc/app/component-guide/(guide)/combo-value-chart/page.tsx\nsrc/app/component-guide/(guide)/home-notice-popup/page.tsx\nsrc/app/component-guide/(guide)/icon/page.tsx\nsrc/app/component-guide/(guide)/image/page.tsx\nsrc/app/component-guide/(guide)/motion/page.tsx\nsrc/app/component-guide/(guide)/motion/motion-preview.tsx\nsrc/app/component-guide/(guide)/radius/page.tsx\nsrc/app/component-guide/(guide)/report-shell/page.tsx\nsrc/app/component-guide/(guide)/semantic-color/page.tsx\nsrc/app/component-guide/(demo)/self-diagnosis/evaluation-model/page.tsx"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "아코디언: 롤링 아코디언 안내 링크\n막대 + 선 값 차트: PDF 색 예시에서 추이선 흰 테두리 삭제\n메인 공지 팝업: 터치로 멈춤 설명\n아이콘: 플랫폼 소개 아이콘 묶음 · 참고자료 탭 아이콘\n이미지: 플랫폼 소개 화면 그림 묶음\n모션: 그리기 · 떠다님 · 흐름 모션, 즉시 감추기 규칙\n라운드: glass(32)\n보고서 틀: 참고자료를 웹 탭도 쓴다는 안내\n시맨틱 색상: 새 색 토큰\n평가모형 데모: priority → preload"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/aae8d25e759b3cda0141f5fbb669707f05188a6c)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 퍼블리싱 인덱스 — 참고자료 탭 행 · 템플릿 다운로드 버전 자동 표시",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json\nsrc/content/publishing-guide/index.ts"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "기업 · 기관 K-BIGx 보고서에 '참고자료' 행 추가(누르면 해당 탭)\n'보고서 템플릿 다운로드' 행: versionAsset 으로 템플릿 파일의 자산 버전을 자동 표시(기존 '미배포' 고정)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/9ae95464a23c3d96699772b965193518e30a0bc1)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.4.6",
             "releasedAt": "2026-10-28",
             "changes": [

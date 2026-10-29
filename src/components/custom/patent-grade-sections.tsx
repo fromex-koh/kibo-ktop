@@ -55,7 +55,7 @@ const PatentGradeIntro = ({homeHref}: PatentGradeIntroProps) => (
                     height={720}
                     sizes="440px"
                     draggable={false}
-                    priority
+                    preload
                     className="h-auto w-full"
                 />
             }

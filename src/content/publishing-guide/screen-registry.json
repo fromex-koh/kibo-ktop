@@ -1040,6 +1040,13 @@
             "name": "활동성정보"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-reference",
+            "screenId": "SB-FOTA-CS5-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=reference",
+            "name": "참고자료"
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "screenId": "SB-FOTA-CP1-0007",
             "userType": "기업",
@@ -2242,6 +2249,13 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/activity-info",
             "name": "활동성정보"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-reference",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=reference",
+            "name": "참고자료"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",

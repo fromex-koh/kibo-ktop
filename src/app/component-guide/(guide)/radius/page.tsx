@@ -22,6 +22,7 @@ const ROUNDED_CLASS: Record<keyof typeof tokens.radius, string> = {
     lg: 'rounded-lg',
     xl: 'rounded-xl',
     '2xl': 'rounded-2xl',
+    glass: 'rounded-glass',
     '3xl': 'rounded-3xl',
     full: 'rounded-full',
 }
@@ -106,6 +107,10 @@ const RadiusGuidePage = () => (
                     <li>
                         <code>rounded-*</code> 의 정의된 단계만 씁니다. <code>rounded-[10px]</code> 같은 임의 값은 쓰지
                         않습니다.
+                    </li>
+                    <li>
+                        <code>rounded-glass</code>(32)는 히어로 띠 위 반투명 유리 카드 전용입니다(K-BIGx 보고서 소개) —
+                        24 와 40 사이 시안 값이라 이름을 쓰임새로 붙였습니다.
                     </li>
                     <li>
                         값은 <code>tokens.json</code> 의 <code>radius</code>(기준값은 <code>radiusBase</code>)를

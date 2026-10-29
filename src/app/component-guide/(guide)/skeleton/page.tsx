@@ -66,7 +66,7 @@ const CHART_SKELETON_EXAMPLES: Array<{
     {
         type: 'donut',
         title: '기업 보유기술 (PercentageDonutChart)',
-        description: '도넛 링과 사각 칩 범례 8줄을 같은 배치(간격 60 · 좁은 폭에서는 아래로)로 대체합니다.',
+        description: '도넛 링과 사각 칩 범례 8줄을 같은 배치(간격 30 · 좁은 폭에서는 아래로)로 대체합니다.',
         label: '기업 보유기술을 불러오는 중입니다.',
     },
     {

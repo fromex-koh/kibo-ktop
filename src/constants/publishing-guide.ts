@@ -290,6 +290,18 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'OptionCard', href: '/component-guide/option-card', layers: ['composite']},
                     {label: 'RadioCard', href: '/component-guide/radio-card', layers: ['composite']},
                     {label: 'RadioChip', href: '/component-guide/radio-chip', layers: ['composite']},
+                    {label: 'CardCarousel', href: '/component-guide/card-carousel', layers: ['custom']},
+                    {
+                        label: 'EvaluationModelCard',
+                        href: '/component-guide/evaluation-model-card',
+                        layers: ['custom'],
+                    },
+                    {
+                        label: 'PlatformServiceIntro',
+                        href: '/component-guide/platform-service-intro',
+                        layers: ['custom'],
+                    },
+                    {label: 'ChipMarquee', href: '/component-guide/chip-marquee', layers: ['custom']},
                     {label: 'Separator', href: '/component-guide/separator', layers: ['ui']},
                 ],
             },
@@ -297,13 +309,22 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '탭',
                 items: [
                     {label: 'FormTabs', href: '/component-guide/form-tabs', layers: ['composite']},
+                    {label: 'PillTabs', href: '/component-guide/pill-tabs', layers: ['theme']},
                     {label: 'Tabs', href: '/component-guide/tabs', layers: ['ui']},
                     {label: 'TextTabs', href: '/component-guide/text-tabs', layers: ['composite']},
+                    {
+                        label: 'VersionSelectPanel',
+                        href: '/component-guide/version-select-panel',
+                        layers: ['composite'],
+                    },
                 ],
             },
             {
                 title: '펼침',
-                items: [{label: 'Accordion', href: '/component-guide/accordion', layers: ['ui']}],
+                items: [
+                    {label: 'Accordion', href: '/component-guide/accordion', layers: ['ui']},
+                    {label: 'RollingAccordion', href: '/component-guide/rolling-accordion', layers: ['composite']},
+                ],
             },
             {
                 title: '데이터 표시',
@@ -537,6 +558,16 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 items: [
                                     {label: 'NetworkGraph', href: '/component-guide/network-graph', layers: ['custom']},
                                     {label: 'ProcessFlow', href: '/component-guide/process-flow', layers: ['custom']},
+                                    {
+                                        label: 'ProcedureSteps',
+                                        href: '/component-guide/procedure-steps',
+                                        layers: ['custom'],
+                                    },
+                                    {
+                                        label: 'ModelStructureDiagram',
+                                        href: '/component-guide/model-structure-diagram',
+                                        layers: ['custom'],
+                                    },
                                     {
                                         label: 'WordCloud',
                                         href: '/component-guide/word-cloud',

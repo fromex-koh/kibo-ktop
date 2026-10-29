@@ -105,7 +105,7 @@ const PatentReportMetricPage = ({detail, inventionTitle}: PatentReportMetricPage
                     <DetailLines items={detail.summaryLines} />
                     <div className="mt-5 flex items-center gap-6">
                         <div className="flex w-55 shrink-0 flex-col items-center">
-                            {medal ? <Image src={medal} alt="" priority className="h-69 w-auto" /> : null}
+                            {medal ? <Image src={medal} alt="" preload className="h-69 w-auto" /> : null}
                             <span className="sr-only">{`${metricLabel} ${detail.grade} 등급`}</span>
                         </div>
                         <GradeDistributionChart

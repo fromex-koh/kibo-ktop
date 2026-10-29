@@ -68,36 +68,36 @@
             "key": "corp-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
@@ -888,7 +888,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
@@ -954,46 +954,53 @@
             "isCurrent": false
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-reference",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.6",
+            "isCurrent": false
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
@@ -1545,36 +1552,36 @@
             "key": "org-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.4.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-verification-progress",
@@ -2092,7 +2099,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-company-overview",
@@ -2158,46 +2165,53 @@
             "isCurrent": false
         },
         {
+            "key": "org-k-bigx-report-innovation-growth-report-reference",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.6",
+            "isCurrent": false
+        },
+        {
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-carbon-neutrality",

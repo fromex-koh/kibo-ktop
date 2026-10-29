@@ -21,6 +21,12 @@ import buildingCoins from '@public/images/option-card/building-coins.webp'
 import buildingLightbulb from '@public/images/option-card/building-lightbulb.webp'
 import documentChartMagnifier from '@public/images/option-card/document-chart-magnifier.webp'
 import clipboardCheckChart from '@public/images/option-card/clipboard-check-chart.webp'
+import kbigxHeroAiReport from '@public/images/platform-k-bigx-report/hero-ai-report.webp'
+import kbigxHeroSmeTarget from '@public/images/platform-k-bigx-report/hero-sme-target.webp'
+import carbonHeroLeadingSme from '@public/images/platform-carbon-neutrality/hero-leading-sme.webp'
+import carbonHeroSmeUse from '@public/images/platform-carbon-neutrality/hero-sme-use.webp'
+import carbonHeroTaxonomy from '@public/images/platform-carbon-neutrality/hero-taxonomy.webp'
+import carbonHeroPublicUse from '@public/images/platform-carbon-neutrality/hero-public-use.webp'
 import officeBuilding from '@public/images/login/office-building.webp'
 import bankBuilding from '@public/images/login/bank-building.webp'
 import searchWindowGradeBadge from '@public/images/service-intro/search-window-grade-badge.webp'
@@ -41,6 +47,15 @@ import techEvaluation from '@public/images/main-hero/tech-evaluation.webp'
 import patentEvaluation from '@public/images/main-hero/patent-evaluation.webp'
 import serviceIntroConsulting from '@public/images/main-hero/service-intro-consulting.webp'
 import serviceIntroSelfDiagnosis from '@public/images/main-hero/service-intro-self-diagnosis.webp'
+import businessHandshake from '@public/images/platform-technology-evaluation/business-handshake.webp'
+import officeCityView from '@public/images/platform-technology-evaluation/office-city-view.webp'
+import reportChartsDesk from '@public/images/platform-technology-evaluation/report-charts-desk.webp'
+import aiChipCircuit from '@public/images/platform-intro/ai-chip-circuit.webp'
+import aiDatabaseServer from '@public/images/platform-intro/ai-database-server.webp'
+import aiDonutChart from '@public/images/platform-intro/ai-donut-chart.webp'
+import chartReviewMeeting from '@public/images/platform-intro/chart-review-meeting.webp'
+import lightbulbLeaf from '@public/images/platform-intro/lightbulb-leaf.webp'
+import officeBankBuildings from '@public/images/platform-intro/office-bank-buildings.webp'
 
 export const metadata: Metadata = {title: '이미지 (Image)'}
 
@@ -216,27 +231,27 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                 key: 'option-card',
                 title: '선택 카드',
                 description:
-                    '경로 · 표시 크기는 화면별 목록 데이터에 있습니다(평가모형 선택: image · 그 밖: illustration · illustrationSize).',
+                    '경로 · 표시 크기는 화면별 목록 데이터에 있습니다(평가모형 선택: image · 그 밖: illustration · illustrationSize). 플랫폼 소개 개요 카드(CardCarousel)도 같은 그림 두 장을 씁니다(100 칸 · 게이지는 144×96 으로 칸보다 넓게).',
                 folder: 'public/images/option-card/',
-                usedIn: 'content/service/evaluation-model-selection.ts · tech-index-model-form.tsx · evaluation-method-form.tsx · batch-evaluation-form.tsx',
+                usedIn: 'content/service/evaluation-model-selection.ts(평가모형 선택 · 플랫폼 소개 > 기술평가 카드) · tech-index-model-form.tsx · evaluation-method-form.tsx · batch-evaluation-form.tsx · custom/platform-intro.tsx · custom/platform-k-bigx-report.tsx · custom/platform-carbon-neutrality.tsx',
                 size: '평가모형 선택: 높이 144 자리(예: 225×150) · 그 밖: 148×100 자리(예: 95×92)',
                 grid: 'narrow',
                 items: [
                     {
                         file: 'speed-gauge.webp',
-                        label: '평가모형 선택 · KTRS-FM',
+                        label: '평가모형 선택 · KTRS-FM(플랫폼 소개 > 기술평가 포함) · 플랫폼 소개 05',
                         src: speedGauge,
                         className: 'h-20 w-auto',
                     },
                     {
                         file: 'rocket-growth.webp',
-                        label: '평가모형 선택 Tech-Index · Tech-Index 선택 (일반) · 일괄평가 (일반)',
+                        label: '평가모형 선택 Tech-Index(플랫폼 소개 > 기술평가 포함) · Tech-Index 선택 (일반) · 일괄평가 (일반)',
                         src: rocketGrowth,
                         className: 'h-20 w-auto',
                     },
                     {
                         file: 'building-coins.webp',
-                        label: '평가모형 선택 · 투자모형',
+                        label: '평가모형 선택 · 투자모형(플랫폼 소개 > 기술평가 포함)',
                         src: buildingCoins,
                         className: 'h-20 w-auto',
                     },
@@ -248,15 +263,111 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                     },
                     {
                         file: 'document-chart-magnifier.webp',
-                        label: '평가진행방식 · 평가검증 하기',
+                        label: '평가진행방식 · 평가검증 하기 · 플랫폼 소개 02',
                         src: documentChartMagnifier,
                         className: 'h-20 w-auto',
                     },
                     {
                         file: 'clipboard-check-chart.webp',
-                        label: '평가진행방식 · 개별평가 하기',
+                        label: '평가진행방식 · 개별평가 하기 · 플랫폼 소개 > K-BIGx 보고서 · 탄소중립 카드(차별점)',
                         src: clipboardCheckChart,
                         className: 'h-20 w-auto',
+                    },
+                ],
+            },
+            {
+                key: 'platform-k-bigx-hero',
+                title: '플랫폼 소개 > K-BIGx 보고서 카드 그림',
+                description:
+                    "히어로 띠의 반투명 카드 위 입체 그림입니다. 높이 88 에 폭은 그림 비율대로 놓습니다(AI 보고서 88×88 · 중소·벤처기업 105×88). 카드 제목이 같은 뜻이라 장식(alt='')이고, 첫 화면이라 미리 받습니다(preload). 원본은 표시 크기의 3배(264 높이)이고, 입체 그림이라 q90 webp(11~14KB — 무손실은 3배 큼)로 두었습니다. 'K-BIGx 차별점' 카드는 선택 카드 그림(option-card/clipboard-check-chart)을 함께 씁니다.",
+                folder: 'public/images/platform-k-bigx-report/',
+                usedIn: 'custom/platform-k-bigx-report.tsx (기업 /platform/k-bigx-report)',
+                size: '높이 88 · h-22 w-auto',
+                grid: 'narrow',
+                items: [
+                    {
+                        file: 'hero-ai-report.webp',
+                        label: 'AI 기반의 맞춤형 보고서 (264×264)',
+                        src: kbigxHeroAiReport,
+                        className: 'h-22 w-auto',
+                    },
+                    {
+                        file: 'hero-sme-target.webp',
+                        label: '중소·벤처기업 대상 (315×264)',
+                        src: kbigxHeroSmeTarget,
+                        className: 'h-22 w-auto',
+                    },
+                ],
+            },
+            {
+                key: 'platform-carbon-hero',
+                title: '플랫폼 소개 > 탄소중립 카드 그림',
+                description:
+                    "탄소중립 히어로 반투명 카드 위 입체 그림입니다(선도중소기업확인 · 개방형 K-택소노미 각 2장). 시안의 88 칸 여백까지 담긴 그림이라 높이 88 그대로 놓습니다. 카드 제목이 같은 뜻이라 장식(alt='')이고, 첫 화면이라 미리 받습니다(preload). 원본은 표시 크기의 3배(264 × 264) · 입체 그림이라 q90 webp(10~18KB — 무손실은 2.5~3배 큼). 택소노미 2장은 시안 그림 레이어를 3배로 내보내 88 칸 안 시안 위치에 놓았습니다(칸의 붉은 안내 사각형 제외). '차별점' 카드는 선택 카드 그림(option-card/clipboard-check-chart)을 함께 씁니다.",
+                folder: 'public/images/platform-carbon-neutrality/',
+                usedIn: 'custom/platform-carbon-neutrality.tsx (기업 /platform/carbon-neutrality)',
+                size: '높이 88 · h-22 w-auto',
+                grid: 'narrow',
+                items: [
+                    {
+                        file: 'hero-leading-sme.webp',
+                        label: '탄소중립 선도중소기업확인 (264×264)',
+                        src: carbonHeroLeadingSme,
+                        className: 'h-22 w-auto',
+                    },
+                    {
+                        file: 'hero-sme-use.webp',
+                        label: '중소기업에서 활용 가능 (264×264)',
+                        src: carbonHeroSmeUse,
+                        className: 'h-22 w-auto',
+                    },
+                    {
+                        file: 'hero-taxonomy.webp',
+                        label: '개방형 K-택소노미 (264×264)',
+                        src: carbonHeroTaxonomy,
+                        className: 'h-22 w-auto',
+                    },
+                    {
+                        file: 'hero-public-use.webp',
+                        label: '국민 누구나 활용 가능 (264×264)',
+                        src: carbonHeroPublicUse,
+                        className: 'h-22 w-auto',
+                    },
+                ],
+            },
+            {
+                key: 'platform-intro-overview',
+                title: '플랫폼 소개 개요 카드',
+                description:
+                    '파랑 카드(CardCarousel) 오른쪽 아래 그림입니다. 표시 크기 100×100 의 3배(300×300)로 만들었습니다. 02 · 05 카드는 선택 카드의 document-chart-magnifier · speed-gauge 를 같이 씁니다.',
+                folder: 'public/images/platform-intro/',
+                usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
+                size: '100×100 자리 · sizes 100px',
+                grid: 'narrow',
+                items: [
+                    {
+                        file: 'ai-donut-chart.webp',
+                        label: '01 어떤 플랫폼인가요',
+                        src: aiDonutChart,
+                        className: 'size-20',
+                    },
+                    {
+                        file: 'ai-database-server.webp',
+                        label: '03 무엇으로 만들어졌나요',
+                        src: aiDatabaseServer,
+                        className: 'size-20',
+                    },
+                    {
+                        file: 'office-bank-buildings.webp',
+                        label: '04 누가 활용하나요',
+                        src: officeBankBuildings,
+                        className: 'size-20',
+                    },
+                    {
+                        file: 'lightbulb-leaf.webp',
+                        label: '06 어떻게 활용하나요',
+                        src: lightbulbLeaf,
+                        className: 'size-20',
                     },
                 ],
             },
@@ -388,8 +499,8 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
     {
         id: 'image-background',
         number: '2-4',
-        title: '배경 · 사진 (메인페이지)',
-        description: '메인페이지 전용입니다. 칸에 맞춰 잘리고(object-cover) 모두 alt="" 입니다.',
+        title: '배경 · 사진',
+        description: '메인페이지 · 플랫폼 소개 사진입니다. 칸에 맞춰 잘리고(object-cover) 모두 alt="" 입니다.',
         groups: [
             {
                 key: 'hero-bg',
@@ -450,6 +561,67 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                     },
                 ],
             },
+            {
+                key: 'platform-intro',
+                title: '플랫폼 소개 대표 사진',
+                description:
+                    '화면 맨 위 큰 사진(LCP)이라 preload 로 미리 받습니다. PC 표시 크기(1200×400)의 3배로 만들고, 모바일은 82:45 · 태블릿 · PC 는 3:1 칸에 맞춰 잘립니다. 위에 어두운 막(platform-hero-overlay 60%)과 흰 제목 · 소개가 겹칩니다.',
+                folder: 'public/images/platform-intro/',
+                usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
+                size: '1200×400 (태블릿 792×264 · 모바일 328×180) · 칸 전체 object-cover · sizes(1200 · 792 · 100vw−32) · preload',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'chart-review-meeting.webp',
+                        label: '차트 보고서 검토',
+                        src: chartReviewMeeting,
+                        className: 'h-auto w-full',
+                    },
+                ],
+            },
+            {
+                key: 'platform-intro-banner',
+                title: '플랫폼 소개 배너 사진',
+                description:
+                    '화면 전체 폭 남색 띠의 배경입니다. 남색 바탕 · 왼쪽으로 옅어지는 효과까지 한 장에 들어 있고, 시안 1920×280 기준으로 가운데를 맞춰 잘립니다. 화면 전체 폭 배경이라 2배로 만들었습니다. 칸 바탕(platform-banner)이 사진과 같은 남색이라 사진을 못 불러와도 흰 글자가 읽힙니다.',
+                folder: 'public/images/platform-intro/',
+                usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
+                size: '화면 전체 폭 × 280 · object-cover 가운데 · sizes(1920 이상 100vw · 그 아래 1920px — 높이에 맞춰 늘 1920 폭으로 그려짐)',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'ai-chip-circuit.webp',
+                        label: '회로망 속 AI 칩',
+                        src: aiChipCircuit,
+                        className: 'h-auto w-full',
+                    },
+                ],
+            },
+            {
+                key: 'platform-technology-evaluation',
+                title: '플랫폼 소개 > 기술평가 항목 사진',
+                description:
+                    '모형 소개 아래 롤링 아코디언(RollingAccordion)의 옆 사진입니다. 결과정보 · 기대효과 · 활용분야가 열릴 때 그 항목의 사진으로 서서히 바뀌고, 세 모형이 같은 사진을 씁니다. PC 표시 크기(690×428)의 3배로 만들었습니다. 화면 아래쪽이라 미리 받지 않습니다(lazy).',
+                folder: 'public/images/platform-technology-evaluation/',
+                usedIn: 'custom/evaluation-model-tabs.tsx (기업 /platform/technology-evaluation)',
+                size: '690×428 (태블릿 792×492 · 모바일 328×204 — 세 폭 같은 비율) · 칸 전체 object-cover · sizes(690 · 792 · 100vw−32)',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'report-charts-desk.webp',
+                        label: '결과정보',
+                        src: reportChartsDesk,
+                        className: 'h-auto w-full',
+                    },
+                    {
+                        file: 'business-handshake.webp',
+                        label: '기대효과',
+                        src: businessHandshake,
+                        className: 'h-auto w-full',
+                    },
+                    {file: 'office-city-view.webp', label: '활용분야', src: officeCityView, className: 'h-auto w-full'},
+                ],
+            },
         ],
     },
 ]
@@ -494,7 +666,10 @@ const KIND_ROWS = [
         cells: ['2-2. 일러스트', '선택 카드 · 로그인 · 서비스 소개 · 상태 화면 그림', 'alt="" (장식)'],
     },
     {key: 'screenshot', cells: ['2-3. 스크린샷', '사용 방법 화면 캡처', 'alt 에 캡처 내용']},
-    {key: 'background', cells: ['2-4. 배경 · 사진', '메인페이지 배경 · 소개 사진', 'alt="" (장식)']},
+    {
+        key: 'background',
+        cells: ['2-4. 배경 · 사진', '메인페이지 배경 · 소개 사진, 플랫폼 소개 대표 사진', 'alt="" (장식)'],
+    },
     {
         key: 'icon',
         cells: [
@@ -543,7 +718,7 @@ const USAGE_ROWS = [
             <span key="how">
                 <code>@public/…</code> 로 import 해 <code>src</code> 에 넘깁니다. 크기는 자동입니다.
             </span>,
-            '로그인 · 스크린샷 · 메인페이지 사진',
+            '로그인 · 스크린샷 · 메인페이지 · 플랫폼 소개 사진',
         ],
     },
     {
@@ -573,7 +748,7 @@ const USAGE_ROWS = [
             <span key="how">
                 <code>fill</code> 또는 <code>aspect-*</code> + <code>object-cover</code>
             </span>,
-            '메인페이지 배경 · 사진 · 확대 메뉴 캡처',
+            '메인페이지 배경 · 사진 · 플랫폼 소개 대표 사진 · 확대 메뉴 캡처',
         ],
     },
 ] as const
@@ -671,10 +846,10 @@ const RULE_ROWS = [
         cells: ['sizes', '표시 폭이 정해져 있으면 적습니다(예: sizes="440px").'],
     },
     {
-        key: 'priority',
+        key: 'preload',
         cells: [
-            'priority',
-            '첫 화면에 바로 보이는 그림에만 씁니다(헤더 로고 · 선택 카드 · 서비스 소개 띠 · 서비스 상태 · 보고서 로고).',
+            'preload',
+            '첫 화면에 바로 보이는 그림에만 씁니다(헤더 로고 · 선택 카드 · 서비스 소개 띠 · 서비스 상태 · 보고서 로고 · 플랫폼 소개 대표 사진). Next 16 에서 지원 중단 예정인 priority 대신 씁니다.',
         ],
     },
     {

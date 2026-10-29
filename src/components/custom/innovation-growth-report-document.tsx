@@ -74,12 +74,14 @@ import {InnovationGrowthReportTech} from '@/components/custom/innovation-growth-
 import {InnovationGrowthReportActivity} from '@/components/custom/innovation-growth-report-activity'
 import {InnovationGrowthReportTechIndex} from '@/components/custom/innovation-growth-report-tech-index'
 import {InnovationGrowthReportCredit} from '@/components/custom/innovation-growth-report-credit'
+import {InnovationGrowthReportReference} from '@/components/custom/innovation-growth-report-reference'
 import emblemGovernmentImage from '@public/images/emblem-government.webp'
 import barChartIcon from '@public/images/icons/bar-chart.webp'
 import buildingIcon from '@public/images/icons/building.webp'
 import coinsIcon from '@public/images/icons/coins.webp'
 import documentCheckIcon from '@public/images/icons/document-check.webp'
 import gaugeIcon from '@public/images/icons/gauge.webp'
+import documentChartIcon from '@public/images/icons/document-chart.webp'
 import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 
 // K-BIGx 기업혁신성장 보고서 — 새 창으로 여는 웹 보고서(진단브리핑 · 구성 항목 탭).
@@ -137,6 +139,7 @@ const STATEMENT_YEAR_COLORS = [
 
 // 탭 제목 띠 아이콘 — 흰 그림 에셋(public/images/icons)을 파란 칸 가운데에 둔다. 높이를 맞추고 폭은 그림 비율대로.
 // 계기판(활동성정보)은 그림의 아래쪽이 비어 있어 가운데 맞춤이면 위로 떠 보이므로 조금 키우고 아래로 내린다.
+// 참고자료(문서)는 세로로 긴 그림(20 × 24)이라 높이 24(h-6)로 둔다.
 const TAB_BANNER_ICONS: Record<InnovationReportSectionId, {src: StaticImageData; className: string}> = {
     briefing: {src: documentCheckIcon, className: 'h-5.5 w-auto'},
     company: {src: buildingIcon, className: 'h-5.5 w-auto'},
@@ -144,6 +147,7 @@ const TAB_BANNER_ICONS: Record<InnovationReportSectionId, {src: StaticImageData;
     'tech-index': {src: barChartIcon, className: 'h-5.5 w-auto'},
     'credit-finance': {src: coinsIcon, className: 'h-5.5 w-auto'},
     activity: {src: gaugeIcon, className: 'mt-1.5 size-6.5'},
+    reference: {src: documentChartIcon, className: 'h-6 w-auto'},
 }
 
 // 관련 기업 및 특허현황 수치별 아이콘 — 데이터의 stat.id 로 고른다.
@@ -492,6 +496,8 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
 
                             {activeTab === 'company' ? (
                                 <InnovationGrowthReportCompany status={report.companyStatus} />
+                            ) : activeTab === 'reference' ? (
+                                <InnovationGrowthReportReference />
                             ) : activeTab === 'activity' ? (
                                 <InnovationGrowthReportActivity
                                     detail={report.activityDetail}
@@ -1636,6 +1642,9 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
 
                 {activeTab === 'company' ? (
                     <CompanyTabSkeleton />
+                ) : activeTab === 'reference' ? (
+                    // 참고자료는 고정 표라 받을 데이터가 없다 — 본문을 그대로 그린다.
+                    <InnovationGrowthReportReference />
                 ) : activeTab === 'innovation' ? (
                     <TechTabSkeleton />
                 ) : activeTab === 'activity' ? (

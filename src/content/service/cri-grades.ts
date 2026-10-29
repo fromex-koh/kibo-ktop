@@ -1,6 +1,6 @@
 import type {RatingGaugeDetail, SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 
-// CRI(기업신용등급) 등급 정의 · 등급명 — 기업신용등급 게이지(SemicircleRatingGauge)가 쓰는 단일 소스.
+// CRI(기업신용등급) 등급 정의 · 등급명 — 기업신용등급 게이지(SemicircleRatingGauge) · K-BIGx 참고자료 표(웹 탭 · PDF 템플릿)의 단일 소스.
 // 출처: CRI 등급 정의 및 등급명 표(24개 — 평가 등급 22개 + 평가 유보 R · 평가 제외 NR).
 //
 // 게이지 채움 비율 — 평가 등급 22개(AAA+ ~ D)를 위에서부터 100 → 한 단계(100 ÷ 22, 반올림해 D = 5)까지 고르게 나눈다.

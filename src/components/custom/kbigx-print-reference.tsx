@@ -2,9 +2,9 @@ import {KbxBlock, KbxSubBlock, KbxTable} from '@/components/custom/kbigx-print-p
 import {CASH_FLOW_GRADES} from '@/content/service/cash-flow-grades'
 import {CRI_GRADES} from '@/content/service/cri-grades'
 
-// K-BIGx 보고서 인쇄본 — 참고자료(등급 정의). API 연동 대상이 아니다 — 등급표 상수(CRI_GRADES · CASH_FLOW_GRADES)를
-// 그대로 그린다. 신용등급 24행 + 현금흐름등급 6행이 한 쪽에 들어가도록 칸 여백을 줄인다(density="compact").
-// 등급표에 행을 더하면 한 쪽을 넘칠 수 있으니 인쇄본에서 넘침 표시를 확인한다.
+// K-BIGx 보고서 PDF 템플릿 — 참고자료(등급 정의). API 연동 대상이 아니다 — 등급표 상수(CRI_GRADES · CASH_FLOW_GRADES)를
+// 그대로 그린다. 웹 보고서 참고자료 탭(innovation-growth-report-reference.tsx)도 같은 상수를 쓴다. 신용등급 24행 + 현금흐름등급 6행이 한 쪽에 들어가도록 칸 여백을 줄인다(density="compact").
+// 등급표에 행을 더하면 한 쪽을 넘칠 수 있으니 PDF 미리보기에서 넘침 표시를 확인한다.
 
 const CREDIT_GRADE_COLUMNS = [
     {key: 'grade', header: '등급', isRowHeader: true, className: 'w-kbx-150'},

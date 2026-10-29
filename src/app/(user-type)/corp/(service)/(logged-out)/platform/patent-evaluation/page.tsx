@@ -8,16 +8,19 @@ import {
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
+import {PlatformPatentEvaluation} from '@/components/custom/platform-patent-evaluation'
+import {PLATFORM_PATENT_EVALUATION} from '@/content/service/platform-patent-evaluation'
 
 export const metadata: Metadata = {title: '특허평가 소개'}
 
+// 플랫폼 소개 > 특허평가 — 화면 제목 → KPAS 소개 · 특허평가 구조도 · 평가절차 안내(PlatformPatentEvaluation).
+// 간격(시안): 화면 제목과 본문 60 · 본문과 푸터 60.
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
-// 원고 연동 전까지 표시하는 임시 섹션은 실제 콘텐츠로 교체한다.
 const CorpPlatformPatentEvaluationPage = () => (
     <main id="main" tabIndex={-1} className="bg-page flex-1">
-        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
+        <div className="grid-layout gap-15 pt-10 pb-15 *:col-span-full">
             <PageTitleBar
-                title="특허평가 소개"
+                title={PLATFORM_PATENT_EVALUATION.title}
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -30,23 +33,13 @@ const CorpPlatformPatentEvaluationPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>특허평가 소개</BreadcrumbPage>
+                                <BreadcrumbPage>{PLATFORM_PATENT_EVALUATION.title}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 }
             />
-            <section
-                className="bg-background grid min-h-100 place-items-center px-6"
-                aria-labelledby="platform-patent-evaluation-placeholder-title"
-            >
-                <h2
-                    id="platform-patent-evaluation-placeholder-title"
-                    className="typo-title-l-bold text-center break-keep"
-                >
-                    내용 추후 업데이트
-                </h2>
-            </section>
+            <PlatformPatentEvaluation />
         </div>
     </main>
 )

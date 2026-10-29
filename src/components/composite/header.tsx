@@ -235,7 +235,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                     draggable={false}
                     width={140}
                     height={32}
-                    priority
+                    preload
                     className="h-8 w-35 shrink-0"
                 />
             ) : (
@@ -246,7 +246,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                         draggable={false}
                         width={140}
                         height={32}
-                        priority
+                        preload
                         className="[display:var(--logo-on-light)] h-8 w-35 shrink-0"
                     />
                     <Image
@@ -255,7 +255,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                         draggable={false}
                         width={140}
                         height={32}
-                        priority
+                        preload
                         className="[display:var(--logo-on-dark)] h-8 w-35 shrink-0"
                     />
                 </>
