@@ -1,15 +1,15 @@
 // 마이페이지 — K-BIGx 보고서 이력(기업·기관).
 //
-// 카드 한 장이 보고서 한 건이고, 케이스는 조회 대상(자가조회·타사조회)과 이용권 차감(여·부) 두 축으로
+// 카드 한 장이 보고서 한 건이고, 케이스는 조회 대상(자사조회·타사조회)과 이용권 차감(차감·미차감) 두 축으로
 // 갈린다(시안 케이스 시트). 기관 화면은 보고서 유형(기업혁신성장·대량정보조회)이 한 축 더 붙고, 상세에
 // 조회 기관이 더해진다(시안 "기관 - K-BIGx 보고서 이력" 조회결과 case).
 
 /**
  * 조회 대상 — 상세 줄의 [조회유형] 값이다. 우리 회사를 봤는지 다른 회사를 봤는지가 갈린다.
- * 시안은 값마다 색이 다르다(자가조회 파랑 · 타사조회 보라).
+ * 시안은 값마다 색이 다르다(자사조회 파랑 · 타사조회 보라).
  */
 export const K_BIGX_REPORT_INQUIRY_TYPE = {
-    own: {label: '자가조회', className: 'text-blue-600'},
+    own: {label: '자사조회', className: 'text-blue-600'},
     other: {label: '타사조회', className: 'text-purple-600'},
 } as const satisfies Record<string, {label: string; className: string}>
 
@@ -82,7 +82,7 @@ export type KBigxReportHistoryItem = {
     id: string
     /** 기업명 = report.companyName (PDF 표지 · 기업 정보 · 쪽 머리말). 대량정보조회는 묶음 이름. */
     companyName: string
-    /** 이용권이 깎였는지. 카드 오른쪽 상자에 여/부 한 글자로 선다(시안). */
+    /** 이용권이 깎였는지. 카드 오른쪽 배지에 '이용권 차감' · '이용권 미차감' 으로 선다. */
     isTicketDeducted: boolean
     inquiryType: KBigxReportInquiryType
     /** 조회일시(YYYY-MM-DD) = report.issuedAt (PDF 표지 발급일). 보고서 내용 선택 모달의 조회기준일 자리에도 쓴다. */
@@ -98,6 +98,5 @@ export type KBigxReportHistoryItem = {
 /** 한 페이지에 보여 줄 카드 수 — 2건이라 목록이 짧아도 페이지 이동을 확인할 수 있다(다른 목록 화면과 같다). */
 export const K_BIGX_REPORT_HISTORY_PAGE_SIZE = 2
 
-/** 이용권 상자의 아래 글자와, 그 위에 서는 한 글자(시안: 차감했으면 여 · 아니면 부). */
-export const TICKET_DEDUCTION_LABEL = '이용권차감'
-export const TICKET_DEDUCTION_MARK = {deducted: '여', notDeducted: '부'} as const
+/** 이용권 배지 글자 — 이 건에 이용권이 깎였는지. */
+export const TICKET_DEDUCTION_BADGE = {deducted: '이용권 차감', notDeducted: '이용권 미차감'} as const
