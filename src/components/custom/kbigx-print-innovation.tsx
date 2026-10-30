@@ -482,7 +482,7 @@ const PatentAnalysisBlock = ({
 // ── 맞춤형 기술정보 · 경쟁기업 및 우수기업 ──
 
 // 경쟁기업 사업실적 — 흑백 인쇄에서도 갈리게 명도 3단계: 조회기업 진남(가장 진함) · 경쟁기업 파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리.
-// 선(영업이익률)은 진남 한 줄 — 흰 바깥 테두리(lineHalo)는 요청으로 뺐다.
+// 선(영업이익률)은 짙은 남색 한 줄이고 흰 바깥 테두리(lineHalo)는 두지 않는다(현업 요청).
 const COMPETITOR_CHART_COLORS = {
     bar: 'var(--kbx-color-chart-general)',
     subjectBar: 'var(--kbx-color-chart-subject)',
@@ -524,13 +524,13 @@ const RANK_LIST_PROPS = {
     formatValue: formatGrowthRate,
 } as const satisfies Partial<RankBarListProps>
 
-// 순위 막대 색 — 100억원 이하는 남색 · 초과는 파랑(인자 bar). 평균(옅은 바탕 + 사선 · 테두리 — 같은 쪽 경쟁기업 그래프와
-// 같은 표현) · 조회기업(초록)은 두 목록이 같다. 조회기업을 진남으로 두면 100억원 이하 막대(남색)와 겹쳐 초록을 유지한다.
+// 순위 막대 색 — 100억원 이하는 보라 · 초과는 파랑(인자 bar). 평균(옅은 바탕 + 사선 · 테두리 — 같은 쪽 경쟁기업
+// 그래프와 같은 표현) · 조회기업(진남 — 경쟁기업 그래프의 조회기업과 같은 색)은 두 목록이 같다.
 const rankColors = (bar: string) => ({
     bar,
     averageBar: 'var(--kbx-color-chart-average-base)',
     averageLine: 'var(--kbx-color-chart-average-line)',
-    subjectBar: 'var(--kbx-color-green)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
 })
 
 // 데이터 → RankBarList 항목. keepCorporatePrefix — '(주)' 같은 법인 표기 뒤에서 줄이 갈리지 않게 붙인다(보이는 글자는 같다).
@@ -601,7 +601,7 @@ const KbigxPrintInnovationCompetitors = ({report}: {report: InnovationGrowthRepo
                         title={`매출 ${growthLeaders.small.title}`}
                         items={small}
                         max={rankMax}
-                        colors={rankColors('var(--kbx-color-navy)')}
+                        colors={rankColors('var(--kbx-color-purple)')}
                     />
                     <RankBarList
                         {...RANK_LIST_PROPS}

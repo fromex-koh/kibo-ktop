@@ -452,7 +452,7 @@ const kbxCategoryColor = (label: string, index: number) =>
 
 // 차트 빈 상태 — 그릴 데이터가 없을 때 차트 자리에 두는 옅은 면 + 가운데 '데이터가 없습니다.'. 인쇄본 차트는 모두 이 모양으로 맞춘다.
 // 높이는 차트 자리와 같게 className(h-* · flex-1 등)으로 준다 — 비어도 쪽 배치가 흔들리지 않는다.
-// 빈 상태를 안에서 그리는 차트(RankBarList · DonutListChart · InsideLabelPieChart)에는 emptyText={KBX_CHART_EMPTY_TEXT} 와
+// 빈 상태를 안에서 그리는 차트(RankBarList · DonutListChart)에는 emptyText={KBX_CHART_EMPTY_TEXT} 와
 // emptyClassName={cn(KBX_CHART_EMPTY_CLASS, 높이)} 를 넘겨 같은 모양으로 맞춘다.
 // (숫자 · 표 칸처럼 값 자리가 비면 '-' 로 적어 실제 0 과 구분하고, 차트 자리는 문구로 알린다.)
 const KBX_CHART_EMPTY_TEXT = '데이터가 없습니다.'
