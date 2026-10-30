@@ -260,7 +260,7 @@ const DualLineChartGuidePage = () => (
             <section aria-labelledby="dlc-print" className="flex flex-col gap-6">
                 <SectionHeading id="dlc-print" title="5. K-BIGx PDF 템플릿에서">
                     차입금 현황 신용/담보 비중 소블록의 왼쪽 반(폭 556)에 두고, 오른쪽 반에는 최근 비중을
-                    InsideLabelPieChart 원형으로 둡니다. 확인 화면:{' '}
+                    CalloutPieChart 원형(라벨은 원 밖 지시선 끝)으로 둡니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
                         target="_blank"

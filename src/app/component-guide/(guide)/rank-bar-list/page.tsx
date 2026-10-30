@@ -61,7 +61,7 @@ const printColors = (bar: string) => ({
     bar,
     averageBar: 'var(--kbx-color-chart-average-base)',
     averageLine: 'var(--kbx-color-chart-average-line)',
-    subjectBar: 'var(--kbx-color-green)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
 })
 
 // 3. 엣지 케이스.
@@ -134,10 +134,10 @@ const PRINT_CODE = `// K-BIGx PDF 템플릿 — 20px · 줄 여백 8 · 이름 �
   items={small}
   max={rankBarScaleMax(small, large)}
   colors={{
-    bar: 'var(--kbx-color-navy)',
+    bar: 'var(--kbx-color-purple)',
     averageBar: 'var(--kbx-color-chart-average-base)',
     averageLine: 'var(--kbx-color-chart-average-line)', // 평균 = 옅은 바탕 + 사선 · 테두리
-    subjectBar: 'var(--kbx-color-green)',
+    subjectBar: 'var(--kbx-color-chart-subject)',
   }}
   listClassName="kbx-text-20 text-kbx-foreground border-kbx-primary kbx-border-t-strong"
   titleClassName="bg-kbx-surface text-kbx-primary kbx-text-21 font-kbx-extrabold px-3.5 py-2.5"
@@ -378,7 +378,10 @@ const RankBarListGuidePage = () => (
                         평균 막대는 옅은 바탕 + 파랑 사선 · 테두리(<code>averageLine</code>)입니다 — 같은 쪽 경쟁기업
                         사업실적 그래프의 평균과 같은 표현이고, 색을 빼도(흑백 인쇄) 사선 막대 = 평균으로 읽힙니다.
                     </li>
-                    <li>조회기업 막대는 초록 — 100억원 이하 목록의 막대(남색)와 구분됩니다.</li>
+                    <li>
+                        100억원 이하 막대는 보라(#6B6EEB) · 초과는 파랑이고, 조회기업 막대는 진남(#183A6D — 경쟁기업
+                        사업실적 그래프의 조회기업과 같은 색)입니다. 이하 막대가 보라라 진남 조회기업과 겹치지 않습니다.
+                    </li>
                 </ul>
                 <Example
                     title="PDF 템플릿 색"
@@ -390,7 +393,7 @@ const RankBarListGuidePage = () => (
                             title="매출 100억원 이하"
                             items={SMALL}
                             max={SHARED_MAX}
-                            colors={printColors('var(--kbx-color-navy)')}
+                            colors={printColors('var(--kbx-color-purple)')}
                             highlightLabel="고성장"
                         />
                         <RankBarList

@@ -54,12 +54,14 @@ const toData = (
         }
     })
 
+// PDF 템플릿과 같은 규칙 — 이름은 2줄까지, 넘치면 말줄임.
+const LABEL_MAX_LINES = 2
+
 const SCENARIOS = [
     {
         id: 'standard',
         label: '표준',
-        description:
-            '가장 큰 분류(50%)가 오른쪽 반원을 차지하고 조각 안에 라벨이 들어갑니다. 나머지는 왼쪽 바깥에 쌓입니다.',
+        description: '가장 큰 분류(50%)가 오른쪽 반원을 차지하고, 모든 분류의 라벨이 지시선 끝에 놓입니다.',
         data: toData([50, 14, 10, 8, 6, 5, 4, 3], true),
     },
     {
@@ -71,20 +73,14 @@ const SCENARIOS = [
     {
         id: 'balanced',
         label: '균형',
-        description:
-            '25% 이상인 분류가 없으면 안쪽 라벨 없이 모두 바깥 라벨이 되고, 원이 가운데로 와서 라벨이 양쪽으로 나뉩니다.',
+        description: '분류가 고르면 조각이 원 둘레에 고르게 퍼져 라벨이 양쪽으로 나뉩니다.',
         data: toData([24, 22, 20, 18, 16], true),
-    },
-    {
-        id: 'threshold',
-        label: '25% 경계',
-        description: '첫 분류가 정확히 25%면 안쪽 라벨이 들어갑니다(25% 이상).',
-        data: toData([25, 24, 20, 16, 15], true),
     },
     {
         id: 'long',
         label: '긴 라벨',
-        description: '라벨이 길면 남은 폭에 맞춰 줄을 바꿉니다. 원 크기는 그대로이고 그림 높이만 늘어납니다.',
+        description:
+            '라벨이 길면 남은 폭에 맞춰 2줄까지 줄을 바꾸고, 넘치면 둘째 줄 끝에서 말줄임합니다. 비중 · 건수는 옆에 안 들어가면 다음 줄로 내립니다. 원 크기는 그대로입니다.',
         data: toData([50, 20, 16, 14], false, LONG_NAMES),
     },
     {
@@ -97,13 +93,13 @@ const SCENARIOS = [
     {
         id: 'two',
         label: '2개',
-        description: '두 분류면 큰 조각은 안쪽, 작은 조각은 바깥 라벨 하나입니다.',
+        description: '두 분류면 라벨이 원 양쪽에 하나씩 놓입니다.',
         data: toData([70, 30], false),
     },
     {
         id: 'single',
         label: '1개',
-        description: '한 분류가 100%면 원 전체가 한 조각이고, 이름 · 비중 · 건수가 원 한가운데에 놓입니다.',
+        description: '한 분류가 100%면 원 전체가 한 조각이고, 라벨은 지시선 하나로 바깥에 놓입니다.',
         data: toData([100], false),
     },
 ] as const
@@ -136,6 +132,7 @@ const CalloutPieScenarioDemo = () => {
             <div className="max-w-xl">
                 <CalloutPieChart
                     data={[...scenario.data]}
+                    maxLabelLines={LABEL_MAX_LINES}
                     ariaLabel={`${scenario.label} 데이터의 분류별 비중과 건수`}
                 />
             </div>

@@ -37,6 +37,7 @@ import {ClearableInput, DatePicker, Select, SelectTrigger, TelInput, useFormValu
 
 <ClearableInput id="ceo-name" name="ceoName" />
 <TelInput id="company-tel" name="companyTel" />   // 숫자만 받아 하이픈을 자동으로 넣는다
+<InputGroupInput id="sales" name="sales" inputMode="numeric" format={formatThousands} data-number-format={NUMBER_FORMAT_THOUSANDS} />   // 세 자리마다 쉼표(1,234,567) · 표시가 있어야 제출할 때 숫자로 바뀐다
 <DatePicker id="found-date" name="foundDate" maxDate={today} />
 <Select name="corpType">
   <SelectTrigger id="corp-type">…</SelectTrigger>  // Select 는 뿌리에 id 가 없다 — 트리거에 붙인다
@@ -145,7 +146,13 @@ const WRAPPER_ROWS = [
     {key: 'input', cells: ['Input', '기본 한 줄 입력. 조회 버튼이 붙는 칸처럼 지우기 버튼이 필요 없을 때.']},
     {key: 'clearable', cells: ['ClearableInput', '지우기 버튼이 붙는 한 줄 입력. 대부분의 텍스트 칸이 이것입니다.']},
     {key: 'tel', cells: ['TelInput', '전화번호. 숫자만 받아 하이픈을 자동으로 넣습니다(02·050X·1544 대응).']},
-    {key: 'group', cells: ['InputGroupInput', '단위(명·건·백만원)가 붙는 입력. InputGroup 안에서 씁니다.']},
+    {
+        key: 'group',
+        cells: [
+            'InputGroupInput',
+            '단위(명·건·개·백만원·원·일)가 붙는 수량·금액 입력. InputGroup 안에서 씁니다. format={formatThousands}(lib/number-format)로 세 자리마다 쉼표를 넣습니다(1,234,567). 영업이익·순이익·자본총계처럼 음수가 될 수 있는 금액은 formatSignedThousands 로 맨 앞 \'-\' 를 받습니다. 연도·월·개월·날짜·사업자번호·법인번호·특허 등록번호·전화번호는 수량이 아니라 쉼표를 넣지 않습니다. 값은 쉼표가 든 그대로 담깁니다 — 쉼표 칸에는 data-number-format="thousands" 표시가 달려, 제출할 때 withNumberValues(폼, 값)가 그 칸들만 숫자로 바꿉니다(값 하나는 parseThousands). 새 칸에 이 표시를 빠뜨리면 쉼표 문자열 그대로 전송됩니다. 조회 응답처럼 setValue 로 넣는 값은 칸의 format 을 거치지 않으므로 formatThousands 로 감싸서 넣습니다. 최대 자릿수는 아직 미정이라 걸려 있지 않습니다 — 정해지면 UnitField 에 maxDigits 를 넘기거나 format 을 limitDigits(formatThousands, 자릿수)로 감쌉니다.',
+        ],
+    },
     {key: 'textarea', cells: ['Textarea', '여러 줄 입력.']},
     {key: 'select', cells: ['Select · SelectTrigger', 'id 는 트리거에 붙입니다. 뿌리(Select)에는 id 속성이 없습니다.']},
     {key: 'radio', cells: ['RadioGroup', '라디오 묶음. 항목은 RadioGroupItem 을 그대로 씁니다.']},

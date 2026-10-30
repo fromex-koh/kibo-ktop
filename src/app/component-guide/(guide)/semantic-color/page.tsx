@@ -249,10 +249,23 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'service-hero-green-band': 'bg-service-hero-green-band',
     'service-hero-green-glow-left': 'bg-service-hero-green-glow-left',
     'service-hero-green-glow-right': 'bg-service-hero-green-glow-right',
+    'service-hero-navy-band': 'bg-service-hero-navy-band',
+    'service-hero-navy-glow-left': 'bg-service-hero-navy-glow-left',
+    'service-hero-navy-glow-right': 'bg-service-hero-navy-glow-right',
+    'service-glass-border': 'bg-service-glass-border',
+    'service-hero-marker': 'bg-service-hero-marker',
+    'procedure-step-number': 'bg-procedure-step-number',
+    'rolling-accordion-surface': 'bg-rolling-accordion-surface',
+    'rolling-accordion-marker': 'bg-rolling-accordion-marker',
+    'platform-connector': 'bg-platform-connector',
+    'platform-icon-surface': 'bg-platform-icon-surface',
+    'platform-kbigx-source-icon-surface': 'bg-platform-kbigx-source-icon-surface',
     'service-target-band': 'bg-service-target-band',
     'chip-marquee-surface': 'bg-chip-marquee-surface',
     'chip-marquee-border': 'bg-chip-marquee-border',
     'chip-marquee-foreground': 'bg-chip-marquee-foreground',
+    'chip-marquee-hover': 'bg-chip-marquee-hover',
+    'chip-marquee-hover-border': 'bg-chip-marquee-hover-border',
     'pill-tab-track': 'bg-pill-tab-track',
     'pill-tab-active': 'bg-pill-tab-active',
     'pill-tab-active-foreground': 'bg-pill-tab-active-foreground',
@@ -285,6 +298,14 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'platform-banner': 'bg-platform-banner',
     'platform-banner-foreground': 'bg-platform-banner-foreground',
     'platform-hero-overlay': 'bg-platform-hero-overlay',
+    'platform-audience': 'bg-platform-audience',
+    'platform-carousel-nav-border': 'bg-platform-carousel-nav-border',
+    'platform-carousel-marker': 'bg-platform-carousel-marker',
+    'platform-kbigx-flow-surface': 'bg-platform-kbigx-flow-surface',
+    'platform-kbigx-flow-board': 'bg-platform-kbigx-flow-board',
+    'platform-kbigx-flow-source-border': 'bg-platform-kbigx-flow-source-border',
+    'platform-kbigx-flow-applicant': 'bg-platform-kbigx-flow-applicant',
+    'platform-kbigx-flow-applicant-foreground': 'bg-platform-kbigx-flow-applicant-foreground',
     'menu-overlay': 'bg-menu-overlay',
     'menu-overlay-foreground': 'bg-menu-overlay-foreground',
     'menu-overlay-foreground-subtle': 'bg-menu-overlay-foreground-subtle',
@@ -460,6 +481,17 @@ const CUSTOM_GROUPS: Group[] = [
     },
     {name: 'service-accent-green', match: (n) => n === 'service-accent-green'},
     {name: 'service-hero-green (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-green-')},
+    {name: 'service-hero-navy (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-navy-')},
+    {name: 'service-glass-border (소개 히어로 안내 카드 테두리)', match: (n) => n === 'service-glass-border'},
+    {name: 'service-hero-marker (소개 히어로 카드 목록 점)', match: (n) => n === 'service-hero-marker'},
+    {name: 'procedure-step-number (절차 단계 번호 면)', match: (n) => n === 'procedure-step-number'},
+    {name: 'rolling-accordion-surface (자동 롤링 아코디언 판)', match: (n) => n === 'rolling-accordion-surface'},
+    {name: 'rolling-accordion-marker (자동 롤링 아코디언 목록 점)', match: (n) => n === 'rolling-accordion-marker'},
+    {name: 'platform-connector (소개 화면 연결선 · 화살표)', match: (n) => n === 'platform-connector'},
+    {
+        name: 'platform-icon-surface (K-BIGx 소개 아이콘 칸)',
+        match: (n) => n === 'platform-icon-surface' || n === 'platform-kbigx-source-icon-surface',
+    },
     {
         name: 'service-target-band / chip-marquee (면 / 테두리 / 글자)',
         match: (n) => n === 'service-target-band' || n.startsWith('chip-marquee-'),
@@ -725,9 +757,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'platform-* (플랫폼 소개)': (
         <>
             플랫폼 소개 화면 전용입니다. platform-banner 는 남색 소개 배너 바탕(배너 사진의 남색과 같아 사진을 못
-            불러와도 같은 띠로 보임), -foreground 는 배너 글자, platform-hero-overlay 는 상단 대표 사진 위 어두운
-            막(60%)이자 사진 칸 바탕(사진을 못 불러와도 흰 글자가 읽히고, 대비 검사기도 이 색으로 계산)입니다. 모두 사진
-            위에 놓여 세 테마 값이 같습니다.
+            불러와도 같은 띠로 보임), -foreground 는 배너 글자(다크는 흰색 대신 gray.10), platform-hero-overlay 는 상단
+            대표 사진 위 어두운 막(60%)이자 사진 칸 바탕(사진을 못 불러와도 흰 글자가 읽히고, 대비 검사기도 이 색으로
+            계산)입니다. platform-audience 는 이용 대상 목록의 이용자 이름(중소기업고객 등),
+            platform-carousel-nav-border 는 개요 카드 [이전] 버튼 테두리, platform-carousel-marker 는 고른 개요 카드의
+            설명 점입니다 — 라이트는 기존 색 그대로이고 다크만 시안 값으로 갈립니다. platform-kbigx-flow-* 는 K-BIGx
+            보고서 소개 생성 흐름도의 판(surface 바깥 판 · 점선 묶음, board 안쪽 판, source-border 점선, applicant
+            신청기업 칸 면 · 글자)입니다.
         </>
     ),
     'menu-overlay (서비스 헤더 전체 메뉴)': (
@@ -800,40 +836,83 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'model-icon-surface / icon-surface-raised': (
         <>
             그림 아이콘(이미지)이 놓이는 칸입니다. 그림은 색을 바꿀 수 없어 다크에서도 밝은 navy.100 으로 두어 파랑
-            그림이 묻히지 않게 합니다. model-icon-surface 는 라이트도 옅은 남색 칸(기술평가 모형 구조도 머리 · K-BIGx
-            분석 기능 · 흐름도 보고서), icon-surface-raised 는 라이트가 흰 원인 칸(K-BIGx 흐름도 특허정보 · 기업정보 ·
-            LLM)입니다.
+            그림이 묻히지 않게 합니다. model-icon-surface 는 라이트도 옅은 남색 칸(기술평가 모형 구조도 머리 · 탄소중립
+            분석 기능)입니다. K-BIGx 소개는 다크 전용 그림이 있어 platform-icon-surface ·
+            platform-kbigx-source-icon-surface 를 씁니다.
         </>
     ),
     'service-accent-green': (
         <>
             탄소중립 화면의 초록 강조 글자입니다 — 히어로 큰 제목 둘째 줄 · &apos;진단 시작하기&apos; 링크의 hover ·
-            포커스. 라이트는 시안 mint.800 이고, 다크는 팔레트 반사로 거의 흰색(mint.50)이 되어 평소 글자와 구분되지
-            않으므로 또렷한 mint.400 을 씁니다.
+            포커스. 라이트는 시안 mint.800 이고, 다크는 시안대로 밝은 mint.200 입니다.
         </>
     ),
     'service-hero-green (띠 / 번진 원)': (
         <>
             플랫폼 소개 &gt; 탄소중립 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 시안
-            값(green.100 · mint.100 · warning.50)이고, 다크는 팔레트 반사로 진한 초록 · 짙은 원색이 되어 강렬하므로
-            본문보다 한 단계 밝은 gray.800 띠 위에 라이트와 같은 톤 짝으로 은은하게 번지게 합니다 — 왼쪽 깊은
-            초록(mint.900) · 오른쪽 깊은 호박색(warning.800).
+            값(green.100 · mint.100 · warning.50)이고, 다크는 시안대로 짙은 초록 띠(success.900) 위에 왼쪽 mint.900 ·
+            오른쪽 success.800 원이 은은하게 번집니다.
+        </>
+    ),
+    'service-hero-navy (띠 / 번진 원)': (
+        <>
+            플랫폼 소개 &gt; K-BIGx 보고서 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 시안
+            값(navy.100 · blue.200 · purple.200)이고, 다크는 시안대로 짙은 남색 띠(navy.800) 위에 왼쪽 blue.900 · 오른쪽
+            purple.900 원이 은은하게 번집니다.
+        </>
+    ),
+    'service-hero-marker (소개 히어로 카드 목록 점)': (
+        <>소개 화면 히어로 유리 카드의 목록 점입니다. 라이트 gray.500 · 다크 gray.100.</>
+    ),
+    'service-glass-border (소개 히어로 안내 카드 테두리)': (
+        <>
+            플랫폼 소개 히어로의 반투명 안내 카드(ServiceGlassCard) 테두리입니다. 라이트는 흰색 90%, 다크는 흰색
+            25%입니다. K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
+        </>
+    ),
+    'procedure-step-number (절차 단계 번호 면)': (
+        <>
+            절차 단계(ProcedureSteps)의 번호 칸 면입니다. 라이트는 gray.500, 다크는 시안대로 밝은 gray.200 이고 번호
+            글자는 primary-foreground 입니다. K-BIGx 보고서 · 특허평가 · 탄소중립 소개가 함께 씁니다.
+        </>
+    ),
+    'rolling-accordion-marker (자동 롤링 아코디언 목록 점)': (
+        <>자동 롤링 아코디언 본문 목록의 점입니다. 라이트 gray.500 · 다크 gray.100.</>
+    ),
+    'platform-connector (소개 화면 연결선 · 화살표)': (
+        <>
+            절차 단계 화살표와 K-BIGx 구조도의 연결선 · 화살표 · 더하기 색입니다. 라이트 gray.500 · 다크 gray.100 이고,
+            선은 50% 로 씁니다.
+        </>
+    ),
+    'platform-icon-surface (K-BIGx 소개 아이콘 칸)': (
+        <>
+            K-BIGx 소개의 아이콘 칸입니다. 분석 기능 · 보고서 칸은 platform-icon-surface(라이트 navy.100 · 다크
+            navy.700), 구조도의 특허정보 · 기업정보 · LLM 칸은 platform-kbigx-source-icon-surface(라이트 흰색 · 다크
+            gray.800).
+        </>
+    ),
+    'rolling-accordion-surface (자동 롤링 아코디언 판)': (
+        <>
+            자동 롤링 아코디언(RollingAccordion)의 글 판입니다. 라이트는 panel-subtle 과 같은 gray.10, 다크는 시안대로
+            페이지 바탕과 같은 gray.900 입니다. 기술평가 · K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
         </>
     ),
     'service-target-band / chip-marquee (면 / 테두리 / 글자)': (
         <>
             탄소중립 &apos;이런 기업에 적합합니다&apos; 띠(service-target-band)와 그 위 칩 마퀴(ChipMarquee)의 칩 면 ·
-            테두리 · 글자입니다. 라이트는 시안(blue.50 띠 · blue.10 칩 · navy.200 테두리 · navy.600 글자). 다크는 팔레트
-            반사로 띠와 칩 면이 같은 blue.900 이 되어 칩이 묻히므로, gray.800 띠 위에 gray.700 칩 · gray.600 테두리 ·
-            밝은 글자로 둡니다.
+            테두리 · 글자 · 마우스를 올린 면(hover)입니다. 라이트는 시안(blue.50 띠 · blue.10 칩 · navy.200 테두리 ·
+            navy.600 글자 · navy.500 hover). 다크는 시안대로 blue.900 띠 위에 navy.800 칩 · navy.500 테두리 · navy.300
+            글자이고, hover 면은 navy.300 에 짙은 글자(primary-foreground)이며 테두리도 면과 같은 navy.300 이라 보이지
+            않습니다(hover-border — 라이트는 평소 테두리 navy.200 그대로).
         </>
     ),
     'pill-tab (트랙 / 고른 면 / 글자)': (
         <>
             알약 전환 탭(theme/pill-tabs.variants.ts)의 트랙(track) · 고른 항목 면(active) ·
             글자(active-foreground)입니다 — 플랫폼 소개 &gt; 탄소중립의 플랫폼 전환. 라이트는 시안(트랙 green.50 · 고른
-            면 mint.800 · 흰 굵은 글자). 다크는 트랙을 중립 gray.700 으로 두어 고른 진한 초록 면이 또렷하게 드러나고,
-            고른 면은 같은 mint.800 이라 흰 글자 대비가 유지됩니다.
+            면 mint.800 · 흰 굵은 글자). 다크는 시안대로 짙은 초록 트랙(green.900) 위에 같은 mint.800 고른 면 · gray.10
+            글자입니다.
         </>
     ),
     'brand-solid / brand-solid-foreground': (

@@ -2,8 +2,14 @@
 
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
-import Image, {type StaticImageData} from 'next/image'
+import Image from 'next/image'
 import Link from 'next/link'
+import {
+    GuideAssetGroup,
+    summarizeAssets,
+    type GuideAssetGroupData,
+    type GuideAssetItem,
+} from '@/components/custom/guide-asset-group'
 import type {LucideIcon} from 'lucide-react'
 import {
     ArrowDown,
@@ -125,6 +131,22 @@ import ktrsFmIcon from '@public/images/platform-technology-evaluation/ktrs-fm-ic
 import economicUseIcon from '@public/images/platform-patent-evaluation/economic-use.webp'
 import patentTradeIcon from '@public/images/platform-patent-evaluation/patent-trade.webp'
 import patentedKnowledgeIcon from '@public/images/platform-patent-evaluation/patented-knowledge.webp'
+import kbigxAiAnalysisReportDarkIcon from '@public/images/platform-k-bigx-report/ai-analysis-report-dark.webp'
+import kbigxPeerComparisonDarkIcon from '@public/images/platform-k-bigx-report/peer-comparison-dark.webp'
+import kbigxIndustryTrendDarkIcon from '@public/images/platform-k-bigx-report/industry-trend-dark.webp'
+import kbigxInsightDarkIcon from '@public/images/platform-k-bigx-report/insight-dark.webp'
+import kbigxApplicantDarkIcon from '@public/images/platform-k-bigx-report/applicant-dark.webp'
+import kbigxPatentInfoDarkIcon from '@public/images/platform-k-bigx-report/patent-info-dark.webp'
+import kbigxCompanyInfoDarkIcon from '@public/images/platform-k-bigx-report/company-info-dark.webp'
+import kbigxLlmDarkIcon from '@public/images/platform-k-bigx-report/llm-dark.webp'
+import kbigxReportDarkIcon from '@public/images/platform-k-bigx-report/k-bigx-report-dark.webp'
+import carbonEmissionDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis-dark.webp'
+import carbonReductionPlanDarkIcon from '@public/images/platform-carbon-neutrality/reduction-plan-dark.webp'
+import carbonKeywordSearchDarkIcon from '@public/images/platform-carbon-neutrality/keyword-search-dark.webp'
+import carbonSelfDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/self-diagnosis-dark.webp'
+import patentedKnowledgeDarkIcon from '@public/images/platform-patent-evaluation/patented-knowledge-dark.webp'
+import patentTradeDarkIcon from '@public/images/platform-patent-evaluation/patent-trade-dark.webp'
+import economicUseDarkIcon from '@public/images/platform-patent-evaluation/economic-use-dark.webp'
 import kbigxAiAnalysisReportIcon from '@public/images/platform-k-bigx-report/ai-analysis-report.webp'
 import carbonEmissionDiagnosisIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis.webp'
 import carbonReductionPlanIcon from '@public/images/platform-carbon-neutrality/reduction-plan.webp'
@@ -146,14 +168,9 @@ export const metadata: Metadata = {title: '아이콘 (Icon)'}
 // 아이콘이 아닌 큰 그림(로고 · 일러스트 · 스크린샷 · 배경)은 이미지 가이드(/component-guide/image)에서 다룬다.
 // className 은 Tailwind 가 읽도록 리터럴로 적는다(조합하면 스타일이 생성되지 않는다).
 
-// 미리보기 바탕 — 흰 그림 · 라이트/다크 짝 그림은 실제로 놓이는 면 위에 보여야 정확하다.
-//   card  : 가이드 카드 바탕 그대로(테마를 따라 바뀜) — 짝이 없는 그림.
-//   light : 'light' 범위 클래스로 늘 라이트 테마의 카드 면 — 가이드를 다크로 바꿔도 라이트 화면 그대로 보인다.
-//   dark  : 'dark' 범위 클래스로 늘 다크 테마의 카드 면 — 가이드를 라이트로 바꿔도 다크 화면 그대로 보인다.
-//   (원시 색 bg-gray-* 는 다크 테마에서 반전되므로 고정 바탕으로 쓰지 않는다.)
-//   blue · purple : 흰 그림이 놓이는 칸 색(보고서 탭 띠 · 왕관 · K-BIGx 신청기업) — 바탕이 없으면 흰 그림이 보이지 않을 때만 쓴다.
-// 화면에서 그림 뒤에 따로 칠하는 칸(옅은 남색 아이콘 칸 등)은 미리보기에 그리지 않는다 — 칸까지 그림 파일로 오해하지 않도록
-// 그림 파일만 보이고, 놓이는 칸은 묶음 설명 · 표시 크기에 글로 적는다.
+// 미리보기 바탕 — 라이트 · 다크 짝은 GuideAssetGroup 이 각 테마로 고정해 그린다. 아래는 짝이 없는 그림과 쓰는 법 표에 쓴다.
+//   light · dark : 그 테마의 카드 면으로 고정(원시 색 bg-gray-* 는 다크에서 반전되어 쓰지 않는다).
+//   blue · purple : 흰 그림이 놓이는 칸 색.
 type ImageIconSurface = 'card' | 'light' | 'dark' | 'blue' | 'purple'
 const IMAGE_ICON_SURFACE_CLASS: Record<ImageIconSurface, string> = {
     card: '',
@@ -162,40 +179,26 @@ const IMAGE_ICON_SURFACE_CLASS: Record<ImageIconSurface, string> = {
     blue: 'flex size-10 items-center justify-center rounded-sm bg-blue-500',
     purple: 'flex size-10 items-center justify-center rounded-sm bg-purple-500',
 }
-// 짝 그림 아래에 적는 바탕 이름 — 테마를 바꿔도 어느 테마용인지 글로 알 수 있게.
-const IMAGE_ICON_SURFACE_NOTE: Partial<Record<ImageIconSurface, string>> = {
-    light: '라이트 화면 고정',
-    dark: '다크 화면 고정',
-}
 
-type ImageIconItem = {
-    file: string
-    label: string
-    src: StaticImageData
-    /** 실제 화면의 크기 클래스(미리보기도 같은 크기). */
-    className: string
-    surface?: ImageIconSurface
-}
+type ImageIconItem = Omit<GuideAssetItem, 'surfaceClassName' | 'surfaceNote'> & {surface?: ImageIconSurface}
 
-type ImageIconGroup = {
-    key: string
-    title: string
-    description: string
-    folder: string
-    usedIn: string
-    size: string
+// 문서 위계 — 분류 > 묶음 > 그림 카드.
+const IMAGE_ICON_CATEGORIES = ['서비스 소개', '보고서', '요금 · 공통'] as const
+
+type ImageIconGroup = Omit<GuideAssetGroupData, 'items'> & {
+    category: (typeof IMAGE_ICON_CATEGORIES)[number]
     items: readonly ImageIconItem[]
 }
 
 const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     {
         key: 'report-banner',
+        category: '보고서',
         title: '보고서 탭 제목 띠',
-        description:
-            'K-BIGx 기업혁신성장 보고서 탭 제목 띠의 파란 칸(40 · 반경 8) 안 흰 그림입니다. 제목이 옆에 있어 장식입니다.',
+        description: 'K-BIGx 보고서 탭 제목 띠의 파란 칸 안 그림입니다.',
         folder: 'public/images/icons/',
-        usedIn: 'custom/innovation-growth-report-document.tsx (TAB_BANNER_ICONS)',
-        size: 'h-5.5 w-auto · 계기판 size-6.5 · 참고자료 h-6(20 × 24)',
+        usedIn: 'custom/innovation-growth-report-document.tsx',
+        size: 'h-5.5 w-auto (계기판 size-6.5 · 참고자료 h-6)',
         items: [
             {
                 file: 'document-check.webp',
@@ -238,72 +241,64 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
     {
         key: 'report-section-mark',
+        category: '보고서',
         title: '보고서 구획 표시',
-        description: '인쇄형 보고서 구획 제목 앞의 16 표식입니다. 쪽마다 되풀이되어 늦게 불러오지 않습니다(preload).',
+        description: '인쇄형 보고서 구획 제목 앞 표식입니다.',
         folder: 'public/images/report/',
-        usedIn: 'custom/report-document.tsx (ReportSectionMark)',
+        usedIn: 'custom/report-document.tsx',
         size: 'size-icon-sm',
         items: [{file: 'section-mark.webp', label: '구획 표시', src: reportSectionMark, className: 'size-icon-sm'}],
     },
     {
         key: 'qa-mark',
+        category: '요금 · 공통',
         title: '질문 · 답변 표시 (QaMark)',
-        description:
-            "FAQ · 문의 답변의 'Q' · 'A' 그림입니다. 라이트 · 다크 두 장을 dark: 로 바꿔 보입니다. 컴포넌트 QaMark 를 씁니다.",
+        description: 'FAQ · 문의 답변의 Q · A 표시입니다.',
         folder: 'public/images/faq/',
-        usedIn: 'custom/qa-mark.tsx (QaMark: 아코디언 FAQ · 문의 상세)',
+        usedIn: 'custom/qa-mark.tsx',
         size: 'size-icon-lg',
         items: [
             {
                 file: 'faq-question-mark.webp',
-                label: '질문 · 라이트',
+                label: '질문 (Q)',
                 src: faqQuestionMark,
                 className: 'size-icon-lg',
-                surface: 'light',
-            },
-            {
-                file: 'faq-question-mark-dark.webp',
-                label: '질문 · 다크',
-                src: faqQuestionMarkDark,
-                className: 'size-icon-lg',
-                surface: 'dark',
+                dark: {file: 'faq-question-mark-dark.webp', src: faqQuestionMarkDark},
             },
             {
                 file: 'faq-answer-mark.webp',
-                label: '답변 · 라이트',
+                label: '답변 (A)',
                 src: faqAnswerMark,
                 className: 'size-icon-lg',
-                surface: 'light',
-            },
-            {
-                file: 'faq-answer-mark-dark.webp',
-                label: '답변 · 다크',
-                src: faqAnswerMarkDark,
-                className: 'size-icon-lg',
-                surface: 'dark',
+                dark: {file: 'faq-answer-mark-dark.webp', src: faqAnswerMarkDark},
             },
         ],
     },
     {
         key: 'won',
+        category: '요금 · 공통',
         title: '원화 표시',
-        description:
-            '요금 안내의 금액 앞 원화 그림입니다(lucide 에 원화 아이콘이 없음). 라이트 · 다크 두 장을 테마 변수(--logo-on-light · --logo-on-dark)로 바꿔 보입니다.',
+        description: '요금 안내의 금액 앞 원화 표시입니다.',
         folder: 'public/images/pricing/',
         usedIn: 'custom/pricing-policy.tsx',
         size: 'size-8',
         items: [
-            {file: 'icon-won-light.webp', label: '라이트', src: wonIconLight, className: 'size-8', surface: 'light'},
-            {file: 'icon-won-dark.webp', label: '다크', src: wonIconDark, className: 'size-8', surface: 'dark'},
+            {
+                file: 'icon-won-light.webp',
+                label: '원화',
+                src: wonIconLight,
+                className: 'size-8',
+                dark: {file: 'icon-won-dark.webp', src: wonIconDark},
+            },
         ],
     },
     {
         key: 'ticket-grade',
+        category: '요금 · 공통',
         title: '이용권 등급',
-        description:
-            '이용권 등급(미니멈 · 베이직 · 스탠다드 · 프리미엄) 그림입니다. 경로는 요금 데이터(content/service/pricing.ts)에 있습니다.',
+        description: '이용권 등급 그림입니다. size-13 에서는 원본이 2배입니다(그 외 아이콘은 3배).',
         folder: 'public/images/ticket-grade/',
-        usedIn: 'custom/pricing-policy.tsx (size-8) · custom/paid-service-history.tsx (size-13)',
+        usedIn: 'custom/pricing-policy.tsx · custom/paid-service-history.tsx',
         size: 'size-8 · size-13',
         items: [
             {file: 'ticket-grade-minimum.webp', label: '미니멈', src: ticketGradeMinimum, className: 'size-13'},
@@ -314,12 +309,12 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
     {
         key: 'crown',
+        category: '보고서',
         title: '왕관 (순위 피라미드 최상위)',
-        description:
-            '순위 피라미드 맨 위 단의 표시입니다. 맨 위 단이 현재 구간이면 보라 면 위 흰 왕관, 아니면 보라 왕관입니다. SVG 안이라 <image> 로 그립니다.',
+        description: '순위 피라미드 맨 위 표시입니다. 현재 구간이면 흰 왕관, 아니면 보라 왕관입니다.',
         folder: 'public/images/rank-pyramid/',
         usedIn: 'custom/rank-pyramid-chart.tsx',
-        size: '20×18 (보라 왕관은 여백 포함 24×24)',
+        size: '20×18 (보라 왕관 24×24)',
         items: [
             {file: 'crown.webp', label: '흰 왕관', src: crownImage, className: 'h-4.5 w-5', surface: 'purple'},
             {file: 'crown-purple.webp', label: '보라 왕관', src: crownPurpleImage, className: 'size-6'},
@@ -327,21 +322,21 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
     {
         key: 'evaluation-model',
+        category: '서비스 소개',
         title: '평가모형 아이콘',
-        description:
-            "플랫폼 소개 > 기술평가 모형 구조도 맨 위의 모형 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(120 · 반경 40 · model-icon-surface — 라이트 · 다크 모두 navy.100. 그림 아이콘은 색을 바꿀 수 없어 다크에서도 밝은 칸에 둔다) 가운데 60 으로 놓습니다. 아래 모형명과 같은 글이라 장식(alt='')입니다. 글자가 든 그림이라 무손실 webp(표시 크기의 3배 180×180)로 두었습니다. Tech-Index · 투자모형 아이콘은 받으면 이 묶음에 추가합니다.",
+        description: '기술평가 모형 구조도의 모형 아이콘입니다. 다크 파일은 없습니다.',
         folder: 'public/images/platform-technology-evaluation/',
-        usedIn: 'custom/ktrs-fm-structure-diagram.tsx (기업 /platform/technology-evaluation)',
-        size: 'size-15 (칸 size-30 · rounded-3xl · bg-model-icon-surface)',
+        usedIn: 'custom/ktrs-fm-structure-diagram.tsx',
+        size: 'size-15 · 칸 size-30',
         items: [{file: 'ktrs-fm-icon.webp', label: 'KTRS-FM', src: ktrsFmIcon, className: 'size-15'}],
     },
     {
         key: 'patent-evaluation',
+        category: '서비스 소개',
         title: '특허평가 관점 아이콘',
-        description:
-            "플랫폼 소개 > 특허평가 구조도의 세 관점(특허화된 기술지식 · 특허 매매 · 경제적 활용) 아이콘입니다. 회색 묶음(panel-inset) 안에 60 으로 놓고, 바로 아래 제목이 같은 뜻이라 장식(alt='')입니다. 원본 180×180(표시 크기의 3배)이고 무손실 webp 가 일반 압축보다 작아 무손실로 두었습니다(1~1.4KB).",
+        description: '특허평가 구조도의 세 관점 아이콘입니다. 탄소중립 수준 진단 · 전문평가도 같은 파일을 씁니다.',
         folder: 'public/images/platform-patent-evaluation/',
-        usedIn: 'custom/platform-patent-evaluation.tsx (기업 /platform/patent-evaluation) · custom/platform-carbon-neutrality.tsx(수준 진단 · 전문평가 — 탄소중립 기능 아이콘)',
+        usedIn: 'custom/platform-patent-evaluation.tsx · custom/platform-carbon-neutrality.tsx',
         size: 'size-15',
         items: [
             {
@@ -349,87 +344,169 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
                 label: '특허화된 기술지식',
                 src: patentedKnowledgeIcon,
                 className: 'size-15',
+                tile: 'bg-panel-inset',
+                dark: {file: 'patented-knowledge-dark.webp', src: patentedKnowledgeDarkIcon},
             },
-            {file: 'patent-trade.webp', label: '특허 매매', src: patentTradeIcon, className: 'size-15'},
-            {file: 'economic-use.webp', label: '경제적 활용', src: economicUseIcon, className: 'size-15'},
+            {
+                file: 'patent-trade.webp',
+                label: '특허 매매',
+                src: patentTradeIcon,
+                className: 'size-15',
+                tile: 'bg-panel-inset',
+                dark: {file: 'patent-trade-dark.webp', src: patentTradeDarkIcon},
+            },
+            {
+                file: 'economic-use.webp',
+                label: '경제적 활용',
+                src: economicUseIcon,
+                className: 'size-15',
+                tile: 'bg-panel-inset',
+                dark: {file: 'economic-use-dark.webp', src: economicUseDarkIcon},
+            },
         ],
     },
     {
         key: 'k-bigx-feature',
+        category: '서비스 소개',
         title: 'K-BIGx 보고서 분석 기능 아이콘',
-        description:
-            "플랫폼 소개 > K-BIGx 보고서 '분석 기능' 목록의 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(80 · model-icon-surface) 가운데 40 으로 놓고, 옆 제목이 같은 뜻이라 장식(alt='')입니다. 원본 120×120(3배) · 무손실 webp(0.2~0.9KB).",
+        description: 'K-BIGx 소개의 분석 기능 아이콘입니다.',
         folder: 'public/images/platform-k-bigx-report/',
-        usedIn: 'custom/platform-k-bigx-report.tsx (기업 /platform/k-bigx-report)',
-        size: 'size-10 (칸 size-20 · rounded-2xl · bg-model-icon-surface)',
+        usedIn: 'custom/platform-k-bigx-report.tsx',
+        size: 'size-10 · 칸 size-20',
         items: [
             {
                 file: 'ai-analysis-report.webp',
                 label: 'AI 기반 종합 분석 보고서',
                 src: kbigxAiAnalysisReportIcon,
                 className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'ai-analysis-report-dark.webp', src: kbigxAiAnalysisReportDarkIcon},
             },
             {
                 file: 'peer-comparison.webp',
                 label: '동종업계 비교 분석',
                 src: kbigxPeerComparisonIcon,
                 className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'peer-comparison-dark.webp', src: kbigxPeerComparisonDarkIcon},
             },
-            {file: 'industry-trend.webp', label: '산업 동향 정보', src: kbigxIndustryTrendIcon, className: 'size-10'},
-            {file: 'insight.webp', label: '인사이트 제공', src: kbigxInsightIcon, className: 'size-10'},
+            {
+                file: 'industry-trend.webp',
+                label: '산업 동향 정보',
+                src: kbigxIndustryTrendIcon,
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'industry-trend-dark.webp', src: kbigxIndustryTrendDarkIcon},
+            },
+            {
+                file: 'insight.webp',
+                label: '인사이트 제공',
+                src: kbigxInsightIcon,
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'insight-dark.webp', src: kbigxInsightDarkIcon},
+            },
         ],
     },
     {
         key: 'k-bigx-flow',
+        category: '서비스 소개',
         title: 'K-BIGx 보고서 흐름도 아이콘',
-        description:
-            "K-BIGx 보고서 생성 흐름도의 아이콘입니다. 신청기업은 파랑 칸 위 흰 그림 32, 특허정보 · 기업정보 · LLM 은 흰 원(80) 가운데 40, 보고서는 옅은 남색 둥근 칸(120 · model-icon-surface) 가운데 60 으로 놓습니다. 미리보기는 그림 파일만 보입니다(원 · 둥근 칸은 화면에서 따로 칠하는 면 — 신청기업만 흰 그림이라 파랑 바탕 위에 보임). 옆 이름이 같은 뜻이라 장식(alt='')입니다. 원본은 표시 크기의 3배 · 무손실 webp.",
+        description: 'K-BIGx 보고서 흐름도 아이콘입니다.',
         folder: 'public/images/platform-k-bigx-report/',
-        usedIn: 'custom/k-bigx-report-flow-diagram.tsx (기업 /platform/k-bigx-report)',
-        size: '신청기업 size-8 · 원 아이콘 size-10 · 보고서 size-15',
+        usedIn: 'custom/k-bigx-report-flow-diagram.tsx',
+        size: '신청기업 size-8 · 정보 칸 size-10 · 보고서 size-15',
         items: [
             {
                 file: 'applicant.webp',
-                label: '신청기업 (96)',
+                label: '신청기업',
                 src: kbigxApplicantIcon,
                 className: 'size-8',
-                surface: 'blue',
+                tile: 'bg-platform-kbigx-flow-applicant',
+                dark: {file: 'applicant-dark.webp', src: kbigxApplicantDarkIcon},
             },
-            {file: 'patent-info.webp', label: '특허정보 (120)', src: kbigxPatentInfoIcon, className: 'size-10'},
-            {file: 'company-info.webp', label: '기업정보 (120)', src: kbigxCompanyInfoIcon, className: 'size-10'},
-            {file: 'llm.webp', label: 'LLM (120)', src: kbigxLlmIcon, className: 'size-10'},
+            {
+                file: 'patent-info.webp',
+                label: '특허정보',
+                src: kbigxPatentInfoIcon,
+                className: 'size-10',
+                tile: 'bg-platform-kbigx-source-icon-surface',
+                dark: {file: 'patent-info-dark.webp', src: kbigxPatentInfoDarkIcon},
+            },
+            {
+                file: 'company-info.webp',
+                label: '기업정보',
+                src: kbigxCompanyInfoIcon,
+                className: 'size-10',
+                tile: 'bg-platform-kbigx-source-icon-surface',
+                dark: {file: 'company-info-dark.webp', src: kbigxCompanyInfoDarkIcon},
+            },
+            {
+                file: 'llm.webp',
+                label: 'LLM',
+                src: kbigxLlmIcon,
+                className: 'size-10',
+                tile: 'bg-platform-kbigx-source-icon-surface',
+                dark: {file: 'llm-dark.webp', src: kbigxLlmDarkIcon},
+            },
             {
                 file: 'k-bigx-report.webp',
-                label: '보고서 (180)',
+                label: '보고서',
                 src: kbigxReportIcon,
                 className: 'size-15',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'k-bigx-report-dark.webp', src: kbigxReportDarkIcon},
             },
         ],
     },
     {
         key: 'carbon-feature',
+        category: '서비스 소개',
         title: '탄소중립 분석 기능 아이콘',
-        description:
-            "플랫폼 소개 > 탄소중립 '분석 기능' 목록의 아이콘입니다. 미리보기는 그림 파일만 보입니다 — 화면에서는 따로 칠한 옅은 남색 둥근 칸(80 · model-icon-surface) 가운데 40 으로 놓고, 옆 제목이 같은 뜻이라 장식(alt='')입니다. 원본 120×120(3배) · 무손실 webp(0.8~1.1KB). '탄소중립 수준 진단' · 택소노미 '전문평가'는 특허평가 관점 아이콘(수준 진단 · 전문평가 그림)을 함께 씁니다. '키워드 검색' · '자가진단'은 시안 아이콘을 3배로 내보냈습니다.",
+        description: '탄소중립 소개의 분석 기능 아이콘입니다. 수준 진단 · 전문평가는 위 특허평가 파일을 함께 씁니다.',
         folder: 'public/images/platform-carbon-neutrality/',
-        usedIn: 'custom/platform-carbon-neutrality.tsx (기업 /platform/carbon-neutrality)',
-        size: 'size-10 (칸 size-20 · rounded-2xl · bg-model-icon-surface)',
+        usedIn: 'custom/platform-carbon-neutrality.tsx',
+        size: 'size-10 · 칸 size-20',
         items: [
             {
                 file: 'emission-diagnosis.webp',
                 label: '배출량 진단',
                 src: carbonEmissionDiagnosisIcon,
                 className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'emission-diagnosis-dark.webp', src: carbonEmissionDiagnosisDarkIcon},
             },
-            {file: 'reduction-plan.webp', label: '감축계획 수립', src: carbonReductionPlanIcon, className: 'size-10'},
-            {file: 'keyword-search.webp', label: '키워드 검색', src: carbonKeywordSearchIcon, className: 'size-10'},
-            {file: 'self-diagnosis.webp', label: '자가진단', src: carbonSelfDiagnosisIcon, className: 'size-10'},
+            {
+                file: 'reduction-plan.webp',
+                label: '감축계획 수립',
+                src: carbonReductionPlanIcon,
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'reduction-plan-dark.webp', src: carbonReductionPlanDarkIcon},
+            },
+            {
+                file: 'keyword-search.webp',
+                label: '키워드 검색',
+                src: carbonKeywordSearchIcon,
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'keyword-search-dark.webp', src: carbonKeywordSearchDarkIcon},
+            },
+            {
+                file: 'self-diagnosis.webp',
+                label: '자가진단',
+                src: carbonSelfDiagnosisIcon,
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
+                dark: {file: 'self-diagnosis-dark.webp', src: carbonSelfDiagnosisDarkIcon},
+            },
         ],
     },
     {
         key: 'emblem',
+        category: '보고서',
         title: '정부 상징 문양',
-        description: '보고서 진단브리핑 정부 R&D 부처별 건수 앞의 문양입니다. 부처명이 옆에 있어 장식입니다.',
+        description: '진단브리핑 정부 R&D 부처별 건수 앞 문양입니다.',
         folder: 'public/images/',
         usedIn: 'custom/innovation-growth-report-document.tsx',
         size: 'size-icon-lg',
@@ -437,11 +514,12 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
     {
         key: 'browser',
+        category: '요금 · 공통',
         title: '브라우저 로고',
-        description: '이용 안내의 권장 브라우저 로고입니다. 브라우저 이름을 함께 적어 로고는 장식입니다.',
+        description: '이용 안내의 권장 브라우저 로고입니다.',
         folder: 'public/images/browser/',
         usedIn: 'custom/service-guide.tsx',
-        size: 'size-20 (object-contain)',
+        size: 'size-20',
         items: [
             {
                 file: 'microsoft-edge.webp',
@@ -456,9 +534,9 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
     {
         key: 'grade-medal',
+        category: '보고서',
         title: '등급 메달',
-        description:
-            '특허 보고서 지표 쪽의 등급(AAA ~ C) 메달입니다. 실제 화면은 h-69(276) 이고, 아래 미리보기는 줄여 보입니다.',
+        description: '특허 보고서 지표 쪽의 등급(AAA ~ C) 메달입니다. 미리보기는 줄인 크기입니다.',
         folder: 'public/images/grade-medal/',
         usedIn: 'custom/patent-report-metric-page.tsx',
         size: 'h-69 w-auto',
@@ -476,10 +554,11 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     },
 ]
 
-const IMAGE_ICON_COUNT = IMAGE_ICON_GROUPS.reduce((sum, group) => sum + group.items.length, 0)
+const {count: IMAGE_ICON_COUNT, totalSize: IMAGE_ICON_TOTAL_SIZE} = summarizeAssets(IMAGE_ICON_GROUPS)
 
 // 이미지 아이콘 쓰는 법 — 경우별 코드(실제 서비스와 같은 파일 · 크기).
 const IMAGE_ICON_CODE = `import Image from 'next/image'
+import {ThemeImage} from '@/components/custom/theme-image'
 import emblemGovernment from '@public/images/emblem-government.webp'
 import buildingIcon from '@public/images/icons/building.webp'
 import questionMark from '@public/images/faq/faq-question-mark.webp'
@@ -495,9 +574,8 @@ import medalAaa from '@public/images/grade-medal/aaa.webp'
   <Image src={buildingIcon} alt="" className="h-5.5 w-auto" />
 </span>
 
-{/* ③ 라이트 · 다크 두 장 — 테마에 맞는 한 장만 보인다 */}
-<Image src={questionMark} alt="" sizes="24px" className="size-icon-lg dark:hidden" />
-<Image src={questionMarkDark} alt="" sizes="24px" className="size-icon-lg hidden dark:block" />
+{/* ③ 라이트 · 다크 두 장 — 테마에 맞는 한 장만 보인다(ThemeImage: custom/theme-image.tsx) */}
+<ThemeImage light={questionMark} dark={questionMarkDark} className="size-icon-lg" />
 
 {/* ④ 그림만으로 뜻을 전할 때 — alt 에 그 뜻을 적는다[5.1.1] */}
 <Image src={medalAaa} alt="AAA 등급" className="h-24 w-auto" />
@@ -521,7 +599,7 @@ const IMAGE_USAGE_ROWS = [
             <Image key="preview" src={emblemGovernment} alt="" sizes="24px" className="size-icon-lg" />,
             '① 정사각 그림',
             <span key="how">
-                <code>size-icon-*</code> 토큰으로 크기를 맞춥니다.
+                <code>size-icon-*</code> 토큰
             </span>,
         ],
     },
@@ -533,7 +611,7 @@ const IMAGE_USAGE_ROWS = [
             </span>,
             '② 비율이 다른 그림',
             <span key="how">
-                높이만 주고 폭은 <code>w-auto</code> 로 두어 원본 비율을 지킵니다.
+                높이만 지정, 폭은 <code>w-auto</code>
             </span>,
         ],
     },
@@ -550,7 +628,7 @@ const IMAGE_USAGE_ROWS = [
             </span>,
             '③ 라이트 · 다크 두 장',
             <span key="how">
-                <code>dark:hidden</code> · <code>hidden dark:block</code> 으로 테마에 맞는 한 장만 보입니다.
+                <code>ThemeImage</code> 사용, 파일명 끝에 <code>-dark</code>
             </span>,
         ],
     },
@@ -560,8 +638,7 @@ const IMAGE_USAGE_ROWS = [
             <Image key="preview" src={medalAaa} alt="" className="h-12 w-auto" />,
             '④ 그림만으로 뜻을 전함',
             <span key="how">
-                <code>alt</code> 에 그 뜻을 적습니다(예: AAA 등급). 옆에 같은 글자가 있으면{' '}
-                <code>alt=&quot;&quot;</code>.
+                <code>alt</code> 에 뜻을 적음(예: AAA 등급)
             </span>,
         ],
     },
@@ -573,8 +650,7 @@ const IMAGE_USAGE_ROWS = [
             </span>,
             '⑤ SVG 안',
             <span key="how">
-                <code>next/image</code> 대신 <code>&lt;image href=&#123;src.src&#125;&gt;</code> 로 그립니다(순위
-                피라미드 왕관).
+                <code>&lt;image href=&#123;src.src&#125;&gt;</code> 사용(왕관)
             </span>,
         ],
     },
@@ -586,60 +662,14 @@ const IMAGE_RULE_COLUMNS = [
 ] as const
 
 const IMAGE_RULE_ROWS = [
-    {
-        key: 'when',
-        cells: [
-            '언제 쓰나',
-            'lucide 에 없는 그림(원화 · 왕관 · 브라우저 로고 · 등급 메달 등)만 이미지로 둡니다. lucide 에 있으면 lucide 를 씁니다.',
-        ],
-    },
-    {
-        key: 'where',
-        cells: [
-            '파일 위치 · 이름',
-            'public/images/<묶음>/ 에 kebab-case 로 둡니다. 이름은 쓰는 곳이 아니라 그림 모양으로 짓습니다(예: building.webp). 그래야 다른 화면에서도 다시 쓸 수 있습니다.',
-        ],
-    },
-    {
-        key: 'format',
-        cells: [
-            '형식 · 해상도',
-            <span key="note">
-                <Link
-                    href="/component-guide/image#image-rule"
-                    className="text-primary-strong focus-visible:ring-ring outline-ring rounded underline underline-offset-4 focus:outline-none focus-visible:ring-2"
-                >
-                    이미지 가이드 1-2
-                </Link>{' '}
-                와 같습니다(예: 22 표시 → 66).
-            </span>,
-        ],
-    },
-    {
-        key: 'import',
-        cells: [
-            '불러오기',
-            'next/image 와 정적 import(@public/…)를 씁니다[NA-005]. SVG 안에서만 <image> 를 씁니다(왕관).',
-        ],
-    },
-    {
-        key: 'size',
-        cells: ['크기', '정사각이면 size-icon-* 토큰을 먼저 쓰고, 비율이 다른 그림은 h-* w-auto 로 높이만 맞춥니다.'],
-    },
-    {
-        key: 'dark',
-        cells: [
-            '다크 모드',
-            '바탕에 따라 안 보이는 그림은 라이트 · 다크 두 장을 두고 dark: 또는 테마 변수로 하나만 보입니다.',
-        ],
-    },
-    {
-        key: 'a11y',
-        cells: [
-            '대체 텍스트',
-            '옆에 같은 뜻의 글자가 있으면 alt="" (장식), 그림만으로 뜻을 전하면 alt 에 그 뜻을 적습니다[5.1.1].',
-        ],
-    },
+    {key: 'when', cells: ['언제', 'lucide 에 없는 그림만 이미지로 둡니다.']},
+    {key: 'where', cells: ['위치 · 이름', 'public/images/<묶음>/ · kebab-case · 그림 모양으로 이름 짓기']},
+    {key: 'format', cells: ['형식 · 해상도', 'webp · 표시 크기의 3배(22 표시 → 66)']},
+    {key: 'file-size', cells: ['용량', '작은 아이콘 3KB 이하, 큰 그림(로고 · 메달) 16KB 이하 — 현재 전체 기준']},
+    {key: 'import', cells: ['불러오기', 'next/image + 정적 import[NA-005]']},
+    {key: 'size', cells: ['크기', '정사각은 size-icon-*, 비율이 다르면 h-* w-auto']},
+    {key: 'dark', cells: ['다크 모드', '파일명-dark.webp 를 두고 ThemeImage 사용 · 글자 · 안쪽은 투명 유지']},
+    {key: 'a11y', cells: ['대체 텍스트', '옆 글자와 뜻이 같으면 alt="", 그림만으로 뜻을 전하면 alt 에 적기[5.1.1]']},
 ] as const
 
 const ICON_SIZE_COLUMNS = [
@@ -1058,7 +1088,7 @@ const IconGuidePage = () => (
         </BaseCard>
 
         <GroupHeading id="icon-image-group" title="2. 이미지 아이콘">
-            lucide 에 없는 그림만 webp 이미지로 둡니다. 서비스에서 쓰는 {IMAGE_ICON_COUNT}개를 쓰는 곳별로 묶었습니다.
+            lucide 에 없는 그림 {IMAGE_ICON_COUNT}개 · 합계 {IMAGE_ICON_TOTAL_SIZE}입니다.
         </GroupHeading>
 
         <BaseCard>
@@ -1068,8 +1098,7 @@ const IconGuidePage = () => (
                         2-1. 쓰는 법
                     </h3>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>next/image</code> 와 정적 import(<code>@public/…</code>)로 씁니다[NA-005]. 경우는 다섯
-                        가지입니다.
+                        <code>next/image</code> + 정적 import(<code>@public/…</code>) 기준, 경우별 방법입니다.
                     </p>
                 </div>
                 <Table
@@ -1100,55 +1129,26 @@ const IconGuidePage = () => (
                         2-3. 목록
                     </h3>
                     <p className="typo-body-l-regular text-label-foreground">
-                        미리보기는 실제 크기 · 바탕입니다(등급 메달만 줄임). 라이트 · 다크 짝 그림은 가이드 테마와
-                        상관없이 각자 쓰이는 화면 바탕에 고정해 보입니다. 숫자는 원본 픽셀입니다.
+                        라이트 · 다크 짝은 한 카드에 함께 보입니다. 바탕은 실제 칸 색, 숫자는 원본 픽셀 · 용량입니다.
                     </p>
                 </div>
-                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
-                    {IMAGE_ICON_GROUPS.map((group) => (
-                        <div key={group.key} className="flex flex-col gap-4 py-8 last:pb-0">
-                            <h4 className="typo-title-m-bold text-foreground">{group.title}</h4>
-                            <p className="typo-body-l-regular text-label-foreground">{group.description}</p>
-                            <dl className="typo-body-m-regular text-foreground-subtle grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-                                <dt>폴더</dt>
-                                <dd>
-                                    <code className="text-foreground">{group.folder}</code>
-                                </dd>
-                                <dt>쓰는 곳</dt>
-                                <dd>
-                                    <code className="text-foreground">{group.usedIn}</code>
-                                </dd>
-                                <dt>표시 크기</dt>
-                                <dd>
-                                    <code className="text-foreground">{group.size}</code>
-                                </dd>
-                            </dl>
-                            <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-6">
-                                {group.items.map((item) => (
-                                    <li
-                                        key={item.file}
-                                        className="border-border flex flex-col items-center gap-3 rounded-md border p-4 text-center"
-                                    >
-                                        <span className="flex min-h-24 items-center justify-center">
-                                            <span className={IMAGE_ICON_SURFACE_CLASS[item.surface ?? 'card']}>
-                                                <Image src={item.src} alt="" className={item.className} />
-                                            </span>
-                                        </span>
-                                        <span className="typo-body-m-bold text-foreground">{item.label}</span>
-                                        {item.surface && IMAGE_ICON_SURFACE_NOTE[item.surface] ? (
-                                            <span className="typo-caption-regular text-foreground-subtle">
-                                                {IMAGE_ICON_SURFACE_NOTE[item.surface]}
-                                            </span>
-                                        ) : null}
-                                        <code className="text-foreground-subtle font-mono text-xs break-all">
-                                            {item.file}
-                                        </code>
-                                        <span className="typo-caption-regular text-foreground-subtle tabular-nums">
-                                            {item.src.width}×{item.src.height}px
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
+                <div className="flex flex-col gap-12">
+                    {IMAGE_ICON_CATEGORIES.map((category) => (
+                        <div key={category} className="border-subtle-3 flex flex-col gap-8 border-t pt-6">
+                            <h4 className="typo-h5-bold text-foreground">{category}</h4>
+                            {IMAGE_ICON_GROUPS.filter((group) => group.category === category).map((group) => (
+                                <GuideAssetGroup
+                                    key={group.key}
+                                    headingLevel="h5"
+                                    group={{
+                                        ...group,
+                                        items: group.items.map(({surface, ...item}) => ({
+                                            ...item,
+                                            surfaceClassName: surface ? IMAGE_ICON_SURFACE_CLASS[surface] : undefined,
+                                        })),
+                                    }}
+                                />
+                            ))}
                         </div>
                     ))}
                 </div>
@@ -1162,14 +1162,14 @@ const IconGuidePage = () => (
                         2-4. 아이콘이 아닌 이미지
                     </h3>
                     <p className="typo-body-l-regular text-label-foreground">
-                        로고 · 일러스트 · 스크린샷 · 배경처럼 작은 상징이 아닌 그림은{' '}
+                        로고 · 일러스트 · 스크린샷 · 배경은{' '}
                         <Link
                             href="/component-guide/image"
                             className="text-primary-strong focus-visible:ring-ring outline-ring rounded underline underline-offset-4 focus:outline-none focus-visible:ring-2"
                         >
                             이미지 가이드
                         </Link>
-                        에서 다룹니다. 새 그림이 작은 상징이면 2-3 목록에, 아니면 이미지 가이드 목록에 추가합니다.
+                        에서 봅니다.
                     </p>
                 </div>
             </section>

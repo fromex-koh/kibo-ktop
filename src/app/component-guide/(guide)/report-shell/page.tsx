@@ -248,7 +248,7 @@ const KBX_PART_ROWS = [
         key: 'chart-empty',
         cells: [
             <code key="p">KbxChartBox · KbxChartEmpty · KBX_CHART_EMPTY_TEXT</code>,
-            "차트 빈 상태 — KbxChartBox isEmpty 면 emptyClassName 크기의 옅은 면 + '데이터가 없습니다.', 아니면 차트(children)를 그대로 그립니다. 빈 상태를 내장한 차트(RankBarList · DonutListChart · InsideLabelPieChart)에는 emptyText · emptyClassName 으로 넘깁니다.",
+            "차트 빈 상태 — KbxChartBox isEmpty 면 emptyClassName 크기의 옅은 면 + '데이터가 없습니다.', 아니면 차트(children)를 그대로 그립니다. 빈 상태를 내장한 차트(RankBarList · DonutListChart)에는 emptyText · emptyClassName 으로 넘깁니다.",
         ],
     },
     {
@@ -419,7 +419,7 @@ const KBX_FILE_ROWS = [
                 chartLink('MarkerLineChart', '/component-guide/marker-line-chart'),
                 chartLink('ValueLineChart', '/component-guide/value-line-chart'),
                 chartLink('DualLineChart', '/component-guide/dual-line-chart'),
-                chartLink('InsideLabelPieChart', '/component-guide/inside-label-pie-chart'),
+                chartLink('CalloutPieChart', '/component-guide/callout-pie-chart'),
                 chartLink('DonutListChart', '/component-guide/donut-list-chart'),
             ]),
         ],
@@ -716,6 +716,13 @@ const ReportShellGuidePage = () => (
                             PDF 의 글자는 그림이라 선택 · 검색이 되지 않고, 9쪽 기준 약 3MB · 10초 안팎이 걸립니다.
                             글자가 살아 있는 PDF 가 필요하면 서버에서 만들어 내려주는 방식으로 바꿉니다(셸의 [프론트엔드
                             연동] 주석). 서버용으로는 아래 &lsquo;K-BIGx PDF 템플릿 단독 HTML&rsquo; 을 씁니다.
+                        </li>
+                        <li>
+                            긴 글 넘침 — 자가진단 결과 리포트(KTRS-FM · Tech-Index 일반/창업 · 투자모형) 문서 틀에{' '}
+                            <code>wrap-anywhere</code> 를 둬, 띄어쓰기 없는 긴 글(숫자 · 영문 1,000자 등)도 칸 폭 안에서
+                            글자 단위로 줄을 바꿉니다(감리 조치). 칸 밖으로 넘치지 않지만 A4 한 장을 넘을 수는 있습니다
+                            — 1페이지 맞춤(글자 수 제한 · 말줄임)은 요청 시 따로 작업합니다. 위치만 잡힌 짧은 글(분포
+                            그래프 세로 눈금 등)은 <code>whitespace-nowrap</code> 으로 한 줄을 지킵니다.
                         </li>
                     </ul>
                 </div>

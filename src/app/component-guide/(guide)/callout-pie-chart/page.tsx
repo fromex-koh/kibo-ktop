@@ -54,6 +54,9 @@ const toData = (
         }
     })
 
+// 예시는 모두 PDF 템플릿과 같은 규칙으로 그린다 — 이름은 2줄까지, 넘치면 말줄임(비중 · 건수 줄은 세지 않음).
+const LABEL_MAX_LINES = 2
+
 const STANDARD_DATA = toData([50, 14, 10, 8, 6, 5, 4, 3])
 
 // 지시선 · 엣지 케이스 예시.
@@ -86,6 +89,25 @@ const ALL_LONG_DATA = toData([50, 18, 14, 10, 8], false, [
     '위성 통신 및 광통신 부품 설계 기술',
 ])
 // 표준과 같은 8조각(+ 기타)에 이름이 모두 긴 경우.
+// 고른 8개 + 긴 이름 · 한 분류 100% + 긴 이름 · 아주 작은 조각 · 가운뎃점 · 말줄임 예시.
+const EVEN_LONG_DATA = toData(
+    [13, 13, 13, 13, 12, 12, 12, 12],
+    true,
+    CROWDED_LONG_DATA.map((item) => item.label),
+)
+const SINGLE_LONG_DATA = toData([100], false, ['차세대 무선 통신·네트워크 기반 초고속 전송 및 접속 기술'])
+const TINY_SLICE_DATA = toData([99, 1], false)
+const MIDDLE_DOT_DATA = toData([40, 30, 20, 10], true, [
+    '이차전지 소재 · 부품 · 장비 고도화 기술',
+    '바이오 의약품 공정 개발 및 품질 관리 기술',
+    '광통신 부품 및 광소자 모듈 제조 기술',
+])
+// 칸 높이가 정해진 자리에서 라벨을 줄이는 예시 — 큰 분류 뒤로 이름이 긴 작은 조각 7개(90%).
+const TAIL_LONG_DATA = toData(
+    [90, 2, 2, 2, 1, 1, 1, 1],
+    true,
+    CROWDED_LONG_DATA.map((item) => item.label),
+)
 const EIGHT_LONG_DATA = toData([50, 14, 10, 8, 6, 5, 4, 3], true, [
     '무선 통신·네트워크',
     '차세대 이동통신 기반 초고속 전송 기술',
@@ -100,17 +122,6 @@ const NO_SPACE_DATA = toData([50, 30, 20], false, [
     'IoTPlatformServiceIntegrationTechnology',
     '이동통신서비스플랫폼운영기술고도화',
 ])
-// 조각 안 라벨이 길 때 — 3줄 안이면 조각 안, 넘으면 지시선 라벨로 바뀐다.
-const INSIDE_THREE_LINES_DATA = toData([55, 25, 20], false, [
-    '차세대 무선 통신·네트워크 기술',
-    'IoT 플랫폼',
-    '네트워크 보안',
-])
-const INSIDE_TOO_LONG_DATA = toData([55, 25, 20], false, [
-    '차세대 무선 통신·네트워크 기반 초고속 전송 및 접속 기술',
-    'IoT 플랫폼',
-    '네트워크 보안',
-])
 // 데이터 값이 클 때 — 건수 천 단위 · 소수 비중.
 const LARGE_VALUE_DATA: CalloutPieItem[] = [
     {id: 'v1', label: '무선 통신·네트워크', percentage: 48.6, count: 12345, color: COLORS[0]},
@@ -124,6 +135,8 @@ const USAGE_CODE = `import {CalloutPieChart} from '@/components/custom/callout-p
 // 비중이 큰 분류부터 넘기면 12시에서 시계 방향으로 이어집니다.
 <CalloutPieChart
   ariaLabel="기업 보유기술 소분류별 비중과 건수"
+  // 이름 줄 수 상한 — 넘치면 말줄임(생략하면 모두 적음).
+  maxLabelLines={2}
   data={[
     {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24, color: 'var(--ds-navy-800)'},
     {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7, color: 'var(--ds-navy-500)'},
@@ -149,54 +162,14 @@ const PRINT_CODE = `// K-BIGx PDF 템플릿 — 조각 · 글자 · 선 색을 k
     count: 'var(--kbx-color-chart-label)',
     leader: 'var(--kbx-color-chart-line)',
     inside: 'var(--kbx-color-paper)',
-    insideMuted: 'var(--kbx-color-border)',
   }}
   // 칸 높이(폭 556 기준) — 원 중심을 칸 세로 가운데에 맞춘다(아래 '높이가 정해진 자리' 참고).
   areaHeight={387}
+  // 이름은 2줄까지 — 넘치면 말줄임. 비중 · 건수는 옆에 안 들어가면 다음 줄.
+  maxLabelLines={2}
   // 높이가 정해진 자리에서는 줄어들 수 있게 한다.
   className="my-auto min-h-0 pt-4"
 />`
-
-// 2. 라벨 기준 — 안쪽 라벨 · 지시선 라벨.
-const LABEL_RULE_COLUMNS = [
-    {key: 'case', header: '데이터', align: 'start', rowHeader: true},
-    {key: 'inside', header: '조각 안 라벨', align: 'start', wrap: true},
-    {key: 'outside', header: '지시선 라벨', align: 'start', wrap: true},
-] as const
-
-const LABEL_RULE_ROWS = [
-    {
-        key: 'standard',
-        cells: ['첫 분류 25% 이상 (예: 50 · 14 · 10 …)', '첫 분류 하나', '두 번째 분류부터 모두'],
-    },
-    {
-        key: 'second-large',
-        cells: [
-            '두 번째도 25% 이상 (예: 45 · 40 · 15)',
-            '첫 분류 하나',
-            '두 번째(40%)도 지시선 라벨 — 안쪽 라벨은 첫 분류만 받는다',
-        ],
-    },
-    {key: 'threshold', cells: ['첫 분류가 정확히 25%', '첫 분류 하나(25% 이상)', '나머지 모두']},
-    {key: 'balanced', cells: ['첫 분류 25% 미만 (예: 24 · 22 · 20 …)', '없음', '모든 분류']},
-    {key: 'single', cells: ['한 분류 100%', '그 분류(원 전체) · 원 한가운데', '없음']},
-    {
-        key: 'dominant',
-        cells: [
-            '첫 분류가 아주 큼 (예: 93 · 1 · 1 …)',
-            '첫 분류 하나 — 기본 자리에서는 원 아래로 넘쳐 흰 글자가 흰 바탕에 묻히므로, 원 안에 모두 들어갈 때까지 중심 쪽으로 당긴다',
-            '나머지 모두',
-        ],
-    },
-    {
-        key: 'long-inside',
-        cells: [
-            '첫 분류 이름이 조각 안에서 3줄을 넘음',
-            '없음 — 조각 밖으로 넘치므로',
-            '첫 분류까지 모든 분류(이름은 잘리지 않고 다 보인다)',
-        ],
-    },
-] as const
 
 // 4. 지시선 모양.
 const LEADER_RULE_COLUMNS = [
@@ -251,7 +224,7 @@ const LEADER_RULE_ROWS = [
         key: 'wrap',
         cells: [
             '라벨이 길 때(줄바꿈)',
-            '라벨 자리에서 그림 가장자리까지 남은 폭에 맞춰 줄을 바꿉니다. 비중 · 건수가 마지막 줄에 들어가지 않으면 다음 줄로 내립니다. 줄이 늘면 이웃 라벨과의 간격을 그만큼 늘리고, 그림 높이만 늘어납니다.',
+            '라벨 자리에서 그림 가장자리까지 남은 폭에 맞춰 줄을 바꿉니다. 이름은 maxLabelLines(PDF 템플릿 2)줄까지 적고 넘치면 마지막 줄 끝에서 말줄임합니다. 비중 · 건수가 마지막 이름 줄에 들어가지 않으면 다음 줄로 내립니다. 줄이 늘면 이웃 라벨과의 간격을 그만큼 늘리고, 그림 높이만 늘어납니다.',
         ],
     },
     {
@@ -273,7 +246,7 @@ const PROPS_ITEMS = [
     [
         'CalloutPieChart',
         'colors',
-        '글자 · 선 색(label · value · count · leader · inside · insideMuted)입니다. 넘기지 않으면 웹 시맨틱 색입니다.',
+        '글자 · 선 색(label · value · count · leader · inside(조각 사이 선))입니다. 넘기지 않으면 웹 시맨틱 색입니다.',
         '웹 시맨틱 색',
         'Partial<CalloutPieColors>',
     ],
@@ -287,14 +260,14 @@ const PROPS_ITEMS = [
     [
         'CalloutPieChart',
         'areaHeight',
-        '그림 칸 높이(칸 폭을 556 으로 볼 때)입니다. 주면 원 크기는 그대로 두고, 라벨이 칸 밖으로 나가지 않는 범위에서 원 중심을 칸 세로 가운데에 맞춥니다.',
+        '그림 칸 높이(칸 폭을 556 으로 볼 때)입니다. 주면 원 크기는 그대로 두고, 라벨이 칸 밖으로 나가지 않는 범위에서 원 중심을 칸 세로 가운데에 맞춥니다. maxLabelLines 와 함께 주면 라벨 때문에 그림이 칸보다 길어질 때 라벨을 줄여(이름 1줄 → 비중 · 건수를 같은 줄에) 원 크기를 지킵니다.',
         '-',
         'number',
     ],
     [
         'CalloutPieChart',
         'maxLabelLines',
-        '바깥 라벨 줄 수 상한(비중 · 건수 줄 포함)입니다. 주면 이름이 그 줄 수를 넘을 때 마지막 줄 끝에서 말줄임해 그림 높이 · 원 크기가 이름 길이로 바뀌지 않습니다(PDF 템플릿 진단브리핑은 2). 안 주면 줄 수 제한 없이 모두 보입니다.',
+        '바깥 라벨 이름 줄 수 상한입니다(비중 · 건수 줄은 세지 않음). 주면 이름이 그 줄 수를 넘을 때 마지막 줄 끝에서 말줄임해 그림 높이가 이름 길이로 끝없이 늘지 않습니다(PDF 템플릿 진단브리핑은 2). 비중 · 건수는 마지막 이름 줄 옆에 들어가지 않으면 한 줄 더 내립니다. 안 주면 줄 수 제한 없이 모두 보입니다.',
         '-',
         'number',
     ],
@@ -337,14 +310,19 @@ const CalloutPieChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="cpc-basic" className="flex flex-col gap-6">
                 <SectionHeading id="cpc-basic" title="1. 기본 사용">
-                    K-BIGx 보고서 PDF 템플릿의 기업 보유기술 차트입니다. 가운데가 빈 도넛과 범례 모양은{' '}
+                    K-BIGx 보고서 PDF 템플릿의 기업 보유기술 · 신용/담보 비중 원형 차트입니다. 가운데가 빈 도넛과 범례
+                    모양은{' '}
                     <Link href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
                         PercentageDonutChart
                     </Link>
                     를 씁니다.
                 </SectionHeading>
                 <div className="max-w-xl">
-                    <CalloutPieChart data={STANDARD_DATA} ariaLabel="기업 보유기술 소분류별 비중과 건수 예시" />
+                    <CalloutPieChart
+                        maxLabelLines={LABEL_MAX_LINES}
+                        data={STANDARD_DATA}
+                        ariaLabel="기업 보유기술 소분류별 비중과 건수 예시"
+                    />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
@@ -352,23 +330,25 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-label-rule" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-label-rule" title="2. 라벨 기준 (조각 안 · 지시선)">
-                    조각 안에 라벨을 적는 것은 첫 분류(가장 큰 분류)가 25% 이상일 때 그 분류 하나뿐입니다. 나머지는
-                    비중과 관계없이 지시선 끝에 &apos;이름 비중 건수&apos;를 적습니다. 조각 안 이름은 가운뎃점(·) 뒤에서
-                    줄을 바꿉니다. 조각 안 라벨은 원 테두리 안쪽(여백 8)에 늘 모두 들어갑니다.
+                <SectionHeading id="cpc-label-rule" title="2. 라벨 기준 (모두 지시선)">
+                    비중과 관계없이 모든 분류를 지시선 끝에 &apos;이름 비중 건수&apos;로 적습니다. 조각 안에는 글자를
+                    적지 않습니다 — 가장 큰 조각 안에 적던 방식은 조각 모양에 따라 어색하게 놓이는 경우가 있어
+                    없앴습니다(분류가 하나뿐이어도 지시선 라벨입니다).
                 </SectionHeading>
-                <Table
-                    caption="CalloutPieChart 라벨 기준"
-                    columns={LABEL_RULE_COLUMNS}
-                    rows={LABEL_RULE_ROWS}
-                    size="md"
-                />
                 <div className="grid gap-6 md:grid-cols-2">
-                    <Example title="두 번째도 25% 이상" description="40% 조각도 지시선 라벨입니다.">
-                        <CalloutPieChart data={toData([45, 40, 15])} ariaLabel="두 번째 분류도 큰 예시" />
+                    <Example title="큰 분류가 있을 때" description="50% 조각도 다른 분류처럼 지시선 라벨입니다.">
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={toData([50, 50])}
+                            ariaLabel="큰 분류가 있는 예시"
+                        />
                     </Example>
-                    <Example title="첫 분류 25% 미만" description="조각 안 라벨 없이 모두 지시선 라벨입니다.">
-                        <CalloutPieChart data={toData([24, 22, 20, 18, 16])} ariaLabel="큰 분류가 없는 예시" />
+                    <Example title="고른 분포" description="모든 분류가 지시선 라벨입니다.">
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={toData([24, 22, 20, 18, 16])}
+                            ariaLabel="큰 분류가 없는 예시"
+                        />
                     </Example>
                 </div>
             </section>
@@ -399,22 +379,34 @@ const CalloutPieChartGuidePage = () => (
                 />
                 <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     <Example title="기본" description="원 둘레까지 곧은 선입니다.">
-                        <CalloutPieChart data={STANDARD_DATA} ariaLabel="원 둘레 배치 예시" />
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={STANDARD_DATA}
+                            ariaLabel="원 둘레 배치 예시"
+                        />
                     </Example>
                     <Example title="밀어내기" description="위로 몰린 라벨을 46 간격으로 밀어 올립니다.">
-                        <CalloutPieChart data={PUSHED_DATA} ariaLabel="라벨 밀어내기 예시" />
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={PUSHED_DATA}
+                            ariaLabel="라벨 밀어내기 예시"
+                        />
                     </Example>
                     <Example
                         title="원 돌리기"
                         description="90% 뒤로 1~2% 조각 7개가 12시 근처에 몰리면 위로만 쌓여 그림이 길어지므로, 원을 돌려 큰 조각을 위로 보내고 라벨을 원 아래 양옆에 고르게 펼칩니다."
                     >
-                        <CalloutPieChart data={TAIL_DATA} ariaLabel="원 돌리기 예시" />
+                        <CalloutPieChart maxLabelLines={LABEL_MAX_LINES} data={TAIL_DATA} ariaLabel="원 돌리기 예시" />
                     </Example>
                     <Example
                         title="세로줄 배치 · 꺾은 지시선"
-                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 490, PDF 템플릿 칸 387 에서는 약 0.8배로 줄어듦)."
+                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 425). PDF 템플릿 칸(387)에서는 이름을 1줄로 줄여 0.95배로 들어갑니다(7번 참고)."
                     >
-                        <CalloutPieChart data={CROWDED_LONG_DATA} ariaLabel="세로줄 배치 예시" />
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={CROWDED_LONG_DATA}
+                            ariaLabel="세로줄 배치 예시"
+                        />
                     </Example>
                 </div>
             </section>
@@ -423,8 +415,8 @@ const CalloutPieChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="cpc-edge" className="flex flex-col gap-6">
                 <SectionHeading id="cpc-edge" title="5. 엣지 케이스">
-                    라벨 · 값은 데이터마다 달라집니다. 원 크기는 그대로 두고, 길어진 글자는 잘리지 않게 줄을 바꿔 모두
-                    보입니다.
+                    라벨 · 값은 데이터마다 달라집니다. 원 크기는 그대로 두고, 길어진 이름은 2줄까지 줄을 바꾸고 넘치면
+                    둘째 줄 끝에서 말줄임합니다. 비중 · 건수는 마지막 이름 줄 옆에 들어가지 않으면 다음 줄로 내립니다.
                 </SectionHeading>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
@@ -432,81 +424,141 @@ const CalloutPieChartGuidePage = () => (
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="한 분류만 긴 경우"
-                                description="그 라벨만 줄을 바꾸고, 이웃 라벨은 늘어난 줄만큼 간격을 벌립니다."
+                                description="그 라벨만 2줄로 접고(넘치면 말줄임), 이웃 라벨은 늘어난 줄만큼 간격을 벌립니다."
                             >
-                                <CalloutPieChart data={ONE_LONG_DATA} ariaLabel="한 분류만 긴 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={ONE_LONG_DATA}
+                                    ariaLabel="한 분류만 긴 예시"
+                                />
                             </Example>
                             <Example
                                 title="모든 분류가 긴 경우"
-                                description="모든 라벨이 줄을 바꾸고 그림 높이가 늘어납니다. 원 크기는 그대로입니다."
+                                description="모든 라벨이 2줄까지 접히고 넘치면 말줄임합니다. 줄이 늘어난 만큼 그림 높이만 늘고 원 크기는 그대로입니다."
                             >
-                                <CalloutPieChart data={ALL_LONG_DATA} ariaLabel="모든 분류가 긴 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={ALL_LONG_DATA}
+                                    ariaLabel="모든 분류가 긴 예시"
+                                />
                             </Example>
                             <Example
                                 title="8조각 모두 긴 경우"
                                 description="표준과 같은 8조각에 이름이 모두 길면 왼쪽에 쌓인 라벨이 엉켜, 원을 돌려 라벨을 양옆에 나눕니다."
                             >
-                                <CalloutPieChart data={EIGHT_LONG_DATA} ariaLabel="8조각 모두 긴 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={EIGHT_LONG_DATA}
+                                    ariaLabel="8조각 모두 긴 예시"
+                                />
                             </Example>
                             <Example
                                 title="띄어쓰기 없는 긴 이름"
-                                description="끊을 자리가 없으면 글자 단위로 끊어 줄을 바꿉니다."
+                                description="끊을 자리가 없으면 글자 단위로 끊어 2줄까지 적고, 넘치면 말줄임합니다. 말줄임할 뒷부분은 원래 이름에서 잘라 와, 글자 단위로 끊긴 자리에 없던 띄어쓰기가 끼어들지 않습니다."
                             >
-                                <CalloutPieChart data={NO_SPACE_DATA} ariaLabel="띄어쓰기 없는 긴 이름 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={NO_SPACE_DATA}
+                                    ariaLabel="띄어쓰기 없는 긴 이름 예시"
+                                />
+                            </Example>
+                            <Example
+                                title="줄 수 상한 없이(maxLabelLines 생략)"
+                                description="maxLabelLines 를 넘기지 않으면 이름을 말줄임하지 않고 남은 폭에 맞춰 모두 적습니다. 그림 높이가 이름 길이만큼 늘어납니다."
+                            >
+                                <CalloutPieChart data={EIGHT_LONG_DATA} ariaLabel="줄 수 상한 없이 긴 이름 예시" />
+                            </Example>
+                            <Example
+                                title="고른 8개가 모두 긴 경우"
+                                description="큰 분류 없이 8개가 고르면 라벨이 원 둘레 양쪽에 나뉘고, 이름은 저마다 2줄까지 접혀 말줄임합니다."
+                            >
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={EVEN_LONG_DATA}
+                                    ariaLabel="고른 8개가 모두 긴 예시"
+                                />
+                            </Example>
+                            <Example
+                                title="가운뎃점 · 말줄임 다듬기"
+                                description="'소재 · 부품' 처럼 띄운 가운뎃점은 앞 말에 붙여 줄이 '·' 로 시작하지 않습니다. 말줄임 앞의 띄어쓰기는 지웁니다('및 …' → '및…')."
+                            >
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={MIDDLE_DOT_DATA}
+                                    ariaLabel="가운뎃점 · 말줄임 예시"
+                                />
                             </Example>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-2. 조각 안 라벨이 길 때</h3>
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <Example
-                                title="3줄 안에 드는 경우"
-                                description="조각 안에서 줄을 바꿔 최대 3줄까지 적습니다."
-                            >
-                                <CalloutPieChart data={INSIDE_THREE_LINES_DATA} ariaLabel="조각 안 라벨 3줄 예시" />
-                            </Example>
-                            <Example
-                                title="3줄을 넘는 경우"
-                                description="조각 밖으로 넘치므로 첫 분류도 지시선 라벨로 바꿔 이름을 모두 적습니다."
-                            >
-                                <CalloutPieChart data={INSIDE_TOO_LONG_DATA} ariaLabel="조각 안 라벨이 긴 예시" />
-                            </Example>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-3. 데이터 값이 클 때</h3>
+                        <h3 className="typo-title-m-bold text-foreground">5-2. 데이터 값이 클 때</h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="큰 건수 · 소수 비중"
                                 description="건수는 천 단위 쉼표를 넣고(12,345개), 비중은 받은 자릿수 그대로 적습니다. 마지막 줄에 들어가지 않으면 비중 · 건수를 다음 줄로 내립니다."
                             >
-                                <CalloutPieChart data={LARGE_VALUE_DATA} ariaLabel="데이터 값이 큰 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={LARGE_VALUE_DATA}
+                                    ariaLabel="데이터 값이 큰 예시"
+                                />
                             </Example>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-4. 데이터 구성</h3>
+                        <h3 className="typo-title-m-bold text-foreground">5-3. 데이터 구성</h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="비중 합이 100 이 아닌 경우"
                                 description="반올림으로 합이 99 여도 합 기준으로 원을 채우고, 글자는 받은 비중(33%)을 그대로 적습니다."
                             >
-                                <CalloutPieChart data={ROUNDED_SUM_DATA} ariaLabel="비중 합이 99 인 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={ROUNDED_SUM_DATA}
+                                    ariaLabel="비중 합이 99 인 예시"
+                                />
                             </Example>
                             <Example
                                 title="0% 항목이 있는 경우"
                                 description="0% 이하는 그리지 않습니다. 숨김 목록에는 남습니다."
                             >
-                                <CalloutPieChart data={ZERO_DATA} ariaLabel="0% 항목이 있는 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={ZERO_DATA}
+                                    ariaLabel="0% 항목이 있는 예시"
+                                />
                             </Example>
                             <Example
                                 title="데이터가 없는 경우"
                                 description="빈 목록이거나 모두 0% 면 emptyText 만 보입니다."
                             >
-                                <CalloutPieChart data={[]} ariaLabel="데이터가 없는 예시" />
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={[]}
+                                    ariaLabel="데이터가 없는 예시"
+                                />
+                            </Example>
+                            <Example
+                                title="한 분류 100% · 긴 이름"
+                                description="원 전체가 한 조각이고 라벨은 3시 방향 오른쪽에 둡니다. 이름은 2줄까지 적고 말줄임합니다."
+                            >
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={SINGLE_LONG_DATA}
+                                    ariaLabel="한 분류 100% 긴 이름 예시"
+                                />
+                            </Example>
+                            <Example
+                                title="아주 작은 조각 (99 : 1)"
+                                description="1% 조각도 지시선 라벨로 적습니다. 조각이 가늘어도 선은 조각 가운데에서 나갑니다."
+                            >
+                                <CalloutPieChart
+                                    maxLabelLines={LABEL_MAX_LINES}
+                                    data={TINY_SLICE_DATA}
+                                    ariaLabel="아주 작은 조각 예시"
+                                />
                             </Example>
                         </div>
                     </div>
@@ -525,7 +577,11 @@ const CalloutPieChartGuidePage = () => (
                         <CalloutPieChartSkeleton label="기업 보유기술을 불러오는 중입니다." />
                     </Example>
                     <Example title="불러온 뒤" description="같은 자리에 차트가 그려집니다.">
-                        <CalloutPieChart data={STANDARD_DATA} ariaLabel="불러온 뒤 예시" />
+                        <CalloutPieChart
+                            maxLabelLines={LABEL_MAX_LINES}
+                            data={STANDARD_DATA}
+                            ariaLabel="불러온 뒤 예시"
+                        />
                     </Example>
                 </div>
                 <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="로딩 코드 복사" />
@@ -536,7 +592,10 @@ const CalloutPieChartGuidePage = () => (
             <section aria-labelledby="cpc-print" className="flex flex-col gap-6">
                 <SectionHeading id="cpc-print" title="7. K-BIGx PDF 템플릿에서">
                     색을 값으로 받으므로 PDF 템플릿은 kbx 토큰을 넘깁니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로
-                    그려 스켈레톤 없이 나옵니다. 확인 화면:{' '}
+                    그려 스켈레톤 없이 나옵니다. 원형 그래프 라벨은 모두 원 밖 지시선 끝에 둡니다(현업 요청) —
+                    진단브리핑 기업 보유기술과 신용/재무정보 차입금 현황의 신용/담보 비중(예전 InsideLabelPieChart)이 이
+                    차트를 씁니다. 신용/담보 비중은 오른쪽 반 칸(556 × 330, <code>areaHeight</code> 330)에 두고 건수
+                    없이 비중만 적습니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=briefing"
                         target="_blank"
@@ -546,8 +605,58 @@ const CalloutPieChartGuidePage = () => (
                         K-BIGx 보고서 PDF 템플릿 진단브리핑
                         <span className="sr-only"> (새 창)</span>
                     </Link>
+                    {' · '}
+                    <Link
+                        href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={LINK_CLASS}
+                    >
+                        K-BIGx 보고서 PDF 템플릿 신용/재무정보
+                        <span className="sr-only"> (새 창)</span>
+                    </Link>
                 </SectionHeading>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
+                <h3 className="typo-title-m-bold text-foreground">칸 높이가 모자랄 때 — 원 크기 지키기</h3>
+                <p className="typo-body-l-regular text-label-foreground">
+                    <code>areaHeight</code> 와 <code>maxLabelLines</code> 를 함께 주면, 라벨이 칸보다 길어 그림 전체(원
+                    포함)가 줄어들 상황에서 라벨부터 줄입니다. 이름 2줄 → 이름 1줄 → 이름 1줄 + 비중 · 건수를 같은 줄에
+                    순서로 바꿔 보고, 칸에 들어가는 첫 단계를 씁니다. 칸 높이의 1.07배까지는 들어간 것으로 봅니다(표준
+                    8조각 · 목업은 이름 2줄 그대로 0.94배). 비중 · 건수를 이름 옆에 붙이는 단계에서도 이름이 세 글자도
+                    안 남으면(&apos;…&apos; 만 남는 등) 옆에 붙이지 않고 다음 줄로 내립니다. 아래는 PDF 템플릿 칸(556 ×
+                    387)과 같은 비율의 자리입니다.
+                </p>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <Example
+                        title="80% + 이름이 긴 작은 조각 7개"
+                        description="이름 2줄이면 그림이 0.86배로 줄어 이름을 1줄로 줄입니다(0.95배)."
+                    >
+                        {/* 칸 비율 556 : 387 — PDF 템플릿 차트 칸과 같은 자리를 만든다. */}
+                        <div className="aspect-[556/387] w-full">
+                            <CalloutPieChart
+                                maxLabelLines={LABEL_MAX_LINES}
+                                areaHeight={387}
+                                data={CROWDED_LONG_DATA}
+                                ariaLabel="칸 높이에 맞춰 이름을 1줄로 줄인 예시"
+                                className="h-full"
+                            />
+                        </div>
+                    </Example>
+                    <Example
+                        title="90% + 이름이 긴 작은 조각 7개"
+                        description="이름 1줄로도 넘쳐(0.86배) 비중 · 건수를 이름 옆에 붙입니다. 원은 줄지 않습니다."
+                    >
+                        <div className="aspect-[556/387] w-full">
+                            <CalloutPieChart
+                                maxLabelLines={LABEL_MAX_LINES}
+                                areaHeight={387}
+                                data={TAIL_LONG_DATA}
+                                ariaLabel="칸 높이에 맞춰 비중 · 건수를 이름 옆에 붙인 예시"
+                                className="h-full"
+                            />
+                        </div>
+                    </Example>
+                </div>
                 <h3 className="typo-title-m-bold text-foreground">높이가 정해진 자리</h3>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
@@ -567,14 +676,15 @@ const CalloutPieChartGuidePage = () => (
                     </li>
                     <li>
                         원 크기는 늘 반지름 112(지름 224)이고 칸을 채우려고 키우지 않습니다. 그림 높이가 칸(387)보다 길
-                        때만 그림 전체가 같은 비율로 줄어듭니다. 8개 안에서는 표준 8조각(높이 401 → 0.97배)과 세로줄
-                        배치 예시(높이 490 → 0.79배)만 줄어들고, 나머지는 원래 크기 그대로입니다.
+                        때만 그림 전체가 같은 비율로 줄어듭니다. 표준 8조각(높이 401 → 0.97배) · 목업(412 → 0.94배) ·
+                        편중(397 → 0.98배)은 템플릿 모양 그대로 조금 줄어들고, 그보다 길어지는 경우는 위 &apos;칸 높이가
+                        모자랄 때&apos; 처럼 라벨을 줄여 원 크기를 지킵니다.
                     </li>
                     <li>
-                        PDF 템플릿에서 넣어 본 데이터(모두 8개 이하): 표준 · 1개 · 2개 · 3개 · 편중 · 균형 · 긴 라벨 ·
-                        8조각 + 긴 이름 · 원 돌리기(90%) · 세로줄 배치(80% + 긴 이름) · 고른 8개 · 작은 조각이 이어질 때
-                        · 큰 값 · 띄어쓰기 없는 이름 · 조각 안 긴 이름. 모두 R&amp;D 줄 위치가 같고, 쪽 넘침 · 선 엇갈림
-                        · 라벨 겹침 없이 소제목과 라벨 사이 32 이상이 남습니다.
+                        PDF 템플릿에서 넣어 본 데이터(모두 8개 이하): 표준 · 목업 · 1개(짧은 · 긴 이름) · 2개(50:50) ·
+                        3개 · 편중 · 균형 · 긴 라벨 · 8조각 + 긴 이름 · 원 돌리기(90%) · 90% · 80% + 긴 이름 · 고른 8개
+                        + 긴 이름 · 큰 값 · 띄어쓰기 없는 이름. 모두 문서 쪽 수(28쪽) · R&amp;D 줄 위치가 같고, 쪽 넘침
+                        · 선 엇갈림 · 라벨 겹침 없이 소제목과 라벨 사이 32 이상이 남습니다.
                     </li>
                 </ul>
             </section>

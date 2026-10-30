@@ -118,7 +118,9 @@ const ADDON_CODE = `{/* 읽기전용 상태 아이콘 */}
   </InputGroupAddon>
 </InputGroup>
 
-{/* 단위는 상자 안 오른쪽, 값은 오른쪽 정렬 */}
+{/* 단위는 상자 안 오른쪽, 값은 오른쪽 정렬
+    수량 · 금액 칸은 type="number" 대신 form-values 의 InputGroupInput + inputMode="numeric"
+    + format={formatThousands} 로 세 자리 쉼표를 넣고, data-number-format 표시로 제출 값을 숫자로 바꾼다(폼 탭 가이드 참고) */}
 <InputGroup>
   <InputGroupInput
     name="applicantCount"
@@ -487,6 +489,19 @@ const InputGuidePage = () => (
                         상자 안 아이콘은 <code>InputGroupAddon</code>, 클릭 동작은 <code>InputGroupButton</code>을
                         씁니다. 명 · 건 같은 단위도 <code>InputGroupAddon</code>으로 상자 안 오른쪽에 두고 값은 오른쪽
                         정렬합니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        수량 · 금액 칸(명 · 건 · 개 · 백만원 · 원 · 일)은 세 자리마다 쉼표를 넣습니다(1,234,567 — 감리
+                        조치). 쉼표가 들어가야 하므로 <code>type=&quot;number&quot;</code> 대신 form-values 의{' '}
+                        <code>InputGroupInput</code> 에 <code>inputMode=&quot;numeric&quot;</code> 과{' '}
+                        <code>format={'{formatThousands}'}</code>(lib/number-format), 제출할 때 숫자로 바꾸기 위한{' '}
+                        <code>data-number-format={'{NUMBER_FORMAT_THOUSANDS}'}</code> 표시를 줍니다. 연도 · 월 · 날짜 ·
+                        번호(사업자 · 법인 · 특허 등록) · 전화번호는 쉼표를 넣지 않습니다. 자세한 규칙(음수 · 보낼 값 ·
+                        setValue 로 넣는 값 · 자릿수 상한)은{' '}
+                        <Link href="/component-guide/form-tabs" className="text-primary-strong underline">
+                            폼 탭 가이드
+                        </Link>
+                        를 봅니다.
                     </p>
                 </div>
                 <div className="grid gap-6 lg:grid-cols-2">

@@ -197,6 +197,13 @@ const PROPS_ITEMS = [
         '({type, value}) => void',
     ],
     ['SelectSearchForm', 'onReset', '[초기화]를 눌렀을 때 호출됩니다. 여기서 검색 결과를 비웁니다.', '-', '() => void'],
+    [
+        'SelectSearchForm',
+        'onTypeChange',
+        '셀렉트에서 고른 기준이 바뀔 때(검색 전에도) 호출됩니다. [초기화]로 처음 기준에 돌아갈 때도 부릅니다. 고른 기준에 따라 폼 밖의 안내를 바꿀 때 씁니다(예: K-BIGx 기업혁신성장보고서조회의 특허 검색 범위 안내 · 기업정보 제공법적 근거).',
+        '-',
+        '(type: string) => void',
+    ],
     ['SelectSearchForm', 'isSearching', '조회 중입니다. [검색하기] · [초기화]가 눌리지 않습니다.', 'false', 'boolean'],
     [
         'SelectSearchForm',

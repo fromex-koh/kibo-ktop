@@ -65,7 +65,7 @@ const TONE_ROWS = [
         key: 'navy',
         cells: [
             'navy',
-            'navy.100 · 오른쪽 아래 purple.200 · 왼쪽 위 blue.200',
+            'service-hero-navy-* — 라이트 navy.100 · 오른쪽 아래 purple.200 · 왼쪽 위 blue.200, 다크 navy.800 띠 · purple.900 · blue.900 원',
             'primary-strong #3568d6',
             'K-BIGx 보고서',
         ],
@@ -74,8 +74,8 @@ const TONE_ROWS = [
         key: 'green',
         cells: [
             'green',
-            'service-hero-green-* — 라이트 green.100 · warning.50 · mint.100(시안), 다크 gray.800 띠 · 깊은 초록 원',
-            'service-accent-green — 라이트 mint.800 · 다크 mint.400',
+            'service-hero-green-* — 라이트 green.100 · warning.50 · mint.100(시안), 다크 success.900 띠 · mint.900 · success.800 원',
+            'service-accent-green — 라이트 mint.800 · 다크 mint.200',
             '탄소중립',
         ],
     },
@@ -99,6 +99,13 @@ const PROPS_ITEMS = [
     ['ServiceGlassCard', 'description · bullets', '설명 한 단락 또는 점 목록.', '-', 'string · string[]'],
     ['ServiceFeatureList', 'items', '아이콘 · 제목 · 설명 목록.', '-', '{icon; title; description}[]'],
     ['ServiceFeatureList', 'columns', '태블릿부터 열 수 — 2열은 아이콘이 글 가운데, 3열은 글 위에 맞춤.', '-', '2 | 3'],
+    [
+        'ServiceFeatureList',
+        'iconSurfaceClassName',
+        '아이콘 칸 바탕 — 화면 전용 색이 있을 때만 넘깁니다(K-BIGx 소개).',
+        "'bg-model-icon-surface'",
+        'string',
+    ],
 ] as const
 
 const PlatformServiceIntroGuidePage = () => (
@@ -164,8 +171,9 @@ const PlatformServiceIntroGuidePage = () => (
                         100(모바일 60) · 큰 제목과 보조 32 · 보조와 설명 16 · 설명과 아래 칸 48.
                     </li>
                     <li>
-                        유리 카드 — 흰 20% 면 · 흰 90% 테두리 1 · 반경 32(rounded-glass) · 여백 32 · 그림 88 · 제목 24
-                        Bold · 설명 16 Medium. 뒤 흐림은 두지 않습니다(시안) — 번진 원의 움직임이 비쳐 보입니다.
+                        유리 카드 — 흰 20% 면 · 테두리 1(service-glass-border: 라이트 흰 90% · 다크 흰색 25%) · 반경
+                        32(rounded-glass) · 여백 32 · 그림 88 · 제목 24 Bold · 설명 16 Medium. 뒤 흐림은 두지
+                        않습니다(시안) — 번진 원의 움직임이 비쳐 보입니다.
                     </li>
                     <li>모바일은 카드를 세로로 쌓습니다(사이 16). 동작 줄이기면 모든 움직임이 없습니다[6.3.1].</li>
                     <li>
