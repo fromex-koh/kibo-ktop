@@ -1,6 +1,9 @@
 import type {ProcedureStep} from '@/components/custom/procedure-steps'
 import type {RollingAccordionGroup} from '@/components/composite/rolling-accordion'
-import {CARBON_NEUTRAL_HOME_URL} from '@/constants/header-navigation'
+
+// 진단 시작 주소(외부 탄소중립 플랫폼) — 바로가기는 이동 확인 모달을 거쳐 새 탭으로 연다.
+const CARBON_REDUCTION_SELF_CHECK_URL = 'https://www.kibo.or.kr/carbon/carbon-reduction/self-check'
+const K_TAXONOMY_SELF_CHECK_URL = 'https://www.kibo.or.kr/carbon/k-taxonomy/selected-self-check'
 
 // 플랫폼 소개 > 탄소중립 화면의 문구 — 시안 "탄소중립_선도기업" · "탄소중립_택소노미". 기업 · 기관 화면이 함께 쓴다.
 // 히어로 · '이런 기업에 적합합니다' · 바로가기는 두 플랫폼이 같고, 히어로 카드 · 분석 기능 · 아래 묶음은 고른 플랫폼에 따라 바뀐다.
@@ -43,7 +46,7 @@ type CarbonPlatform = {
           }
     /** 바로가기 이름(진단 시작하기). */
     startLabel: string
-    /** 바로가기 주소(외부 탄소중립 플랫폼 · 새 탭). */
+    /** 바로가기 주소(외부 탄소중립 플랫폼) — 이동 확인 모달의 [확인] 이 새 탭으로 연다. */
     startHref: string
 }
 
@@ -69,6 +72,12 @@ const PLATFORM_CARBON_NEUTRALITY = {
             'ESG 공시기업',
             '택소노미 평가 외부검토기관',
         ],
+    },
+    // 바로가기를 누르면 뜨는 이동 확인 모달 — 두 플랫폼이 같은 문구다(둘 다 탄소중립 플랫폼 안의 진단).
+    moveDialog: {
+        title: '탄소중립 플랫폼 이동',
+        platformName: '탄소중립 플랫폼',
+        question: '페이지로 이동하시겠습니까?',
     },
 } as const
 
@@ -130,7 +139,7 @@ const CARBON_PLATFORMS: readonly CarbonPlatform[] = [
             ],
         },
         startLabel: '탄소중립 진단 시작하기',
-        startHref: CARBON_NEUTRAL_HOME_URL,
+        startHref: CARBON_REDUCTION_SELF_CHECK_URL,
     },
     {
         key: 'taxonomy',
@@ -197,9 +206,7 @@ const CARBON_PLATFORMS: readonly CarbonPlatform[] = [
             ],
         },
         startLabel: 'K-택소노미 진단 시작하기',
-        // 택소노미 진단 주소를 아직 받지 못해 탄소중립 플랫폼 홈에 구분 표시(#k-taxonomy)를 붙여 둔다 — 같은 주소의 링크가
-        // 나란히 있으면 WAVE 가 '중복 링크(Redundant link)'로 본다. 실제 주소를 받으면 바꾼다.
-        startHref: `${CARBON_NEUTRAL_HOME_URL}#k-taxonomy`,
+        startHref: K_TAXONOMY_SELF_CHECK_URL,
     },
 ]
 
