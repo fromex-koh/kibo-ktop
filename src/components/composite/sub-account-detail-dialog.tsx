@@ -65,11 +65,14 @@ type SubAccountDetailDialogProps = {
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
+    /** 밖에서 열고 닫을 때 — 목록 카드의 [⋮] 메뉴가 연다(다른 메뉴 모달과 같은 방식). */
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
     /** 보여 줄 계정. 카드가 들고 있는 값과 상세값을 함께 쓴다. */
     item: SubAccountItem
 }
 
-const SubAccountDetailDialog = ({children, defaultOpen, item}: SubAccountDetailDialogProps) => {
+const SubAccountDetailDialog = ({children, defaultOpen, open, onOpenChange, item}: SubAccountDetailDialogProps) => {
     const [tab, setTab] = useState<SubAccountDetailTab>(SUB_ACCOUNT_DETAIL_TABS[0].value)
     const tabLabelId = useId()
     const panelId = useId()
@@ -79,7 +82,7 @@ const SubAccountDetailDialog = ({children, defaultOpen, item}: SubAccountDetailD
     const tabLabel = SUB_ACCOUNT_DETAIL_TABS.find((option) => option.value === tab)?.label ?? '내역'
 
     return (
-        <Dialog defaultOpen={defaultOpen}>
+        <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
             {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
             <DialogContent aria-describedby={undefined}>
                 <DialogHeader>

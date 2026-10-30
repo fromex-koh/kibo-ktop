@@ -92,14 +92,92 @@ const getAgreement = (caseKey: SubAccountAgreementCase): SubAccountAgreement => 
     return isPartner ? {...MOCK_AGREEMENT, services} : {services}
 }
 
-// 계정 수 요약 — 세 칸이 나란히 놓인다(시안).
-const MOCK_SUMMARIES: readonly SubAccountSummary[] = [
-    {icon: 'total', label: '전체 하위 계정', count: 12},
-    {icon: 'active', label: '사용 계정', count: 7},
-    {icon: 'usage', label: '이용횟수', count: 91},
+// 계정 수 요약 — 세 칸이 나란히 놓인다(시안). 전체 · 사용 계정 수는 목업 목록에서 세어 목록과 어긋나지 않게 한다.
+// [프론트엔드 연동] 연동 후에는 응답의 요약 값을 그대로 쓴다.
+const MOCK_USAGE_COUNT = 91
+const getSummaries = (accounts: readonly SubAccountItem[]): readonly SubAccountSummary[] => [
+    {icon: 'total', label: '전체 하위 계정', count: accounts.length},
+    {icon: 'active', label: '사용 계정', count: accounts.filter((account) => account.status === 'active').length},
+    {icon: 'usage', label: '이용횟수', count: MOCK_USAGE_COUNT},
 ]
 
-// 계정 목록 — 시안의 카드 세 장에 길이 확인용 한 장을 더한 것이다. 상세값은 케이스의 이용서비스를 받는다.
+// 페이지 넘김 확인용 계정 — 한 페이지 10장(SUB_ACCOUNT_PAGE_SIZE)으로 10페이지까지 나오도록 위 4장 뒤에 96장을 더한다.
+// 지역 16곳 × 부서 6곳으로 이름을 만든다. 상태 · 보고서 출력 횟수 · 내역 유무를 섞어 두어 필터 · 정렬 · 빈 내역
+// 모달도 여러 페이지에서 볼 수 있다. 실제 데이터로 바꿀 때는 지운다.
+const MOCK_EXTRA_REGIONS = [
+    {name: '부산', slug: 'busan'},
+    {name: '대구', slug: 'daegu'},
+    {name: '인천', slug: 'incheon'},
+    {name: '수원', slug: 'suwon'},
+    {name: '창원', slug: 'changwon'},
+    {name: '청주', slug: 'cheongju'},
+    {name: '전주', slug: 'jeonju'},
+    {name: '천안', slug: 'cheonan'},
+    {name: '포항', slug: 'pohang'},
+    {name: '제주', slug: 'jeju'},
+    {name: '원주', slug: 'wonju'},
+    {name: '춘천', slug: 'chuncheon'},
+    {name: '강릉', slug: 'gangneung'},
+    {name: '목포', slug: 'mokpo'},
+    {name: '여수', slug: 'yeosu'},
+    {name: '순천', slug: 'suncheon'},
+] as const
+const MOCK_EXTRA_OFFICES = [
+    {name: '지점', slug: 'branch'},
+    {name: '중앙지점', slug: 'central'},
+    {name: '기업금융센터', slug: 'corporate'},
+    {name: '여신심사부', slug: 'credit'},
+    {name: '영업부', slug: 'sales'},
+    {name: '디지털금융팀', slug: 'digital'},
+] as const
+const MOCK_EXTRA_MANAGERS = [
+    '김민수',
+    '박지영',
+    '최성호',
+    '정다은',
+    '강태윤',
+    '윤서연',
+    '장현우',
+    '임수빈',
+    '한도윤',
+    '오지민',
+    '서준혁',
+    '신예린',
+    '권태민',
+    '황보람',
+    '안재현',
+    '송하늘',
+] as const
+// 계정 ID 번호 · 담당자 · 보고서 출력 횟수 · 상태를 고르게 섞는 값.
+const MOCK_EXTRA_ID_START = 5
+const MOCK_EXTRA_MANAGER_SHIFT = 3
+const MOCK_EXTRA_REPORT_STEP = 7
+const MOCK_EXTRA_REPORT_RANGE = 40
+const MOCK_EXTRA_SUSPENDED_EVERY = 4
+const MOCK_EXTRA_NO_LOG_EVERY = 5
+const MOCK_EXTRA_ID_DIGITS = 3
+
+const getExtraSubAccounts = (services: readonly SubAccountService[]): readonly SubAccountItem[] =>
+    MOCK_EXTRA_OFFICES.flatMap((office, officeIndex) =>
+        MOCK_EXTRA_REGIONS.map((region, regionIndex) => ({office, officeIndex, region, regionIndex})),
+    ).map(({office, officeIndex, region, regionIndex}, index) => {
+        const number = index + MOCK_EXTRA_ID_START
+        return {
+            id: `sub-account-${number}`,
+            name: `${region.name}${office.name}`,
+            status: (index + 1) % MOCK_EXTRA_SUSPENDED_EVERY ? 'active' : 'suspended',
+            accountId: `sub_${String(number).padStart(MOCK_EXTRA_ID_DIGITS, '0')}`,
+            managerName:
+                MOCK_EXTRA_MANAGERS[
+                    (regionIndex + officeIndex * MOCK_EXTRA_MANAGER_SHIFT) % MOCK_EXTRA_MANAGERS.length
+                ],
+            email: `${region.slug}.${office.slug}@bb-bank.com`,
+            reportCount: (number * MOCK_EXTRA_REPORT_STEP) % MOCK_EXTRA_REPORT_RANGE,
+            detail: mockDetail(services, '', (index + 1) % MOCK_EXTRA_NO_LOG_EVERY !== 0),
+        }
+    })
+
+// 계정 목록 — 시안의 카드 세 장에 길이 확인용 한 장, 페이지 넘김 확인용 96장(getExtraSubAccounts)을 더한 것이다. 상세값은 케이스의 이용서비스를 받는다.
 // 보고서 출력 횟수만 시안 값(모두 15건)과 달리 15·32·8 로 두었다 — 모두 같으면 [보고서 출력순 정렬] 이
 // 도는지 화면에서 확인할 수 없다. 실제 데이터로 바꾸면 이 값도 함께 바뀐다.
 //
@@ -156,6 +234,7 @@ const getSubAccounts = (services: readonly SubAccountService[]): readonly SubAcc
             '광주지점 여신심사부 계정입니다. 매월 말 서비스별 배분 건수를 점검하고, 남은 건수가 5건 이하이면 본부 담당자에게 추가 배분을 요청합니다.',
         ),
     },
+    ...getExtraSubAccounts(services),
 ]
 
 type OrgSubAccountOverview = {
@@ -170,7 +249,9 @@ const getOrgSubAccountOverview = async (
 ): Promise<OrgSubAccountOverview> => {
     const agreement = getAgreement(caseKey)
 
-    return {agreement, summaries: MOCK_SUMMARIES, accounts: getSubAccounts(agreement.services)}
+    const accounts = getSubAccounts(agreement.services)
+
+    return {agreement, summaries: getSummaries(accounts), accounts}
 }
 
 export {getOrgSubAccountOverview}
