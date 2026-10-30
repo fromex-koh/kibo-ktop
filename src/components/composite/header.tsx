@@ -63,6 +63,11 @@ export type HeaderUser = {
     /** 이름을 눌렀을 때 갈 마이페이지 경로. 없으면 MYPAGE_HOME_HREF[userType].
      *  [프론트엔드 연동] 기관은 로그인 회원 유형의 내 정보 경로를 넣는다(협약·비협약 은행/기관·하위계정). */
     mypageHref?: string
+    /**
+     * 기관 하위계정으로 로그인했는지 — 배지가 '기관' 대신 '하위 기관' 이 된다. 이때 name 에는 기관명이 아니라
+     * 담당자명을 넣는다(현업 요청: [하위 기관] {담당자명} 님). [프론트엔드 연동] 로그인 회원 유형으로 정한다.
+     */
+    isSubAccount?: boolean
 }
 
 // 전체 메뉴 닫힘 애니메이션과 헤더 상태를 동기화하는 시간.
@@ -99,13 +104,16 @@ const MemberTypeToggle = ({
     </SegmentedControl>
 )
 
+// 기관 하위계정 배지 글자 — 색은 기관 배지와 같다(기관 회원의 한 갈래).
+const SUB_ACCOUNT_BADGE_LABEL = '하위 기관'
+
 // 로그인한 회원의 userType 배지. 마이페이지 LNB 도 같은 배지를 쓴다(색이 곧 회원 유형이다).
-const UserTypeBadge = ({userType}: {userType: UserType}) => {
+const UserTypeBadge = ({userType, isSubAccount = false}: {userType: UserType; isSubAccount?: boolean}) => {
     const badge = USER_TYPE_BADGE[userType]
 
     return (
         <Badge variant="solid" color={badge.color} shape="pill" size="sm" className="mr-2 min-w-0 shrink-0">
-            {badge.label}
+            {isSubAccount && userType === 'org' ? SUB_ACCOUNT_BADGE_LABEL : badge.label}
         </Badge>
     )
 }
@@ -619,7 +627,7 @@ const HeaderContent = ({
                                 href={user.mypageHref ?? MYPAGE_HOME_HREF[userType]}
                                 className="group/user-name focus-visible:ring-ring rounded-2xs grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                             >
-                                <UserTypeBadge userType={userType} />
+                                <UserTypeBadge userType={userType} isSubAccount={user.isSubAccount} />
                                 <span className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
                                     <span className="block w-max max-w-full min-w-0 shrink truncate group-hover/user-name:underline sm:max-w-46">
                                         {user.name}
