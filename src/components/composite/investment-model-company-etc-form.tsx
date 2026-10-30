@@ -92,8 +92,10 @@ const InvestmentModelCompanyEtcForm = () => {
 
                 <Separator />
 
+                {/* 거래유형 라디오는 따로 보이는 라벨이 없어 구획 제목이 그 이름이다 — 필수 표시를 제목에 붙인다. */}
                 <Section
                     title="거래유형 및 매출처"
+                    required
                     description="거래형태가 중복될 시 가장 매출에 크게 기여하는 거래 유형 1개를 선택 바랍니다."
                     action={
                         <TradeTypeGuideDialog>

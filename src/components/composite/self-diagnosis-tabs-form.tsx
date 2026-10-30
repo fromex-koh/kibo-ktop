@@ -8,6 +8,7 @@ import {useFormTabsSubmit} from '@/components/composite/form-tabs-submit'
 import {FormValuesProvider} from '@/components/composite/form-values'
 import {SELF_DIAGNOSIS_FORM_TABS} from '@/components/composite/self-diagnosis-form-tabs'
 import type {FormTabItem} from '@/components/composite/form-tabs'
+import {withNumberValues} from '@/lib/number-format'
 
 // 자가진단 입력 폼. 하단 CTA는 formId로 이 폼과 연결된다.
 // 모든 탭의 검사를 통과하면 값을 콘솔에 찍고 nextHref 로 이동한다 — 저장 API 는 그 console.log 자리에 붙인다.
@@ -37,9 +38,13 @@ const SelfDiagnosisTabsFormFields = ({
     })
 
     const submit = (event: SubmitEvent<HTMLFormElement>) => {
+        const form = event.currentTarget
         handleSubmit(event, (values) => {
+            // [프론트엔드 연동] 보낼 값 — 수량 · 금액 칸(화면 값 '1,234,567')만 숫자(1234567)로 바꿔 둔다.
+            // 저장 API 에는 이 payload 를 보낸다(lib/number-format 의 withNumberValues).
+            const payload = withNumberValues(form, values)
             // [프론트엔드 연동] 이 줄을 저장 API 호출로 바꾼다 — 성공한 뒤에 다음 단계로 보낸다.
-            console.log('[기업·기술정보 입력] 제출 데이터', values)
+            console.log('[기업·기술정보 입력] 제출 데이터', payload)
             const href = typeof nextHref === 'function' ? nextHref(values) : nextHref
             if (href) router.push(href)
         })

@@ -9,6 +9,7 @@ import {Button} from '@/components/ui/button'
 import {FieldError} from '@/components/ui/field'
 import {InputGroup, InputGroupAddon} from '@/components/ui/input-group'
 import {repeatCardClassName, repeatCardTitleClassName} from '@/components/theme/repeat-card.variants'
+import {NUMBER_FORMAT_THOUSANDS, formatThousands} from '@/lib/number-format'
 
 // Tech-Index 일반용 [재무정보] 탭 본문 —
 // Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_재무정보".
@@ -53,7 +54,9 @@ const FINANCE_FIELD_YEAR = /^finance-(\d{4})-/
 // 금액 칸에 들어갈 수 있는 것은 숫자뿐이다. inputMode="numeric" 은 모바일 키보드를 숫자판으로 바꿔 줄 뿐
 // 글자 입력을 막지 못하므로(데스크톱 키보드·붙여넣기), 값에서 숫자가 아닌 것을 걷어낸다.
 // 앞자리 0 도 함께 정리한다 — "007백만원" 같은 값이 그대로 제출되면 뒤에서 다시 다듬어야 한다.
-const formatAmount = (value: string) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+// 세 자리마다 쉼표를 넣는다(감리: 숫자 세 자리 구분 표시) — lib/number-format.
+// [프론트엔드 연동] 칸별 최대 자릿수가 정해지면 limitDigits(formatThousands, 자릿수) 로 바꾼다(lib/number-format). 지금은 상한 없음.
+const formatAmount = formatThousands
 
 // 기준일의 연·월 — 자릿수만 맞으면 되는 것이 아니라 달력에 있는 달이어야 한다(특허 등록일과 같은 처리).
 // 형식은 pattern 이 막고(제출할 때), 그때 띄울 문구는 data-pattern-message 로 함께 준다 —
@@ -213,6 +216,7 @@ const AmountField = ({year, account}: {year: number; account: (typeof FINANCE_AC
                     autoComplete="off"
                     placeholder={AMOUNT_ZERO}
                     format={formatAmount}
+                    data-number-format={NUMBER_FORMAT_THOUSANDS}
                     // 지워서 비운 칸은 벗어날 때 0 으로 돌려놓는다 — 자리 안내가 "0" 이라 비워 두면 화면에는
                     // 0 으로 보이는데 값은 비어 있다(수량 칸 공통 처리).
                     onBlur={(event) => {
@@ -261,10 +265,11 @@ const TechIndexFinanceForm = ({showYearUnit}: TechIndexFinanceFormProps) => {
     const [isLookupNoticeOpen, setIsLookupNoticeOpen] = useState(false)
 
     // 여러 해의 값을 한 번에 담는다 — 불러오기와 미작성이 같은 길로 화면을 채운다.
+    // setValue 는 칸의 format 을 거치지 않아 여기서 쉼표를 넣는다(응답 값은 쉼표 없이 넘겨도 된다).
     const applyFinanceValues = (targetYears: readonly number[], valueOf: (index: number, key: string) => string) => {
         targetYears.forEach((year, index) => {
             FINANCE_ACCOUNTS.forEach((account) => {
-                setValue(financeField(year, account.key), valueOf(index, account.key))
+                setValue(financeField(year, account.key), formatAmount(valueOf(index, account.key)))
             })
         })
     }

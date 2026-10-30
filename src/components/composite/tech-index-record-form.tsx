@@ -5,6 +5,7 @@ import {Field, FieldGrid} from '@/components/composite/form-fields'
 import {InputGroupInput, useFormValues} from '@/components/composite/form-values'
 import {InputGroup, InputGroupAddon} from '@/components/ui/input-group'
 import {TECH_INDEX_RECORD_COUNT_DEFAULT, TECH_INDEX_RECORD_FIELDS} from '@/constants/technology-evaluation'
+import {NUMBER_FORMAT_THOUSANDS, formatThousands} from '@/lib/number-format'
 
 // Tech-Index 일반용 [기술실적 및 인증실적] 탭 본문 —
 // Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_기술실적 및 인증실적".
@@ -22,7 +23,9 @@ const [DEVELOPMENT_FIELD, UTILIZATION_FIELD, COMMERCIALIZATION_FIELD, CERTIFICAT
 // 수량 칸에 들어갈 수 있는 것은 숫자뿐이다. inputMode="numeric" 은 모바일 키보드를 숫자판으로 바꿔 줄 뿐
 // 글자 입력을 막지 못하므로(데스크톱 키보드·붙여넣기), 값에서 숫자가 아닌 것을 걷어낸다.
 // 앞자리 0 도 함께 정리한다 — "007건" 같은 값이 그대로 제출되면 뒤에서 다시 다듬어야 한다.
-const formatCount = (value: string) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+// 세 자리마다 쉼표를 넣는다(감리: 숫자 세 자리 구분 표시) — lib/number-format.
+// [프론트엔드 연동] 칸별 최대 자릿수가 정해지면 limitDigits(formatThousands, 자릿수) 로 바꾼다(lib/number-format). 지금은 상한 없음.
+const formatCount = formatThousands
 
 // 시안 안내 문구 — 카드 제목 아래에 불릿 목록으로 온다.
 const NOTICES = [
@@ -46,6 +49,7 @@ const CountField = ({id, name, label}: {id: string; name: string; label: string}
                     autoComplete="off"
                     placeholder={NUMBER_DEFAULT}
                     format={formatCount}
+                    data-number-format={NUMBER_FORMAT_THOUSANDS}
                     // 지워서 비운 칸은 벗어날 때 0 으로 돌려놓는다 — 이 칸의 "없음" 은 0 이다.
                     onBlur={(event) => {
                         if (!event.currentTarget.value) setValue(name, NUMBER_DEFAULT)
