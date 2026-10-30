@@ -202,6 +202,11 @@ const InnovationGrowthReportLookup = ({intro, reportHref, initialResult}: Innova
     const requestRef = useRef(0)
 
     const isPatentSearch = searchType === 'patent'
+    // 셀렉트에서 지금 고른 기준 — 검색 전에도 바뀐다(searchType 은 검색한 기준). 카드 아래 안내 줄은 특허 검색일 때만 보인다.
+    const [selectedType, setSelectedType] = useState<string>(
+        initialResult?.type ?? INNOVATION_GROWTH_SEARCH_TYPES[0].value,
+    )
+    const isPatentSearchSelected = selectedType === 'patent'
     const company = companies.find((item) => item.id === companyId)
     const patent = patents?.find((item) => item.id === patentId)
     const hasPatents = Boolean(patents?.length)
@@ -309,21 +314,25 @@ const InnovationGrowthReportLookup = ({intro, reportHref, initialResult}: Innova
                     invalidError={getInnovationGrowthInvalidError}
                     onSearch={handleSearch}
                     onReset={handleReset}
+                    onTypeChange={setSelectedType}
                     isSearching={searchStatus === 'loading'}
                 />
-                {/* 검색 범위 안내와 [기업정보 제공법적 근거] — 카드 아래 가운데 한 줄(좁은 화면에서는 두 줄). */}
-                <div className="flex flex-col items-center gap-x-4 gap-y-1 md:flex-row md:justify-center">
-                    <p className="typo-body-l-medium text-label-foreground flex items-center gap-1 break-keep">
-                        <CircleAlert aria-hidden="true" className="size-icon-sm shrink-0" />
-                        {INNOVATION_GROWTH_SEARCH_SCOPE}
-                    </p>
-                    <KbigxLegalBasisDialog>
-                        <Button type="button" variant="text-underline" size="sm" aria-haspopup="dialog">
-                            {INNOVATION_GROWTH_LEGAL_BASIS_LABEL}
-                            <ChevronRight aria-hidden="true" />
-                        </Button>
-                    </KbigxLegalBasisDialog>
-                </div>
+                {/* 검색 범위 안내와 [기업정보 제공법적 근거] — 카드 아래 가운데 한 줄(좁은 화면에서는 두 줄).
+                    특허 검색을 골랐을 때만 둔다 — 기업 검색에는 해당하지 않는 안내다. */}
+                {isPatentSearchSelected ? (
+                    <div className="flex flex-col items-center gap-x-4 gap-y-1 md:flex-row md:justify-center">
+                        <p className="typo-body-l-medium text-label-foreground flex items-center gap-1 break-keep">
+                            <CircleAlert aria-hidden="true" className="size-icon-sm shrink-0" />
+                            {INNOVATION_GROWTH_SEARCH_SCOPE}
+                        </p>
+                        <KbigxLegalBasisDialog>
+                            <Button type="button" variant="text-underline" size="sm" aria-haspopup="dialog">
+                                {INNOVATION_GROWTH_LEGAL_BASIS_LABEL}
+                                <ChevronRight aria-hidden="true" />
+                            </Button>
+                        </KbigxLegalBasisDialog>
+                    </div>
+                ) : null}
             </div>
 
             {/* 결과 영역 — 검색 전에는 비어 있다. */}

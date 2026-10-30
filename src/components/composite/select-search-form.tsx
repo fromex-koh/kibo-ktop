@@ -46,6 +46,11 @@ type SelectSearchFormProps = {
     /** [초기화]를 눌렀을 때 — 사용처는 여기서 검색 결과도 처음 상태로 되돌린다. */
     onReset?: () => void
     /**
+     * 셀렉트에서 고른 기준이 바뀌었을 때(검색 전에도) — [초기화]로 처음 기준에 돌아갈 때도 부른다.
+     * 고른 기준에 따라 폼 밖의 안내를 바꿀 때 쓴다.
+     */
+    onTypeChange?: (type: string) => void
+    /**
      * 조회 중. [검색하기]가 도는 표시와 searchingLabel 로 바뀌고 [초기화]와 함께 눌리지 않는다 — 결과가 오기 전에
      * 다시 누르거나 입력을 비워 결과와 입력이 어긋나지 않게 한다.
      */
@@ -78,6 +83,7 @@ const SelectSearchForm = ({
     options,
     onSearch,
     onReset,
+    onTypeChange,
     isSearching = false,
     defaultValues,
     defaultType,
@@ -109,6 +115,7 @@ const SelectSearchForm = ({
         setSearchType(initialType)
         setKeyword(defaultValues?.[initialType] ?? '')
         setError('')
+        onTypeChange?.(initialType)
         onReset?.()
     }
 
@@ -117,6 +124,7 @@ const SelectSearchForm = ({
         if (keyword === (defaultValues?.[searchType] ?? '')) setKeyword(defaultValues?.[nextType] ?? '')
         setSearchType(nextType)
         setError('')
+        onTypeChange?.(nextType)
     }
 
     // 값이 비었거나 형식이 맞지 않으면 입력 아래에 안내를 보이고 입력으로 포커스를 옮긴다[7.4.2].
