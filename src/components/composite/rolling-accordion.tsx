@@ -49,7 +49,7 @@ const RollingAccordionBody = ({groups}: {groups: readonly RollingAccordionGroup[
                     <ul className="flex flex-col gap-2">
                         {group.items.map((item) => (
                             <li key={item} className="flex">
-                                <ListMarker className="h-lh" />
+                                <ListMarker className="[&>span]:bg-rolling-accordion-marker h-lh" />
                                 <span className="break-keep">{item}</span>
                             </li>
                         ))}
@@ -134,7 +134,7 @@ const RollingAccordion = ({items, interval = DEFAULT_INTERVAL_MS, className}: Ro
             {/* 멈춤(마우스 올림 · 터치 · 키보드 포커스)은 아코디언 상자에만 건다 — 그림은 꾸밈이라 그림 위에서는 멈추지 않는다. */}
             <div
                 {...pauseHandlers}
-                className="bg-panel-subtle rounded-lg p-8 md:p-12 xl:col-span-5 xl:col-start-1 xl:row-start-1"
+                className="bg-rolling-accordion-surface rounded-lg p-8 md:p-12 xl:col-span-5 xl:col-start-1 xl:row-start-1"
             >
                 <Accordion
                     type="single"

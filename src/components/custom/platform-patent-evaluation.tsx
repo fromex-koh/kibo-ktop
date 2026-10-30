@@ -1,10 +1,14 @@
-import Image, {type StaticImageData} from 'next/image'
+import type {StaticImageData} from 'next/image'
+import economicUseDarkIcon from '@public/images/platform-patent-evaluation/economic-use-dark.webp'
 import economicUseIcon from '@public/images/platform-patent-evaluation/economic-use.webp'
+import patentTradeDarkIcon from '@public/images/platform-patent-evaluation/patent-trade-dark.webp'
 import patentTradeIcon from '@public/images/platform-patent-evaluation/patent-trade.webp'
+import patentedKnowledgeDarkIcon from '@public/images/platform-patent-evaluation/patented-knowledge-dark.webp'
 import patentedKnowledgeIcon from '@public/images/platform-patent-evaluation/patented-knowledge.webp'
 import {ListMarker} from '@/components/custom/list-marker'
 import {ProcedureSteps} from '@/components/custom/procedure-steps'
 import {ScrollReveal} from '@/components/custom/scroll-reveal'
+import {ThemeImage} from '@/components/custom/theme-image'
 import {PLATFORM_PATENT_EVALUATION} from '@/content/service/platform-patent-evaluation'
 
 // 플랫폼 소개 > 특허평가 본문(기업 · 기관 공용). 화면 제목 아래에 세 묶음이 놓인다.
@@ -38,10 +42,10 @@ const KpasIntro = () => (
 
 // 관점 아이콘 — 원본 180 × 180 = 표시 크기(60)의 3배. 글자 없는 단색 그림이라도 무손실 webp 가 더 작아 무손실로 두었다.
 type AspectIcon = (typeof diagram.aspects)[number]['icon']
-const ASPECT_ICONS: Record<AspectIcon, StaticImageData> = {
-    'patented-knowledge': patentedKnowledgeIcon,
-    'patent-trade': patentTradeIcon,
-    'economic-use': economicUseIcon,
+const ASPECT_ICONS: Record<AspectIcon, {light: StaticImageData; dark: StaticImageData}> = {
+    'patented-knowledge': {light: patentedKnowledgeIcon, dark: patentedKnowledgeDarkIcon},
+    'patent-trade': {light: patentTradeIcon, dark: patentTradeDarkIcon},
+    'economic-use': {light: economicUseIcon, dark: economicUseDarkIcon},
 }
 
 // 특허평가 구조도 — 평가모형 구조도 가이드(/component-guide/model-structure-diagram)에도 싣는다.
@@ -60,7 +64,7 @@ const PatentEvaluationDiagram = () => (
                         {diagram.aspects.map((aspect) => (
                             <li key={aspect.title} className="flex flex-col items-center gap-4 text-center">
                                 {/* 관점 아이콘(60) — 옆 제목이 같은 뜻을 말하므로 꾸밈이다(alt="")[5.1.1]. */}
-                                <Image src={ASPECT_ICONS[aspect.icon]} alt="" className="size-15" />
+                                <ThemeImage {...ASPECT_ICONS[aspect.icon]} className="size-15" />
                                 <div className="flex flex-col">
                                     <p className="typo-body-l-bold text-label-foreground break-keep">{aspect.title}</p>
                                     <p className="typo-body-m-regular text-label-foreground">

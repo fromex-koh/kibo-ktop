@@ -22,8 +22,8 @@ const STEP_STAGGER_MS = 120
 // 단계 사이 화살표 — 번호 오른쪽 칸 끝에서 단계 사이 간격 가운데까지 걸친다(폭 96 · 오른쪽으로 60 넘침 = 48 + 사이 24 의 절반).
 const StepArrow = () => (
     <svg aria-hidden="true" viewBox="0 0 96 12" className="-mr-15 hidden w-24 shrink-0 md:block">
-        <path d="M 0 6 H 90" strokeWidth={2} className="stroke-foreground-subtle/50 fill-none" />
-        <polygon points="90,3 96,6 90,9" className="fill-foreground-subtle" />
+        <path d="M 0 6 H 90" strokeWidth={2} className="stroke-platform-connector/50 fill-none" />
+        <polygon points="90,3 96,6 90,9" className="fill-platform-connector" />
     </svg>
 )
 
@@ -44,7 +44,7 @@ const ProcedureSteps = ({steps, stepHeadingLevel = 'h3'}: ProcedureStepsProps) =
                             {/* 번호 — 순서는 목록(ol)이 알려 주므로 숫자는 읽지 않는다. */}
                             <span
                                 aria-hidden="true"
-                                className="typo-h1-bold text-primary-foreground flex size-15 shrink-0 items-center justify-center rounded-xl bg-gray-500"
+                                className="typo-h1-bold text-primary-foreground bg-procedure-step-number flex size-15 shrink-0 items-center justify-center rounded-xl"
                             >
                                 {index + 1}
                             </span>

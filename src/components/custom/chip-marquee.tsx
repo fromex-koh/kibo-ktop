@@ -53,7 +53,7 @@ const ChipMarquee = ({items, label, className}: ChipMarqueeProps) => {
                         {items.map((item) => (
                             <li
                                 key={item}
-                                className="border-chip-marquee-border typo-body-xl-bold text-chip-marquee-foreground hover:text-primary-foreground bg-chip-marquee-surface hover:bg-navy-500 rounded-lg border px-6 py-4 whitespace-nowrap transition-colors"
+                                className="border-chip-marquee-border typo-body-xl-bold text-chip-marquee-foreground hover:text-primary-foreground bg-chip-marquee-surface hover:bg-chip-marquee-hover hover:border-chip-marquee-hover-border rounded-lg border px-6 py-4 whitespace-nowrap transition-colors"
                             >
                                 {item}
                             </li>

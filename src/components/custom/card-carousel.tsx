@@ -54,15 +54,16 @@ const formatNumber = (index: number) => String(index + 1).padStart(NUMBER_DIGITS
 const MOTION_CLASS_NAME = 'duration-500 ease-roll motion-reduce:transition-none'
 
 // 시안: [이전]은 흰 면 + 테두리, [다음]은 짙은 면 — 한 바퀴 돌아 둘 다 늘 누를 수 있다.
+// [이전] 테두리는 다크에서 글자보다 한 단계 옅은 회색(gray.200)이라 전용 토큰을 쓴다(라이트는 글자색과 같다).
 const NAV_BUTTON_BASE_CLASS_NAME =
-    'border-label-foreground outline-ring focus-visible:outline-ring flex size-12 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
+    'outline-ring focus-visible:outline-ring flex size-12 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 const PREV_BUTTON_CLASS_NAME = cn(
     NAV_BUTTON_BASE_CLASS_NAME,
-    'bg-background text-label-foreground interactive:hover:bg-muted',
+    'border-platform-carousel-nav-border bg-background text-label-foreground interactive:hover:bg-muted',
 )
 const NEXT_BUTTON_CLASS_NAME = cn(
     NAV_BUTTON_BASE_CLASS_NAME,
-    'bg-label-foreground text-background interactive:hover:bg-foreground',
+    'border-label-foreground bg-label-foreground text-background interactive:hover:bg-foreground',
 )
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -254,7 +255,8 @@ const CardCarousel = ({title, items, defaultIndex = 0, className}: CardCarouselP
                                                     key={description}
                                                     className="typo-body-xl-regular text-label-foreground flex"
                                                 >
-                                                    <ListMarker />
+                                                    {/* 점은 다크에서 설명 글자와 같은 밝기(gray.100)라 전용 토큰으로 칠한다(라이트는 기본 마커 색과 같다). */}
+                                                    <ListMarker className="[&>span]:bg-platform-carousel-marker" />
                                                     <span className="break-keep">{description}</span>
                                                 </li>
                                             ))}
