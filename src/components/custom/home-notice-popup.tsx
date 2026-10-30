@@ -8,7 +8,6 @@ import {Dialog as DialogPrimitive} from 'radix-ui'
 import {Dialog, DialogClose, DialogPortal, DialogTitle} from '@/components/ui/dialog'
 import type {HomeNotice} from '@/content/service/home-notices'
 import {cn} from '@/lib/utils'
-import {useAutoplayPause} from '@/hooks/use-autoplay-pause'
 
 // 홈 공지 팝업 — 메인 화면 위에 어두운 막을 깔고 공지 카드를 띄운다.
 //
@@ -200,8 +199,8 @@ const HomeNoticePopup = ({items: allItems, onHideToday, onClose}: HomeNoticePopu
     const [direction, setDirection] = useState<'next' | 'previous'>()
     // 재생/정지를 직접 누르기 전(undefined)에는 '동작 줄이기' 설정을 따른다.
     const [playPreference, setPlayPreference] = useState<boolean>()
-    // 읽는 중(카드 묶음에 마우스를 올림 · 터치함 · 키보드 초점이 들어감) — 자동 넘김을 멈춘다(useAutoplayPause).
-    const {isPaused: isReading, pauseHandlers: readingHandlers} = useAutoplayPause()
+    // 카드에 마우스가 올라가 있거나 초점이 들어가 있는 동안 — 자동 넘김을 멈춘다.
+    const [isReading, setIsReading] = useState(false)
     // 화면 폭이 바뀌어 한 번에 보이는 카드 수가 달라지면 첫 공지부터 다시 놓는다 — 좁은 화면에서 넘긴 번호를
     // 넓은 화면에 그대로 쓰면 카드 순서가 바뀌어 보인다. (렌더 중 상태 맞춤 — effect 로 하면 한 번 깜빡인다.)
     const [layoutPerView, setLayoutPerView] = useState(perView)
@@ -269,7 +268,13 @@ const HomeNoticePopup = ({items: allItems, onHideToday, onClose}: HomeNoticePopu
                         <div className="flex w-full flex-col items-center gap-6">
                             {/* 읽는 중 판단은 카드 묶음에만 건다 — 조작 줄까지 감싸면 재생 버튼을 누르는 동안과
                                 누른 뒤(초점이 버튼에 남는다)에도 멈춘 채여서 버튼이 동작하지 않는 것처럼 보인다. */}
-                            <div className="xl:max-w-content w-full max-w-82 md:max-w-170" {...readingHandlers}>
+                            <div
+                                className="xl:max-w-content w-full max-w-82 md:max-w-170"
+                                onPointerEnter={() => setIsReading(true)}
+                                onPointerLeave={() => setIsReading(false)}
+                                onFocus={() => setIsReading(true)}
+                                onBlur={() => setIsReading(false)}
+                            >
                                 {/* key 가 바뀌면 묶음을 새로 그리며 넘어간 방향에서 들어온다. */}
                                 <ul
                                     key={current}

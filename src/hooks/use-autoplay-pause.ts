@@ -6,7 +6,7 @@ import {useEffect, useRef, useState, type FocusEvent, type PointerEvent as React
 //     터치는 손을 떼는 순간 pointerleave 가 와서 hover 방식으로는 바로 다시 넘어가 버리기 때문이다.
 //   · 키보드 — 포커스(focus-visible)가 안에 있는 동안 멈추고, 밖으로 나가면 다시 재생한다[6.2.1].
 //     마우스로 눌러 생긴 포커스는 세지 않는다 — 누른 뒤 벗어났는데도 멈춘 채로 남지 않게 한다.
-// 쓰는 곳: RollingAccordion · 메인페이지 기술평가 목차 롤링 · 메인 공지 팝업.
+// 쓰는 곳: 서비스 소개 화면의 RollingAccordion · ChipMarquee.
 //
 // 사용: const {isPaused, pauseHandlers} = useAutoplayPause()
 //       <div {...pauseHandlers}>…</div>  — isPaused 일 때 타이머를 멈춘다.

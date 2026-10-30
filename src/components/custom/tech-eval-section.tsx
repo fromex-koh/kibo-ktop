@@ -9,7 +9,6 @@ import Reveal from './reveal'
 import {useStackPagerActivePage} from './stack-pager'
 import {TECH_EVAL_CTA_FILL_CLASS, TechEvalServiceVisual, buildTechEvalServices} from './tech-eval-services'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
-import {useAutoplayPause} from '@/hooks/use-autoplay-pause'
 
 // 목차(롤링)와 모바일 목록을 가르는 조건 — 아래 max-md:hidden · md:hidden 과 같은 값이어야 한다.
 // 값이 어긋나면 두 벌이 함께 보이거나 둘 다 사라지므로 tokens.json 의 breakpoint.md 와 한 세트로 검증한다.
@@ -58,9 +57,8 @@ const TechEvalSection = ({
     const [activeIndex, setActiveIndex] = useState(0)
     const [entrySequence, setEntrySequence] = useState(0)
     const previousStackPageRef = useRef(stackPage)
-    // 롤링 영역을 보는 중이면(마우스를 올림 · 터치함 · 키보드 포커스) 진행 바를 멈추고, 마우스가 벗어나거나
-    // 영역 밖을 누르거나 포커스가 나가면 멈춘 지점부터 이어서 재생한다(useAutoplayPause).
-    const {isPaused, pauseHandlers} = useAutoplayPause()
+    // 목차·CTA 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
+    const [isPaused, setIsPaused] = useState(false)
     const activeService = services[activeIndex]
 
     // 두 번째 섹션에 새로 진입할 때만 첫 서비스와 진행 시간을 초기화한다.
@@ -70,6 +68,7 @@ const TechEvalSection = ({
 
         if (hasEnteredThirdSection) {
             setActiveIndex(0)
+            setIsPaused(false)
             setEntrySequence((current) => current + 1)
         }
 
@@ -113,7 +112,6 @@ const TechEvalSection = ({
             {isDesktop !== false ? (
                 <div
                     data-rolling-tech-content
-                    {...pauseHandlers}
                     className="w-full max-md:hidden md:pt-[calc(--spacing(28)+clamp(--spacing(6),7.4vh,--spacing(20)))] md:pb-[clamp(--spacing(8),9.26vh,--spacing(25))]"
                 >
                     <div className="grid-layout w-full items-start gap-y-16">
@@ -137,7 +135,7 @@ const TechEvalSection = ({
                                         height: `${100 / services.length}%`,
                                     }}
                                     onAnimationEnd={showNextService}
-                                    // 진행바 정지 — 롤링 영역을 보는 중이거나(마우스 · 터치 · 키보드 포커스), 이 섹션이 비활성 스택 페이지일 때.
+                                    // 진행바 정지 — 목차 버튼 호버/포커스 중이거나, 이 섹션이 비활성 스택 페이지일 때.
                                     className="animate-tech-progress bg-main-accent pager-on:[[data-stack-page]:not([data-stack-state=active])_&]:[animation-play-state:paused] absolute inset-x-0 origin-top data-[paused=true]:[animation-play-state:paused]"
                                 />
                             </div>
@@ -154,6 +152,10 @@ const TechEvalSection = ({
                                                 type="button"
                                                 aria-current={isActive ? 'true' : undefined}
                                                 onClick={() => setActiveIndex(index)}
+                                                onMouseEnter={() => setIsPaused(true)}
+                                                onMouseLeave={() => setIsPaused(false)}
+                                                onFocus={() => setIsPaused(true)}
+                                                onBlur={() => setIsPaused(false)}
                                                 // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
                                                 // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
                                                 className={cn(
@@ -208,6 +210,10 @@ const TechEvalSection = ({
                                                         <Link
                                                             href={service.ctaHref}
                                                             aria-label={`${service.title} 시작하기`}
+                                                            onMouseEnter={() => setIsPaused(true)}
+                                                            onMouseLeave={() => setIsPaused(false)}
+                                                            onFocus={() => setIsPaused(true)}
+                                                            onBlur={() => setIsPaused(false)}
                                                         >
                                                             시작하기
                                                             <ArrowRight aria-hidden="true" />
