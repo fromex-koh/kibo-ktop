@@ -20,7 +20,7 @@ const FREE_SERVICE = {
     title: '무료 서비스',
     description: '기술보증기금은 기업의 정보 접근성을 높이기 위해 아래 서비스를 무료로 제공합니다.',
     badge: '무료',
-    name: '자가조회',
+    name: '자사조회',
     nameDetail: '(본인 기업 조회)',
     features: ['횟수 무제한', '이용권 불필요'],
 } as const
@@ -69,7 +69,7 @@ const PAID_PLANS: readonly PricingPlan[] = [
 // 이용권 카드 아래 안내.
 const NO_DEDUCTION_NOTICE = {
     title: '다음의 경우에는 이용 횟수가 차감되지 않습니다.',
-    items: ['자가 조회(본인 기업 조회)하는 경우', '기술혁신성장정보가 제공되지 않는 경우'],
+    items: ['자사 조회(본인 기업 조회)하는 경우', '기술혁신성장정보가 제공되지 않는 경우'],
 } as const
 
 const USAGE_GUIDE = {
