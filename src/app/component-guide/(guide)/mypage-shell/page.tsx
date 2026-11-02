@@ -56,7 +56,20 @@ const PROPS_ITEMS = [
         '-',
         'string',
     ],
-    ['MypageSidebar', 'companyName', '유형 배지 옆에 보이는 회원 이름입니다(필수).', '-', 'ReactNode'],
+    [
+        'MypageSidebar',
+        'companyName',
+        '유형 배지 옆에 보이는 회원 이름입니다(필수). 기관 하위계정은 헤더와 같은 담당자명입니다.',
+        '-',
+        'ReactNode',
+    ],
+    [
+        'MypageSidebar',
+        'isSubAccount',
+        "기관 하위계정인지입니다. 켜면 배지가 헤더와 같이 '하위 기관' 이 됩니다(헤더 user.isSubAccount 와 같은 값).",
+        'false',
+        'boolean',
+    ],
     [
         'MypageSidebar',
         'className · aside 속성',
@@ -104,6 +117,13 @@ const MENU_ROWS = [
         cells: [
             <code key="userType">org</code>,
             '내 정보 · 평가결과 조회 · 평가검증 신청 조회 · K-BIGx 보고서 이력 · 하위계정 현황 · 1:1 문의',
+        ],
+    },
+    {
+        key: 'org-sub-account',
+        cells: [
+            <code key="userType">org + isSubAccount</code>,
+            "기관과 같은 메뉴입니다. 배지는 '하위 기관', 이름은 담당자명(헤더와 같은 값)이고, [내 정보]는 하위계정 내 정보(/org/mypage/profile-edit/sub-account)로 갑니다 — 마스터 기관 화면으로 넘어가지 않습니다.",
         ],
     },
 ] as const
@@ -217,7 +237,7 @@ const MypageShellGuidePage = () => (
                     </li>
                     <li>
                         접힌 목록의 트리거에는 현재 메뉴 라벨이 보이고 목록 열림 상태가 Popover 로 전달됩니다. 유형은
-                        배지 글자(기업 · 기관)로도 표시됩니다[5.3.1].
+                        배지 글자(기업 · 기관 · 하위 기관)로도 표시됩니다[5.3.1].
                     </li>
                     <li>
                         사용처는 <code>PageTitleBar</code>로 <code>h1</code>을 두고 본문 <code>main</code>에{' '}

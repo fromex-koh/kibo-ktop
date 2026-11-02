@@ -154,7 +154,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const InsideLabelPieChartGuidePage = () => (
     <GuidePageShell
         title="조각 안 라벨 원형 (InsideLabelPieChart)"
-        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보 차입금 현황의 신용/담보 비중 원형입니다."
+        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. K-BIGx 보고서 PDF 템플릿 신용/담보 비중 원형으로 썼으나, 현업 요청(원형 그래프 라벨은 원 밖)으로 PDF 템플릿은 CalloutPieChart 로 바꿨습니다 — 지금은 쓰는 화면이 없습니다."
     >
         <BaseCard>
             <section aria-labelledby="ilp-basic" className="flex flex-col gap-6">
@@ -231,9 +231,10 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-print" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-print" title="5. K-BIGx PDF 템플릿에서">
-                    신용/담보 비중 소블록의 오른쪽 반에 330 크기로 가운데 둡니다(왼쪽 반은 DualLineChart 꺾은선). 확인
-                    화면:{' '}
+                <SectionHeading id="ilp-print" title="5. K-BIGx PDF 템플릿에서 (지금은 쓰지 않음)">
+                    예전에는 신용/담보 비중 소블록의 오른쪽 반에 330 크기로 가운데 두었습니다. 현업 요청(원형 그래프
+                    라벨은 무조건 원 밖 지시선 끝)으로 지금은 CalloutPieChart 를 씁니다 — 아래 코드는 예전 사용
+                    예입니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
                         target="_blank"

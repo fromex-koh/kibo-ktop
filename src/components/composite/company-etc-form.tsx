@@ -32,6 +32,7 @@ import {
     useFormValues,
 } from '@/components/composite/form-values'
 import {Field, FieldGrid, FieldRow3} from '@/components/composite/form-fields'
+import {NUMBER_FORMAT_THOUSANDS, formatSignedThousands, formatThousands, limitDigits} from '@/lib/number-format'
 
 // 기업 기타 정보 탭 본문 — Figma "기업 기타 정보" 탭 컨텐츠(1200×2572) 전체.
 // 자가진단 입력 화면과 FormTabs 컴포넌트 가이드가 같은 것을 보도록 여기 한 벌만 둔다.
@@ -129,10 +130,8 @@ const Section = ({
     </div>
 )
 
-// 수량·금액 칸에 들어갈 수 있는 것은 숫자뿐이다. inputMode="numeric" 은 모바일 키보드를 숫자판으로
-// 바꿔 줄 뿐 글자 입력을 막지 못하므로(데스크톱 키보드·붙여넣기), 값에서 숫자가 아닌 것을 걷어낸다.
-// 앞자리 0 도 함께 정리한다 — "007건" 같은 값이 그대로 제출되면 뒤에서 다시 다듬어야 한다.
-const formatCount = (value: string) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+// 수량·금액 칸의 형식은 lib/number-format 에 있다 — 숫자만 남기고 앞자리 0 을 정리한 뒤 세 자리마다 쉼표를 넣는다
+// (감리: 숫자 세 자리 구분 표시). inputMode 는 키보드만 바꿀 뿐 글자 · 붙여넣기를 막지 못해 값에서 걸러 낸다.
 
 // 수량·금액 칸의 기본값 — "해당 사항 없음" 의 답은 빈칸이 아니라 0 이다. 화면이 열릴 때부터 0 이 들어 있고,
 // 사용자가 지워서 비면 칸을 벗어날 때 0 으로 되돌린다. 빈칸으로 제출되면 받는 쪽이 "" 를 숫자로 다시
@@ -172,6 +171,8 @@ const UnitField = ({
     required,
     labelHidden,
     helper,
+    allowNegative,
+    maxDigits,
     className,
 }: {
     id: string
@@ -183,11 +184,23 @@ const UnitField = ({
     /** 구획 제목이 곧 이 칸의 이름일 때 켠다 — 라벨을 화면에 두지 않고 aria-label 로만 준다[7.4.1]. */
     labelHidden?: boolean
     helper?: string
+    /**
+     * 음수가 될 수 있는 금액(영업이익 · 순이익 · 자본총계) — 맨 앞의 '-' 를 받는다. 모바일 숫자판에는 '-' 가 없어
+     * 이 칸만 일반 키보드를 연다.
+     */
+    allowNegative?: boolean
+    /**
+     * 최대 자릿수(쉼표 · '-' 제외). [프론트엔드 연동] 상한은 아직 정해지지 않아 어느 칸에도 넘기지 않는다 —
+     * 정해지면 그 칸에 maxDigits={6} 처럼 넘기면 된다(lib/number-format 의 limitDigits).
+     */
+    maxDigits?: number
     className?: string
 }) => {
     const {setValue} = useFormValues()
     // 읽기 전용 칸은 계산 결과라 사용자가 채울 수 없다 — 필수로 두면 채울 방법 없이 막힌다.
     const isRequired = readOnly ? false : (required ?? true)
+    const baseFormat = allowNegative ? formatSignedThousands : formatThousands
+    const format = maxDigits ? limitDigits(baseFormat, maxDigits) : baseFormat
     const input = (
         <InputGroup>
             <InputGroupInput
@@ -195,13 +208,16 @@ const UnitField = ({
                 name={id}
                 readOnly={readOnly}
                 required={isRequired}
-                inputMode="numeric"
+                inputMode={allowNegative ? 'text' : 'numeric'}
                 autoComplete="off"
                 placeholder={NUMBER_DEFAULT}
-                format={formatCount}
-                // 지워서 비운 칸은 벗어날 때 0 으로 돌려놓는다 — 이 칸의 "없음" 은 0 이다.
+                format={format}
+                // [프론트엔드 연동] 제출할 때 이 표시가 달린 칸만 숫자로 바꾼다(lib/number-format 의 withNumberValues).
+                data-number-format={NUMBER_FORMAT_THOUSANDS}
+                // 지워서 비운 칸(음수 칸은 '-' 만 남은 칸도)은 벗어날 때 0 으로 돌려놓는다 — 이 칸의 "없음" 은 0 이다.
                 onBlur={(event) => {
-                    if (!event.currentTarget.value) setValue(id, NUMBER_DEFAULT)
+                    const {value} = event.currentTarget
+                    if (!value || value === '-') setValue(id, NUMBER_DEFAULT)
                 }}
                 // 라벨을 화면에 두지 않는 칸은 구획 제목이 곧 이름이라 그 글을 aria-label 로 준다[7.4.1].
                 aria-label={labelHidden ? label : undefined}
@@ -335,7 +351,8 @@ const CompanyEtcForm = () => {
                             unit="백만원"
                             helper="백만원 미만 절사"
                         />
-                        {/* 연환산 값은 입력이 아니라 계산 결과라 읽기 전용이다. */}
+                        {/* 연환산 값은 입력이 아니라 계산 결과라 읽기 전용이다.
+                            [프론트엔드 연동] 계산값을 넣을 때도 formatThousands 로 쉼표를 넣어 다른 칸과 같게 보인다. */}
                         <UnitField
                             id="salesAnnualized"
                             label="연간 환산 매출액"
@@ -348,8 +365,10 @@ const CompanyEtcForm = () => {
 
                 <Separator />
 
+                {/* 거래유형 라디오는 따로 보이는 라벨이 없어 구획 제목이 그 이름이다 — 필수 표시를 제목에 붙인다. */}
                 <Section
                     title="거래유형 및 매출처"
+                    required
                     description="거래형태가 중복될 시 가장 매출에 크게 기여하는 거래 유형 1개를 선택 바랍니다."
                     action={
                         <TradeTypeGuideDialog>
@@ -381,8 +400,16 @@ const CompanyEtcForm = () => {
                                 그래서 label 요소로 두면 어느 컨트롤과도 이어지지 않은 라벨이 된다
                                 (WAVE "Orphaned form label"). 생김새는 그대로 두고 요소만 바꾼 뒤,
                                 묶음이 aria-labelledby 로 이 글을 가리켜 이름을 가져간다[7.4.1]. */}
-                            <Label asChild className="text-foreground cursor-auto font-bold">
-                                <span id={OWN_WORKPLACE_LABEL_ID}>자가사업장 보유</span>
+                            <Label asChild className="text-foreground cursor-auto gap-1 font-bold">
+                                <span id={OWN_WORKPLACE_LABEL_ID}>
+                                    자가사업장 보유
+                                    {/* 별표는 장식이라 aria-hidden 이고, 읽어 줄 때는 뒤의 문장으로 대신
+                                        읽힌다[5.3.1] — 라벨의 필수 표시(FieldLabel)와 같은 방식·같은 색이다. */}
+                                    <span aria-hidden="true" className="text-error-500">
+                                        *
+                                    </span>
+                                    <span className="sr-only"> (필수)</span>
+                                </span>
                             </Label>
                             <div className="h-control-h-md flex items-center">
                                 <RadioRow
@@ -402,6 +429,7 @@ const CompanyEtcForm = () => {
 
                 <Section
                     title="신청기술 구분"
+                    required
                     action={
                         <TechnologyDefinitionDialog>
                             <Button type="button" variant="secondary" size="xs">
@@ -422,7 +450,7 @@ const CompanyEtcForm = () => {
 
                 <Separator />
 
-                <Section title="평가기술명">
+                <Section title="평가기술명" required>
                     <LabellessField id="techName">
                         {/* 구획 제목이 곧 이 입력의 이름이라 라벨을 따로 두지 않고 aria-label 로 연결한다[7.4.1]. */}
                         <Input
@@ -438,7 +466,7 @@ const CompanyEtcForm = () => {
 
                 <Separator />
 
-                <Section title="신청기술 개요">
+                <Section title="신청기술 개요" required>
                     <LabellessField
                         id={TECH_SUMMARY_NAME}
                         footer={
@@ -468,7 +496,7 @@ const CompanyEtcForm = () => {
 
                 <Separator />
 
-                <Section title="평가기술 IPC">
+                <Section title="평가기술 IPC" required>
                     <LabellessField id="techIpc">
                         <Select name="techIpc" required>
                             <SelectTrigger id="techIpc" aria-label="평가기술 IPC" className="w-full">

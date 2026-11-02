@@ -3,14 +3,14 @@
 import type {ReactNode} from 'react'
 import {EllipsisVertical} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
-import {SubAccountDetailDialog} from '@/components/composite/sub-account-detail-dialog'
 import {SubAccountStatusBadge} from '@/components/composite/sub-account-status-badge'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {Button} from '@/components/ui/button'
 import {subAccountStatusChangeLabel, type SubAccountItem, type SubAccountMenuAction} from '@/constants/sub-account'
 
 // 하위계정 카드 — Figma "마이페이지_하위계정 현황" 의 리스트 한 장.
-// 상태 배지 + 계정 이름 / [⋮] 메뉴 · 계정 ID·담당자 이름·보고서 출력 / [상세정보] 로 이루어진다.
+// 상태 배지 + 계정 이름 / [⋮] 메뉴 · 계정 ID·담당자 이름·보고서 출력으로 이루어진다.
+// 상세정보는 카드 아래 버튼이 아니라 [⋮] 메뉴의 [비밀번호 초기화] 아래에 있다(현업 요청).
 
 // 카드의 상세 한 칸 — 넓은 화면에서는 라벨과 값이 한 줄에 붙어 나란히 놓인다(시안 사이 4).
 // 좁은 화면에서는 칸이 한 줄씩 쌓이는데, 그때는 상자를 지워(contents) 라벨과 값이 바깥 dl 의 두 칸
@@ -24,10 +24,11 @@ const SubAccountDetail = ({label, children}: {label: string; children: ReactNode
     </div>
 )
 
-// [⋮] 메뉴에 담기는 일 — 시안 순서 그대로다. 삭제만 지우는 일이라 색을 달리한다.
+// [⋮] 메뉴에 담기는 일 — 시안 순서에 상세정보를 비밀번호 초기화 아래로 더했다. 삭제만 지우는 일이라 색을 달리한다.
 const MENU_ITEMS: readonly {action: SubAccountMenuAction; label: string; destructive?: boolean}[] = [
     {action: 'edit', label: '수정'},
     {action: 'password-reset', label: '비밀번호 초기화'},
+    {action: 'detail', label: '상세정보'},
     {action: 'status-change', label: '상태 변경'},
     {action: 'delete', label: '삭제', destructive: true},
 ]
@@ -45,62 +46,49 @@ const SubAccountCard = ({item, onMenuSelect}: SubAccountCardProps) => {
 
     return (
         <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
-            <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-4">
-                    <div className="flex items-start justify-between gap-4">
-                        {/* 배지는 이름 앞에 글자처럼 흘려 넣는다 — 칸으로 나누면 이름이 두 줄이 될 때
+            <div className="flex flex-col gap-4">
+                <div className="flex items-start justify-between gap-4">
+                    {/* 배지는 이름 앞에 글자처럼 흘려 넣는다 — 칸으로 나누면 이름이 두 줄이 될 때
                             배지만 남은 줄이 생긴다. */}
-                        <h3 className="typo-title-l-bold text-foreground min-w-0">
-                            <SubAccountStatusBadge status={item.status} className="me-2 align-middle" />
-                            {item.name}
-                        </h3>
+                    <h3 className="typo-title-l-bold text-foreground min-w-0">
+                        <SubAccountStatusBadge status={item.status} className="me-2 align-middle" />
+                        {item.name}
+                    </h3>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                {/* 아이콘만 있는 버튼이라 어느 계정의 메뉴인지 이름에 담는다[5.1.1]. */}
-                                <Button
-                                    type="button"
-                                    variant="plain"
-                                    size="icon"
-                                    aria-label={`${item.name} 관리 메뉴`}
-                                    className="shrink-0"
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            {/* 아이콘만 있는 버튼이라 어느 계정의 메뉴인지 이름에 담는다[5.1.1]. */}
+                            <Button
+                                type="button"
+                                variant="plain"
+                                size="icon"
+                                aria-label={`${item.name} 관리 메뉴`}
+                                className="shrink-0"
+                            >
+                                <EllipsisVertical aria-hidden="true" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-45">
+                            {MENU_ITEMS.map((menu) => (
+                                <DropdownMenuItem
+                                    key={menu.action}
+                                    variant={menu.destructive ? 'destructive' : 'default'}
+                                    onSelect={() => onMenuSelect?.(menu.action, item)}
                                 >
-                                    <EllipsisVertical aria-hidden="true" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="min-w-45">
-                                {MENU_ITEMS.map((menu) => (
-                                    <DropdownMenuItem
-                                        key={menu.action}
-                                        variant={menu.destructive ? 'destructive' : 'default'}
-                                        onSelect={() => onMenuSelect?.(menu.action, item)}
-                                    >
-                                        {menu.action === 'status-change' ? statusChangeLabel : menu.label}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                                    {menu.action === 'status-change' ? statusChangeLabel : menu.label}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
 
-                    {/* 좁은 화면: 라벨 칸(가장 긴 라벨 폭) + 값 칸 두 줄 그리드. sm 이상: 시안대로 한 줄에
+                {/* 좁은 화면: 라벨 칸(가장 긴 라벨 폭) + 값 칸 두 줄 그리드. sm 이상: 시안대로 한 줄에
                         이어 붙이고 칸 사이를 24 로 벌린다. */}
-                    <dl className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 sm:flex sm:flex-wrap sm:gap-x-6">
-                        <SubAccountDetail label="계정 ID">{item.accountId}</SubAccountDetail>
-                        <SubAccountDetail label="담당자 이름">{item.managerName}</SubAccountDetail>
-                        <SubAccountDetail label="보고서 출력">{`${item.reportCount}건`}</SubAccountDetail>
-                    </dl>
-                </div>
-
-                {/* 시안: 카드 오른쪽 끝에 180 짜리 버튼 하나. 좁은 화면에서는 줄을 가득 채운다.
-                    화면으로 가지 않고 상세정보 모달을 연다 — 어느 계정인지 이름에 담는다[6.4.3]. */}
-                <div className="flex justify-end">
-                    <SubAccountDetailDialog item={item}>
-                        <Button type="button" variant="tertiary" size="sm" className="max-sm:w-full sm:w-45">
-                            상세정보
-                            <span className="sr-only">{` (${item.name})`}</span>
-                        </Button>
-                    </SubAccountDetailDialog>
-                </div>
+                <dl className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 sm:flex sm:flex-wrap sm:gap-x-6">
+                    <SubAccountDetail label="계정 ID">{item.accountId}</SubAccountDetail>
+                    <SubAccountDetail label="담당자 이름">{item.managerName}</SubAccountDetail>
+                    <SubAccountDetail label="보고서 출력">{`${item.reportCount}건`}</SubAccountDetail>
+                </dl>
             </div>
         </BaseCard>
     )

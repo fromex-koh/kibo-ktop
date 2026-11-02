@@ -8,6 +8,7 @@ import {
     TECH_INDEX_RESEARCH_STAFF_FIELD,
     TECH_INDEX_TOTAL_STAFF_FIELD,
 } from '@/constants/technology-evaluation'
+import {NUMBER_FORMAT_THOUSANDS, formatThousands} from '@/lib/number-format'
 
 // Tech-Index 일반용 [기술 인력 현황] 탭 상단의 인원 요약 —
 // Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_기술 인력 현황".
@@ -43,7 +44,8 @@ const CalculatedStaffCountField = ({
                 id={id}
                 name={name}
                 readOnly
-                value={String(value)}
+                value={formatThousands(String(value))}
+                data-number-format={NUMBER_FORMAT_THOUSANDS}
                 autoComplete="off"
                 className="text-right"
             />

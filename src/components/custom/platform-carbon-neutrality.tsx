@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, type ReactNode} from 'react'
+import {useRef, useState, type ReactNode} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import {ArrowRight} from 'lucide-react'
 import {Tabs as TabsPrimitive} from 'radix-ui'
@@ -8,7 +8,11 @@ import businessHandshake from '@public/images/platform-technology-evaluation/bus
 import officeCityView from '@public/images/platform-technology-evaluation/office-city-view.webp'
 import reportChartsDesk from '@public/images/platform-technology-evaluation/report-charts-desk.webp'
 import clipboardCheckChart from '@public/images/option-card/clipboard-check-chart.webp'
+import keywordSearchDarkIcon from '@public/images/platform-carbon-neutrality/keyword-search-dark.webp'
+import selfDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/self-diagnosis-dark.webp'
+import emissionDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis-dark.webp'
 import emissionDiagnosisIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis.webp'
+import reductionPlanDarkIcon from '@public/images/platform-carbon-neutrality/reduction-plan-dark.webp'
 import heroLeadingSmeImage from '@public/images/platform-carbon-neutrality/hero-leading-sme.webp'
 import heroPublicUseImage from '@public/images/platform-carbon-neutrality/hero-public-use.webp'
 import heroSmeUseImage from '@public/images/platform-carbon-neutrality/hero-sme-use.webp'
@@ -16,8 +20,11 @@ import heroTaxonomyImage from '@public/images/platform-carbon-neutrality/hero-ta
 import keywordSearchIcon from '@public/images/platform-carbon-neutrality/keyword-search.webp'
 import reductionPlanIcon from '@public/images/platform-carbon-neutrality/reduction-plan.webp'
 import selfDiagnosisIcon from '@public/images/platform-carbon-neutrality/self-diagnosis.webp'
+import economicUseDarkIcon from '@public/images/platform-patent-evaluation/economic-use-dark.webp'
 import economicUseIcon from '@public/images/platform-patent-evaluation/economic-use.webp'
+import patentedKnowledgeDarkIcon from '@public/images/platform-patent-evaluation/patented-knowledge-dark.webp'
 import patentedKnowledgeIcon from '@public/images/platform-patent-evaluation/patented-knowledge.webp'
+import {ConfirmDialog, ConfirmTarget} from '@/components/composite/confirm-dialog'
 import {RollingAccordion, RollingAccordionBody} from '@/components/composite/rolling-accordion'
 import {ChipMarquee} from '@/components/custom/chip-marquee'
 import {
@@ -27,6 +34,7 @@ import {
     ServiceGlassCardList,
 } from '@/components/custom/platform-service-intro'
 import {ProcedureSteps} from '@/components/custom/procedure-steps'
+import {ThemeImage} from '@/components/custom/theme-image'
 import {ScrollReveal} from '@/components/custom/scroll-reveal'
 import {PILL_TAB_LIST_CLASS_NAME, PILL_TAB_TRIGGER_CLASS_NAME} from '@/components/theme/pill-tabs.variants'
 import {
@@ -42,7 +50,7 @@ import {cn} from '@/lib/utils'
 // 플랫폼 소개 > 탄소중립 본문(기업 · 기관 공용). 화면 제목 줄은 page.tsx 가 titleBar 로 넘긴다.
 //   ① 히어로(PlatformServiceHero) — 알약 탭으로 두 플랫폼(선도중소기업확인 · K-택소노미)을 고르고, 고른 쪽 카드 3장
 //   ② 분석 기능(ServiceFeatureList) · ③ 아래 묶음(선도중소기업 = ProcedureSteps · 택소노미 = RollingAccordion) — 고른 플랫폼 것만
-//   ④ 이런 기업에 적합합니다(ChipMarquee) · ⑤ 진단 바로가기(외부 플랫폼 · 새 탭)
+//   ④ 이런 기업에 적합합니다(ChipMarquee) · ⑤ 진단 바로가기(이동 확인 모달 → [확인] 시 외부 플랫폼 새 탭)
 // 문구 · 링크 주소는 content/service/platform-carbon-neutrality.ts 에서 고친다.
 //
 // 알아둘 점 — 탭 전환
@@ -52,7 +60,7 @@ import {cn} from '@/lib/utils'
 //   · transition-none 을 지우지 않는다 — 등장 클래스 duration-* 이 transition 시간도 정해 감춤이 그만큼 늦게 적용된다.
 //   · 탭 접근성(role · 화살표 키 · aria-*)은 Radix Tabs 가 맡는다[8.2.1].
 
-const {hero, target} = PLATFORM_CARBON_NEUTRALITY
+const {hero, target, moveDialog} = PLATFORM_CARBON_NEUTRALITY
 
 // 아래 묶음 사진 — 기술평가와 같은 세 장(원본 2070 × 1284 = PC 690 × 428 의 3배). 항목 순서대로 쓴다.
 const ACCORDION_PHOTOS: readonly StaticImageData[] = [reportChartsDesk, businessHandshake, officeCityView]
@@ -67,13 +75,14 @@ const HERO_CARD_IMAGES: Record<CarbonHeroCard['image'], {src: StaticImageData; c
     'hero-public-use': {src: heroPublicUseImage, className: 'h-22 w-auto'},
     'clipboard-check-chart': {src: clipboardCheckChart, className: 'mt-1 mb-2 ml-2 size-19'},
 }
-const FEATURE_ICONS: Record<CarbonFeature['icon'], StaticImageData> = {
-    'emission-diagnosis': emissionDiagnosisIcon,
-    'reduction-plan': reductionPlanIcon,
-    'keyword-search': keywordSearchIcon,
-    'self-diagnosis': selfDiagnosisIcon,
-    'level-diagnosis': patentedKnowledgeIcon,
-    'expert-evaluation': economicUseIcon,
+// 분석 기능 아이콘 — 라이트 · 다크 그림이 따로다.
+const FEATURE_ICONS: Record<CarbonFeature['icon'], {light: StaticImageData; dark: StaticImageData}> = {
+    'emission-diagnosis': {light: emissionDiagnosisIcon, dark: emissionDiagnosisDarkIcon},
+    'reduction-plan': {light: reductionPlanIcon, dark: reductionPlanDarkIcon},
+    'level-diagnosis': {light: patentedKnowledgeIcon, dark: patentedKnowledgeDarkIcon},
+    'keyword-search': {light: keywordSearchIcon, dark: keywordSearchDarkIcon},
+    'self-diagnosis': {light: selfDiagnosisIcon, dark: selfDiagnosisDarkIcon},
+    'expert-evaluation': {light: economicUseIcon, dark: economicUseDarkIcon},
 }
 
 const HeroCardImage = ({image}: {image: CarbonHeroCard['image']}) => (
@@ -86,7 +95,7 @@ const HeroCardImage = ({image}: {image: CarbonHeroCard['image']}) => (
 )
 
 const FeatureIcon = ({icon}: {icon: CarbonFeature['icon']}) => (
-    <Image src={FEATURE_ICONS[icon]} alt="" className="size-10" />
+    <ThemeImage {...FEATURE_ICONS[icon]} className="size-10" />
 )
 
 const PlatformDetail = ({platform}: {platform: CarbonPlatform}) => {
@@ -137,11 +146,53 @@ const TargetSection = () => (
     </section>
 )
 
+// 진단 바로가기 한 칸 — 버튼이 이동 확인 모달을 열고(Radix 가 aria-haspopup · 포커스 복귀를 맡는다[8.2.1]),
+// [확인] 을 누를 때만 새 탭을 연다 — 누르자마자 다른 사이트로 넘어가지 않게 한 번 묻는다[7.2.1].
+const PlatformStartButton = ({platform}: {platform: CarbonPlatform}) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const openPlatform = () => {
+        window.open(platform.startHref, '_blank', 'noopener,noreferrer')
+        setIsOpen(false)
+    }
+
+    return (
+        <ConfirmDialog
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            title={moveDialog.title}
+            question={
+                // 좁은 화면에서 낱말 중간('제공됩니|다.')이 끊기지 않게 낱말 단위로 줄을 바꾼다.
+                <span className="break-keep">
+                    해당 서비스는 &lsquo;<ConfirmTarget>{moveDialog.platformName}</ConfirmTarget>&rsquo;에서 제공됩니다.
+                    <br />
+                    {moveDialog.question}
+                    <span className="sr-only"> (확인을 누르면 새 창에서 열림)</span>
+                </span>
+            }
+            onConfirm={openPlatform}
+        >
+            <button
+                type="button"
+                className="typo-callout-bold text-foreground hover:text-service-accent-green focus-visible:text-service-accent-green outline-ring focus-visible:outline-ring flex min-h-14 w-full items-center justify-center gap-2 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid md:min-h-25"
+            >
+                {platform.startLabel}
+                <ArrowRight aria-hidden="true" className="size-icon-lg" />
+            </button>
+        </ConfirmDialog>
+    )
+}
+
 const PlatformCarbonNeutrality = ({titleBar}: {titleBar: ReactNode}) => {
     const [platformKey, setPlatformKey] = useState<CarbonPlatformKey>('leading-sme')
+    const tabListRef = useRef<HTMLDivElement>(null)
     const handleValueChange = (value: string) => {
         const next = CARBON_PLATFORMS.find((platform) => platform.key === value)
-        if (next) setPlatformKey(next.key)
+        if (!next) return
+
+        setPlatformKey(next.key)
+        // 탭과 바뀐 내용이 화면 위쪽에 오도록 스크롤한다.
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        tabListRef.current?.scrollIntoView({block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
     }
 
     return (
@@ -155,7 +206,12 @@ const PlatformCarbonNeutrality = ({titleBar}: {titleBar: ReactNode}) => {
                 tone="green"
             >
                 <div className="flex w-full flex-col items-center gap-6">
-                    <TabsPrimitive.List aria-label={hero.tabListLabel} className={PILL_TAB_LIST_CLASS_NAME}>
+                    {/* 스크롤 후 탭이 상단 헤더에 가리지 않게 띄우는 거리(헤더 높이 + 16) — md 미만 56 → 72 · md 100 → 116 · xl 112 → 128 */}
+                    <TabsPrimitive.List
+                        ref={tabListRef}
+                        aria-label={hero.tabListLabel}
+                        className={cn(PILL_TAB_LIST_CLASS_NAME, 'scroll-mt-18 md:scroll-mt-29 xl:scroll-mt-32')}
+                    >
                         {CARBON_PLATFORMS.map((platform) => (
                             <TabsPrimitive.Trigger
                                 key={platform.key}
@@ -193,13 +249,14 @@ const PlatformCarbonNeutrality = ({titleBar}: {titleBar: ReactNode}) => {
                 </div>
             </PlatformServiceHero>
 
+            {/* 아래 묶음은 탭 패널이 아니라 고른 탭을 따라 바뀌는 내용이다 — 같은 값의 Content 를 또 두면 Radix 가 같은 id 를
+                한 번 더 만들어 id 가 중복된다[8.1.1]. 그래서 일반 div 에 data-state 만 붙여 위 카드와 같은 감춤 · 등장 클래스를 쓴다. */}
             <div className="grid-layout pt-20 pb-20 *:col-span-full">
                 {CARBON_PLATFORMS.map((platform) => (
-                    <TabsPrimitive.Content
+                    <div
                         key={platform.key}
-                        value={platform.key}
-                        forceMount
-                        className="motion-safe:data-[state=active]:animate-in motion-safe:data-[state=active]:fade-in-0 motion-safe:data-[state=active]:ease-roll flex flex-col gap-20 transition-none outline-none data-[state=inactive]:hidden motion-safe:data-[state=active]:duration-700"
+                        data-state={platform.key === platformKey ? 'active' : 'inactive'}
+                        className="motion-safe:data-[state=active]:animate-in motion-safe:data-[state=active]:fade-in-0 motion-safe:data-[state=active]:ease-roll flex flex-col gap-20 transition-none data-[state=inactive]:hidden motion-safe:data-[state=active]:duration-700"
                     >
                         <section
                             aria-labelledby={`platform-carbon-${platform.key}-features`}
@@ -213,6 +270,7 @@ const PlatformCarbonNeutrality = ({titleBar}: {titleBar: ReactNode}) => {
                             </h2>
                             <ServiceFeatureList
                                 columns={3}
+                                iconSurfaceClassName="bg-platform-icon-surface"
                                 items={platform.features.map((feature) => ({
                                     title: feature.title,
                                     description: feature.description,
@@ -221,28 +279,19 @@ const PlatformCarbonNeutrality = ({titleBar}: {titleBar: ReactNode}) => {
                             />
                         </section>
                         <PlatformDetail platform={platform} />
-                    </TabsPrimitive.Content>
+                    </div>
                 ))}
             </div>
 
             <TargetSection />
 
-            {/* 바로가기 — 외부 탄소중립 플랫폼(새 탭). 플랫폼 소개(/platform) 바로가기와 같은 양식이다.
+            {/* 바로가기 — 누르면 이동 확인 모달(공용 ConfirmDialog)이 뜨고, [확인] 을 눌러야 외부 진단 화면을 새 탭으로 연다.
                 모바일은 칸이 화면 끝까지 뻗도록 그리드 가장자리 여백만큼 밖으로 뺀다(-mx-(--ds-grid-margin)). */}
             <nav aria-label="탄소중립 진단 바로가기" className="grid-layout *:col-span-full">
                 <ul className="border-subtle-3 divide-subtle-3 -mx-(--ds-grid-margin) grid divide-y md:mx-0 md:grid-cols-2 md:divide-x md:divide-y-0 md:border-x">
                     {CARBON_PLATFORMS.map((platform) => (
                         <li key={platform.key}>
-                            <a
-                                href={platform.startHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="typo-callout-bold text-foreground hover:text-service-accent-green focus-visible:text-service-accent-green outline-ring focus-visible:outline-ring flex min-h-14 items-center justify-center gap-2 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid md:min-h-25"
-                            >
-                                {platform.startLabel}
-                                <ArrowRight aria-hidden="true" className="size-icon-lg" />
-                                <span className="sr-only">(새 창에서 열림)</span>
-                            </a>
+                            <PlatformStartButton platform={platform} />
                         </li>
                     ))}
                 </ul>

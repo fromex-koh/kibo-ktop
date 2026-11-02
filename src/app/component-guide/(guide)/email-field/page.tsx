@@ -12,8 +12,17 @@ import EmailFieldFormDemo from './email-field-form-demo'
 
 export const metadata: Metadata = {title: '이메일 입력 (EmailField)'}
 
-const USAGE_CODE = `<FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요.">
-  <EmailField name="additionalNoticeEmail" />
+const USAGE_CODE = `{/* 필수 칸이면 제목 앞에 「필수」 배지(동의서 항목과 같은 배지)를 두고 EmailField 에 required 를 준다 */}
+<FormCard
+  title={
+    <>
+      <Badge variant="outline" color="info" shape="round" className="me-2 align-middle">필수</Badge>
+      부분발송 이메일등록
+    </>
+  }
+  subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요."
+>
+  <EmailField name="additionalNoticeEmail" required />
 </FormCard>`
 
 const SUBMIT_CODE = `{/* 주소는 hidden input 하나로 실린다 */}

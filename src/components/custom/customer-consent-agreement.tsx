@@ -80,13 +80,13 @@ const CONFIRMATIONS = [
 
 type ConsentAnswers = Record<string, string>
 
-const RequirementBadge = ({requirement}: {requirement: 'required' | 'optional'}) =>
+const RequirementBadge = ({requirement, className}: {requirement: 'required' | 'optional'; className?: string}) =>
     requirement === 'required' ? (
-        <Badge variant="outline" color="info" shape="round">
+        <Badge variant="outline" color="info" shape="round" className={className}>
             필수
         </Badge>
     ) : (
-        <Badge variant="outline" color="neutral" shape="round">
+        <Badge variant="outline" color="neutral" shape="round" className={className}>
             선택
         </Badge>
     )
@@ -485,7 +485,16 @@ const CustomerConsentNoticeEmail = () => {
     )
 
     return (
-        <FormCard title="부분발송 이메일등록">
+        // 필수 표시는 별표가 아니라 동의 항목과 같은 「필수」 배지이고, 위치도 동의 항목처럼 제목 앞이다.
+        // 글자처럼 흘려 넣어 제목이 두 줄이 되어도 배지와 첫 줄이 떨어지지 않는다.
+        <FormCard
+            title={
+                <>
+                    <RequirementBadge requirement="required" className="me-2 align-middle" />
+                    부분발송 이메일등록
+                </>
+            }
+        >
             {/* 아이디·도메인을 분리 입력하고 제출 시 하나의 이메일 값으로 조합한다. */}
             <EmailField name="additionalNoticeEmail" required onValueChange={handleValueChange} />
         </FormCard>

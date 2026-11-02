@@ -29,6 +29,7 @@ import {
     TECH_INDEX_PATENT_COUNT_DEFAULT,
     techIndexPatentField,
 } from '@/constants/technology-evaluation'
+import {NUMBER_FORMAT_THOUSANDS, formatThousands, parseThousands} from '@/lib/number-format'
 
 // Tech-Index 일반용 [특허 보유현황] 탭 본문 —
 // Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_특허 보유현황".
@@ -87,7 +88,9 @@ const NUMBER_DEFAULT = TECH_INDEX_PATENT_COUNT_DEFAULT
 
 // 수량 칸에 들어갈 수 있는 것은 숫자뿐이다. inputMode="numeric" 은 모바일 키보드를 숫자판으로 바꿔 줄 뿐
 // 글자 입력을 막지 못하므로(데스크톱 키보드·붙여넣기), 값에서 숫자가 아닌 것을 걷어낸다.
-const formatCount = (value: string) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+// 세 자리마다 쉼표를 넣는다(감리: 숫자 세 자리 구분 표시) — lib/number-format.
+// [프론트엔드 연동] 칸별 최대 자릿수가 정해지면 limitDigits(formatThousands, 자릿수) 로 바꾼다(lib/number-format). 지금은 상한 없음.
+const formatCount = formatThousands
 
 // 등록일 세 칸 — 자릿수만 맞으면 되는 것이 아니라 달력에 있는 날이어야 한다.
 // 형식은 pattern 이 막고(제출할 때), 그때 띄울 문구는 data-pattern-message 로 함께 준다 —
@@ -160,7 +163,8 @@ const PartFieldError = ({id}: {id: string}) => {
     return message ? <FieldError id={`${id}-error`}>{message}</FieldError> : null
 }
 
-const toCount = (value: string | undefined) => Number(value || NUMBER_DEFAULT)
+// 칸 값은 쉼표가 들어 있어 Number 로 바로 읽지 않는다.
+const toCount = (value: string | undefined) => parseThousands(value || NUMBER_DEFAULT)
 
 const patentField = techIndexPatentField
 
@@ -204,6 +208,7 @@ const CountField = ({
                     autoComplete="off"
                     placeholder={NUMBER_DEFAULT}
                     format={formatCount}
+                    data-number-format={NUMBER_FORMAT_THOUSANDS}
                     onBlur={(event) => {
                         if (!event.currentTarget.value) setValue(name, NUMBER_DEFAULT)
                     }}
@@ -237,7 +242,8 @@ const TotalField = ({
                 id={id}
                 name={name}
                 readOnly
-                value={String(value)}
+                value={formatThousands(String(value))}
+                data-number-format={NUMBER_FORMAT_THOUSANDS}
                 autoComplete="off"
                 className="text-right"
             />
@@ -282,7 +288,7 @@ const PatentEntry = ({id, label, isAdded, focusOnMount, isLastCard, onDelete, ca
     // [연동 지점] 응답 모양만 PatentLookupResult 에 맞추면 이 함수는 그대로 쓴다.
     const applyPatentLookupResult = (result: PatentLookupResult) => {
         TECH_INDEX_PATENT_CARD_COUNT_FIELDS.forEach((name) => {
-            setValue(field(name), result[name])
+            setValue(field(name), formatThousands(result[name]))
             clearFieldError(field(name))
         })
     }

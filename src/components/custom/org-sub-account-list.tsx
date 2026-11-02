@@ -18,6 +18,7 @@ import {
     SelectFilterField,
 } from '@/components/composite/search-filter-form'
 import {SubAccountCard} from '@/components/custom/sub-account-card'
+import {SubAccountDetailDialog} from '@/components/composite/sub-account-detail-dialog'
 import {showCheckToast} from '@/components/custom/check-toast'
 import {Button} from '@/components/ui/button'
 import {
@@ -103,7 +104,7 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
     // [초기화] — 폼이 조회 조건을 기본값으로 되돌리고, 목록은 첫 페이지로 돌아간다.
     const handleReset = () => setPage(1)
 
-    // [⋮] 에서 고른 일 — 넷 다 화면을 옮기지 않고 이 화면에서 모달로 연다.
+    // [⋮] 에서 고른 일 — 다섯 다 화면을 옮기지 않고 이 화면에서 모달로 연다.
     const handleMenuSelect = (action: SubAccountMenuAction, item: SubAccountItem) => {
         setMenuItem(item)
         setMenuAction(action)
@@ -287,8 +288,8 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
                 ) : null}
             </div>
 
-            {/* [⋮] 가 여는 네 모달 — 고른 일에 따라 하나만 열리고, 어느 계정인지는 위 menuItem 하나가 들고 있다.
-                수정은 입력 모달이고, 나머지 셋은 같은 확인 모달(ConfirmDialog)이라 생김새가 같다. */}
+            {/* [⋮] 가 여는 다섯 모달 — 고른 일에 따라 하나만 열리고, 어느 계정인지는 위 menuItem 하나가 들고 있다.
+                수정은 입력 모달, 상세정보는 보기 모달이고, 나머지 셋은 같은 확인 모달(ConfirmDialog)이라 생김새가 같다. */}
             <SubAccountEditDialog
                 open={menuAction === 'edit'}
                 onOpenChange={closeMenuDialog}
@@ -301,6 +302,15 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
                 item={menuItem}
                 onConfirm={handlePasswordResetConfirm}
             />
+            {/* 상세정보 — 계정마다 갈래(접속 일시 · 활동) 고른 값을 따로 들도록 계정이 바뀌면 새로 만든다. */}
+            {menuItem ? (
+                <SubAccountDetailDialog
+                    key={menuItem.id}
+                    open={menuAction === 'detail'}
+                    onOpenChange={closeMenuDialog}
+                    item={menuItem}
+                />
+            ) : null}
             <SubAccountStatusChangeDialog
                 open={menuAction === 'status-change'}
                 onOpenChange={closeMenuDialog}

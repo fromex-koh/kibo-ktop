@@ -68,6 +68,11 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
     ],
 }
 
+// 하위계정 [내 정보] — isSubAccount 면 마스터 기관(협약기관) 화면이 아니라 하위계정 내 정보로 간다.
+// [프론트엔드 연동] 기관 [내 정보] 경로를 로그인 회원 유형으로 고를 때 이 분기도 함께 그 방식으로 바꾼다.
+const PROFILE_MENU_LABEL = '내 정보'
+const SUB_ACCOUNT_PROFILE_HREF = '/org/mypage/profile-edit/sub-account'
+
 const subscribeToQueries = (onStoreChange: () => void) => {
     const queries = [window.matchMedia(FORM_TABS_QUERY), window.matchMedia(FORM_TABS_MOBILE_QUERY)]
     queries.forEach((query) => query.addEventListener('change', onStoreChange))
@@ -85,9 +90,21 @@ const getLayout = () => {
 const useMypageSidebarLayout = () => useSyncExternalStore(subscribeToQueries, getLayout, () => 'mobile' as const)
 
 // 회원 배지 + 기업명 — 세 형태가 모두 같은 묶음을 쓴다.
-// 배지는 헤더가 쓰는 유형 배지 그대로다 — 글자(기업·기관)와 색이 한 곳에서만 정해진다.
-const MypageProfile = ({userType, companyName}: {userType: 'corp' | 'org'; companyName: ReactNode}) => (
-    <StickySidebarProfile name={companyName} badge={<UserTypeBadge userType={userType} />} />
+// 배지는 헤더가 쓰는 유형 배지 그대로다 — 글자(기업·기관·하위 기관)와 색이 한 곳에서만 정해진다.
+// 하위계정이면 헤더와 같이 '하위 기관' 배지에 담당자명이다(이름은 화면이 companyName 으로 헤더와 같은 값을 넘긴다).
+const MypageProfile = ({
+    userType,
+    companyName,
+    isSubAccount,
+}: {
+    userType: 'corp' | 'org'
+    companyName: ReactNode
+    isSubAccount?: boolean
+}) => (
+    <StickySidebarProfile
+        name={companyName}
+        badge={<UserTypeBadge userType={userType} isSubAccount={isSubAccount} />}
+    />
 )
 
 type MypageSidebarProps = {
@@ -95,12 +112,16 @@ type MypageSidebarProps = {
     userType: 'corp' | 'org'
     // 지금 보고 있는 화면의 메뉴 라벨 — 그 항목이 활성으로 표시된다.
     current: string
-    // 기업명. [프론트엔드 연동] 회원정보 응답의 기업명을 넣는다.
+    // 기업명(기관 하위계정은 담당자명 — 헤더와 같은 값). [프론트엔드 연동] 회원정보 응답의 이름을 넣는다.
     companyName: ReactNode
+    // 기관 하위계정인지 — 배지가 헤더와 같이 '하위 기관' 이 된다. [프론트엔드 연동] 헤더의 isSubAccount 와 같은 값.
+    isSubAccount?: boolean
 } & Omit<ComponentPropsWithoutRef<typeof StickySidebar>, 'children'>
 
-const MypageSidebar = ({userType, current, companyName, className, ...props}: MypageSidebarProps) => {
-    const menu = MYPAGE_MENU[userType]
+const MypageSidebar = ({userType, current, companyName, isSubAccount, className, ...props}: MypageSidebarProps) => {
+    const menu = MYPAGE_MENU[userType].map((item) =>
+        isSubAccount && item.label === PROFILE_MENU_LABEL ? {...item, href: SUB_ACCOUNT_PROFILE_HREF} : item,
+    )
     const layout = useMypageSidebarLayout()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const currentItem = menu.find((item) => item.label === current) ?? menu[0]
@@ -127,7 +148,7 @@ const MypageSidebar = ({userType, current, companyName, className, ...props}: My
                         className,
                     )}
                 >
-                    <MypageProfile userType={userType} companyName={companyName} />
+                    <MypageProfile userType={userType} companyName={companyName} isSubAccount={isSubAccount} />
                     <PopoverTrigger
                         className={cn(
                             'border-control bg-surface text-foreground flex min-h-14 items-center gap-2 rounded-sm border px-6 py-4',
@@ -172,7 +193,7 @@ const MypageSidebar = ({userType, current, companyName, className, ...props}: My
         // top-34 — 헤더(xl 에서 112)가 sticky top-0 이라 그 아래 24 를 띄운다. 컴포넌트 기본값(top-6)으로
         // 두면 카드 윗부분이 헤더에 가린다.
         <StickySidebar className={cn('top-34 w-86 self-start', className)} {...props}>
-            <MypageProfile userType={userType} companyName={companyName} />
+            <MypageProfile userType={userType} companyName={companyName} isSubAccount={isSubAccount} />
             <StickySidebarNav aria-label="마이페이지 메뉴">
                 {menu.map(({icon, label, href}) => (
                     <StickySidebarNavItem key={label} icon={icon} href={href} active={label === current}>

@@ -735,7 +735,9 @@ const EvaluationReportView = ({hasTechnicalReport = true, report}: EvaluationRep
 
     return (
         // print:pb-0 — 종이에서는 문서 끝 여백이 필요 없다. 그 여백까지 세면 A4 한 장을 넘겨 빈 장이 붙는다.
-        <div className="bg-surface w-report print-exact mx-auto flex shrink-0 flex-col gap-12 pb-9 print:block print:space-y-12 print:pb-0">
+        // wrap-anywhere — 받은 글(기업명 · 의견 · 설명 등)에 띄어쓰기 없는 긴 영문 · 숫자가 오면 한 낱말로 보여
+        // 문서 밖으로 뻗는다. 문서 전체에 걸어 칸 끝에서 줄을 바꾼다 — 짧은 값은 지금처럼 그대로다.
+        <div className="bg-surface w-report print-exact mx-auto flex shrink-0 flex-col gap-12 pb-9 wrap-anywhere print:block print:space-y-12 print:pb-0">
             <ReportDocument label={report.label} title="자가진단 평가결과" action={<PrintButton />}>
                 <section className="flex break-inside-avoid flex-col print:block">
                     <div className="flex items-baseline justify-between gap-4">

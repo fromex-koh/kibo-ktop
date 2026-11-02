@@ -217,7 +217,9 @@ const PlatformIntro = ({userType}: PlatformIntroProps) => (
                                     key={user.name}
                                     className="flex flex-col gap-6 md:col-span-full md:grid md:grid-cols-subgrid"
                                 >
-                                    <dt className="typo-body-xl-medium text-navy-600 break-keep">{user.name}</dt>
+                                    <dt className="typo-body-xl-medium text-platform-audience break-keep">
+                                        {user.name}
+                                    </dt>
                                     <dd>
                                         <ul className="flex flex-col gap-2">
                                             {user.uses.map((use) => (

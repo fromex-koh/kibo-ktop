@@ -144,7 +144,9 @@ type InvestmentModelReportViewProps = {
 const InvestmentModelReportView = ({children, report, isLoading = false}: InvestmentModelReportViewProps) => (
     // 문서가 여럿이면(심층분석) 화면에서 48 씩 띄워 장이 나뉘어 보이게 한다. 종이에서는 장이 갈리므로 끈다.
     // print:pb-0 — 종이에서는 문서 끝 여백이 필요 없다. 그 여백까지 세면 A4 한 장을 넘겨 빈 장이 붙는다.
-    <div className="bg-surface w-report print-exact mx-auto flex shrink-0 flex-col gap-12 pb-9 print:block print:gap-0 print:pb-0">
+    // wrap-anywhere — 받은 글(기업명 · 의견 · 설명 등)에 띄어쓰기 없는 긴 영문 · 숫자가 오면 한 낱말로 보여
+    // 문서 밖으로 뻗는다. 문서 전체에 걸어 칸 끝에서 줄을 바꾼다 — 짧은 값은 지금처럼 그대로다.
+    <div className="bg-surface w-report print-exact mx-auto flex shrink-0 flex-col gap-12 pb-9 wrap-anywhere print:block print:gap-0 print:pb-0">
         {/* 구획 간격은 16 이다(디자인 24) — 요약 문장이 두 줄이 되어도 A4 한 장에 들어가도록 좁혀 둔 값이다. */}
         <ReportDocument
             label={report.label}

@@ -4,11 +4,15 @@ import businessHandshake from '@public/images/platform-technology-evaluation/bus
 import officeCityView from '@public/images/platform-technology-evaluation/office-city-view.webp'
 import reportChartsDesk from '@public/images/platform-technology-evaluation/report-charts-desk.webp'
 import clipboardCheckChart from '@public/images/option-card/clipboard-check-chart.webp'
+import aiAnalysisReportDarkIcon from '@public/images/platform-k-bigx-report/ai-analysis-report-dark.webp'
 import aiAnalysisReportIcon from '@public/images/platform-k-bigx-report/ai-analysis-report.webp'
 import heroAiReportImage from '@public/images/platform-k-bigx-report/hero-ai-report.webp'
 import heroSmeTargetImage from '@public/images/platform-k-bigx-report/hero-sme-target.webp'
+import industryTrendDarkIcon from '@public/images/platform-k-bigx-report/industry-trend-dark.webp'
 import industryTrendIcon from '@public/images/platform-k-bigx-report/industry-trend.webp'
+import insightDarkIcon from '@public/images/platform-k-bigx-report/insight-dark.webp'
 import insightIcon from '@public/images/platform-k-bigx-report/insight.webp'
+import peerComparisonDarkIcon from '@public/images/platform-k-bigx-report/peer-comparison-dark.webp'
 import peerComparisonIcon from '@public/images/platform-k-bigx-report/peer-comparison.webp'
 import {RollingAccordion, RollingAccordionBody} from '@/components/composite/rolling-accordion'
 import {KBigxReportFlowDiagram} from '@/components/custom/k-bigx-report-flow-diagram'
@@ -20,6 +24,7 @@ import {
 } from '@/components/custom/platform-service-intro'
 import {ProcedureSteps} from '@/components/custom/procedure-steps'
 import {ScrollReveal} from '@/components/custom/scroll-reveal'
+import {ThemeImage} from '@/components/custom/theme-image'
 import {K_BIGX_REPORT_SECTIONS, PLATFORM_K_BIGX_REPORT} from '@/content/service/platform-k-bigx-report'
 import {cn} from '@/lib/utils'
 
@@ -45,13 +50,14 @@ const HERO_CARD_IMAGES: Record<(typeof hero.cards)[number]['image'], {src: Stati
     'hero-sme-target': {src: heroSmeTargetImage, className: 'h-22 w-auto'},
     'clipboard-check-chart': {src: clipboardCheckChart, className: 'mt-1 mb-2 ml-2 size-19'},
 }
-// 분석 기능 아이콘(40).
-const FEATURE_ICONS: Record<(typeof features.items)[number]['icon'], StaticImageData> = {
-    'ai-analysis-report': aiAnalysisReportIcon,
-    'peer-comparison': peerComparisonIcon,
-    'industry-trend': industryTrendIcon,
-    insight: insightIcon,
-}
+// 분석 기능 아이콘(40) — 라이트 · 다크 그림이 따로다.
+const FEATURE_ICONS: Record<(typeof features.items)[number]['icon'], {light: StaticImageData; dark: StaticImageData}> =
+    {
+        'ai-analysis-report': {light: aiAnalysisReportIcon, dark: aiAnalysisReportDarkIcon},
+        'peer-comparison': {light: peerComparisonIcon, dark: peerComparisonDarkIcon},
+        'industry-trend': {light: industryTrendIcon, dark: industryTrendDarkIcon},
+        insight: {light: insightIcon, dark: insightDarkIcon},
+    }
 const SECTION_PHOTO_SIZES = '(min-width: 1280px) 690px, (min-width: 768px) 792px, calc(100vw - 32px)'
 
 const PlatformKBigxReport = ({titleBar}: {titleBar: ReactNode}) => (
@@ -91,10 +97,11 @@ const PlatformKBigxReport = ({titleBar}: {titleBar: ReactNode}) => (
                     </h2>
                     <ServiceFeatureList
                         columns={2}
+                        iconSurfaceClassName="bg-platform-icon-surface"
                         items={features.items.map((item) => ({
                             title: item.title,
                             description: item.description,
-                            icon: <Image src={FEATURE_ICONS[item.icon]} alt="" className="size-10" />,
+                            icon: <ThemeImage {...FEATURE_ICONS[item.icon]} className="size-10" />,
                         }))}
                     />
                 </section>

@@ -92,7 +92,6 @@ const PIE_TEXT_COLORS = {
     count: 'var(--kbx-color-chart-label)',
     leader: 'var(--kbx-color-chart-line)',
     inside: 'var(--kbx-color-paper)',
-    insideMuted: 'var(--kbx-color-border)',
 }
 
 // 부문별 비교 레이더 — 웹 보고서 모양(SECTOR_COMPARISON_RADAR_STYLE) 위에 인쇄용 치수 · kbx 색을 덮어쓴다.
@@ -172,7 +171,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
                                 colors={PIE_TEXT_COLORS}
                                 ariaLabel="기업 보유기술 세부분야별 비중과 건수"
                                 areaHeight={PIE_AREA_HEIGHT}
-                                // 라벨은 비중 · 건수 포함 2줄까지 — 넘치는 분야명은 말줄임.
+                                // 분야명은 2줄까지 — 넘치면 말줄임. 비중 · 건수는 옆에 안 들어가면 셋째 줄.
                                 maxLabelLines={PIE_LABEL_MAX_LINES}
                                 className="my-auto min-h-0 pt-4"
                             />

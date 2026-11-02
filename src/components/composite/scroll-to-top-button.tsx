@@ -24,14 +24,26 @@ type ScrollToTopButtonProps = {
 }
 
 const ScrollToTopButton = ({label = '맨 위로 이동', className}: ScrollToTopButtonProps) => {
-    const [isVisible, setIsVisible] = useState(false)
+    const [isPastThreshold, setIsPastThreshold] = useState(false)
+    const [isFooterInView, setIsFooterInView] = useState(false)
 
     useEffect(() => {
-        const handleScroll = () => setIsVisible(window.scrollY > SCROLL_THRESHOLD_PX)
+        const handleScroll = () => setIsPastThreshold(window.scrollY > SCROLL_THRESHOLD_PX)
 
         handleScroll()
         window.addEventListener('scroll', handleScroll, {passive: true})
         return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // 푸터가 화면에 들어오면 숨긴다 — 모바일에서 푸터 정보 · 링크를 가리지 않게. 위로 올리면 다시 보인다.
+    useEffect(() => {
+        const footers = document.querySelectorAll('footer')
+        const footer = footers[footers.length - 1]
+        if (!footer) return
+
+        const observer = new IntersectionObserver(([entry]) => setIsFooterInView(entry?.isIntersecting ?? false))
+        observer.observe(footer)
+        return () => observer.disconnect()
     }, [])
 
     const handleClick = () => {
@@ -39,7 +51,7 @@ const ScrollToTopButton = ({label = '맨 위로 이동', className}: ScrollToTop
         window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
     }
 
-    if (!isVisible) return null
+    if (!isPastThreshold || isFooterInView) return null
 
     return (
         <Button

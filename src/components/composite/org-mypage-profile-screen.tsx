@@ -16,8 +16,8 @@ import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/com
 // 브레드크럼뿐이다. 유형별로 다른 것은 이름과 값이라 화면(page)이 넘긴다.
 
 type OrgMypageProfileScreenProps = {
-    // 사이드바에 보이는 회원 — 기관명과 유형 배지. 이름은 그 화면의 헤더와 같은 값이다.
-    member: {companyName: string}
+    // 사이드바에 보이는 회원 — 이름과 유형 배지(헤더와 같은 값). 하위계정이면 [하위 기관] + 담당자명이다.
+    member: {companyName: string; isSubAccount?: boolean}
     // 본문 폼. 회원 유형마다 묻는 것이 달라 화면(page)이 넘긴다.
     form: ReactNode
     // 화면 제목 아래 안내.
@@ -57,7 +57,12 @@ const OrgMypageProfileScreen = ({
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
                 {/* 회원정보는 이 화면이 한 번 읽어 사이드바와 폼에 함께 내린다 — 두 곳이 값을 따로
                     가져가면 같은 화면에서 다른 이름이 보인다(연동 시에도 조회는 한 번이다). */}
-                <MypageSidebar userType="org" current="내 정보" companyName={member.companyName} />
+                <MypageSidebar
+                    userType="org"
+                    current="내 정보"
+                    companyName={member.companyName}
+                    isSubAccount={member.isSubAccount}
+                />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>

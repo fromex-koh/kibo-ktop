@@ -80,7 +80,7 @@ const STATE_ROWS = [
         cells: [
             '고른 카드(하나)',
             '옅은 파랑 면(primary-subtle) · 파란 테두리 · 번호 진한 파랑 · 제목 본문 색',
-            '설명 목록(점 + 16 Regular). 설명이 비면 그림',
+            '설명 목록(점 + 16 Regular — 점은 platform-carousel-marker, 다크는 글자와 같은 gray.100). 설명이 비면 그림',
         ],
     },
     {
@@ -91,7 +91,7 @@ const STATE_ROWS = [
         key: 'nav',
         cells: [
             '이전 · 다음 버튼',
-            '이전은 흰 면 + 테두리, 다음은 짙은 면 — 한 바퀴 돌아 둘 다 늘 누를 수 있음',
+            '이전은 흰 면 + 테두리(platform-carousel-nav-border — 다크는 gray.200), 다음은 짙은 면 — 한 바퀴 돌아 둘 다 늘 누를 수 있음',
             '카드 줄 전체를 한 칸 밀어 고른 카드를 첫 칸으로(0.5초 · ease-roll) — 나가는 카드는 흐려지며 사라지고, 들어오는 카드는 선명해짐',
         ],
     },

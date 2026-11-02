@@ -63,7 +63,15 @@ const ScrollToTopButtonGuidePage = () => (
                                 나타날 때는 아래에서 살짝 떠오르며(<code>animate-in</code>), 보이지 않을 때는 DOM 에서
                                 빠집니다.
                             </li>
+                            <li>
+                                푸터가 화면에 들어오면 사라지고, 위로 올리면 다시 나타납니다(푸터 정보 · 링크를 가리지
+                                않음).
+                            </li>
                             <li>이 가이드 화면에도 들어 있습니다. 아래로 스크롤하면 오른쪽 아래에 나타납니다.</li>
+                            <li>
+                                플랫폼 소개 5개 화면(소개 · 기술평가 · 특허평가 · K-BIGx 보고서 · 탄소중립)은
+                                platform/layout.tsx 에 한 번 둡니다.
+                            </li>
                         </ul>
                     </div>
                     <div className={BLOCK}>

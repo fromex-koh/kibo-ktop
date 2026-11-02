@@ -20,13 +20,14 @@ type PlatformServiceTone = 'navy' | 'green'
 // 띠 · 번진 원(오른쪽 아래 · 왼쪽 위) · 큰 제목 둘째 줄 강조색 한 벌.
 const TONE_CLASS: Record<PlatformServiceTone, {band: string; circleRight: string; circleLeft: string; accent: string}> =
     {
+        // 다크는 팔레트 반사 값이 시안보다 밝아, 전용 토큰(service-hero-navy-*)으로 짙은 남색 띠 + 은은한 원을 쓴다.
         navy: {
-            band: 'bg-navy-100',
-            circleRight: 'from-purple-200',
-            circleLeft: 'from-blue-200',
+            band: 'bg-service-hero-navy-band',
+            circleRight: 'from-service-hero-navy-glow-right',
+            circleLeft: 'from-service-hero-navy-glow-left',
             accent: 'text-primary-strong',
         },
-        // 다크는 팔레트 반사로 띠가 너무 진해져, 전용 토큰(service-hero-green-*)으로 차분한 회색 띠 + 은은한 원을 쓴다.
+        // 다크는 팔레트 반사 값이 시안과 달라, 전용 토큰(service-hero-green-*)으로 짙은 초록 띠 + 은은한 원을 쓴다.
         green: {
             band: 'bg-service-hero-green-band',
             circleRight: 'from-service-hero-green-glow-right',
@@ -136,7 +137,7 @@ type ServiceGlassCardProps = {
 const ServiceGlassCard = ({index, image, title, description, bullets}: ServiceGlassCardProps) => (
     <li
         className={cn(
-            'rounded-glass flex flex-col gap-3 border border-white/90 bg-white/20 p-8 text-left transition-none',
+            'rounded-glass border-service-glass-border flex flex-col gap-3 border bg-white/20 p-8 text-left transition-none',
             RISE_CLASS_NAME,
             CARD_DELAY_CLASS[index],
         )}
@@ -149,7 +150,7 @@ const ServiceGlassCard = ({index, image, title, description, bullets}: ServiceGl
                 <ul className="typo-body-xl-medium text-label-foreground flex flex-col gap-2">
                     {bullets.map((bullet) => (
                         <li key={bullet} className="flex">
-                            <ListMarker className="h-lh" />
+                            <ListMarker className="[&>span]:bg-service-hero-marker h-lh" />
                             <span className="break-keep">{bullet}</span>
                         </li>
                     ))}
@@ -168,12 +169,26 @@ type ServiceFeature = {icon: ReactNode; title: string; description: string}
 
 const FEATURE_COLUMNS_CLASS = {2: 'md:grid-cols-2', 3: 'md:grid-cols-3'} as const
 
-const ServiceFeatureList = ({items, columns}: {items: readonly ServiceFeature[]; columns: 2 | 3}) => (
+const ServiceFeatureList = ({
+    items,
+    columns,
+    iconSurfaceClassName = 'bg-model-icon-surface',
+}: {
+    items: readonly ServiceFeature[]
+    columns: 2 | 3
+    /** 아이콘 칸 바탕 — 화면 전용 색이 있을 때만 넘긴다. */
+    iconSurfaceClassName?: string
+}) => (
     <ScrollReveal>
         <ul className={cn('grid gap-8 md:gap-x-6 md:gap-y-12', FEATURE_COLUMNS_CLASS[columns])}>
             {items.map((item) => (
                 <li key={item.title} className={cn('flex gap-6', columns === 2 ? 'items-center' : 'items-start')}>
-                    <span className="bg-model-icon-surface flex size-20 shrink-0 items-center justify-center rounded-2xl">
+                    <span
+                        className={cn(
+                            'flex size-20 shrink-0 items-center justify-center rounded-2xl',
+                            iconSurfaceClassName,
+                        )}
+                    >
                         {item.icon}
                     </span>
                     <div className="flex flex-col gap-2">

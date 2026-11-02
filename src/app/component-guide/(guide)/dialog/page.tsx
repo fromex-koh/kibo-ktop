@@ -235,7 +235,7 @@ const READY_MADE_ROWS = [
         key: 'confirm',
         cells: [
             <code key="c">ConfirmDialog</code>,
-            '되돌리기 어려운 일(초기화 · 상태 변경)을 하기 전',
+            '되돌리기 어려운 일(초기화 · 상태 변경)을 하기 전 · 다른 사이트로 넘어가기 전(탄소중립 소개의 진단 바로가기 — [확인] 이 새 탭을 엶)',
             '제목 + 물음 + 덧붙임 · [취소] [확인]',
             'title · question · notice · onConfirm (대상은 ConfirmTarget 으로 굵게)',
         ],

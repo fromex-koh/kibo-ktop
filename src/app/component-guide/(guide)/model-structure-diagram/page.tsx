@@ -79,7 +79,7 @@ const DIAGRAM_ROWS = [
         key: 'k-bigx',
         cells: [
             'KBigxReportFlowDiagram',
-            '신청기업(228 · 파랑) → 흰 판(744): DB 두 칸(320) → 기술혁신정보 묶음(점선 묶음 특허정보 + 기업정보 · + · LLM → 모이는 연결선 → 기술혁신정보 DB 384) → 보고서(아이콘 칸 120)',
+            'K-BIGx 흐름도 — 아이콘은 라이트 · 다크 파일이 따로(ThemeImage), 칸 바탕은 platform-icon-surface · platform-kbigx-source-icon-surface, 선 · 화살표 · 더하기는 platform-connector. 신청기업(228 · 파랑, 다크는 하늘색 면 · 짙은 글자) → 흰 판(744): DB 두 칸(320) → 기술혁신정보 묶음(점선 묶음 특허정보 + 기업정보 · + · LLM → 모이는 연결선 → 기술혁신정보 DB 384) → 보고서(아이콘 칸 120). 판 색은 platform-kbigx-flow-* — 다크는 바깥 판이 페이지 바탕과 같고 흰 판이 한 단계 밝음',
             '1200 × 1156',
         ],
     },

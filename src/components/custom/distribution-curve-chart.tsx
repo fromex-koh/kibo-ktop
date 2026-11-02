@@ -395,7 +395,9 @@ const DistributionCurveChart = ({
                                 {yTicks.map((tick) => (
                                     <li
                                         key={tick}
-                                        className="absolute right-0 -translate-y-1/2"
+                                        // whitespace-nowrap — 위치만 잡힌 칸이라 폭이 글자에 맞춰진다. 바깥 문서가 아무 데서나
+                                        // 줄을 바꾸게 해 두면(wrap-anywhere) '3.5' 가 '3.' · '5' 두 줄로 쪼개진다.
+                                        className="absolute right-0 -translate-y-1/2 whitespace-nowrap"
                                         style={{top: `${(1 - tick / (axisMaximum || 1)) * 100}%`}}
                                     >
                                         {tick.toFixed(1)}

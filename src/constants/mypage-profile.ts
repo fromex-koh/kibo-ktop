@@ -94,7 +94,11 @@ export const ORG_MYPAGE_MEMBERS = {
     nonPartnerBank: {companyName: ORG_PREVIEW_USERS.nonPartnerBank.name},
     partnerAgency: {companyName: ORG_PREVIEW_USERS.partnerAgency.name},
     nonPartnerAgency: {companyName: ORG_PREVIEW_USERS.nonPartnerAgency.name},
-    subAccount: {companyName: ORG_PREVIEW_USERS.subAccount.name},
+    // 하위계정 — 헤더와 같게 [하위 기관] 배지 + 담당자명이다(배지 · 이름 모두 헤더와 같은 값을 쓴다).
+    subAccount: {
+        companyName: ORG_PREVIEW_USERS.subAccount.name,
+        isSubAccount: ORG_PREVIEW_USERS.subAccount.isSubAccount,
+    },
 } as const
 
 // 기관 회원정보 — 칸 구성은 기업과 같고 값만 그 기관의 것이다. 유형마다 다른 기관이라 값도 다르다.
@@ -248,14 +252,15 @@ export const ORG_MEMBER_ACCOUNTS: Record<string, Record<string, string>> = {
         [ORG_MEMBER_PASSWORD_FIELD]: 'Gtp#2026mst',
     },
     subAccount: {
-        [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.subAccount.name,
+        [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.subAccount.orgName,
         // 하위 계정은 상위 기관의 협약 형태를 그대로 따른다 — 고를 수 있는 값이 아니라 글자로만 보여 준다.
         [ORG_MEMBER_KIND_FIELD]: '협약기관',
         [ORG_MEMBER_ID_FIELD]: 'sba_user01',
         [ORG_MEMBER_MASTER_FIELD]: ORG_PREVIEW_USERS.partnerAgency.name,
         [ORG_MEMBER_PERIOD_FIELD]: '2026-01-01 ~ 2026-12-31',
         [ORG_MEMBER_JOINED_AT_FIELD]: '2026-05-17',
-        [ORG_MEMBER_MANAGER_FIELD]: '이창업',
+        // 담당자 — 헤더 이름 자리에 그대로 보이는 값이라 같은 값을 쓴다.
+        [ORG_MEMBER_MANAGER_FIELD]: ORG_PREVIEW_USERS.subAccount.name,
         [ORG_MEMBER_TEL_FIELD]: '02-333-4455',
         [ORG_MEMBER_PASSWORD_FIELD]: 'Sba#2026usr',
     },

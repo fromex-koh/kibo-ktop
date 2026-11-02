@@ -87,10 +87,13 @@ const ProcedureStepsGuidePage = () => (
                 </div>
                 <ul className={LIST_CLASS}>
                     <li>
-                        단계 사이 24 · 둥근 번호 60(반경 20 · gray.500 면 · 32 Bold) · 이름 24 Bold · 설명 16
-                        Medium(gray.500).
+                        단계 사이 24 · 둥근 번호 60(반경 20 · procedure-step-number 면 — 라이트 gray.500 · 다크 gray.200
+                        · 32 Bold) · 이름 24 Bold · 설명 16 Medium(gray.500).
                     </li>
-                    <li>번호와 이름 16 · 이름과 설명 8. 번호 사이 화살표(96)는 단계 사이 간격 가운데에 놓입니다.</li>
+                    <li>
+                        번호와 이름 16 · 이름과 설명 8. 번호 사이 화살표(96 · platform-connector, 선은 50%)는 단계 사이
+                        간격 가운데에 놓입니다.
+                    </li>
                     <li>모바일은 단계를 세로로 쌓고(사이 40) 화살표를 감춥니다.</li>
                     <li>
                         화면에 들어오면 단계가 왼쪽에서 밀려오며 0.12초 간격으로 나타납니다(0.45초 · 화살표는 단계에

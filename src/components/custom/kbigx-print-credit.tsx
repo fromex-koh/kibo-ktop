@@ -1,7 +1,7 @@
 import {Fragment, type ReactNode} from 'react'
 import {DonutListChart} from '@/components/custom/donut-list-chart'
 import {DualLineChart} from '@/components/custom/dual-line-chart'
-import {InsideLabelPieChart} from '@/components/custom/inside-label-pie-chart'
+import {CalloutPieChart} from '@/components/custom/callout-pie-chart'
 import {
     KBX_CASH_FLOW_TAG_CLASS,
     KBX_CREDIT_TAG_CLASS,
@@ -799,7 +799,18 @@ const isCreditCollateralEmpty = ({points, current}: InnovationGrowthReport['cred
     return !points.length && !(Number.isFinite(total) && total > 0)
 }
 
-// 신용/담보 비중 — 시점별 꺾은선(왼쪽 반, points) · 최근 비중 원형(오른쪽 반 가운데, 330px, current). 사이 56.
+// 신용/담보 비중 — 시점별 꺾은선(왼쪽 반, points) · 최근 비중 원형(오른쪽 반, 556 × 330, current). 사이 56.
+// 원형의 글자 · 선 색 — 진단브리핑 기업 보유기술 원형과 같은 kbx 색이다.
+const CREDIT_PIE_COLORS = {
+    label: 'var(--kbx-color-foreground)',
+    value: 'var(--kbx-color-primary)',
+    count: 'var(--kbx-color-chart-label)',
+    leader: 'var(--kbx-color-chart-line)',
+    inside: 'var(--kbx-color-paper)',
+}
+// 칸 높이(칸 폭 556 기준) — 꺾은선 칸과 같은 330. 이름(신용 · 담보)은 짧지만 기업 보유기술과 같이 2줄까지로 둔다.
+const CREDIT_PIE_AREA_HEIGHT = 330
+const CREDIT_PIE_LABEL_MAX_LINES = 2
 const CreditCollateral = ({
     creditCollateral,
 }: {
@@ -807,6 +818,8 @@ const CreditCollateral = ({
 }) => {
     const {current} = creditCollateral
     const total = current.credit + current.collateral
+    // 최근 비중을 그릴 수 있는지 — 두 값의 합이 0 보다 커야 비중을 낼 수 있다(값을 받지 못하면 NaN).
+    const hasCurrentShare = Number.isFinite(total) && total > 0
 
     // 추이 · 최근 비중이 모두 없으면 크기가 다른 빈 상태 둘 대신 영역 전체에 빈 상태 하나(원형 칸 높이 330 = h-82.5).
     if (isCreditCollateralEmpty(creditCollateral)) return <KbxChartEmpty className="h-82.5" />
@@ -835,29 +848,33 @@ const CreditCollateral = ({
                     legendClassName="kbx-text-18 text-kbx-label"
                 />
             </KbxChartBox>
-            {/* 비중은 두 값 합 대비로 다시 계산해 소수 첫째 자리로 반올림한다(받은 값 합이 100 이 아니어도 원이 찬다). */}
-            <InsideLabelPieChart
-                ariaLabel="최근 신용/담보 비중"
-                data={[
-                    {
-                        id: 'credit',
-                        label: '신용',
-                        percentage: total ? Math.round((current.credit / total) * PERCENT * 10) / 10 : 0,
-                        color: 'var(--kbx-color-navy)',
-                    },
-                    {
-                        id: 'collateral',
-                        label: '담보',
-                        percentage: total ? Math.round((current.collateral / total) * PERCENT * 10) / 10 : 0,
-                        color: 'var(--kbx-color-mint)',
-                    },
-                ]}
-                gapColor="var(--kbx-color-paper)"
-                labelColor="var(--kbx-color-paper)"
-                emptyText={KBX_CHART_EMPTY_TEXT}
-                emptyClassName={cn(KBX_CHART_EMPTY_CLASS, 'h-82.5')}
-                className="w-82.5 justify-self-center"
-            />
+            {/* 최근 비중 원형 — 라벨은 원 밖 지시선 끝에 둔다(현업 요청: 원형 그래프 라벨은 무조건 원 밖). 진단브리핑 기업
+                보유기술과 같은 CalloutPieChart 라 원 크기(지름 224)와 라벨 모양이 같다. 오른쪽 칸 폭(556)을 다 쓰고, 칸 높이는
+                꺾은선과 같은 330(areaHeight)이다.
+                비중은 두 값 합 대비로 다시 계산해 소수 첫째 자리로 반올림한다(받은 값 합이 100 이 아니어도 원이 찬다). */}
+            <KbxChartBox isEmpty={!hasCurrentShare} emptyClassName="h-82.5">
+                <CalloutPieChart
+                    ariaLabel="최근 신용/담보 비중"
+                    data={[
+                        {
+                            id: 'credit',
+                            label: '신용',
+                            percentage: Math.round((current.credit / total) * PERCENT * 10) / 10,
+                            color: 'var(--kbx-color-navy)',
+                        },
+                        {
+                            id: 'collateral',
+                            label: '담보',
+                            percentage: Math.round((current.collateral / total) * PERCENT * 10) / 10,
+                            color: 'var(--kbx-color-mint)',
+                        },
+                    ]}
+                    colors={CREDIT_PIE_COLORS}
+                    areaHeight={CREDIT_PIE_AREA_HEIGHT}
+                    maxLabelLines={CREDIT_PIE_LABEL_MAX_LINES}
+                    className="h-82.5"
+                />
+            </KbxChartBox>
         </div>
     )
 }

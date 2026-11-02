@@ -7,8 +7,7 @@ import {
     K_BIGX_BULK_REPORT_ACTION,
     K_BIGX_REPORT_INQUIRY_TYPE,
     K_BIGX_REPORT_TYPE,
-    TICKET_DEDUCTION_LABEL,
-    TICKET_DEDUCTION_MARK,
+    TICKET_DEDUCTION_BADGE,
     type KBigxBulkReportAction,
     type KBigxReportHistoryItem,
 } from '@/constants/k-bigx-report-history'
@@ -16,7 +15,7 @@ import {cn} from '@/lib/utils'
 
 // K-BIGx 보고서 이력 카드 — Figma "SB-FOTA-CM0-0017_마이페이지_K-BIGx 보고서 이력"(기업)·
 // "기관 - K-BIGx 보고서 이력" 조회결과 case(기관)의 리스트 한 장.
-// 기업명 / 이용권 상자 · 상세 · 버튼 하나로 이루어진다. 기관 카드에는 두 가지가 더 붙는다.
+// 기업명 / 이용권 배지 · 상세 · 버튼 하나로 이루어진다. 기관 카드에는 두 가지가 더 붙는다.
 //   · 기업명 위의 보고서 유형 배지(기업혁신성장·대량정보조회) — 유형에 따라 버튼이 [보고서 다운로드] 하나 · [엑셀 결과]·[HTML 압축파일] 둘로 갈린다.
 //   · 상세 네 번째 칸 [조회 기관] — 누가 조회했는지.
 // 두 값은 기관 데이터에만 있어, 값이 없으면(기업) 그 자리도 그리지 않는다.
@@ -41,6 +40,11 @@ const ReportDetail = ({
     </div>
 )
 
+// 이용권 배지 — 시안 '카운트'(높이 28 · 좌우 12 · 반경 8 · 면 navy.100 · 테두리 navy.200 · 글자 13 Medium navy.600).
+// 공용 Badge 는 면(navy.50)과 글자 크기(12 · 14)가 시안과 달라, 덮어쓰면 typo-* 가 겹치므로[PB-08] 이 카드에서만 쓰는 모양으로 둔다.
+const TICKET_BADGE_CLASS_NAME =
+    'typo-body-m-medium bg-navy-100 border-navy-200 text-navy-600 inline-flex h-7 shrink-0 items-center rounded-sm border px-3 whitespace-nowrap'
+
 type KBigxReportCardProps = {
     item: KBigxReportHistoryItem
     /** 대량정보조회 [엑셀 결과]·[HTML 압축파일] 이 가는 곳(결과 파일). */
@@ -59,14 +63,14 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
     const reportType = item.reportType ? K_BIGX_REPORT_TYPE[item.reportType] : undefined
     // 버튼 — 대량정보조회만 결과 파일 둘이고, 나머지(기업 카드·기업혁신성장)는 [보고서 다운로드] 하나다.
     const isBulkReport = item.reportType === 'bulk-info'
-    // 시안의 상자는 수가 아니라 여/부 한 글자다 — 이 건에 이용권이 깎였는지만 알린다.
-    const deductionMark = item.isTicketDeducted ? TICKET_DEDUCTION_MARK.deducted : TICKET_DEDUCTION_MARK.notDeducted
+    // 이 건에 이용권이 깎였는지만 알린다 — 수가 아니라 차감 · 미차감 두 가지다.
+    const deductionLabel = item.isTicketDeducted ? TICKET_DEDUCTION_BADGE.deducted : TICKET_DEDUCTION_BADGE.notDeducted
 
     return (
         <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    {/* 기업명(기관은 배지+기업명 묶음)이 오른쪽 이용권 상자 높이의 가운데에 선다(기업·기관 시안 같음). */}
+                    {/* 기업명(기관은 배지+기업명 묶음)이 오른쪽 이용권 배지 높이의 가운데에 선다. */}
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex min-w-0 flex-col items-start gap-1">
                             {reportType ? (
@@ -77,18 +81,9 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
                             <h3 className="typo-title-l-bold text-foreground min-w-0">{item.companyName}</h3>
                         </div>
 
-                        {/* 이용권 상자 — 옅은 남색 면에 여/부 한 글자가 크게 선다(시안 81×71).
-                            두 조각이 한 덩어리("이용권차감 여")로 읽히도록 읽을 문장을 따로 두고
-                            보이는 것은 감춘다(role 이 없는 요소에는 aria-label 을 쓸 수 없다[8.1.1]). */}
-                        <p className="bg-navy-100 border-navy-200 text-navy-600 flex shrink-0 flex-col items-center rounded-sm border px-3 py-2">
-                            <span className="sr-only">{`${TICKET_DEDUCTION_LABEL} ${deductionMark}`}</span>
-                            <span aria-hidden="true" className="typo-h3-bold">
-                                {deductionMark}
-                            </span>
-                            <span aria-hidden="true" className="typo-caption-medium">
-                                {TICKET_DEDUCTION_LABEL}
-                            </span>
-                        </p>
+                        {/* 이용권 배지 — 기업명 줄 오른쪽 끝(현업 요청: 여/부 상자 대신 '이용권 차감' · '이용권 미차감').
+                            두 값은 글자로 갈리고 색은 같다 — 색만으로 뜻을 나르지 않는다[5.3.1]. */}
+                        <p className={TICKET_BADGE_CLASS_NAME}>{deductionLabel}</p>
                     </div>
 
                     {/* 칸들이 한 줄에 이어 붙는다(시안 칸 사이 24). 조회유형·조회일시는 값의 길이가 정해져 있어

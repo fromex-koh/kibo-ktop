@@ -226,7 +226,18 @@ const CustomerConsentPage = () => (
                 </SelectableCard>
             </div>
 
-            <FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요.">
+            {/* 필수 표시 — 실제 화면(customer-consent-agreement)과 같이 제목 앞 「필수」 배지. */}
+            <FormCard
+                title={
+                    <>
+                        <Badge variant="outline" color="info" shape="round" className="me-2 align-middle">
+                            필수
+                        </Badge>
+                        부분발송 이메일등록
+                    </>
+                }
+                subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요."
+            >
                 <div className="flex flex-wrap items-center gap-6">
                     {/* 아이디 @ 도메인 — 시안은 @ 를 입력 칸 안이 아니라 두 칸 사이에 둔다(칸 사이 8px). */}
                     <div className="flex min-w-0 flex-1 items-center gap-2">

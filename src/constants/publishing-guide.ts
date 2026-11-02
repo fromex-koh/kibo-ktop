@@ -549,7 +549,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'InsideLabelPieChart',
                                         href: '/component-guide/inside-label-pie-chart',
                                         layers: ['custom'],
-                                        isKbigxPrint: true,
                                     },
                                 ],
                             },

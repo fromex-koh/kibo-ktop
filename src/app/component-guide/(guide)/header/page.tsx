@@ -52,7 +52,10 @@ const userType = user?.userType
   showUserTypeToggle={false}
   user={user}
   navigationByUserType={navigationByUserType}
-/>`
+/>
+
+// 기관 하위계정 — isSubAccount 를 켜면 배지가 '하위 기관' 이 되고, name 에는 기관명 대신 담당자명을 넣는다.
+<Header userType="org" user={{name: '홍길동', sessionRemaining: '30:00', isSubAccount: true}} … />`
 
 const SUB_PAGE_LAYOUT_CODE = `// 일반 서비스 페이지는 Header를 직접 반복하지 않고
 // (service)/layout.tsx에서 SubPageLayout을 사용한다.
@@ -62,6 +65,8 @@ const SUB_PAGE_LAYOUT_CODE = `// 일반 서비스 페이지는 Header를 직접 
 </SubPageLayout>`
 
 const DEMO_USER = {name: '홍길동', sessionRemaining: '30:00'}
+// 기관 하위계정 — 배지 '하위 기관' + 담당자명.
+const DEMO_SUB_ACCOUNT_USER = {name: '홍길동', sessionRemaining: '30:00', isSubAccount: true}
 
 const DEMO_NAVIGATION = DEFAULT_HEADER_NAVIGATION
 
@@ -91,7 +96,7 @@ const PROPS = [
     [
         'Header',
         'user',
-        '로그인 사용자 정보입니다. 넘기면 유형 배지 · 이름 · 로그인 유지 시간과 로그인 후 유틸리티 링크가 나옵니다.',
+        "로그인 사용자 정보입니다(name · sessionRemaining · mypageHref · isSubAccount). 넘기면 유형 배지 · 이름 · 로그인 유지 시간과 로그인 후 유틸리티 링크가 나옵니다. isSubAccount 를 켜면 배지가 '하위 기관' 이고 name 은 담당자명입니다.",
         'undefined',
         'HeaderUser',
     ],
@@ -113,8 +118,28 @@ const PROPS = [
         'undefined',
         'readonly HeaderNavLink[]',
     ],
-    ['HeaderUser', 'name', '사용자 이름입니다(필수).', '-', 'string'],
+    [
+        'HeaderUser',
+        'name',
+        '사용자 이름입니다(필수). 기관 하위계정이면 기관명이 아니라 담당자명을 넣습니다.',
+        '-',
+        'string',
+    ],
     ['HeaderUser', 'sessionRemaining', '로그인 유지 시간으로 표시할 문자열입니다(필수).', '-', 'string'],
+    [
+        'HeaderUser',
+        'mypageHref',
+        '이름을 눌렀을 때 갈 마이페이지 경로입니다. 없으면 회원 유형의 마이페이지 첫 화면입니다.',
+        'undefined',
+        'string',
+    ],
+    [
+        'HeaderUser',
+        'isSubAccount',
+        "기관 하위계정으로 로그인했는지입니다. 켜면 배지가 '기관' 대신 '하위 기관'(같은 색)이 됩니다.",
+        'false',
+        'boolean',
+    ],
 ] satisfies readonly PropsTableItem[]
 
 const SCREEN_COLUMNS = [
@@ -222,6 +247,11 @@ const HeaderGuidePage = () => (
                         줍니다. 시간 갱신은 사용처에서 연결합니다.
                     </li>
                     <li>로그인 연장 · 로그아웃 버튼의 실제 처리는 연결되어 있지 않습니다. 서비스에서 연결합니다.</li>
+                    <li>
+                        기관 하위계정으로 로그인하면 <code className="text-foreground font-mono">isSubAccount</code> 를
+                        켭니다 — 배지가 &lsquo;기관&rsquo; 대신 &lsquo;하위 기관&rsquo;(같은 색)이 되고, 이름 자리에는
+                        기관명이 아니라 담당자명이 옵니다(예: [하위 기관] 홍길동 님).
+                    </li>
                 </ul>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
@@ -229,6 +259,11 @@ const HeaderGuidePage = () => (
                         <div className="flex flex-col gap-4">
                             <HeaderDemo navigationByUserType={DEMO_NAVIGATION} userType="corp" user={DEMO_USER} />
                             <HeaderDemo navigationByUserType={DEMO_NAVIGATION} userType="org" user={DEMO_USER} />
+                            <HeaderDemo
+                                navigationByUserType={DEMO_NAVIGATION}
+                                userType="org"
+                                user={DEMO_SUB_ACCOUNT_USER}
+                            />
                         </div>
                         <CodeBlock code={AUTHENTICATED_USAGE_CODE} language="tsx" copyLabel="복사" />
                     </div>

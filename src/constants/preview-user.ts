@@ -47,8 +47,12 @@ export const ORG_PREVIEW_USERS = {
         sessionRemaining: '30:00',
         mypageHref: '/org/mypage/profile-edit/non-partner-agency',
     },
+    // 하위계정 — 헤더는 기관명이 아니라 로그인한 담당자 이름을 [하위 기관] 배지와 함께 보인다(현업 요청).
+    // name 은 헤더 이름 자리(= 담당자명), 기관명은 orgName 이다(내 정보 화면의 회원명 · 기관명이 쓴다).
     subAccount: {
-        name: '서울산업진흥원 창업지원팀',
+        name: '홍길동',
+        orgName: '서울산업진흥원 창업지원팀',
+        isSubAccount: true,
         sessionRemaining: '30:00',
         mypageHref: '/org/mypage/profile-edit/sub-account',
     },

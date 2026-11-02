@@ -1,7 +1,7 @@
 // 기관 마이페이지 — 하위계정 현황.
 //
 // 협약 정보(매칭 사업·사업기간·이용서비스)와 계정 수 요약이 먼저 오고, 그 아래에 하위계정 카드가 놓인다.
-// 카드마다 [⋮] 메뉴로 수정·비밀번호 초기화·상태 변경·삭제를 고른다.
+// 카드마다 [⋮] 메뉴로 수정·비밀번호 초기화·상세정보·상태 변경·삭제를 고른다.
 
 /**
  * 이 화면이 다루는 서비스 이름 — 협약 정보의 [이용서비스] 와 상세정보 모달의 이용건수가 같은 값을 쓴다.
@@ -121,7 +121,7 @@ export const nextSubAccountSortOrder = (order: SubAccountSortOrder): SubAccountS
     SUB_ACCOUNT_SORT_ORDERS[(SUB_ACCOUNT_SORT_ORDERS.indexOf(order) + 1) % SUB_ACCOUNT_SORT_ORDERS.length]
 
 /** [⋮] 메뉴에서 고를 수 있는 일 — 넷 다 화면을 옮기지 않고 목록 화면에서 모달로 연다. */
-export type SubAccountMenuAction = 'edit' | 'password-reset' | 'status-change' | 'delete'
+export type SubAccountMenuAction = 'edit' | 'password-reset' | 'detail' | 'status-change' | 'delete'
 
 /** 협약 정보 — 이 기관이 맺은 협약 한 건. */
 export type SubAccountAgreement = {
@@ -204,5 +204,5 @@ export type SubAccountItem = {
     detail: SubAccountDetail
 }
 
-/** 한 페이지에 보여 줄 카드 수 — 2건이라 목록이 짧아도 페이지 이동을 확인할 수 있다. */
-export const SUB_ACCOUNT_PAGE_SIZE = 2
+/** 한 페이지에 보여 줄 카드 수(현업 요청). */
+export const SUB_ACCOUNT_PAGE_SIZE = 10
