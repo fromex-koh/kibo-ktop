@@ -19,7 +19,7 @@ import {
 import {getServiceToday} from '@/lib/service-today'
 import {MYPAGE_MEMBER} from '@/constants/mypage-profile'
 
-// 결제정보 — 이 화면 하나가 "현재 사용중인 이용권"의 모든 케이스를 처리한다.
+// 결제정보 — 이 화면 하나가 "사용중" 이용권(구매한 이용권 목록의 [사용중] 카드)의 모든 케이스를 처리한다.
 // 카드 모양과 버튼은 CurrentPaidServicePass 의 값으로만 정해진다. 연동할 때는 현재 이용권 조회 응답을 currentPass 로 넘긴다.
 // 미리보기는 ?case=번호(기본 1)로 바꾼다. 케이스 정의: content/service/paid-service-current-pass.ts, 이용중지 정책: lib/suspend-policy.ts.
 //
@@ -37,7 +37,7 @@ import {MYPAGE_MEMBER} from '@/constants/mypage-profile'
 // 신청 · 변경 뒤의 카드 변화는 화면 안 목업 상태라 새로고침하면 처음 케이스로 돌아간다.
 // 하위 경로(suspend*, suspending, suspension-history, refundable)는 케이스·팝업을 따로 보는 미리보기 화면이다.
 
-export const metadata: Metadata = {title: '유료 서비스 관리'}
+export const metadata: Metadata = {title: '이용권 관리'}
 
 type CorpPaidServicePaymentHistoryPageContentProps = {
     /** 현재 이용권. 넘기지 않으면 기본 케이스(1)를 오늘 기준으로 만든다. */
@@ -67,20 +67,18 @@ export const CorpPaidServicePaymentHistoryPageContent = ({
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>유료 서비스 관리</BreadcrumbPage>
+                                <BreadcrumbPage>이용권 관리</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 }
             />
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
-                <MypageSidebar userType="corp" current="유료 서비스 관리" companyName={MYPAGE_MEMBER.companyName} />
+                <MypageSidebar userType="corp" current="이용권 관리" companyName={MYPAGE_MEMBER.companyName} />
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>
-                        <SectionHeaderTitle size="lg">유료 서비스 관리</SectionHeaderTitle>
-                        <SectionHeaderDescription>
-                            현재 이용중인 상품과 사용 내역을 관리합니다.
-                        </SectionHeaderDescription>
+                        <SectionHeaderTitle size="lg">이용권 관리</SectionHeaderTitle>
+                        <SectionHeaderDescription>보유 중인 이용권과 이용 내역을 관리합니다.</SectionHeaderDescription>
                     </SectionHeader>
                     <PaidServiceHistory
                         currentPass={currentPass}
