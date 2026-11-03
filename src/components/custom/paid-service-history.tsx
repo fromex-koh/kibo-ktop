@@ -27,7 +27,8 @@ import {cn} from '@/lib/utils'
 import {getServiceToday} from '@/lib/service-today'
 
 export type PassStatus = 'waiting' | 'expired' | 'refunded'
-export type PassFilter = 'all' | PassStatus
+// 'using' — 지금 사용중인 이용권(currentPass). 구매한 이용권 목록에 함께 나온다.
+export type PassFilter = 'all' | 'using' | PassStatus
 export const PASS_SORT_ORDERS = ['desc', 'asc'] as const
 export type PassSortOrder = (typeof PASS_SORT_ORDERS)[number]
 
@@ -161,19 +162,19 @@ const createUsageHistory = ({
 const CURRENT_PASS: CurrentPaidServicePass = {
     id: 'standard-current',
     grade: '스탠다드',
-    remaining: 61,
-    used: 89,
-    total: 150,
+    remaining: 21,
+    used: 29,
+    total: 50,
     startDate: '2026-09-14',
     endDate: '2026-10-13',
     period: '2026-09-14 ~ 2026-10-13',
     periodAccent: '8일 남음',
     remainingDays: 8,
     purchasedAt: '2026-09-11',
-    composition: '150건 / 30일',
-    price: '1,000,000원',
+    composition: '50건 / 1개월',
+    price: '550,000원',
     gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
-    usageHistory: createUsageHistory({count: 130, endDate: '2026-09-06', seed: 10, stepMod: 6, remaining: 61}),
+    usageHistory: createUsageHistory({count: 42, endDate: '2026-09-06', seed: 10, stepMod: 2, remaining: 21}),
 }
 
 const PaidServiceUsageHistoryPreview = () => (
@@ -189,13 +190,13 @@ const PURCHASED_PASSES: readonly PaidServicePass[] = [
     {
         id: 'premium-20260908',
         grade: '프리미엄',
-        remaining: 500,
+        remaining: 200,
         period: '사용 시작 시 자동 부여',
-        periodAccent: '사용 시작 후 100일',
+        periodAccent: '사용 시작 후 1개월',
         purchasedLabel: '구매일',
         acquiredAt: '2026-09-08',
-        composition: '500건 / 100일',
-        price: '2,500,000원',
+        composition: '200건 / 1개월',
+        price: '1,100,000원',
         status: 'waiting',
         gradeImage: '/images/ticket-grade/ticket-grade-premium.webp',
         refundable: true,
@@ -204,13 +205,13 @@ const PURCHASED_PASSES: readonly PaidServicePass[] = [
     {
         id: 'standard-20260907',
         grade: '스탠다드',
-        remaining: 150,
+        remaining: 50,
         period: '사용 시작 시 자동 부여',
-        periodAccent: '사용 시작 후 30일',
+        periodAccent: '사용 시작 후 1개월',
         purchasedLabel: '구매일',
         acquiredAt: '2026-09-07',
-        composition: '150건 / 30일',
-        price: '1,000,000원',
+        composition: '50건 / 1개월',
+        price: '550,000원',
         status: 'waiting',
         gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
         refundable: true,
@@ -219,13 +220,13 @@ const PURCHASED_PASSES: readonly PaidServicePass[] = [
     {
         id: 'basic-20260906',
         grade: '베이직',
-        remaining: 60,
+        remaining: 20,
         period: '사용 시작 시 자동 부여',
-        periodAccent: '사용 시작 후 30일',
+        periodAccent: '사용 시작 후 1개월',
         purchasedLabel: '구매일',
         acquiredAt: '2026-09-06',
-        composition: '60건 / 30일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'waiting',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: true,
@@ -248,14 +249,14 @@ const PURCHASED_PASSES: readonly PaidServicePass[] = [
     },
     {
         id: 'minimum-20260904',
-        grade: '미니멈',
-        remaining: 2,
+        grade: '1회권',
+        remaining: 1,
         period: '사용 시작 시 자동 부여',
-        periodAccent: '사용 시작 후 30일',
+        periodAccent: '사용 시작 후 1개월',
         purchasedLabel: '구매일',
         acquiredAt: '2026-09-04',
-        composition: '2건 / 30일',
-        price: '10,000원',
+        composition: '1건 / 1개월',
+        price: '22,000원',
         status: 'waiting',
         gradeImage: '/images/ticket-grade/ticket-grade-minimum.webp',
         refundable: true,
@@ -269,149 +270,149 @@ const PURCHASED_PASSES: readonly PaidServicePass[] = [
         periodAccent: '',
         purchasedLabel: '구매일',
         acquiredAt: '2026-09-05',
-        composition: '5건 / 14일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'refunded',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: false,
-        refundAmount: '500,000',
+        refundAmount: '330,000',
         refundedAt: '2026-09-05',
         usageHistory: [],
     },
     {
         id: 'basic-20260707',
         grade: '베이직',
-        remaining: 58,
+        remaining: 18,
         period: '2026-07-10 ~ 2026-08-08',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-07-07',
-        composition: '60건 / 30일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 4, endDate: '2026-08-05', seed: 9, remaining: 58}),
+        usageHistory: createUsageHistory({count: 4, endDate: '2026-08-05', seed: 9, remaining: 18}),
     },
     {
         id: 'standard-20260602',
         grade: '스탠다드',
-        remaining: 144,
+        remaining: 44,
         period: '2026-06-05 ~ 2026-07-04',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-06-02',
-        composition: '150건 / 30일',
-        price: '1,000,000원',
+        composition: '50건 / 1개월',
+        price: '550,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 8, endDate: '2026-07-02', seed: 8, remaining: 144}),
+        usageHistory: createUsageHistory({count: 8, endDate: '2026-07-02', seed: 8, remaining: 44}),
     },
     {
         id: 'minimum-20260517',
-        grade: '미니멈',
+        grade: '1회권',
         remaining: 0,
         period: '2026-05-20 ~ 2026-06-18',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-05-17',
-        composition: '2건 / 30일',
-        price: '10,000원',
+        composition: '1건 / 1개월',
+        price: '22,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-minimum.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 3, endDate: '2026-06-10', seed: 7, remaining: 0}),
+        usageHistory: createUsageHistory({count: 2, endDate: '2026-06-10', seed: 7, remaining: 0}),
     },
     {
         id: 'basic-20260409',
         grade: '베이직',
-        remaining: 56,
+        remaining: 16,
         period: '2026-04-12 ~ 2026-05-11',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-04-09',
-        composition: '60건 / 30일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 7, endDate: '2026-05-09', seed: 6, remaining: 56}),
+        usageHistory: createUsageHistory({count: 7, endDate: '2026-05-09', seed: 6, remaining: 16}),
     },
     {
         id: 'standard-20260227',
         grade: '스탠다드',
-        remaining: 145,
+        remaining: 45,
         period: '2026-03-02 ~ 2026-03-31',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-02-27',
-        composition: '150건 / 30일',
-        price: '1,000,000원',
+        composition: '50건 / 1개월',
+        price: '550,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 6, endDate: '2026-03-29', seed: 5, remaining: 145}),
+        usageHistory: createUsageHistory({count: 6, endDate: '2026-03-29', seed: 5, remaining: 45}),
     },
     {
         id: 'minimum-20260211',
-        grade: '미니멈',
-        remaining: 2,
+        grade: '1회권',
+        remaining: 1,
         period: '2026-02-14 ~ 2026-03-15',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-02-11',
-        composition: '2건 / 30일',
-        price: '10,000원',
+        composition: '1건 / 1개월',
+        price: '22,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-minimum.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 1, endDate: '2026-03-02', seed: 4, remaining: 2}),
+        usageHistory: createUsageHistory({count: 1, endDate: '2026-03-02', seed: 4, remaining: 1}),
     },
     {
         id: 'basic-20260105',
         grade: '베이직',
-        remaining: 57,
+        remaining: 17,
         period: '2026-01-08 ~ 2026-02-06',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2026-01-05',
-        composition: '60건 / 30일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 5, endDate: '2026-02-04', seed: 3, remaining: 57}),
+        usageHistory: createUsageHistory({count: 5, endDate: '2026-02-04', seed: 3, remaining: 17}),
     },
     {
         id: 'minimum-20251128',
-        grade: '미니멈',
+        grade: '1회권',
         remaining: 0,
         period: '2025-12-01 ~ 2025-12-30',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2025-11-28',
-        composition: '2건 / 30일',
-        price: '10,000원',
+        composition: '1건 / 1개월',
+        price: '22,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-minimum.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 4, endDate: '2025-12-20', seed: 2, remaining: 0}),
+        usageHistory: createUsageHistory({count: 3, endDate: '2025-12-20', seed: 2, remaining: 0}),
     },
     {
         id: 'basic-20251030',
         grade: '베이직',
-        remaining: 56,
+        remaining: 16,
         period: '2025-11-01 ~ 2025-11-30',
         periodAccent: '0일 남음',
         purchasedLabel: '구매일',
         acquiredAt: '2025-10-30',
-        composition: '60건 / 30일',
-        price: '500,000원',
+        composition: '20건 / 1개월',
+        price: '330,000원',
         status: 'expired',
         gradeImage: '/images/ticket-grade/ticket-grade-basic.webp',
         refundable: false,
-        usageHistory: createUsageHistory({count: 6, endDate: '2025-11-27', seed: 1, remaining: 56}),
+        usageHistory: createUsageHistory({count: 6, endDate: '2025-11-27', seed: 1, remaining: 16}),
     },
 ] as const
 
@@ -419,6 +420,7 @@ const PaidServiceRefundPreview = () => <PaidServiceRefundDialog defaultOpen grad
 
 const FILTERS: readonly {value: PassFilter; label: string}[] = [
     {value: 'all', label: '전체'},
+    {value: 'using', label: '사용중'},
     {value: 'waiting', label: '대기중'},
     {value: 'expired', label: '만료'},
     {value: 'refunded', label: '환불'},
@@ -428,6 +430,7 @@ const isPassFilter = (value: string): value is PassFilter => FILTERS.some((item)
 
 const EMPTY_TITLES: Record<PassFilter, string> = {
     all: '구매한 이용권 내역이 없습니다.',
+    using: '사용중인 이용권이 없습니다.',
     waiting: '사용 대기중인 이용권이 없습니다.',
     expired: '만료된 이용권이 없습니다.',
     refunded: '환불한 이용권이 없습니다.',
@@ -486,100 +489,94 @@ const CurrentPass = ({
     onViewHistory?: (id: string) => void
     onUsageHistoryPageChange?: (id: string, page: number) => void
 }) => (
-    <section aria-labelledby="current-pass-title" className="flex flex-col gap-6">
-        <h2 id="current-pass-title" className="typo-h4-bold text-foreground">
-            현재 사용중인 이용권
-        </h2>
-        <article className="border-primary bg-card overflow-hidden rounded-lg border">
-            <div className="flex flex-col gap-6 px-6 pt-8 md:px-8">
-                <div className="flex items-center gap-4">
-                    {item.gradeImage ? (
-                        <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} />
-                    ) : null}
-                    <div className="min-w-0 flex-1">
-                        <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
-                        <h3 className="typo-h4-bold text-foreground">{item.grade}</h3>
-                    </div>
-                    {item.suspension ? (
-                        <Badge color="error" shape="round">
-                            이용중지
-                        </Badge>
-                    ) : (
-                        <Badge color="info" shape="round">
-                            사용중
-                        </Badge>
-                    )}
+    // 사용중 이용권 카드 — 구매한 이용권 목록 안에 다른 카드와 함께 놓인다(테두리만 강조색).
+    <article className="border-primary bg-card overflow-hidden rounded-lg border">
+        <div className="flex flex-col gap-6 px-6 pt-8 md:px-8">
+            <div className="flex items-center gap-4">
+                {item.gradeImage ? <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} /> : null}
+                <div className="min-w-0 flex-1">
+                    <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
+                    <h3 className="typo-h4-bold text-foreground">{item.grade}</h3>
                 </div>
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <p className="typo-title-m-regular text-foreground">
-                            잔여 <strong className="typo-title-l-bold">{item.remaining}</strong>건
-                        </p>
-                        <div className="typo-body-l-regular mt-1 flex flex-wrap gap-x-2">
-                            <PassMeta label={item.periodLabel ?? '이용기간'}>{item.period}</PassMeta>
-                            <strong className="text-primary">{item.periodAccent}</strong>
-                        </div>
+                {item.suspension ? (
+                    <Badge color="error" shape="round">
+                        이용중지
+                    </Badge>
+                ) : (
+                    <Badge color="info" shape="round">
+                        사용중
+                    </Badge>
+                )}
+            </div>
+            <div className="flex flex-col gap-4">
+                <div>
+                    <p className="typo-title-m-regular text-foreground">
+                        잔여 <strong className="typo-title-l-bold">{item.remaining}</strong>건
+                    </p>
+                    <div className="typo-body-l-regular mt-1 flex flex-wrap gap-x-2">
+                        <PassMeta label={item.periodLabel ?? '이용기간'}>{item.period}</PassMeta>
+                        <strong className="text-primary">{item.periodAccent}</strong>
                     </div>
-                    {item.suspensionRecord ? (
-                        <SuspensionRecord record={item.suspensionRecord} isActive={Boolean(item.suspension)} />
-                    ) : null}
-                    <div className="flex flex-col gap-2">
-                        <div className="bg-background h-2 overflow-hidden rounded-full">
-                            <div
-                                className="bg-navy-500 h-full rounded-full"
-                                style={{width: `${Math.min(Math.max((item.used / item.total) * 100, 0), 100)}%`}}
-                            />
-                        </div>
-                        <div className="typo-body-l-regular flex justify-between">
-                            <span className="text-foreground-subtle">사용량</span>
-                            <span className="text-foreground">
-                                <strong>{item.used}</strong>건 / {item.total}건
-                            </span>
-                        </div>
+                </div>
+                {item.suspensionRecord ? (
+                    <SuspensionRecord record={item.suspensionRecord} isActive={Boolean(item.suspension)} />
+                ) : null}
+                <div className="flex flex-col gap-2">
+                    <div className="bg-background h-2 overflow-hidden rounded-full">
+                        <div
+                            className="bg-navy-500 h-full rounded-full"
+                            style={{width: `${Math.min(Math.max((item.used / item.total) * 100, 0), 100)}%`}}
+                        />
                     </div>
-                    <div className="typo-body-l-regular flex flex-wrap gap-x-6 gap-y-1 pb-6">
-                        <PassMeta label={item.purchasedLabel ?? '구매일'}>{item.purchasedAt}</PassMeta>
-                        <PassMeta label="상품 구성">{item.composition}</PassMeta>
-                        <PassMeta label="금액">{item.price}</PassMeta>
+                    <div className="typo-body-l-regular flex justify-between">
+                        <span className="text-foreground-subtle">사용량</span>
+                        <span className="text-foreground">
+                            <strong>{item.used}</strong>건 / {item.total}건
+                        </span>
                     </div>
+                </div>
+                <div className="typo-body-l-regular flex flex-wrap gap-x-6 gap-y-1 pb-6">
+                    <PassMeta label={item.purchasedLabel ?? '구매일'}>{item.purchasedAt}</PassMeta>
+                    <PassMeta label="상품 구성">{item.composition}</PassMeta>
+                    <PassMeta label="금액">{item.price}</PassMeta>
                 </div>
             </div>
-            <div className="border-subtle-3 bg-secondary flex flex-col gap-3 border-t border-dashed px-6 py-4 sm:flex-row sm:items-center sm:justify-between md:px-8">
-                <p className="typo-body-m-regular text-foreground-subtle">
-                    {item.suspension
-                        ? '이용중지 기간에는 이용권이 차감되는 서비스를 이용할 수 없습니다.'
-                        : item.hasSuspendedBefore
-                          ? '이용중지는 이용권당 1회만 신청할 수 있습니다.'
-                          : item.isRefundable
-                            ? '구매일로부터 7일 이내의 미사용 이용권은 환불할 수 있습니다.'
-                            : '사용 이력이 있는 이용권은 환불할 수 없습니다.'}
-                </p>
-                {/* [이용중지] · [이용중지 변경] 은 이용권 상태에 따라 Action 이 고르고, 이력이 있으면 렌더하지 않는다. */}
-                {/* 버튼이 셋(환불하기 · 이용중지 · 이용내역)이면 좁은 화면에서 줄을 바꾼다. */}
-                <div className="flex flex-wrap justify-end gap-2">
-                    {item.isRefundable ? (
-                        <PaidServiceRefundDialog grade={item.grade} onConfirm={() => onRefund?.(item.id)}>
-                            <Button type="button" variant="tertiary" size="sm">
-                                환불하기
-                            </Button>
-                        </PaidServiceRefundDialog>
-                    ) : null}
-                    <PaidServiceSuspendAction pass={item} onSubmit={onSuspend} />
-                    <PaidServiceUsageHistoryDialog
-                        defaultOpen={usageHistoryDefaultOpen}
-                        pass={{grade: item.grade, remaining: item.remaining}}
-                        items={item.usageHistory}
-                        totalPages={item.usageHistoryTotalPages}
-                        onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
-                    >
-                        <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
-                            이용내역
+        </div>
+        <div className="border-subtle-3 bg-secondary flex flex-col gap-3 border-t border-dashed px-6 py-4 sm:flex-row sm:items-center sm:justify-between md:px-8">
+            <p className="typo-body-m-regular text-foreground-subtle">
+                {item.suspension
+                    ? '이용중지 기간에는 이용권이 차감되는 서비스를 이용할 수 없습니다.'
+                    : item.hasSuspendedBefore
+                      ? '이용중지는 이용권당 1회만 신청할 수 있습니다.'
+                      : item.isRefundable
+                        ? '구매일로부터 7일 이내의 미사용 이용권은 환불할 수 있습니다.'
+                        : '사용 이력이 있는 이용권은 환불할 수 없습니다.'}
+            </p>
+            {/* [이용중지] · [이용중지 변경] 은 이용권 상태에 따라 Action 이 고르고, 이력이 있으면 렌더하지 않는다. */}
+            {/* 버튼이 셋(환불하기 · 이용중지 · 이용내역)이면 좁은 화면에서 줄을 바꾼다. */}
+            <div className="flex flex-wrap justify-end gap-2">
+                {item.isRefundable ? (
+                    <PaidServiceRefundDialog grade={item.grade} onConfirm={() => onRefund?.(item.id)}>
+                        <Button type="button" variant="tertiary" size="sm">
+                            환불하기
                         </Button>
-                    </PaidServiceUsageHistoryDialog>
-                </div>
+                    </PaidServiceRefundDialog>
+                ) : null}
+                <PaidServiceSuspendAction pass={item} onSubmit={onSuspend} />
+                <PaidServiceUsageHistoryDialog
+                    defaultOpen={usageHistoryDefaultOpen}
+                    pass={{grade: item.grade, remaining: item.remaining}}
+                    items={item.usageHistory}
+                    totalPages={item.usageHistoryTotalPages}
+                    onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
+                >
+                    <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
+                        이용내역
+                    </Button>
+                </PaidServiceUsageHistoryDialog>
             </div>
-        </article>
-    </section>
+        </div>
+    </article>
 )
 
 const PurchasedPassCard = ({
@@ -677,6 +674,11 @@ const PurchasedPassCard = ({
     </article>
 )
 
+// 구매한 이용권 목록의 한 줄 — 사용중 이용권(카드에 이용중지 · 사용량이 더 있다)과 그 밖의 이용권.
+type PassListItem =
+    | {kind: 'using'; id: string; date: string; pass: CurrentPaidServicePass}
+    | {kind: 'purchased'; id: string; date: string; pass: PaidServicePass}
+
 export type PaidServiceHistoryProps = {
     currentPass?: CurrentPaidServicePass | null
     purchasedPasses?: readonly PaidServicePass[]
@@ -730,13 +732,20 @@ const PaidServiceHistory = ({
     const isMobile = useIsMobile()
     const listRef = useRef<HTMLDivElement>(null)
     const shouldScrollAfterPageChangeRef = useRef(false)
+    // 사용중 이용권(currentPass)도 구매한 이용권 목록의 한 줄이다 — 구매일로 다른 이용권과 함께 정렬하고, [전체] · [사용중]에서 보인다.
     const items = useMemo(() => {
-        const filteredItems = purchasedPasses.filter((item) => filter === 'all' || item.status === filter)
-        return filteredItems.toSorted((a, b) => {
-            const dateOrder = a.acquiredAt.localeCompare(b.acquiredAt)
+        const usingItems: readonly PassListItem[] =
+            displayedPass && (filter === 'all' || filter === 'using')
+                ? [{kind: 'using', id: displayedPass.id, date: displayedPass.purchasedAt, pass: displayedPass}]
+                : []
+        const purchasedItems: readonly PassListItem[] = purchasedPasses
+            .filter((item) => filter === 'all' || item.status === filter)
+            .map((item) => ({kind: 'purchased', id: item.id, date: item.acquiredAt, pass: item}))
+        return [...usingItems, ...purchasedItems].toSorted((a, b) => {
+            const dateOrder = a.date.localeCompare(b.date)
             return sortOrder === 'desc' ? -dateOrder : dateOrder
         })
-    }, [filter, purchasedPasses, sortOrder])
+    }, [displayedPass, filter, purchasedPasses, sortOrder])
     const isServerPaginated = totalPages !== undefined
     const resolvedPageSize = Math.max(1, pageSize)
     const resolvedTotalPages = totalPages ?? Math.max(1, Math.ceil(items.length / resolvedPageSize))
@@ -790,28 +799,6 @@ const PaidServiceHistory = ({
 
     return (
         <div className="flex flex-col gap-10">
-            {displayedPass ? (
-                <CurrentPass
-                    // [프론트엔드 연동] 목업 — 케이스 이용권은 이용내역을 들고 오지 않아 기본 이용내역으로 채운다.
-                    item={
-                        displayedPass.usageHistory || displayedPass.used === 0
-                            ? displayedPass
-                            : {...displayedPass, usageHistory: CURRENT_PASS.usageHistory}
-                    }
-                    usageHistoryDefaultOpen={defaultOpenUsageHistoryId === displayedPass.id}
-                    onSuspend={handleSuspend}
-                    onRefund={onRefund}
-                    onViewHistory={onViewHistory}
-                    onUsageHistoryPageChange={onUsageHistoryPageChange}
-                />
-            ) : (
-                <section aria-labelledby="current-pass-title" className="flex flex-col gap-6">
-                    <h2 id="current-pass-title" className="typo-h4-bold text-foreground">
-                        현재 사용중인 이용권
-                    </h2>
-                    <EmptyState title="현재 사용중인 이용권이 없습니다." className="bg-card min-h-52 rounded-lg" />
-                </section>
-            )}
             <section aria-labelledby="purchased-pass-title" className="flex flex-col gap-6">
                 <h2 id="purchased-pass-title" className="typo-h4-bold text-foreground">
                     구매한 이용권 내역
@@ -854,17 +841,34 @@ const PaidServiceHistory = ({
                 </div>
                 <div className="flex flex-col gap-4">
                     {visibleItems.length > 0 ? (
-                        visibleItems.map((item) => (
-                            <PurchasedPassCard
-                                key={item.id}
-                                item={item}
-                                refundDefaultOpen={defaultOpenRefundId === item.id}
-                                usageHistoryDefaultOpen={defaultOpenUsageHistoryId === item.id}
-                                onRefund={onRefund}
-                                onViewHistory={onViewHistory}
-                                onUsageHistoryPageChange={onUsageHistoryPageChange}
-                            />
-                        ))
+                        visibleItems.map((item) =>
+                            item.kind === 'using' ? (
+                                <CurrentPass
+                                    key={item.id}
+                                    // [프론트엔드 연동] 목업 — 케이스 이용권은 이용내역을 들고 오지 않아 기본 이용내역으로 채운다.
+                                    item={
+                                        item.pass.usageHistory || item.pass.used === 0
+                                            ? item.pass
+                                            : {...item.pass, usageHistory: CURRENT_PASS.usageHistory}
+                                    }
+                                    usageHistoryDefaultOpen={defaultOpenUsageHistoryId === item.id}
+                                    onSuspend={handleSuspend}
+                                    onRefund={onRefund}
+                                    onViewHistory={onViewHistory}
+                                    onUsageHistoryPageChange={onUsageHistoryPageChange}
+                                />
+                            ) : (
+                                <PurchasedPassCard
+                                    key={item.id}
+                                    item={item.pass}
+                                    refundDefaultOpen={defaultOpenRefundId === item.id}
+                                    usageHistoryDefaultOpen={defaultOpenUsageHistoryId === item.id}
+                                    onRefund={onRefund}
+                                    onViewHistory={onViewHistory}
+                                    onUsageHistoryPageChange={onUsageHistoryPageChange}
+                                />
+                            ),
+                        )
                     ) : (
                         <EmptyState title={EMPTY_TITLES[filter]} className="bg-card min-h-52 rounded-lg" />
                     )}
