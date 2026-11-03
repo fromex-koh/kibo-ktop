@@ -23,7 +23,7 @@ import {findMockHistoryCard, withMockHistoryCard} from '@/content/service/k-bigx
 // │ 3. 케이스에서 제공하지 않는 값은 응답에서 뺀다(빈 배열 · 빈 칸) — 화면은 그 자리를 자리 표시 값으로 가린다.
 // │    실제 값을 내려 주면 가려도 페이지 데이터에 남아 개발자 도구로 읽힌다. 뺄 범위는 redactForViewerCase 가 참고 구현이다.
 // │ 4. [퍼블리싱 확인용] 코드를 지운다.
-// │    - withPreviewCase · withPreviewCaseSample · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx · kbigx-print-page.tsx).
+// │    - withPreviewCase · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx · kbigx-print-page.tsx).
 // │    - ?empty= 미리보기: withPreviewEmpty 와 그 아래 withPreview* · PREVIEW_* 함수 · 상수, INNOVATION_REPORT_EMPTY_QUERY 와
 // │      미리보기 값 상수(INNOVATION_REPORT_EMPTY_* · *_LONG_TEXT · *_MIXED 등), 호출(위 두 페이지 파일).
 // │      모두 '[퍼블리싱 확인용]' 표식이 붙어 있다 — 이 표식으로 검색해 남김없이 지운다.
@@ -54,7 +54,7 @@ const INNOVATION_ISSUE_COLORS = [
     'var(--ds-report-series-3)',
     'var(--ds-blue-800)',
 ] as const
-// 정부 R&D사업 접수현황 칸 — 늘 4칸 이상(웹 보고서 진단브리핑 · 인쇄본 진단브리핑 공용). 받은 부처가 4곳보다 적거나 없으면
+// 정부 R&D 사업 현황 칸 — 늘 4칸 이상(웹 보고서 진단브리핑 · 인쇄본 진단브리핑 공용). 받은 부처가 4곳보다 적거나 없으면
 // 빠진 부처명을 이 순서대로 채우고 건수는 비운다(null — 화면이 '-' 로 적는다). 받은 부처가 4곳을 넘으면 모두 그린다.
 // 부처는 이름(label)으로 맞춘다 — API 부처명이 이 문구와 다르면 같은 부처가 두 번 나온다.
 const RND_SLOT_COUNT = 4
@@ -165,7 +165,7 @@ const INNOVATION_REPORT_CREATED_TOAST = '이용권이 차감되어 보고서를 
 // title 은 탭 본문 제목 띠에 적는 긴 이름 — 없으면 label 을 그대로 쓴다.
 const INNOVATION_REPORT_SECTIONS = [
     {id: 'briefing', label: '진단브리핑'},
-    {id: 'company', label: '기업현황'},
+    {id: 'company', label: '기업 현황'},
     {id: 'innovation', label: '기술혁신정보'},
     {id: 'tech-index', label: 'Tech-Index', title: 'Tech-Index (혁신성장 역량지수)'},
     {id: 'credit-finance', label: '신용/재무정보'},
@@ -191,8 +191,9 @@ const INNOVATION_REPORT_TAB_QUERY = 'tab'
 // status 는 그대로 보낸다(status 가 '해당없음' 이면 가리지 않고 '해당사항 없음' 으로 보인다).
 // [퍼블리싱 확인용] 주소의 ?case=<id> 가 있으면 viewerCase 를 덮어써 케이스를 바꿔 본다(withPreviewCase) — 연동 후 지운다.
 //   self           ① 자기기업 / 금융기관 — 전 항목 노출
-//   partner-corp   ② 타기업 · 협약기관(법인) — 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
-//   partner-person ③ 타기업 · 협약기관(개인) — 법인등기 · 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
+//   partner-corp   ② 타기업 · 협약기관(법인) — 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
+//   partner-person ③ 타기업 · 협약기관(개인) — 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출,
+//                    법인등기정보는 '해당없음'(배지 + '해당사항 없음' 줄)
 const INNOVATION_REPORT_CASE_QUERY = 'case'
 // [퍼블리싱 확인용] ?empty=briefing — 진단브리핑에 쓰는 값을 모두 비워 빈 데이터 화면('-' · 빈 상태)을 본다. 연동 후 지운다.
 const INNOVATION_REPORT_EMPTY_QUERY = 'empty'
@@ -230,7 +231,7 @@ const INNOVATION_REPORT_COMPANY_LONG_TEXT = 'company-long-text'
 // ?empty=company-mixed — 기업현황에서 글 길이(아주 긴 · 적절한 · 짧은)와 빈 값 · 건수를 칸마다 섞어 한 화면에 본다.
 //   숫자 · 연도 칸은 company-partial 규칙으로 일부만 비우고, 글 칸 · 건수는 withPreviewCompanyMixed 가 정한다.
 const INNOVATION_REPORT_COMPANY_MIXED = 'company-mixed'
-// ?empty=tech-long-text — 기술혁신정보 특허기술 분석 · 경쟁기업 · 성장률 우수기업 이름 · 기술 보유현황 도넛 범례(긴 · 중간 · 짧은 이름 섞음) · 특허 보유현황 · 우수특허 · 이머징 기술 · R&D 전문기관 · 정부 R&D 사업 표의 글 칸을 길게 바꾼다
+// ?empty=tech-long-text — 기술혁신정보 특허기술 분석 · 경쟁기업 · 성장률 우수기업 이름 · 기술보유 현황 도넛 범례(긴 · 중간 · 짧은 이름 섞음) · 특허보유 현황 · 우수특허 · 이머징 기술 · R&D 전문기관 · 정부 R&D 사업 표의 글 칸을 길게 바꾼다
 //   (숫자 · 일자 · 번호 제외). 줄 수는 기본 목업 그대로.
 const INNOVATION_REPORT_TECH_LONG_TEXT = 'tech-long-text'
 // ?empty=tech — 기술혁신정보 탭에 쓰는 값을 모두 비운다(안내 문구 · 고정 줄 이름 · 구간 이름 · 소제목은 두고 값 · 목록은 없음).
@@ -241,7 +242,7 @@ const INNOVATION_REPORT_TECH_MIXED = 'tech-mixed'
 const INNOVATION_REPORT_TECH_MIXED_2 = 'tech-mixed-2'
 // ?empty=briefing-long-text — 진단브리핑의 글 칸(날짜 · 숫자 · 고정 라벨 제외)을 길게 — 보고서 제목 · 기업명 · 세부분야명 ·
 //   기업 정보 값 · 보유기술 범례 · R&D 이슈 키워드 · 동일업종명. 웹 보고서 · PDF 템플릿 공용.
-//   정부 R&D 접수현황의 부처명은 고정값이라 바꾸지 않는다.
+//   정부 R&D 사업 현황의 부처명은 고정값이라 바꾸지 않는다.
 const INNOVATION_REPORT_BRIEFING_LONG_TEXT = 'briefing-long-text'
 // ?empty=briefing-mixed — 진단브리핑에서 글 길이(아주 긴 · 적절한 · 짧은)와 빈 값을 칸마다 섞어 한 화면에 본다.
 //   글 칸은 칸마다 길이를 정해 두고(withPreviewBriefingMixed), 숫자 · 일자 칸은 일부만 비운다(briefing-partial 과 같은 규칙).
@@ -285,20 +286,40 @@ const isInnovationReportCase = (value: unknown): value is InnovationReportCase =
 
 // 케이스별 신용/재무정보 미노출 범위.
 type InnovationCreditVisibility = {
-    /** 가릴 기업신용정보 표 id — 표 머리만 남기고 값 줄을 '비공개' 한 줄로, 제목 옆 상태는 뺀다. */
+    /**
+     * 가릴 기업신용정보 표 id — 표 머리만 남기고 값 줄을 '열람불가(제공 대상 외 정보)' 한 줄로, 제목 옆 상태(배지)는 뺀다.
+     * 받은 상태가 '해당없음' 이어도 가린다(열람자가 받을 수 없는 정보라 상태도 알 수 없다).
+     */
     hiddenInfoTables: readonly string[]
+    /**
+     * 받은 값과 관계없이 '해당없음'(제목 옆 [해당없음] 배지 + '해당사항 없음' 줄)으로 보일 표 id.
+     * 개인 열람(partner-person)의 법인등기정보 — 열람자가 개인이라 법인 정보가 없다(법인 열람은 그대로 보인다).
+     */
+    noneInfoTables: readonly string[]
     /** 차입금 현황(기관별 비중 · 신용/담보 비중 · 담보 현황) 카드를 가린다. */
     isBorrowingStatusHidden: boolean
 }
-const OVERDUE_INFO_TABLES = ['short-overdue', 'trade-overdue', 'public-arrears'] as const
+// 자사 · 협약은행만 조회할 수 있는 정보 — 법인 · 개인 열람 모두 가린다.
+const RESTRICTED_INFO_TABLES = ['suspension', 'short-overdue', 'trade-overdue', 'public-arrears'] as const
 const INNOVATION_CREDIT_VISIBILITY: Record<InnovationReportCase, InnovationCreditVisibility> = {
-    self: {hiddenInfoTables: [], isBorrowingStatusHidden: false},
-    'partner-corp': {hiddenInfoTables: OVERDUE_INFO_TABLES, isBorrowingStatusHidden: true},
+    self: {hiddenInfoTables: [], noneInfoTables: [], isBorrowingStatusHidden: false},
+    'partner-corp': {hiddenInfoTables: RESTRICTED_INFO_TABLES, noneInfoTables: [], isBorrowingStatusHidden: true},
     'partner-person': {
-        hiddenInfoTables: ['registry', 'suspension', ...OVERDUE_INFO_TABLES],
+        hiddenInfoTables: RESTRICTED_INFO_TABLES,
+        noneInfoTables: ['registry'],
         isBorrowingStatusHidden: true,
     },
 }
+// 가린 기업신용정보 표의 값 줄 문구(웹 보고서 · PDF 템플릿 공용).
+const CREDIT_INFO_HIDDEN_TEXT = '열람불가(제공 대상 외 정보)'
+// 기업신용정보 표 상태 '해당없음' — 배지 [해당없음] + 값 줄 '해당사항 없음'(웹 보고서 · PDF 템플릿 공용 규칙).
+const CREDIT_INFO_STATUS_NONE = '해당없음'
+// 케이스의 noneInfoTables 에 든 표를 '해당없음' 으로 바꾼다 — 웹 보고서 · PDF 템플릿이 표를 그리기 전에 똑같이 거친다.
+const applyCreditInfoVisibility = (
+    table: InnovationCreditInfoTable,
+    visibility: InnovationCreditVisibility,
+): InnovationCreditInfoTable =>
+    visibility.noneInfoTables.includes(table.id) ? {...table, status: CREDIT_INFO_STATUS_NONE, rows: []} : table
 
 // 탭 id 인지 — 주소의 ?tab= 값이 보고서 구성 항목(INNOVATION_REPORT_SECTIONS)에 있는지 본다.
 const isReportTab = (value: string): value is InnovationReportSectionId =>
@@ -331,7 +352,7 @@ type InnovationBorrowingCell = {amount: number; ratio: number} | null
 type InnovationBorrowingRow = {key: string; label: string; cells: readonly InnovationBorrowingCell[]}
 type InnovationCreditDetail = {
     /**
-     * 이전평가이력. 등급은 CRI 코드, chartLabel 은 그래프 아래 시점(예: 23.09월).
+     * 기업신용등급 평가이력. 등급은 CRI 코드, chartLabel 은 그래프 아래 시점(예: 23.09월).
      * [프론트엔드 연동 · 정렬] 그래프는 받은 순서대로 그리므로 시간순(오래된 것부터)으로 보낸다.
      * 아래 표는 화면이 평가일자 최신순으로 정렬하고 가장 최근(현재 등급 — 게이지)을 뺀다(기획: 최신순으로 정렬).
      */
@@ -385,7 +406,7 @@ type InnovationCreditDetail = {
     }
     /** 담보 현황(백만원) — 도넛으로 그린다. color 는 share 와 같은 고정 색(--raw-*). */
     collaterals: readonly {id: string; label: string; amount: number; color: string}[]
-    /** 담보 현황 기준 연도(예: 2024년) — 인쇄본 도넛 아래 '2024년 기준'. 기관별 비중 도넛은 institutions.years 의 마지막 연도를 쓴다. */
+    /** 담보 현황 기준 연도(예: 2024년). 웹 · 인쇄본 모두 화면에 표시하지 않는다(받아 두기만 한다). */
     collateralYear: string
 }
 
@@ -444,7 +465,7 @@ type InnovationTechIndexDetail = {
     }[]
 }
 
-// 관련 기업 및 특허현황의 수치 종류 — 총 기업수 · 총 특허수 · 고성장 기업수 · 고성장 기업 특허수.
+// 관련 기업 및 특허 현황의 수치 종류 — 총 기업수 · 총 특허수 · 고성장 기업수 · 고성장 기업 특허수.
 type InnovationStatId = 'companies' | 'patents' | 'high-growth-companies' | 'high-growth-patents'
 
 type InnovationGrowthReport = {
@@ -452,7 +473,7 @@ type InnovationGrowthReport = {
     title: string
     companyName: string
     issuedAt: string
-    /** 보고서 생성일자 — 진단브리핑 정부 R&D사업 접수현황의 '기준일자'로 보인다. */
+    /** 보고서 생성일자 — 진단브리핑 정부 R&D 사업 현황의 '기준일자'로 보인다. */
     createdAt: string
     /** 조회일 전일자 — 현재 화면에 표시하지 않는다(필드만 유지). */
     lookupBaseDate: string
@@ -486,8 +507,6 @@ type InnovationGrowthReport = {
         /** 동일업종 기준 상위 %(예: 25)와 업종 이름. */
         industryPercentile: number
         industryLabel: string
-        /** 점수 카드 오른쪽 위 안내. */
-        scoreNote: string
         /** 지수의 바탕인 기술신용평가(TCB) 평가일자 — 게이지 아래에 '평가일자 · YYYY-MM-DD' 로 보인다. */
         evaluationDate: string
     }
@@ -546,18 +565,18 @@ type InnovationCompanyStatus = {
     /**
      * 경영진 현황 — 목록 수는 기업마다 다르다(가변).
      * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
-     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
+     * 인쇄본도 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄)이다. 목록은 자르지 않고 그대로 보낸다.
      */
     executives: readonly {role: string; name: string; birthDate: string}[]
     /**
      * 주주 현황 — 지분율 높은 순으로 보낸다.
      * [프론트엔드 연동] 웹 보고서는 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄 · 0건이면 빈 상태 — COMPANY_TABLE_ROWS),
-     * 인쇄본은 쪽 높이에 맞춰 최대 10행을 그린다. 목록은 자르지 않고 그대로 보낸다.
+     * 인쇄본도 늘 5줄(앞에서부터 5건, 모자라면 '-' 줄)이다. 목록은 자르지 않고 그대로 보낸다.
      */
     shareholders: readonly {name: string; shares: number; ratio: number; relation: string}[]
     /**
      * 관계기업 현황. [프론트엔드 연동 · 최대 10건] 웹 보고서는 앞에서부터 10건만 그린다(11번째부터 안 보임).
-     * 인쇄본(PDF 템플릿)은 기업현황 첫 쪽에 기본 3줄(모자라면 '-' 줄)을 그리고, 개요 글이 길면 1줄까지 줄인다
+     * 인쇄본(PDF 템플릿)은 기업 현황 첫 쪽에 기본 3줄(모자라면 '-' 줄)을 그리고, 쪽 높이에 맞춰 1 ~ 10줄로 늘리거나 줄인다
      * (k-bigx-print-report.ts 의 COMPANY_AFFILIATE_ROWS · getKbigxCompanyFirstPageLayout). 목록은 자르지 않고 그대로 보낸다.
      */
     affiliates: readonly {
@@ -645,7 +664,7 @@ type InnovationTechDetail = {
         middleCategory: readonly PercentageDonutItem[]
         smallCategory: readonly PercentageDonutItem[]
         /**
-         * 특허 보유현황.
+         * 특허보유 현황.
          * [프론트엔드 연동 · 정렬] 출원일 최근순으로 보낸다 — 화면은 받은 순서대로 그린다.
          * [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임).
          */
@@ -794,13 +813,12 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '산업통상부', value: 1, unit: '건'},
             {label: '보건복지부', value: 2, unit: '건'},
         ],
-        rndNote: '* 상위 4개만 있으므로 상세 내용은 ‘기술혁신 > 정부 R&D 사업’ 페이지 참조 해주세요.',
+        rndNote: '* 상위 4개만 표시되므로, 추가 정보는 기술혁신정보 - 정부R&D사업 페이지를 참조해주세요.',
     },
     techIndex: {
         score: 73.8,
         industryPercentile: 25,
         industryLabel: '그 외 기타 전자부품 제조업',
-        scoreNote: '* 기술신용평가 이력이 없는 경우에는 산출 불가',
         // 기업신용등급 카드의 평가일자와 같은 날(같은 TCB 평가).
         evaluationDate: '2022-06-15',
     },
@@ -861,7 +879,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         notice: '기술혁신정보는 국내 등록특허에 대한 AI 분석 결과에 기반하고 있습니다. 기술보증기금은 AI를 통해 귀사가 보유하고 있는 특허를 분석하여 ‘국가과학기술표준분류체계’에 따른 기술분야로 분류하고, 분류된 기술분야를 기준으로 다양한 기술혁신정보를 맞춤형으로 제공하고 있습니다. 기술혁신정보의 내용은 AI 기반으로 자동 생성된 것으로, AI 특성상 분석 결과 등에 일부 오류 또는 불완전한 정보가 포함될 수 있음을 유의하여 주시기 바랍니다.',
         holdings: {
             description:
-                '기술 보유현황은 귀사의 특허(기술)를 AI로 분석하고, 분석결과에 따라 보유 기술을 국가과학기술표준분류체계(중분류, 세부분야)로 분류한 것입니다.',
+                '보유기술은 귀사의 특허(기술)를 AI로 분석하고, 분석결과에 따라 국가과학기술표준분류체계(중분류 - 세부분야)로 분류한 것입니다.',
             middleCategory: [
                 {id: 'm1', label: '무선 통신·네트워크', percentage: 52, count: 25},
                 {id: 'm2', label: '정보 보호', percentage: 15, count: 7},
@@ -882,7 +900,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {id: 's7', label: '전파 계측', percentage: 4, count: 2},
                 {id: 's8', label: '기타', percentage: 2, count: 1},
             ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
-            // [프론트엔드 연동 · 최대 10건] 특허 보유현황 — 목업은 최대치 10건(출원일 최근순).
+            // [프론트엔드 연동 · 최대 10건] 특허보유 현황 — 목업은 최대치 10건(출원일 최근순).
             patents: [
                 [
                     '무선 통신 시스템에서 데이터 및 제어 정보 송수신 방법',
@@ -1265,8 +1283,9 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {date: '2025-10-15', chartLabel: '25.10월', grade: 'BBB0'},
         ],
         cashFlow: {
-            grade: 'CF6',
-            details: [{label: '결산일자', value: '2024-08-04'}],
+            // 현재 등급 · 결산일자는 평가이력의 가장 최근 값(CF3 · 2024-11-04)과 맞춘다.
+            grade: 'CF3',
+            details: [{label: '결산일자', value: '2024-11-04'}],
             // [프론트엔드 연동 · 정렬] 순서 상관없음 — 화면이 평가일자 최신순으로 정렬한다.
             history: [
                 {date: '2024-11-04', chartLabel: '24.11월', grade: 'CF3'},
@@ -1518,8 +1537,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {id: 'innobiz', label: '이노비즈', value: 58.7},
         ],
         descriptions: [
-            'Tech-Index는 현재의 기술역량과 미래성장의 잠재력 수준을 측정하는 AI평가모형 기반의 복합지수입니다.',
-            'Tech-Index는 현재 기업의 내재적 기술혁신역량을 나타내는 지수(Index)이면서 동시에 미래성장성을 예측해 볼 수 있는 확률적인 점수를 의미합니다.',
+            'Tech-Index는 현재의 기술역량과 미래성장의 잠재력 수준을 측정하는 AI평가모형 기반의 복합지수로, 현재 기업의 내재적 기술혁신역량을 나타내는 지수(Index)이면서 동시에 미래성장성을 예측해 볼 수 있는 확률적인 점수를 의미합니다.',
             'Tech-Index는 ‘기업성장의 선순환 구조’ 이론에 착안하여 기업성장과 관련한 인프라, 투입, 활동, 성과의 4대 혁신역량으로 구성되어 있으며, 혁신역량은 이를 대표하는 14개 투입지표로 구성되어 있습니다.',
         ],
         capabilities: [
@@ -1880,7 +1898,7 @@ const RATIO_GROUP_SPECS: readonly RatioGroupSpec[] = [
         labels: ['총자본회전율', '매출채권회전율', '재고자산회전율', '순운전자본회전율'],
     },
 ]
-// 차입금 변동현황 줄 — 4줄 고정(웹 · PDF 공용). 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 줄 · 연도는 '-'.
+// 차입금 변동 현황 줄 — 4줄 고정(웹 · PDF 공용). 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 줄 · 연도는 '-'.
 const BORROWING_CHANGE_LABELS = ['차입금(백만원)', '차입금/매출액(%)', '차입금상환계수', '총차입금변동률(%)'] as const
 // 기관별 비중 표 줄 — 업권 5개 고정(웹 · PDF 공용). 받은 줄을 label 로 찾으므로 API 도 이 문자열 그대로 보낸다. 없는 업권 · 연도는 '-'.
 const INSTITUTION_LABELS = ['은행업권', '상호금융업권', '저축은행업권', '카드/캐피탈업권', '대부업권'] as const
@@ -1988,9 +2006,7 @@ const getInnovationGrowthReport = async (reportId?: string): Promise<InnovationG
 
 // [퍼블리싱 확인용] 주소의 ?case= 로 열람 케이스를 덮어써 본다. 값이 케이스가 아니면 받은 그대로 둔다. 연동 후 이 함수와 호출을 지운다.
 const withPreviewCase = (report: InnovationGrowthReport, previewCase: unknown): InnovationGrowthReport =>
-    isInnovationReportCase(previewCase)
-        ? withPreviewCaseSample(redactForViewerCase({...report, viewerCase: previewCase}))
-        : report
+    isInnovationReportCase(previewCase) ? redactForViewerCase({...report, viewerCase: previewCase}) : report
 
 // [퍼블리싱 확인용] ?empty=<모드> 로 데이터를 비우거나(빈 값) · 길게(긴 글) · 섞어(여러 경우) 본다 — 모든 탭 · 장 공용 진입점.
 // 모드별 동작은 아래 withPreview* 함수 · 위 INNOVATION_REPORT_EMPTY_* 상수 주석을 본다. 표 줄 이름 · 부처명 같은 틀은 두고 값만
@@ -2527,7 +2543,7 @@ const withPreviewTechLongText = (report: InnovationGrowthReport): InnovationGrow
             },
             holdings: {
                 ...tech.holdings,
-                // 기술 보유현황 도넛 범례(중분류 · 세부분야) — 긴 · 중간 · 짧은 이름을 섞는다('기타'는 그대로).
+                // 기술보유 현황 도넛 범례(중분류 · 세부분야) — 긴 · 중간 · 짧은 이름을 섞는다('기타'는 그대로).
                 middleCategory: toMixedDonutLabels(tech.holdings.middleCategory, 0),
                 smallCategory: toMixedDonutLabels(tech.holdings.smallCategory, 1),
                 patents: tech.holdings.patents.map((patent, index) => ({
@@ -3223,7 +3239,7 @@ const withPreviewCreditInfoLongText = (report: InnovationGrowthReport): Innovati
 //   현금흐름등급   — 등급 · 결산일자 · 이력 모두 없음
 //   기업신용정보   — 표마다 다르게: 긴 글 · 행 없음(상태 없음) · 그대로 · 큰 금액 · 일부 칸 빈 값 · 해당없음
 //   재무비율진단   — 성장성 그대로 · 수익성 행 없음 · 안정성 가운데 해 빈 값 · 활동성 업종평균 대비만 빈 값
-//   차입금 변동률  — 홀수 번째 달 빈 값,  차입금 현황 — 단기 큰 금액 · 장기 가운데 해 빈 칸,  변동현황 — 행 없음
+//   차입금 변동률  — 홀수 번째 달 빈 값,  차입금 현황 — 단기 큰 금액 · 장기 가운데 해 빈 칸,  변동 현황 — 행 없음
 //   기관별 비중    — 표 그대로 · 도넛 없음,  신용/담보 — 추이 없음 · 최근 비중만,  담보 — 1건 · 큰 금액
 const withPreviewCreditMixed = (report: InnovationGrowthReport): InnovationGrowthReport => {
     const detail = report.creditDetail
@@ -3419,26 +3435,6 @@ const withPreviewPartialBriefing = (report: InnovationGrowthReport): InnovationG
     },
 })
 
-// [퍼블리싱 확인용] 케이스별 확인 화면의 기업신용정보 표 상태 — 케이스마다 보여 줄 모양을 고정한다(목업 값만 바꾼다).
-//   partner-corp: 당좌거래정지정보를 '해당없음'(배지 [해당없음] + '해당사항 없음' 줄)으로 둬 비공개 표와 나란히 본다.
-//   partner-person: 법인등기정보를 '해당없음' 으로 둬 같은 방식으로 본다.
-const PREVIEW_CASE_NONE_TABLES: Partial<Record<InnovationReportCase, readonly string[]>> = {
-    'partner-corp': ['suspension'],
-    'partner-person': ['registry'],
-}
-const withPreviewCaseSample = (report: InnovationGrowthReport): InnovationGrowthReport => {
-    const noneTables = PREVIEW_CASE_NONE_TABLES[report.viewerCase] ?? []
-    return {
-        ...report,
-        creditDetail: {
-            ...report.creditDetail,
-            creditInfo: report.creditDetail.creditInfo.map((table) =>
-                noneTables.includes(table.id) ? {...table, status: '해당없음', rows: []} : table,
-            ),
-        },
-    }
-}
-
 // [퍼블리싱 확인용] 케이스에서 제공하지 않는 값을 목업에서 뺀다 — 실서비스에서 백엔드가 하는 일을 흉내 낸다.
 // 화면은 가린 자리에 자리 표시 값을 그리므로, 여기서 뺀 값은 페이지 데이터(DOM · RSC 페이로드)에 남지 않는다.
 const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthReport => {
@@ -3449,7 +3445,9 @@ const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthRe
         creditDetail: {
             ...creditDetail,
             creditInfo: creditDetail.creditInfo.map((table) =>
-                visibility.hiddenInfoTables.includes(table.id) ? {...table, rows: []} : table,
+                visibility.hiddenInfoTables.includes(table.id)
+                    ? {...table, rows: []}
+                    : applyCreditInfoVisibility(table, visibility),
             ),
             ...(visibility.isBorrowingStatusHidden
                 ? {
@@ -3493,6 +3491,8 @@ export {
     toRndSlots,
     INNOVATION_REPORT_EMPTY_QUERY,
     INNOVATION_CREDIT_VISIBILITY,
+    applyCreditInfoVisibility,
+    CREDIT_INFO_HIDDEN_TEXT,
     INNOVATION_REPORT_CASE_QUERY,
     INNOVATION_REPORT_CASES,
     getTechIndexGrade,

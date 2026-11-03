@@ -4,7 +4,7 @@
 // 쪽 차례는 보고서 데이터로 만든다(buildKbigxPrintPages).
 //   · 목록 표는 웹 화면과 같이 앞에서부터 최대 10건(KBIGX_PRINT_LIST_LIMIT)만 그린다. 나머지는 웹 화면에서 본다.
 //   · 목록 표는 쪽을 넘기지 않는다 — 한 쪽에 행 자리를 두고 모자라면 '-' 줄로 채우며, 값이 길어 넘치면 들어가는 행까지만 그린다.
-//     (특허 보유현황 · 우수특허 · 거래처현황 · 정부 R&D 과제 · 기업현황 첫 쪽 표). 쪽을 나누는 것은 기업신용정보뿐이다(heightPages).
+//     (특허보유 현황 · 우수특허 · 거래처현황 · 정부 R&D 과제 · 기업현황 첫 쪽 표). 쪽을 나누는 것은 기업신용정보뿐이다(heightPages).
 //   · 쪽 번호 · 목차의 장 시작 번호 · 장 첫 쪽 여부(장 제목 박스 / 머리말)는 다 만든 목록에서 계산한다.
 //
 // [프론트엔드 연동]
@@ -66,7 +66,7 @@ const REFERENCE_SECTION_LABEL = '참고자료'
 // 목록 표 최대 건수 — 웹 화면과 같다(특허 · 거래처 · R&D 과제 등).
 const KBIGX_PRINT_LIST_LIMIT = 10
 
-// 특허 보유현황 · 우수특허 — 행 높이 어림(용지 px, 폭 1360 기준).
+// 특허보유 현황 · 우수특허 — 행 높이 어림(용지 px, 폭 1360 기준).
 // 서버에서 행 수를 정해야 해 실제 높이를 잴 수 없다. 글자 수로 행마다 줄 수를 어림해 쌓고, 한 쪽 높이(rowsHeight)에
 // 들어가는 행까지만 그린다(getKbigxPatentRows · getKbigxExcellentPatentRows).
 //
@@ -89,7 +89,7 @@ const PATENT_PAGE = {
     subFontSize: 19,
 } as const
 // 우수특허 — 같은 계단식 표(행 치수는 PATENT_PAGE), 기술분야 열 대신 피인용 횟수 · 지수(늘 한 줄).
-// 특허 보유현황보다 중제목(61 + 간격 24) · 표 아래 각주(간격 16 + 30)만큼 더 뺀다. 바닥글 선과 40 띄운다.
+// 특허보유 현황보다 중제목(61 + 간격 24) · 표 아래 각주(간격 16 + 30)만큼 더 뺀다. 바닥글 선과 40 띄운다.
 const EXCELLENT_PATENT_PAGE = {
     rowsHeight: KBX_PAGE_BODY_HEIGHT - 85 - 47 - 101.5 - 46 - KBX_FOOTER_GAP,
     /** 출원인 칸 안쪽 폭(나머지 열 334.6 − 좌우 여백 20). */
@@ -138,33 +138,62 @@ const COMPANY_OVERVIEW_FIT_LABELS: ReadonlySet<string> = new Set([
     '대표기술분야',
     '주요제품',
 ])
-// 기업현황 첫 쪽 표 기준 행 수 — 경영진 · 주주 5행 · 관계기업 3행(모자라면 '-' 줄). 개요 값 길이에 따라 1 ~ 10행 사이에서
-// 늘리거나 줄인다(getKbigxCompanyFirstPageLayout). 다 못 그린 행은 웹 화면에서 본다.
+// 기업 현황 첫 쪽 표 행 수 — 경영진 · 주주는 늘 5행(많으면 앞 5건만, 모자라면 '-' 줄)이고,
+// 쪽 높이는 관계기업 행 수(기본 3행)로 맞춘다(getKbigxCompanyFirstPageLayout). 다 못 그린 행은 웹 화면에서 본다.
 const COMPANY_TABLE_ROWS = 5
 const COMPANY_AFFILIATE_ROWS = 3
-const COMPANY_MIN_ROWS = 1
+const COMPANY_AFFILIATE_MIN_ROWS = 1
 
 // 기업현황 첫 쪽(개요 · 경영진 및 주주 · 관계기업 · 특허 및 인증 — 블록 사이 40) 높이 어림(용지 px).
 //   · baseBottom: 개요 값이 모두 한 줄 · 경영진 · 주주 5행 · 관계기업 3행일 때 본문 끝(실측).
 //   · 개요 값이 길어지면 그 줄 쌍(두 열 중 높은 쪽)만큼 높아진다(overviewExtraHeight).
 //   · 표 한 행 43.5 — 표 칸 글은 한 줄 말줄임이라 행 높이가 늘 같다.
-//   · overviewWidth 391 = 실제 칸 360 ÷ 0.92 — estimateLines 의 한글 1em 이 실제 Pretendard(약 0.92em)보다 넓어서.
+//   · 값 칸 폭 360. 줄 수는 글자별 폭(overviewCharEm)으로 센다 — estimateLines 는 영문 · 숫자를 0.56em 로 잡아,
+//     영문 · 숫자 위주 값(20 ~ 30자)이 실제 2줄인데 1줄로 세어져 관계기업 행이 늘고 쪽을 넘쳤다.
 // [주의] kbigx-print-company.tsx 의 블록 간격 · 표 행 높이 · KbxLabelValueGrid 치수를 바꾸면 같이 고친다.
 const COMPANY_FIRST_PAGE = {
     baseBottom: 1732,
     // 내용이 끝나야 하는 선(바닥글 선 − 40).
     budgetBottom: KBX_PAGE_CONTENT_BOTTOM,
     overviewLine: 29,
-    overviewWidth: 391,
+    overviewWidth: 360,
     overviewFontSize: 24,
     overviewMaxLines: 2,
     tableRow: 43.5,
+    // 어림이 실제보다 작게 나올 때를 위한 여유(실측 오차 최대 4).
+    estimateMargin: 8,
 } as const
 
 // Pretendard 기본 줄 높이 ≈ 글자 × 1.2. 줄인 글자는 이름(24px)과 기준선을 맞추느라 (24 − 글자) × 1.1 만큼 내려간다
 // (실측: 24px 두 줄이면 칸 +29, 12px 두 줄이면 +13).
 const NORMAL_LINE_RATIO = 1.2
 const BASELINE_SHIFT_RATIO = 1.1
+// 개요 값 글자 폭(em, Pretendard 굵게) — 모자라게 세면 쪽을 넘치므로 넓은 쪽으로 잡는다(W · M · m · w 는 따로).
+const OVERVIEW_SPACE_EM = 0.3
+const overviewCharEm = (char: string) => {
+    if ((char.codePointAt(0) ?? 0) >= 0x1100) return 1
+    if (/[WM@]/.test(char)) return 0.95
+    if (/[mw]/.test(char)) return 0.86
+    if (/[A-Z]/.test(char)) return 0.72
+    if (/[0-9a-z]/.test(char)) return 0.62
+    return 0.35
+}
+// 개요 값 줄 수 — 칸과 같이 낱말 단위로 줄을 바꾸고, 한 줄보다 긴 낱말은 그 자리에서 끊는다.
+const estimateOverviewLines = (text: string, fontSize: number, width: number) =>
+    text
+        .split(' ')
+        .filter(Boolean)
+        .reduce(
+            (acc, word) => {
+                const wordWidth = [...word].reduce((sum, char) => sum + overviewCharEm(char), 0) * fontSize
+                const space = acc.used ? OVERVIEW_SPACE_EM * fontSize : 0
+                if (acc.used + space + wordWidth <= width) return {lines: acc.lines, used: acc.used + space + wordWidth}
+                const wrapped = Math.ceil(wordWidth / width)
+                return {lines: acc.lines + (acc.used ? 1 : 0) + wrapped - 1, used: wordWidth - (wrapped - 1) * width}
+            },
+            {lines: 1, used: 0},
+        ).lines
+
 // 개요 값 하나가 한 줄일 때보다 칸을 얼마나 높이는지 — KbxFitValue 와 같이 2줄 높이에 들어갈 때까지 글자를 줄이고,
 // 가장 작은 크기로도 넘치면 2줄에서 말줄임한다고 보고 센다.
 const overviewExtraHeight = (text: string) => {
@@ -172,22 +201,21 @@ const overviewExtraHeight = (text: string) => {
     const baseLine = base * NORMAL_LINE_RATIO
     const size =
         KBX_FIT_TEXT_SIZES.find(
-            (fontSize) => estimateLines(text, fontSize, width) * fontSize * NORMAL_LINE_RATIO <= baseLine * maxLines,
+            (fontSize) =>
+                estimateOverviewLines(text, fontSize, width) * fontSize * NORMAL_LINE_RATIO <= baseLine * maxLines,
         ) ?? KBX_FIT_TEXT_SIZES[KBX_FIT_TEXT_SIZES.length - 1]
-    const lines = Math.min(maxLines, estimateLines(text, size, width))
+    const lines = Math.min(maxLines, estimateOverviewLines(text, size, width))
     return Math.max(0, (base - size) * BASELINE_SHIFT_RATIO + lines * size * NORMAL_LINE_RATIO - baseLine)
 }
 
 type KbigxCompanyFirstPageLayout = {
-    /** 경영진 · 주주 표 행 수(1 ~ 10). */
-    tableRows: number
     /** 관계기업 표 행 수(1 ~ 10). */
     affiliateRows: number
 }
 
-// 기업현황 첫 쪽 표 행 수 — 네 블록은 늘 한 쪽이다(특허 및 인증현황은 맨 아래, 바닥글 선과 40 띄움).
-// 기준(5 · 3행)에서 넘치면 경영진 · 주주 → 관계기업 순으로 번갈아 한 행씩 줄이고(최소 1행),
-// 남으면 같은 순서로 한 행씩 늘려(최대 10행) 남은 높이를 채운다. 데이터가 모자란 행은 '-' 줄.
+// 기업 현황 첫 쪽 관계기업 표 행 수 — 네 블록은 늘 한 쪽이다(특허 및 인증 현황은 맨 아래, 바닥글 선과 40 이상).
+// 기준(3행)에서 남는 높이만큼 늘리고(최대 10행) 모자라면 줄인다(최소 1행). 데이터가 모자란 행은 '-' 줄.
+// 개요가 가장 길어도(값 칸 세 쌍이 모두 두 줄, 어림 +86) 관계기업 2행이면 들어간다.
 const getKbigxCompanyFirstPageLayout = (report: InnovationGrowthReport): KbigxCompanyFirstPageLayout => {
     const {overview} = report.companyStatus
     // 한 줄 말줄임 값은 칸을 늘리지 않는다.
@@ -200,37 +228,15 @@ const getKbigxCompanyFirstPageLayout = (report: InnovationGrowthReport): KbigxCo
     const overviewExtra = overviewHeights
         .filter((_, index) => index % 2 === 0)
         .reduce((sum, height, pairIndex) => sum + Math.max(height, overviewHeights[pairIndex * 2 + 1] ?? 0), 0)
-    const bottom = (tableRows: number, affiliateRows: number) =>
-        COMPANY_FIRST_PAGE.baseBottom +
-        overviewExtra +
-        (tableRows - COMPANY_TABLE_ROWS) * COMPANY_FIRST_PAGE.tableRow +
-        (affiliateRows - COMPANY_AFFILIATE_ROWS) * COMPANY_FIRST_PAGE.tableRow
-    const fits = (layout: {tableRows: number; affiliateRows: number}) =>
-        bottom(layout.tableRows, layout.affiliateRows) <= COMPANY_FIRST_PAGE.budgetBottom
-    // 줄이는 단계 — 번갈아 한 행씩(경영진 · 주주 먼저). 0단계가 기준 행 수다.
-    const shrinkSteps = Array.from(
-        {length: COMPANY_TABLE_ROWS - COMPANY_MIN_ROWS + COMPANY_AFFILIATE_ROWS - COMPANY_MIN_ROWS + 1},
-        (_, step) => {
-            const affiliateCut = Math.min(COMPANY_AFFILIATE_ROWS - COMPANY_MIN_ROWS, Math.floor(step / 2))
-            const tableCut = Math.min(COMPANY_TABLE_ROWS - COMPANY_MIN_ROWS, step - affiliateCut)
-            return {tableRows: COMPANY_TABLE_ROWS - tableCut, affiliateRows: COMPANY_AFFILIATE_ROWS - affiliateCut}
-        },
-    )
-    // 늘리는 단계 — 번갈아 한 행씩(경영진 · 주주 먼저), 표마다 최대 10행.
-    // 기준이 들어가면 들어가는 가장 큰 단계를, 안 들어가면 들어가는 가장 작은 줄임 단계를 고른다.
-    const growSteps = Array.from(
-        {length: KBIGX_PRINT_LIST_LIMIT - COMPANY_TABLE_ROWS + KBIGX_PRINT_LIST_LIMIT - COMPANY_AFFILIATE_ROWS},
-        (_, index) => {
-            const step = index + 1
-            const affiliateAdd = Math.min(KBIGX_PRINT_LIST_LIMIT - COMPANY_AFFILIATE_ROWS, Math.floor(step / 2))
-            const tableAdd = Math.min(KBIGX_PRINT_LIST_LIMIT - COMPANY_TABLE_ROWS, step - affiliateAdd)
-            return {tableRows: COMPANY_TABLE_ROWS + tableAdd, affiliateRows: COMPANY_AFFILIATE_ROWS + affiliateAdd}
-        },
-    )
-    const {tableRows, affiliateRows} = fits(shrinkSteps[0])
-        ? (growSteps.filter(fits).at(-1) ?? shrinkSteps[0])
-        : (shrinkSteps.find(fits) ?? shrinkSteps[shrinkSteps.length - 1])
-    return {tableRows, affiliateRows}
+    const spareHeight =
+        COMPANY_FIRST_PAGE.budgetBottom -
+        COMPANY_FIRST_PAGE.baseBottom -
+        overviewExtra -
+        COMPANY_FIRST_PAGE.estimateMargin
+    const affiliateRows = COMPANY_AFFILIATE_ROWS + Math.floor(spareHeight / COMPANY_FIRST_PAGE.tableRow)
+    return {
+        affiliateRows: Math.min(KBIGX_PRINT_LIST_LIMIT, Math.max(COMPANY_AFFILIATE_MIN_ROWS, affiliateRows)),
+    }
 }
 
 // 정부 R&D 사업 현황 — 접수중과제 · 접수기간 도래 과제(미확정)가 한 쪽(소제목 위 221 ~ KBX_PAGE_CONTENT_BOTTOM)을 위아래로 나눈다.
@@ -296,7 +302,7 @@ const estimatePatentRowHeight = (
     )
 }
 
-// 특허 보유현황 — 한 쪽 · 10행. 앞에서부터 최대 10건(정렬은 데이터 순서 그대로 — 출원일 최근순으로 받는다), 모자라면
+// 특허보유 현황 — 한 쪽 · 10행. 앞에서부터 최대 10건(정렬은 데이터 순서 그대로 — 출원일 최근순으로 받는다), 모자라면
 // '-' 줄(특허명 한 줄 + 값 한 줄)로 채운다. 10행이 rowsHeight 를 넘으면 들어가는 행까지만 그린다(적어도 1행).
 const PATENT_EMPTY_ROW_HEIGHT =
     PATENT_PAGE.titleRow.padding +
@@ -447,16 +453,16 @@ const SECTION_PAGES: Record<PrintOutputSectionId, (report: InnovationGrowthRepor
         page('briefing-3', 'briefing', '활동성 정보'),
     ],
     company: () => [
-        // 네 블록이 늘 한 쪽 — 개요 값 길이에 따라 표 행 수를 늘리거나 줄인다(getKbigxCompanyFirstPageLayout).
-        page('company-1', 'company', '개요 · 경영진 및 주주현황 · 관계기업 · 특허 및 인증현황'),
+        // 네 블록이 늘 한 쪽 — 개요 값 길이에 따라 관계기업 행 수를 늘리거나 줄인다(getKbigxCompanyFirstPageLayout).
+        page('company-1', 'company', '개요 · 경영진 및 주주 현황 · 관계기업 · 특허 및 인증 현황'),
         page('company-2', 'company', '재무상태 · 손익 · 주요재무비율 · 현금흐름'),
         // 매출처 · 매입처는 늘 한 쪽 · 표마다 10행(최대 10건, 모자라면 '-' 줄).
-        page('company-3', 'company', '거래처현황'),
+        page('company-3', 'company', '거래처 현황'),
     ],
     innovation: () => [
         page('innovation-1', 'innovation', '보유기술'),
-        // 특허 보유현황은 늘 한 쪽 · 10행(getKbigxPatentRows).
-        page('innovation-2', 'innovation', '특허 보유현황'),
+        // 특허보유 현황은 늘 한 쪽 · 10행(getKbigxPatentRows).
+        page('innovation-2', 'innovation', '특허보유 현황'),
         page('innovation-3', 'innovation', '특허기술 분석 · 기업·특허 현황'),
         page('innovation-4', 'innovation', '경쟁기업 및 우수기업'),
         // 우수특허는 늘 한 쪽 · 10행 + 기타(getKbigxExcellentPatentRows).
@@ -592,6 +598,7 @@ export {
     getKbigxPrintToc,
     COMPANY_OVERVIEW_FIT_LABELS,
     COMPANY_OVERVIEW_LABELS,
+    COMPANY_TABLE_ROWS,
     getKbigxCompanyFirstPageLayout,
     isKbigxPrintFrameless,
     KBIGX_PRINT_BRAND,

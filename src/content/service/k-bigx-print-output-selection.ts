@@ -14,7 +14,7 @@ const PRINT_OUTPUT_SELECTION_ALL = '전체선택'
 // 보고서에 넣을 수 있는 구성 항목 — id 는 보고서 화면 주소(?sections=)에 넘길 키다.
 const PRINT_OUTPUT_SELECTION_SECTIONS = [
     {id: 'briefing', label: '진단브리핑'},
-    {id: 'company', label: '기업현황'},
+    {id: 'company', label: '기업 현황'},
     {id: 'innovation', label: '기술혁신정보'},
     {id: 'tech-index', label: 'Tech-Index'},
     {id: 'credit-finance', label: '신용/재무정보'},
