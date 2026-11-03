@@ -33,12 +33,9 @@ type PageProps = {report: InnovationGrowthReport}
 const PRIMARY_LABEL = '신청기업'
 const COMPARISON_LABEL = '전체평균'
 const AVERAGE_COMPANY_LABEL = '전체기업'
-// 값이 없을 때 적는 글자 · 점수가 없을 때 요약 문장.
-const NO_SCORE_TEXT = '평가 점수가 없습니다.'
+// 점수가 없을 때 요약 문장 — 점수는 기술신용평가(TCB)를 바탕으로 내므로 그 이력이 없으면 산출할 수 없다(웹 보고서와 같은 문구).
+const NO_SCORE_TEXT = '기술신용평가(TCB) 이력이 없어 산출 불가합니다.'
 const NO_STANDARD_TEXT = '표준정보 비교 결과가 없습니다.'
-// 장 안내문(descriptions)에서 굵게 적는 말 — 문장에 없으면 그대로 적는다.
-const DESCRIPTION_STRONG_PHRASE = 'AI평가모형 기반의 복합지수'
-
 // 점수가 NaN 등 숫자가 아니면 값 없음 — 그래프는 0 위치에 그리고(toChartScore) 값 글자는 '-'(missingText).
 const formatScore = (value: number) => (isKbxNumber(value) ? kbxFixed1Format.format(value) : KBX_EMPTY_VALUE)
 const toChartScore = (value: number) => (isKbxNumber(value) ? value : 0)
@@ -108,19 +105,6 @@ const LEGEND = (
 
 // ── Tech-Index 1(tech-index-1) — 장 안내문 · 혁신성장역량지수(점수 · 표준정보 비교) · 부문별 지표 비교 ──
 
-// 굵게 적을 말을 찾아 나눈다 — 없으면 그대로.
-const withStrongPhrase = (text: string) => {
-    const index = text.indexOf(DESCRIPTION_STRONG_PHRASE)
-    if (index < 0) return text
-    return (
-        <>
-            {text.slice(0, index)}
-            <b className="text-kbx-foreground font-kbx-bold">{DESCRIPTION_STRONG_PHRASE}</b>
-            {text.slice(index + DESCRIPTION_STRONG_PHRASE.length)}
-        </>
-    )
-}
-
 // 기업명이 든 요약 조각 — 기업명이 길면 기업명만 말줄임하고 나머지 글은 같은 줄에 남긴다(조각은 한 줄).
 const WithTruncatedName = ({text, companyName}: {text: string; companyName: string}) => {
     const index = companyName ? text.indexOf(companyName) : -1
@@ -174,7 +158,7 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
                 {descriptions.map((description, index) => (
                     <Fragment key={description}>
                         {index ? ' ' : null}
-                        {withStrongPhrase(description)}
+                        {description}
                     </Fragment>
                 ))}
             </p>

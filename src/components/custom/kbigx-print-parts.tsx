@@ -278,7 +278,10 @@ const KbxLabelValueGrid = ({
                         key={typeof item.value === 'string' ? item.value : undefined}
                         className={cn(
                             'font-kbx-bold m-0 min-w-0 flex-1',
-                            NAME_VALUE_LABELS.has(item.label) ? 'break-normal wrap-anywhere' : 'break-keep',
+                            // 띄어쓰기 없이 긴 영문 · 숫자(코드 · 주소 등)도 칸 안에서 끊는다(wrap-anywhere).
+                            NAME_VALUE_LABELS.has(item.label)
+                                ? 'break-normal wrap-anywhere'
+                                : 'wrap-anywhere break-keep',
                         )}
                     >
                         {item.value || KBX_EMPTY_VALUE}
@@ -290,20 +293,23 @@ const KbxLabelValueGrid = ({
 )
 
 // 숫자 카드 — 옅은 면에 이름 · 큰 숫자 · 단위.
-//   lg: 기본(진단브리핑 관련 기업 및 특허현황 · 정부 R&D사업 접수현황) · xl: 큰 카드(특허 및 인증현황)
+//   lg: 기본(진단브리핑 관련 기업 및 특허 현황 · 정부 R&D 사업 현황) — 이름 위 · 숫자 아래
+//   xl: 기업 현황 특허 및 인증 현황 건수 카드 — 이름 왼쪽 위 · 숫자 오른쪽 아래(웹 보고서와 같다)
 // 숫자가 길면(예: 9,999,999) 숫자 글자를 단계(values)대로 줄인다 — 숫자 + 단위는 늘 한 줄.
 // 줄이는 판단은 value · unit 이 글자(string)일 때만 한다 — 포맷한 문자열로 넘긴다.
 //   width 는 카드 안쪽 폭(용지 px), unitSize 는 단위 글자 크기(px) — 폭 어림에 쓴다. 카드 폭을 바꾸면 width 도 고친다.
 const STAT_CARD_SIZES = {
-    // xl — 높이 80 고정 · 세로 가운데(기업현황 특허 및 인증현황 건수 카드). 제목 22 · 숫자 40 · 단위 24.
+    // xl — 높이 80 고정. 이름 22(아래 인증 상자 이름과 같은 크기) · 숫자 40 · 단위 24. 이름은 위 12, 숫자는 아래 4 —
+    //   숫자는 줄 높이 1 이라 글자 아래에 여백이 있어, 아래를 적게 둬야 위아래가 비슷해 보인다.
     xl: {
-        box: 'h-20 justify-center gap-0.5 px-6',
+        box: 'h-20 justify-between px-6 pt-3 pb-1',
         label: 'kbx-text-22 leading-kbx-110 font-kbx-semibold',
-        value: 'leading-kbx-100',
+        value: 'leading-kbx-100 self-end',
         values: [
             {className: 'kbx-text-40', size: 40},
             {className: 'kbx-text-34', size: 34},
             {className: 'kbx-text-28', size: 28},
+            {className: 'kbx-text-24', size: 24},
         ],
         unit: 'kbx-text-24 ml-1.5',
         unitSize: 24,
@@ -364,7 +370,12 @@ const KbxStatCard = ({
 }
 
 // 이름 · 값 줄 목록 — 위아래 선, 오른쪽 값. 모든 줄이 남색 굵게(이름 700 · 값 800), 28px(진단브리핑 평균 특허수).
-const KbxKeyValueList = ({rows}: {rows: readonly {key: string; label: ReactNode; value: ReactNode}[]}) => (
+// 단위는 위 수치 카드(KbxStatCard)와 같이 숫자보다 작게 둔다.
+const KbxKeyValueList = ({
+    rows,
+}: {
+    rows: readonly {key: string; label: ReactNode; value: ReactNode; unit?: ReactNode}[]
+}) => (
     <dl className="border-kbx-border kbx-border-t-regular kbx-text-28 text-kbx-primary flex flex-col">
         {rows.map((row) => (
             <div
@@ -372,7 +383,10 @@ const KbxKeyValueList = ({rows}: {rows: readonly {key: string; label: ReactNode;
                 className="border-kbx-border kbx-border-b-regular py-kbx-9 flex items-baseline justify-between"
             >
                 <dt className="font-kbx-bold">{row.label}</dt>
-                <dd className="font-kbx-extrabold m-0 tabular-nums">{row.value}</dd>
+                <dd className="font-kbx-extrabold m-0 tabular-nums">
+                    {row.value}
+                    {row.unit ? <span className={cn('font-kbx-bold', STAT_CARD_SIZES.lg.unit)}>{row.unit}</span> : null}
+                </dd>
             </div>
         ))}
     </dl>
@@ -433,7 +447,7 @@ const KbxNote = ({children}: {children: ReactNode}) => (
 )
 
 // 분류 비중 차트(원형 · 도넛)의 조각 색 — 큰 분류부터 진한 남색 → 옅은 파랑, '기타'는 회색. 7개를 넘으면 처음 색부터 되풀이.
-// 진단브리핑 기업 보유기술 · 기술혁신정보 기술 보유현황이 같이 쓴다. 색 값(CSS 변수)이라 SVG fill 에 넘긴다.
+// 진단브리핑 기업 보유기술 · 기술혁신정보 기술보유 현황이 같이 쓴다. 색 값(CSS 변수)이라 SVG fill 에 넘긴다.
 // 색은 받은 순서(index)대로 매긴다 — 여기서 정렬하지 않는다.
 const KBX_CATEGORY_COLORS = [
     'var(--kbx-color-navy-deep)',
@@ -554,8 +568,8 @@ type KbxTableColumn = {
     headerClassName?: string
     /** 좁은 열 — 좌우 여백을 표 밀도와 관계없이 4 로(이머징 기술 기간 · 합계 칸). */
     isNarrow?: boolean
-    /** 머리 칸 왼쪽 세로 구분선 — 두 묶음이 나란한 표에서 둘째 묶음 첫 열에(R&D 전문기관 현황). 값 칸에는 긋지 않는다. */
-    hasHeaderDivider?: boolean
+    /** 칸 왼쪽 세로 구분선(머리 · 값 칸 모두) — 두 묶음이 나란한 표에서 둘째 묶음 첫 열에(R&D 전문기관 현황). */
+    hasDivider?: boolean
 }
 
 type KbxTableRow = {
@@ -622,7 +636,7 @@ const KbxTable = ({
     const cellPadding = (column?: KbxTableColumn) => (column?.isNarrow ? 'px-1' : paddingX)
     const cellClassName = cn('text-center', paddingY, density === 'stacked' && 'leading-kbx-145')
     const headClassName = 'bg-kbx-surface border-kbx-border kbx-border-b-regular font-kbx-bold'
-    const headerDivider = (column: KbxTableColumn) => column.hasHeaderDivider && 'kbx-border-l-hairline'
+    const divider = (column?: KbxTableColumn) => column?.hasDivider && 'kbx-border-l-hairline'
     const hasGroup = columns.some((column) => column.group)
 
     return (
@@ -654,7 +668,7 @@ const KbxTable = ({
                                                 cellClassName,
                                                 cellPadding(column),
                                                 headClassName,
-                                                headerDivider(column),
+                                                divider(column),
                                                 column.className,
                                                 column.headerClassName,
                                             )}
@@ -671,7 +685,7 @@ const KbxTable = ({
                                         key={`group-${column.key}`}
                                         scope="colgroup"
                                         colSpan={span < 0 ? columns.length - index : span}
-                                        className={cn(cellClassName, paddingX, headClassName, headerDivider(column))}
+                                        className={cn(cellClassName, paddingX, headClassName, divider(column))}
                                     >
                                         {column.group}
                                     </th>
@@ -690,7 +704,7 @@ const KbxTable = ({
                                             cellClassName,
                                             cellPadding(column),
                                             headClassName,
-                                            headerDivider(column),
+                                            divider(column),
                                             'bg-kbx-surface-subtle',
                                             column.className,
                                             column.headerClassName,
@@ -733,6 +747,7 @@ const KbxTable = ({
                                 column?.isRowHeader || row.isTotal ? 'font-kbx-bold' : 'font-kbx-regular',
                                 row.isTotal && 'border-t-kbx-foreground kbx-border-t-regular',
                                 column?.align === 'start' && 'pl-6 text-left',
+                                divider(column),
                             )
 
                             return column?.isRowHeader ? (
@@ -791,7 +806,8 @@ const KbxSalesBarList = ({items}: {items: readonly {label: string; value: number
                             isLatest ? 'text-kbx-primary font-kbx-extrabold' : 'font-kbx-bold',
                         )}
                     >
-                        <span className="w-35 shrink-0">{item.label}</span>
+                        {/* 연도 칸 — 폭 140 안에서 가운데 정렬. */}
+                        <span className="w-35 shrink-0 text-center">{item.label}</span>
                         <span aria-hidden="true" className="bg-kbx-surface h-11 min-w-0 flex-1">
                             <span
                                 className="bg-kbx-blue block h-full"
@@ -841,7 +857,7 @@ type KbxStairTableProps = {
     emptyText?: string
 }
 
-// 2단 계단식 표(특허 보유현황 · 우수특허) — 항목마다 1행(이름, 열 전체 병합) · 2행(들여쓰기 빈칸 + 세부 값).
+// 2단 계단식 표(특허보유 현황 · 우수특허) — 항목마다 1행(이름, 열 전체 병합) · 2행(들여쓰기 빈칸 + 세부 값).
 // 항목 하나가 tbody 하나 — 이름 칸이 그 묶음의 행 머리(scope="rowgroup")다[7.3.2].
 // [주의] 칸 여백 · 글자 크기 · 행간 · 선 두께를 바꾸면 행 높이 어림값(k-bigx-print-report.ts 의 PATENT_PAGE ·
 // EXCELLENT_PATENT_PAGE)도 같이 고친다 — 안 고치면 쪽이 넘칠 수 있다.

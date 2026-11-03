@@ -25,10 +25,12 @@ import {
 import {
     COMPANY_OVERVIEW_FIT_LABELS,
     COMPANY_OVERVIEW_LABELS,
+    COMPANY_TABLE_ROWS,
     getKbigxCompanyFirstPageLayout,
     KBIGX_PRINT_LIST_LIMIT,
     type KbigxCompanyFirstPageLayout,
 } from '@/content/service/k-bigx-print-report'
+import {estimateTextEm} from '@/content/service/k-bigx-print-measure'
 import {cn} from '@/lib/utils'
 import {
     formatKbxNumber,
@@ -38,10 +40,10 @@ import {
     kbxNumberFormat,
 } from '@/components/custom/kbigx-print-format'
 
-// K-BIGx 보고서 인쇄본 — 기업현황 장(쪽 id company-1 · company-2 · company-3, kbigx-print-document.tsx 에서 연결).
+// K-BIGx 보고서 인쇄본 — 기업 현황 장(쪽 id company-1 · company-2 · company-3, kbigx-print-document.tsx 에서 연결).
 // 데이터는 화면 보고서와 같은 InnovationGrowthReport.companyStatus 를 그대로 읽는다.
 // 표는 쪽마다 정해진 행 수만 그린다 — 데이터가 많으면 앞에서부터 자르고(나머지는 웹 화면), 모자라면 '-' 줄로 채운다.
-// 첫 쪽 표 행 수는 k-bigx-print-report.ts 의 높이 어림(getKbigxCompanyFirstPageLayout)이 정하고, 거래처는 늘 10행이다.
+// 첫 쪽의 경영진 · 주주는 늘 5행(COMPANY_TABLE_ROWS), 관계기업은 높이 어림(getKbigxCompanyFirstPageLayout)이 정하고, 거래처는 늘 10행이다.
 const COUNT_UNIT = '건'
 const CERTIFIED_LABEL = '인증'
 const NOT_CERTIFIED_LABEL = '미인증'
@@ -80,6 +82,26 @@ const SHAREHOLDER_COLUMNS = [
 // 행 높이가 늘 한 줄이어야 행 수 어림(k-bigx-print-report.ts 의 COMPANY_FIRST_PAGE.tableRow 43.5)이 맞는다.
 const OneLine = ({text}: {text: string}) => <div className="truncate">{text || KBX_EMPTY_VALUE}</div>
 
+// 표 금액 칸 — 칸 폭에 안 들어가는 큰 수는 글자를 한 단계씩 줄인다(estimateTextEm 어림, 최소 12). 가장 작게도
+// 넘치면 그 크기로 한 줄에 둔다 — 줄을 바꾸지 않아 행 높이(쪽 높이 어림)가 늘 같다.
+// 폭은 칸 너비 − 좌우 여백(dense 28 · snug 16). [주의] 표의 열 너비(w-*)를 바꾸면 같이 고친다.
+const AMOUNT_CELL_WIDTH = {shares: 159, totalAssets: 122, sales: 102} as const
+// 재무 표(snug, 글자 18) 연도 칸 — 구분 열이 1/4 · 2/5 · 1/2 일 때(연도 3개).
+const FINANCE_VALUE_WIDTH = {quarter: 123, twoFifths: 95, half: 77} as const
+const AMOUNT_FIT_STEPS = [
+    {className: 'kbx-text-20', size: 20},
+    {className: 'kbx-text-18', size: 18},
+    {className: 'kbx-text-16', size: 16},
+    {className: 'kbx-text-14', size: 14},
+    {className: 'kbx-text-12', size: 12},
+] as const
+const FitAmount = ({text, width, maxSize = 20}: {text: string; width: number; maxSize?: number}) => {
+    const em = estimateTextEm(text)
+    const steps = AMOUNT_FIT_STEPS.filter((item) => item.size <= maxSize)
+    const step = steps.find((item) => em * item.size <= width) ?? steps[steps.length - 1]
+    return <span className={cn(step.className, 'whitespace-nowrap')}>{text}</span>
+}
+
 const AFFILIATE_COLUMNS = [
     {key: 'name', header: '기업명', isRowHeader: true, className: 'w-60'},
     {key: 'ceo', header: '대표자', className: 'w-30'},
@@ -91,7 +113,7 @@ const AFFILIATE_COLUMNS = [
 
 // 인증 카드 — 높이 80(h-20). 테두리 색은 인증 여부에 따라 사용처에서 붙인다.
 const CERT_BOX_CLASS = 'kbx-border-regular flex h-20 items-center justify-between px-6'
-// 특허 및 인증현황 — 건수 4칸 · 인증 4칸 고정. 받은 목록에서 같은 id 로 찾고, 없거나 값이 없으면
+// 특허 및 인증 현황 — 건수 4칸 · 인증 4칸 고정. 받은 목록에서 같은 id 로 찾고, 없거나 값이 없으면
 // 건수 칸은 라벨 아래 '-'(단위 없음), 인증 칸은 상자 안에 '-' 만 적는다(인증 · 미인증 대신).
 const IP_ITEMS = [
     {id: 'patent', label: '특허'},
@@ -106,7 +128,7 @@ const CERTIFICATION_ITEMS = [
     {id: 'research-lab', label: '연구소'},
 ] as const
 
-// 관계기업 현황 · 특허 및 인증현황 — 기업현황 첫 쪽(company-1) 아래 두 블록.
+// 관계기업 현황 · 특허 및 인증 현황 — 기업 현황 첫 쪽(company-1) 아래 두 블록.
 const CompanyAffiliateBlocks = ({
     status,
     affiliateRows,
@@ -126,16 +148,24 @@ const CompanyAffiliateBlocks = ({
                         <OneLine key="name" text={affiliate.name} />,
                         <OneLine key="ceo" text={affiliate.ceo} />,
                         <OneLine key="industry" text={affiliate.industry} />,
-                        affiliate.fiscalYear || KBX_EMPTY_VALUE,
-                        formatKbxNumber(affiliate.totalAssets),
-                        formatKbxNumber(affiliate.sales),
+                        <OneLine key="year" text={affiliate.fiscalYear} />,
+                        <FitAmount
+                            key="assets"
+                            text={formatKbxNumber(affiliate.totalAssets)}
+                            width={AMOUNT_CELL_WIDTH.totalAssets}
+                        />,
+                        <FitAmount
+                            key="sales"
+                            text={formatKbxNumber(affiliate.sales)}
+                            width={AMOUNT_CELL_WIDTH.sales}
+                        />,
                     ],
                     AFFILIATE_COLUMNS.length,
                     affiliateRows,
                 )}
             />
         </KbxBlock>
-        <KbxBlock title="특허 및 인증현황">
+        <KbxBlock title="특허 및 인증 현황">
             {/* 건수 카드 · 인증 카드 각 4칸. 카드 높이(80)는 첫 쪽 높이 어림(COMPANY_FIRST_PAGE.baseBottom)에 포함돼 있다. */}
             <div className="flex flex-col gap-4">
                 <div className="gap-kbx-14 grid grid-cols-4">
@@ -167,7 +197,8 @@ const CompanyAffiliateBlocks = ({
                             >
                                 <span
                                     className={cn(
-                                        'kbx-text-26 font-kbx-bold',
+                                        // 이름은 위 건수 카드 이름과 같은 22.
+                                        'kbx-text-22 font-kbx-bold',
                                         !isCertified && 'text-kbx-foreground-subtle',
                                     )}
                                 >
@@ -197,9 +228,9 @@ const CompanyAffiliateBlocks = ({
     </>
 )
 
-// ── 기업현황 1(company-1) — 개요 · 경영진 및 주주현황 · 관계기업 현황 · 특허 및 인증현황 ──
-// 네 블록이 늘 한 쪽에 들어가도록 이 쪽만 블록 사이가 40(다른 쪽은 80)이다. 표 행 수는 개요 길이에 따라
-// getKbigxCompanyFirstPageLayout 이 늘리거나 줄인다(표마다 1~10행).
+// ── 기업 현황 1(company-1) — 개요 · 경영진 및 주주 현황 · 관계기업 현황 · 특허 및 인증 현황 ──
+// 네 블록이 늘 한 쪽에 들어가도록 이 쪽만 블록 사이가 40(다른 쪽은 80)이다. 경영진 · 주주는 늘 5행이고, 관계기업 행 수는
+// 개요 길이에 따라 getKbigxCompanyFirstPageLayout 이 늘리거나 줄인다(1~10행).
 const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) => {
     const status = report.companyStatus
     const layout = getKbigxCompanyFirstPageLayout(report)
@@ -218,7 +249,7 @@ const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) =
                     }))}
                 />
             </KbxBlock>
-            <KbxBlock title="경영진 및 주주현황">
+            <KbxBlock title="경영진 및 주주 현황">
                 {/* 경영진 · 주주 두 표를 2 : 3 폭으로 나란히 — 두 표는 늘 같은 행 수라 아랫선이 맞는다. */}
                 <div className="flex gap-x-14">
                     <KbxSubBlock title="경영진 현황" className="grow-2 basis-0">
@@ -232,10 +263,10 @@ const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) =
                                 (executive) => [
                                     <OneLine key="role" text={executive.role} />,
                                     <OneLine key="name" text={executive.name} />,
-                                    executive.birthDate || KBX_EMPTY_VALUE,
+                                    <OneLine key="birth" text={executive.birthDate} />,
                                 ],
                                 EXECUTIVE_COLUMNS.length,
-                                layout.tableRows,
+                                COMPANY_TABLE_ROWS,
                             )}
                         />
                     </KbxSubBlock>
@@ -249,12 +280,16 @@ const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) =
                                 status.shareholders,
                                 (shareholder) => [
                                     <OneLine key="name" text={shareholder.name} />,
-                                    formatKbxNumber(shareholder.shares),
+                                    <FitAmount
+                                        key="shares"
+                                        text={formatKbxNumber(shareholder.shares)}
+                                        width={AMOUNT_CELL_WIDTH.shares}
+                                    />,
                                     formatKbxNumber(shareholder.ratio, kbxFixed2Format),
                                     <OneLine key="relation" text={shareholder.relation} />,
                                 ],
                                 SHAREHOLDER_COLUMNS.length,
-                                layout.tableRows,
+                                COMPANY_TABLE_ROWS,
                             )}
                         />
                     </KbxSubBlock>
@@ -265,7 +300,7 @@ const KbigxPrintCompanyOverview = ({report}: {report: InnovationGrowthReport}) =
     )
 }
 
-// ── 기업현황 2(company-2) — 재무현황(재무상태 · 손익 · 주요재무비율 · 현금흐름) ──
+// ── 기업 현황 2(company-2) — 재무 현황(재무상태 · 손익 · 주요재무비율 · 현금흐름) ──
 // 2 × 2 칸. 칸 안은 소제목 → 표 → 그래프(겹친 막대는 범례가 위, 꺾은선은 범례가 아래).
 
 // 재무 표의 구분 — 행 이름 · 순서 고정(FINANCE_ROW_LABELS · 웹 보고서와 공용). 값은 finance.<표>[].key 로 찾고, 없는 구분 · 연도 칸은 '-'(0 은 0).
@@ -278,6 +313,7 @@ const financeTableProps = (
     rows: readonly InnovationFinanceRow[],
     format: (value: number) => string,
     labelClassName: string,
+    valueWidth: number,
 ) => ({
     density: 'snug' as const,
     columns: [
@@ -298,7 +334,11 @@ const financeTableProps = (
                 ...(years.length
                     ? years.map((_, index) => {
                           const value = values?.[index]
-                          return isKbxNumber(value) ? format(value) : KBX_EMPTY_VALUE
+                          return isKbxNumber(value) ? (
+                              <FitAmount key={index} text={format(value)} width={valueWidth} maxSize={18} />
+                          ) : (
+                              KBX_EMPTY_VALUE
+                          )
                       })
                     : Array<string>(INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT).fill(KBX_EMPTY_VALUE)),
             ],
@@ -365,7 +405,10 @@ const NestedFinance = ({
     return (
         <KbxSubBlock title={title}>
             <KbxUnitBelow unit="단위: 백만원">
-                <KbxTable caption={title} {...financeTableProps(years, labels, rows, formatKbxNumber, 'w-1/4')} />
+                <KbxTable
+                    caption={title}
+                    {...financeTableProps(years, labels, rows, formatKbxNumber, 'w-1/4', FINANCE_VALUE_WIDTH.quarter)}
+                />
             </KbxUnitBelow>
             {rows.length && base ? (
                 <>
@@ -414,6 +457,7 @@ const MarkerFinance = ({
     rows,
     format,
     labelClassName,
+    valueWidth,
     ariaLabel,
 }: {
     title: string
@@ -423,6 +467,8 @@ const MarkerFinance = ({
     rows: readonly InnovationFinanceRow[]
     format: (value: number) => string
     labelClassName: string
+    /** 연도 칸 글자 폭(px) — 큰 수는 이 폭에 맞춰 글자를 줄인다. */
+    valueWidth: number
     ariaLabel: string
 }) => {
     const series = rows.map((row, index) => ({
@@ -434,7 +480,10 @@ const MarkerFinance = ({
     return (
         <KbxSubBlock title={title}>
             <KbxUnitBelow unit={unit}>
-                <KbxTable caption={title} {...financeTableProps(years, labels, rows, format, labelClassName)} />
+                <KbxTable
+                    caption={title}
+                    {...financeTableProps(years, labels, rows, format, labelClassName, valueWidth)}
+                />
             </KbxUnitBelow>
             <KbxChartBox isEmpty={!hasFinanceValues(rows)} emptyClassName="h-75">
                 <MarkerLineChart
@@ -458,7 +507,7 @@ const KbigxPrintCompanyFinance = ({report}: {report: InnovationGrowthReport}) =>
     const {finance} = report.companyStatus
 
     return (
-        <KbxBlock title="재무현황">
+        <KbxBlock title="재무 현황">
             <div className="grid grid-cols-2 items-start gap-x-14 gap-y-10">
                 <NestedFinance
                     title="재무상태"
@@ -468,11 +517,11 @@ const KbigxPrintCompanyFinance = ({report}: {report: InnovationGrowthReport}) =>
                     ariaLabel="연도별 재무상태 — 총자산 안의 부채총계 · 자본총계"
                 />
                 <NestedFinance
-                    title="손익현황"
+                    title="손익 현황"
                     years={finance.years}
                     labels={FINANCE_ROW_LABELS.income}
                     rows={finance.income}
-                    ariaLabel="연도별 손익현황 — 매출액 안의 영업이익 · 당기순이익"
+                    ariaLabel="연도별 손익 현황 — 매출액 안의 영업이익 · 당기순이익"
                 />
                 <MarkerFinance
                     title="주요재무비율"
@@ -482,6 +531,7 @@ const KbigxPrintCompanyFinance = ({report}: {report: InnovationGrowthReport}) =>
                     rows={finance.ratios}
                     format={(value) => kbxFixed2Format.format(value)}
                     labelClassName="w-2/5"
+                    valueWidth={FINANCE_VALUE_WIDTH.twoFifths}
                     ariaLabel="연도별 주요재무비율 추이"
                 />
                 <MarkerFinance
@@ -492,6 +542,7 @@ const KbigxPrintCompanyFinance = ({report}: {report: InnovationGrowthReport}) =>
                     rows={finance.cashFlows}
                     format={(value) => kbxNumberFormat.format(value)}
                     labelClassName="w-1/2"
+                    valueWidth={FINANCE_VALUE_WIDTH.half}
                     ariaLabel="연도별 현금흐름 추이"
                 />
             </div>
@@ -499,9 +550,9 @@ const KbigxPrintCompanyFinance = ({report}: {report: InnovationGrowthReport}) =>
     )
 }
 
-// ── 기업현황 3(company-3) — 거래처현황(매출처 · 매입처) ──
+// ── 기업 현황 3(company-3) — 거래처 현황(매출처 · 매입처) ──
 // 늘 한 쪽 — 매출처 · 매입처가 본문을 반씩 나눈다(사이 40, 바닥글 선과 40). 표마다 10행(최대 10건, 모자라면 '-' 줄).
-// 기업명은 한 줄 말줄임이라 행 높이(49)가 늘 같아 10행 × 2 가 한 쪽에 들어간다.
+// 기업명 · 신용등급 · 평가일자는 한 줄 말줄임이라 행 높이(49)가 늘 같아 10행 × 2 가 한 쪽에 들어간다.
 // [주의] 행 여백(KbxTable density="list") · 머리 · 소제목을 키우면 넘칠 수 있다 — 넘침 표시(빨간 점선)로 확인한다.
 
 const tradeTableProps = (
@@ -530,8 +581,8 @@ const tradeTableProps = (
                     const share = partner.shares[yearIndex]
                     return formatKbxNumber(share, kbxFixed2Format)
                 }),
-                partner.grade || KBX_EMPTY_VALUE,
-                partner.evaluationDate || KBX_EMPTY_VALUE,
+                <OneLine key="grade" text={partner.grade} />,
+                <OneLine key="date" text={partner.evaluationDate} />,
             ],
             columns.length,
             rowCount,
@@ -543,7 +594,7 @@ const KbigxPrintCompanyTrade = ({report}: {report: InnovationGrowthReport}) => {
     const {finance, customers, suppliers} = report.companyStatus
 
     return (
-        <KbxBlock title="거래처현황" className="flex-1 pb-10">
+        <KbxBlock title="거래처 현황" className="flex-1 pb-10">
             <div className="flex min-h-0 flex-1 flex-col gap-y-10">
                 <div className="flex min-h-0 flex-1 flex-col">
                     <KbxSubBlock title="매출처" className="min-h-0 flex-1">

@@ -30,13 +30,15 @@ import {
     RATIO_GROUP_SPECS,
     type RatioGroupSpec,
     INNOVATION_CREDIT_VISIBILITY,
+    applyCreditInfoVisibility,
+    CREDIT_INFO_HIDDEN_TEXT,
     isSameYear,
     type InnovationGrowthReport,
     INNOVATION_REPORT_GRADE_HISTORY_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 import type {KbigxPrintPage} from '@/content/service/k-bigx-print-report'
 import {cn} from '@/lib/utils'
-import {PRIVATE_PLACEHOLDER, PRIVATE_SHORT_LABEL} from '@/components/composite/private-content'
+import {PRIVATE_PLACEHOLDER} from '@/components/composite/private-content'
 import {
     isKbxNumber,
     KBX_EMPTY_VALUE,
@@ -194,7 +196,7 @@ const GradeHistory = ({
     </KbxSubBlock>
 )
 
-// ── 신용/재무정보 1 — 기업신용등급(등급 · 정의 · 이전평가이력) · 현금흐름등급(등급 · 정의 · 평가이력) ──
+// ── 신용/재무정보 1 — 기업신용등급(등급 · 정의 · 평가이력) · 현금흐름등급(등급 · 정의 · 평가이력) ──
 
 const KbigxPrintCreditRating = ({report}: PageProps) => {
     const {rating} = report.creditFinance
@@ -202,7 +204,7 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
     const criGrade = findCriGrade(rating.grade)
     // 알약 색 — 등급 단계(9단계)별 KBX_CREDIT_TAG_CLASS. 표에 없는 코드는 GradePill 기본(남색 테두리).
     const band = getCriGradeBand(rating.grade)
-    // 이력은 받은 순서와 관계없이 날짜로 정렬해 최근 3건만 쓴다(이전평가이력은 지금 등급 포함).
+    // 이력은 받은 순서와 관계없이 날짜로 정렬해 최근 3건만 쓴다(기업신용등급 평가이력은 지금 등급 포함).
     const previousRatings = [...ratingHistory].sort(byLatestDate).slice(0, INNOVATION_REPORT_GRADE_HISTORY_COUNT)
     const cashFlowHistory = [...cashFlow.history].sort(byLatestDate).slice(0, INNOVATION_REPORT_GRADE_HISTORY_COUNT)
     const cashFlowGrade = findCashFlowGrade(cashFlow.grade)
@@ -221,7 +223,7 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
                     <GradeDetails details={rating.details} labels={RATING_DETAIL_LABELS} />
                 </GradeHeader>
                 <GradeHistory
-                    title="이전평가이력"
+                    title="평가이력"
                     gradeHeader="신용등급"
                     // 높낮이(rank) — 등급별 게이지 비율(criGradePercentage). 표에 없는 코드는 맨 아래(0).
                     chart={[...previousRatings].reverse().map((item) => {
@@ -272,9 +274,9 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
 // ── 신용/재무정보 2 — 기업신용정보(표 여섯) ──
 
 // 표 하나 — 제목 + 상태 알약 → 표(값 한 줄). 웹 보고서(innovation-growth-report-credit.tsx CreditInfoTable)와 같은 규칙.
-//   · 비공개 표(열람 케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '비공개' 한 줄('해당사항 없음' 줄과 같은 모양),
-//     상태 알약은 뺀다(알약으로 내용을 짐작할 수 없게). 상태 값이 비어 있어도 알약을 뺀다.
-//   · 상태가 '해당없음' 인 표: 비공개 케이스여도 알약 + '해당사항 없음' 줄을 그대로 보인다.
+//   · 가린 표(열람 케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '열람불가(제공 대상 외 정보)' 한 줄('해당사항 없음'
+//     줄과 같은 모양), 상태 알약은 뺀다(알약으로 내용을 짐작할 수 없게). 받은 상태가 '해당없음' 이어도 가린다.
+//   · 상태가 '해당없음' 인 표(가리지 않은 표 · 개인 열람의 법인등기정보): 알약 + '해당사항 없음' 줄.
 // [주의] 제목 줄 · 간격을 바꾸면 k-bigx-print-report.ts 의 CREDIT_INFO_PAGE.blockHeight 도 고친다.
 // 숫자 값(금액 1,200,000 · 일자 2023-11-06 · 번호 123-45-67890) — 말줄임하지 않고 다 보인다(웹 보고서와 같다).
 const CREDIT_NUMBER_VALUE = /^[-+]?\d[\d,.-]*$/
@@ -300,8 +302,8 @@ const CreditInfoBlock = ({
     table: InnovationGrowthReport['creditDetail']['creditInfo'][number]
     visibility: (typeof INNOVATION_CREDIT_VISIBILITY)[keyof typeof INNOVATION_CREDIT_VISIBILITY]
 }) => {
-    const isNone = table.status === CREDIT_STATUS_NONE
-    const isRowPrivate = !isNone && visibility.hiddenInfoTables.includes(table.id)
+    const isRowPrivate = visibility.hiddenInfoTables.includes(table.id)
+    const isNone = !isRowPrivate && table.status === CREDIT_STATUS_NONE
     const columns = table.columns.map((column, index) => ({
         key: `${table.id}-${index}`,
         header: column,
@@ -320,10 +322,10 @@ const CreditInfoBlock = ({
                 )}
             </div>
             <KbxTable
-                caption={`${table.title} — ${isRowPrivate ? PRIVATE_SHORT_LABEL : table.status}`}
+                caption={`${table.title} — ${isRowPrivate ? CREDIT_INFO_HIDDEN_TEXT : table.status}`}
                 columns={columns}
-                emptyText={isRowPrivate ? PRIVATE_SHORT_LABEL : KBX_NOT_APPLICABLE_TEXT}
-                // 빈 칸('해당사항 없음' · '비공개') — 옅은 면 · 옅은 글자 · 굵게(행 머리 칸과 같은 굵기).
+                emptyText={isRowPrivate ? CREDIT_INFO_HIDDEN_TEXT : KBX_NOT_APPLICABLE_TEXT}
+                // 빈 칸('해당사항 없음' · '열람불가') — 옅은 면 · 옅은 글자 · 굵게(행 머리 칸과 같은 굵기).
                 emptyClassName="bg-kbx-surface-subtle font-kbx-bold py-kbx-10"
                 rows={
                     isRowPrivate || isNone
@@ -352,7 +354,10 @@ const CreditInfoBlock = ({
 // 넘치면 k-bigx-print-report.ts 가 '(계속)' 쪽을 붙이고 page.range 를 넘기므로, 이 쪽은 그 범위의 표만 그린다.
 const KbigxPrintCreditInfo = ({report, page}: PageProps & {page: KbigxPrintPage}) => {
     const visibility = INNOVATION_CREDIT_VISIBILITY[report.viewerCase]
-    const tables = report.creditDetail.creditInfo.slice(page.range?.start ?? 0, page.range?.end)
+    // 케이스의 noneInfoTables(개인 열람의 법인등기정보)는 받은 값과 관계없이 '해당없음' 으로 그린다(웹 보고서와 같다).
+    const tables = report.creditDetail.creditInfo
+        .slice(page.range?.start ?? 0, page.range?.end)
+        .map((table) => applyCreditInfoVisibility(table, visibility))
 
     return (
         <KbxBlock title="기업신용정보">
@@ -454,7 +459,8 @@ const RatioGroup = ({
                     }))}
                 />
             </KbxUnitBelow>
-            <div className="flex flex-col gap-2.5">
+            {/* 표와 꺾은선 사이 40(블록 안 간격 16 + mt-6) — 묶음 사이 간격과 같다. 쪽마다 두 묶음이라 쪽 높이가 48 는다. */}
+            <div className="mt-6 flex flex-col gap-2.5">
                 <KbxChartBox isEmpty={!series.length} emptyClassName="h-75">
                     <>
                         <MarkerLineChart
@@ -507,7 +513,7 @@ const KbigxPrintCreditRatiosSecond = ({report}: PageProps) => (
     <RatioPage report={report} groupStart={RATIO_GROUPS_PER_PAGE} />
 )
 
-// ── 신용/재무정보 5 — 차입금 분석(변동률 그래프 · 차입금 현황 표 · 차입금 변동현황 표) ──
+// ── 신용/재무정보 5 — 차입금 분석(변동률 그래프 · 차입금 현황 표 · 차입금 변동 현황 표) ──
 
 const BORROWING_TREND_COLORS = {
     grid: 'var(--kbx-color-chart-grid)',
@@ -635,16 +641,16 @@ const BorrowingTable = ({
     )
 }
 
-// 차입금 변동현황 줄 — BORROWING_CHANGE_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용) 4줄 고정. 없는 줄 · 연도는 '-'.
+// 차입금 변동 현황 줄 — BORROWING_CHANGE_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용) 4줄 고정. 없는 줄 · 연도는 '-'.
 
-// 차입금 분석 쪽 — 변동률(그래프) → 차입금 현황(표) → 차입금 변동현황(표). 소블록 사이 40.
+// 차입금 분석 쪽 — 변동률(그래프) → 차입금 현황(표) → 차입금 변동 현황(표). 소블록 사이 40.
 const KbigxPrintCreditBorrowing = ({report}: PageProps) => {
     const {borrowingTrend, borrowings, borrowingChanges} = report.creditDetail
     // 차입금 현황 연도 — 받은 연도 그대로. 하나도 없으면 재무현황 최근 3개년(칸은 '-').
     const borrowingYears = borrowings.years.length
         ? borrowings.years
         : getRecentYears([], report.companyStatus.finance.years)
-    // 변동현황 연도 — 최근 3개년 고정. 받은 연도가 없으면 차입금 현황 연도를 쓴다.
+    // 변동 현황 연도 — 최근 3개년 고정. 받은 연도가 없으면 차입금 현황 연도를 쓴다.
     const changeYears = getRecentYears(borrowingChanges.years, borrowingYears)
 
     return (
@@ -672,9 +678,9 @@ const KbigxPrintCreditBorrowing = ({report}: PageProps) => {
                 </KbxUnitBelow>
             </KbxSubBlock>
             {/* 단위는 줄 이름에 들어 있어(차입금(백만원) 등) 소제목 단위가 없다. */}
-            <KbxSubBlock title="차입금 변동현황" className="mt-2">
+            <KbxSubBlock title="차입금 변동 현황" className="mt-2">
                 <KbxTable
-                    caption="차입금 변동현황"
+                    caption="차입금 변동 현황"
                     columns={[
                         {key: 'label', header: '구분', isRowHeader: true, className: 'w-1/4'},
                         ...changeYears.map((year) => ({key: year, header: year})),
@@ -724,10 +730,6 @@ const PERCENT = 100
 const INSTITUTION_LABEL_WIDTH = 196
 const shareFormat = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 
-// 도넛 아래 '{연도} 기준' 글. year 가 없으면 그리지 않는다.
-const BaseYearCaption = ({year}: {year?: string}) =>
-    year ? <p className="kbx-text-18 text-kbx-foreground-subtle text-center">{year} 기준</p> : null
-
 // 기관별 비중 표 줄 — INSTITUTION_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용) 업권 5개 고정. 없는 업권 · 연도는 '-'.
 // 표는 institutions.rows(연도별), 도넛은 institutions.share(최근 연도)로 따로 받는다.
 
@@ -738,7 +740,7 @@ const InstitutionShare = ({
     institutions: InnovationGrowthReport['creditDetail']['institutions']
     years: readonly string[]
 }) => (
-    // 표(3fr) · 도넛 + 범례 + 기준 연도(2fr) — 사이 48, 세로 가운데. 비율을 바꾸면 INSTITUTION_LABEL_WIDTH ·
+    // 표(3fr) · 도넛 + 범례(2fr) — 사이 48, 세로 가운데. 비율을 바꾸면 INSTITUTION_LABEL_WIDTH ·
     // 소제목 headerClassName 도 고친다.
     <div className="grid grid-cols-[3fr_2fr] items-center gap-12">
         <KbxTable
@@ -787,8 +789,6 @@ const InstitutionShare = ({
                 labelClassName="flex-none"
                 swatchClassName="size-3"
             />
-            {/* 기준 연도는 표의 마지막(최근) 연도. 도넛이 빈 상태면 적지 않는다. */}
-            <BaseYearCaption year={institutions.share.length ? years.at(-1) : undefined} />
         </div>
     </div>
 )
@@ -879,16 +879,10 @@ const CreditCollateral = ({
     )
 }
 
-// 담보 현황 — 도넛 + 기준 연도(왼쪽 반) · 단위 + 목록(오른쪽 반). 사이 56.
+// 담보 현황 — 도넛(왼쪽 반 가운데 — donutBoxClassName) · 단위 + 목록(오른쪽 반). 사이 56.
 const COLLATERAL_UNIT = '단위: 백만원'
 // 담보 종류 3개 고정 — COLLATERAL_LABELS(k-bigx-innovation-report.ts, 웹 보고서와 공용).
-const Collaterals = ({
-    collaterals,
-    year,
-}: {
-    collaterals: InnovationGrowthReport['creditDetail']['collaterals']
-    year: string
-}) => {
+const Collaterals = ({collaterals}: {collaterals: InnovationGrowthReport['creditDetail']['collaterals']}) => {
     // 받지 못한 종류는 목록에 '-'(0 은 0% · 0). 비중은 세 금액 합 대비로 계산한다. 하나도 없으면 빈 상태.
     const items = COLLATERAL_LABELS.map((label) => ({
         label,
@@ -921,9 +915,7 @@ const Collaterals = ({
             emptyClassName={cn(KBX_CHART_EMPTY_CLASS, 'h-75')}
             ring={COLLATERAL_RING}
             gapColor="var(--kbx-color-paper)"
-            donutCaption={`${year} 기준`}
-            donutBoxClassName="w-1/2 pr-7 gap-2.5"
-            captionClassName="kbx-text-18 text-kbx-foreground-subtle"
+            donutBoxClassName="w-1/2 pr-7"
             className="items-center gap-7"
             // 단위는 목록 바로 위 오른쪽 끝 — 단위 · 목록 묶음이 도넛 높이의 세로 가운데에 온다.
             listHeader={
@@ -947,7 +939,7 @@ const Collaterals = ({
 // 이름은 인쇄본의 고정 이름(업권 · 담보 종류), 색은 kbx 조각 색(shareColor)을 붙인다.
 const PLACEHOLDER_BORROWING_STATUS: Pick<
     InnovationGrowthReport['creditDetail'],
-    'institutions' | 'creditCollateral' | 'collaterals' | 'collateralYear'
+    'institutions' | 'creditCollateral' | 'collaterals'
 > = {
     institutions: {
         years: PRIVATE_PLACEHOLDER.years,
@@ -970,13 +962,12 @@ const PLACEHOLDER_BORROWING_STATUS: Pick<
         amount: PRIVATE_PLACEHOLDER.amounts[index],
         color: shareColor(index),
     })),
-    collateralYear: PRIVATE_PLACEHOLDER.years[PRIVATE_PLACEHOLDER.years.length - 1],
 }
 
 // 차입금 현황 쪽 — 기관별 비중 → 신용/담보 비중 → 담보 현황. 소블록 사이 85(이 쪽만 — 블록 안 간격 32 + mt 53).
 // 소제목 줄 폭을 단위가 붙을 칸(표 · 꺾은선) 폭으로 줄여 단위가 그 칸 오른쪽 끝에 오게 한다.
 const KbigxPrintCreditBorrowingStatus = ({report}: PageProps) => {
-    const {institutions, creditCollateral, collaterals, collateralYear, borrowings} = report.creditDetail
+    const {institutions, creditCollateral, collaterals, borrowings} = report.creditDetail
     // 기관별 비중 연도 — 최근 3개년 고정. 받은 연도가 없으면 차입금 현황 연도를 쓴다.
     const institutionYears = getRecentYears(
         institutions.years,
@@ -987,7 +978,7 @@ const KbigxPrintCreditBorrowingStatus = ({report}: PageProps) => {
     // 실제 값은 쓰지 않는다. 단위는 그대로 둔다(웹과 같다).
     const source = isHidden
         ? PLACEHOLDER_BORROWING_STATUS
-        : {institutions: {...institutions, years: institutionYears}, creditCollateral, collaterals, collateralYear}
+        : {institutions: {...institutions, years: institutionYears}, creditCollateral, collaterals}
     const content = (node: ReactNode) => (isHidden ? <KbxPrivateContent>{node}</KbxPrivateContent> : node)
 
     return (
@@ -1014,7 +1005,7 @@ const KbigxPrintCreditBorrowingStatus = ({report}: PageProps) => {
                 {content(<CreditCollateral creditCollateral={source.creditCollateral} />)}
             </KbxSubBlock>
             <KbxSubBlock title="담보 현황" className="mt-13.25">
-                {content(<Collaterals collaterals={source.collaterals} year={source.collateralYear} />)}
+                {content(<Collaterals collaterals={source.collaterals} />)}
             </KbxSubBlock>
         </KbxBlock>
     )
