@@ -248,14 +248,6 @@ const NestedColumnChart = ({
     return (
         <div className={cn('w-full', className)} {...props}>
             <svg role="img" aria-label={ariaLabel} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="block h-auto w-full">
-                <line
-                    x1={0}
-                    y1={round(zeroY)}
-                    x2={WIDTH}
-                    y2={round(zeroY)}
-                    stroke={color.baseline}
-                    strokeWidth={BASELINE_STROKE}
-                />
                 {data.slice(1).map((item, index) => (
                     <line
                         key={`divider-${item.id}`}
@@ -328,6 +320,15 @@ const NestedColumnChart = ({
                         </g>
                     )
                 })}
+                {/* 바닥선(가로축)은 막대 위에 그린다 — 막대 아랫단이 선을 가리지 않는다. */}
+                <line
+                    x1={0}
+                    y1={round(zeroY)}
+                    x2={WIDTH}
+                    y2={round(zeroY)}
+                    stroke={color.baseline}
+                    strokeWidth={BASELINE_STROKE}
+                />
             </svg>
             <ul className="sr-only">
                 {data.map((item) => (
