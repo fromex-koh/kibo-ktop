@@ -25,6 +25,8 @@ export type VerificationApplicationItem = {
     grade: string
     /** 접수일(YYYY-MM-DD). */
     receivedAt: string
+    /** 접수 시각(HH:mm, 24시간) — 카드의 접수일 칸에 날짜 뒤에 붙는다(예: 2026-05-15 14:26). 없으면 날짜만. */
+    receivedTime?: string
     companyName: string
     /** 기업 사업자번호 — 받은 표기를 그대로 보여 준다. */
     businessNumber: string

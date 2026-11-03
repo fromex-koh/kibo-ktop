@@ -85,8 +85,10 @@ export type KBigxReportHistoryItem = {
     /** 이용권이 깎였는지. 카드 오른쪽 배지에 '이용권 차감' · '이용권 미차감' 으로 선다. */
     isTicketDeducted: boolean
     inquiryType: KBigxReportInquiryType
-    /** 조회일시(YYYY-MM-DD) = report.issuedAt (PDF 표지 발급일). 보고서 내용 선택 모달의 조회기준일 자리에도 쓴다. */
+    /** 조회일시의 날짜(YYYY-MM-DD) = report.issuedAt (PDF 표지 발급일). 보고서 내용 선택 모달의 조회기준일 자리에도 쓴다. */
     inquiredAt: string
+    /** 조회일시의 시각(HH:mm, 24시간) — 카드의 조회일시 칸에 날짜 뒤에 붙는다(예: 2026-05-18 14:26). 없으면 날짜만. */
+    inquiredTime?: string
     /** 특허명 = report.title (웹 보고서 머리 제목 — PDF 에는 나오지 않는다). 대량정보조회는 조회 결과 요약. */
     patentName: string
     /** 보고서 유형 — 기관 화면에만 있다. 없으면(기업) 배지를 그리지 않고 버튼은 [보고서 다운로드] 다. */

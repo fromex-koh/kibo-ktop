@@ -40,6 +40,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'AA',
         evaluatedAt: '2026-05-15',
+        evaluatedTime: '14:26',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-001'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -51,6 +52,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'A',
         evaluatedAt: '2026-04-28',
+        evaluatedTime: '09:12',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-002'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
@@ -62,6 +64,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'AAA',
         evaluatedAt: '2026-04-10',
+        evaluatedTime: '16:48',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-003'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -73,6 +76,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'BBB',
         evaluatedAt: '2026-03-27',
+        evaluatedTime: '11:05',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-004'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
@@ -84,6 +88,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'A',
         evaluatedAt: '2026-03-05',
+        evaluatedTime: '13:37',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-005'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -95,6 +100,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'AA',
         evaluatedAt: '2026-02-19',
+        evaluatedTime: '10:21',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-006'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
@@ -106,6 +112,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'BB',
         evaluatedAt: '2026-01-30',
+        evaluatedTime: '15:54',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-007'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -117,6 +124,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'A',
         evaluatedAt: '2026-01-12',
+        evaluatedTime: '17:30',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-008'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -128,6 +136,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'BBB',
         evaluatedAt: '2025-12-22',
+        evaluatedTime: '08:47',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-009'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
@@ -139,6 +148,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'AA',
         evaluatedAt: '2025-11-28',
+        evaluatedTime: '12:09',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-010'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -150,6 +160,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'B',
         evaluatedAt: '2025-11-06',
+        evaluatedTime: '18:15',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-011'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
@@ -161,6 +172,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'ktrs-fm',
         grade: 'A',
         evaluatedAt: '2025-10-15',
+        evaluatedTime: '14:26',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-012'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
@@ -172,6 +184,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'tech-index',
         grade: '6.6',
         evaluatedAt: '2026-05-15',
+        evaluatedTime: '09:12',
         actions: [selfDiagnosisResult('tech-index', 'corp-evaluation-101')],
     },
     {
@@ -179,6 +192,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'tech-index',
         grade: '7.1',
         evaluatedAt: '2026-03-18',
+        evaluatedTime: '16:48',
         actions: [selfDiagnosisResult('tech-index', 'corp-evaluation-102')],
     },
     {
@@ -186,6 +200,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'startup-tech-index',
         grade: '8.4',
         evaluatedAt: '2026-05-15',
+        evaluatedTime: '11:05',
         actions: [selfDiagnosisResult('startup-tech-index', 'corp-evaluation-201')],
     },
     {
@@ -193,6 +208,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'investment-model',
         grade: 'B+',
         evaluatedAt: '2026-05-15',
+        evaluatedTime: '13:37',
         actions: [selfDiagnosisResult('investment-model', 'corp-evaluation-301')],
     },
 ]

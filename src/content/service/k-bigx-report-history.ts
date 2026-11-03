@@ -18,6 +18,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: true,
         inquiryType: 'own',
         inquiredAt: '2026-05-18',
+        inquiredTime: '14:26',
         patentName: '인공지능 기반 데이터 분석 시스템',
     },
     {
@@ -26,6 +27,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: false,
         inquiryType: 'other',
         inquiredAt: '2026-05-16',
+        inquiredTime: '09:12',
         patentName: '사물인터넷 연동 제어 장치',
     },
     {
@@ -34,6 +36,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: false,
         inquiryType: 'other',
         inquiredAt: '2026-05-14',
+        inquiredTime: '16:48',
         patentName: '바이오 센서를 활용한 진단 키트',
     },
     {
@@ -42,6 +45,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: true,
         inquiryType: 'own',
         inquiredAt: '2026-05-12',
+        inquiredTime: '11:05',
         patentName: '딥러닝 기반 이미지 분류 시스템',
     },
     {
@@ -50,6 +54,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: true,
         inquiryType: 'own',
         inquiredAt: '2026-05-10',
+        inquiredTime: '13:37',
         patentName: '나노입자 기반 약물전달 시스템',
     },
     {
@@ -58,6 +63,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: false,
         inquiryType: 'other',
         inquiredAt: '2026-05-08',
+        inquiredTime: '10:21',
         patentName: '자연어처리 기반 문서 분류 시스템',
     },
     {
@@ -66,6 +72,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: true,
         inquiryType: 'own',
         inquiredAt: '2026-05-06',
+        inquiredTime: '15:54',
         patentName: '위성 데이터 분석 플랫폼',
     },
     {
@@ -74,6 +81,7 @@ const MOCK_K_BIGX_REPORT_HISTORY: readonly KBigxReportHistoryItem[] = [
         isTicketDeducted: true,
         inquiryType: 'own',
         inquiredAt: '2026-05-04',
+        inquiredTime: '17:30',
         patentName: '스마트팜 통합 관제 솔루션',
     },
 ]

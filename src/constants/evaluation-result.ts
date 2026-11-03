@@ -82,6 +82,8 @@ export type EvaluationResultItem = {
     grade: string
     /** 평가일(YYYY-MM-DD). */
     evaluatedAt: string
+    /** 평가 시각(HH:mm, 24시간) — 목록의 평가일 칸에 날짜 뒤에 붙는다(예: 2026-05-15 14:26). 없으면 날짜만. */
+    evaluatedTime?: string
     actions: readonly EvaluationResultAction[]
 }
 
@@ -140,7 +142,10 @@ export type OrgIndividualEvaluationItem = {
     evaluationType: 'individual'
     /** 결과값 — 모형에 따라 등급(AA)이거나 점수(86.6)다. 단위는 모형 표가 정한다. */
     grade: string
+    /** 평가일(YYYY-MM-DD). */
     evaluatedAt: string
+    /** 평가 시각(HH:mm, 24시간) — 목록의 평가일 칸에 날짜 뒤에 붙는다(예: 2026-05-15 14:26). 없으면 날짜만. */
+    evaluatedTime?: string
     companyName: string
     /** 기업 사업자번호 — 받은 표기를 그대로 보여 준다. */
     businessNumber: string
