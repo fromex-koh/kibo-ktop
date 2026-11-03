@@ -42,14 +42,10 @@ const MARKETING_CONSENT_FOOTNOTES = [
 // 버튼 문구 — 두 화면 공통.
 const MARKETING_CONSENT_ACTIONS = {decline: '동의안함', agree: '동의 후 이용'} as const
 
-// 마이페이지 내 정보의 [자세히]로 열 때 — 본문 · 버튼은 같고 제목만 다르다.
-const MYPAGE_MARKETING_CONSENT_TITLE = '기술평가 서비스 마케팅 정보 수신 동의'
-
 export {
     MARKETING_CONSENT_ACTIONS,
     MARKETING_CONSENT_FOOTNOTES,
     MARKETING_CONSENT_NOTICE,
     MARKETING_CONSENT_SECTIONS,
     MARKETING_CONSENT_TITLE,
-    MYPAGE_MARKETING_CONSENT_TITLE,
 }
