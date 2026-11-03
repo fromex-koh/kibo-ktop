@@ -42,8 +42,10 @@
 
   [4] 정해진 값 — 글자 그대로 넣는다(다르면 '-' · 빠짐 · 오류)
     viewerCase(필수)                 "self" 가림 없음
-                                     "partner-corp"   단기연체 · 상거래연체 · 공공체납 표 + 차입금 현황 가림
-                                     "partner-person" 위 + 법인등기 · 당좌거래정지 표 가림
+                                     "partner-corp"   당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표 가림 + 차입금 현황 가림
+                                     "partner-person" 위 + 법인등기 표는 '해당없음'
+                                     가린 표 = 상태 배지 없이 값 줄 '열람불가(제공 대상 외 정보)' 한 줄(받은 상태가 '해당없음' 이어도)
+                                     '해당없음' 표 = [해당없음] 배지 + 값 줄 '해당사항 없음'(받은 값과 관계없이)
     등급 코드          creditFinance.rating.grade · creditDetail.ratingHistory[].grade
                          CRI 등급 AAA+ ~ D · R · NR (예 "BBB0" "A-")
                        creditDetail.cashFlow.grade · creditDetail.cashFlow.history[].grade   CF1 ~ CF6
@@ -83,7 +85,7 @@
     creditDetail.institutions.rows[].label  은행업권 · 상호금융업권 · 저축은행업권 · 카드/캐피탈업권 · 대부업권
     creditDetail.collaterals[].label        부동산 · 특수저당 · 보증
     creditDetail.creditInfo[].id            closure · registry · suspension · short-overdue · trade-overdue · public-arrears
-    creditDetail.creditInfo[].status "해당없음"   '해당사항 없음' 으로 보이고 가리지 않는다
+    creditDetail.creditInfo[].status "해당없음"   [해당없음] 배지 + '해당사항 없음' 줄(viewerCase 로 가린 표는 '열람불가' 가 우선)
     techInnovation.marketScale.rows[].label 10억원 이하 · 30억원 이하 · 100억원 이하 · 300억원 이하 · 300억원 초과
     techIndexDetail.capabilities · capabilityByType 의 id   infra · input · activity · output
     techIndexDetail.indicators[].title      인프라·투입 부문 · 활동·성과 부문
@@ -101,7 +103,7 @@
       creditDetail.institutions.share                 비중 큰 순
       innovation.issues(R&D 이슈 단어)                중요도(weight) 높은 순
       companyStatus.shareholders                      지분율 높은 순
-      techInnovation.holdings.patents(특허 보유현황)  출원일 최근순 — 앞 10건을 그린다
+      techInnovation.holdings.patents(특허보유 현황)  출원일 최근순 — 앞 10건을 그린다
       techInnovation.growthLeaders.*.items            성장률 높은 순 10건 → 평균 · 조회기업 줄
       techInnovation.rndInstitutes.*.rows             앞 10곳을 그리고, 나머지는 '기타 …' 한 줄로 합친다
       techInnovation.emergingTech.rows                상위 10건 + "기타" 줄까지 백엔드가 만들어 보낸다
