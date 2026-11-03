@@ -1,22 +1,10 @@
 'use client'
 
 import {useState, type FormEvent, type ReactElement, type ReactNode} from 'react'
-import Image, {type StaticImageData} from 'next/image'
 import Link from 'next/link'
-import bankBuildingImage from '@public/images/login/bank-building.webp'
-import officeBuildingImage from '@public/images/login/office-building.webp'
 import {ArrowUpRight, CircleAlert} from 'lucide-react'
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-} from '@/components/composite/breadcrumb'
-import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {LoginAgencySignUpGuideDialog} from '@/components/composite/login-agency-signup-guide-dialog'
 import {LoginFindAccountDialog} from '@/components/composite/login-find-account-dialog'
-import {breadcrumbPillClassName} from '@/components/theme/breadcrumb.variants'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
@@ -24,11 +12,7 @@ import {Input} from '@/components/ui/input'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {PasswordInput} from '@/components/composite/password-input'
 import {ListMarker} from '@/components/custom/list-marker'
-import {
-    memberTypeTabClassName,
-    memberTypeTabIllustrationClassName,
-    memberTypeTabListClassName,
-} from '@/components/theme/member-type-tabs.variants'
+import {memberTypeTabClassName, memberTypeTabListClassName} from '@/components/theme/member-type-tabs.variants'
 import {KIBO_ONE_PLATFORM_URL} from '@/constants/site'
 
 // 로그인 화면 — 회원 유형(기업회원 · 기관회원)을 고르고 유형에 맞는 방법으로 로그인한다.
@@ -52,14 +36,10 @@ import {KIBO_ONE_PLATFORM_URL} from '@/constants/site'
 
 type MemberType = 'corp' | 'org'
 
-// 화면을 여는 사용자 유형 — 기업(/corp/auth) · 기관(/org/auth) 두 경로가 같은 화면을 쓰고,
-// 브레드크럼의 홈 주소만 갈린다(회원 유형 탭은 이 값과 무관하다).
-type LoginUserType = 'corp' | 'org'
-
 const MEMBER_TABS = [
-    {id: 'corp', label: '기업회원', image: officeBuildingImage},
-    {id: 'org', label: '기관회원', image: bankBuildingImage},
-] as const satisfies readonly {id: MemberType; label: string; image: StaticImageData}[]
+    {id: 'corp', label: '기업회원'},
+    {id: 'org', label: '기관회원'},
+] as const satisfies readonly {id: MemberType; label: string}[]
 
 const LOGIN_TITLE = '로그인'
 const LOGIN_DESCRIPTION = '회원 유형을 선택하고 로그인해 주세요.'
@@ -97,7 +77,8 @@ const ORG_SIGN_UP_LABEL = '회원가입'
 const KIBO_ONE_SIGN_UP_HREF = '/sign-up/kibo-one'
 
 // 카드 안쪽 폭 588 — 카드(792)의 좌우 여백까지 더하면 시안의 102 가 된다. 좁은 화면에서는 여백만 24 로 줄고 폭은 칸을 채운다.
-const cardClassName = 'bg-card mx-auto flex w-full flex-col rounded-lg p-6 md:p-12'
+// 카드 안쪽 여백 — 좁은 화면 24, md 부터 좌우 48 · 위아래 32(한 화면에 카드가 담기도록 위아래만 줄였다).
+const cardClassName = 'bg-card mx-auto flex w-full flex-col rounded-lg p-6 md:px-12 md:py-8'
 const cardInnerClassName = 'mx-auto flex w-full max-w-147 flex-col gap-6'
 
 // 카드 머리 — 유형 이름(24 Bold)과 로그인 방법 한 줄.
@@ -158,7 +139,8 @@ const CorpLoginPanel = () => (
             ))}
         </ul>
         {/* 버튼 위만 48 을 둔다(안내 상자와 떨어뜨린다) — 카드 안 기본 사이 간격은 24 다. */}
-        <div className="flex flex-col gap-2 pt-6">
+        {/* 안내 상자와 버튼 사이 — 좁은 화면 48, md 부터 32(PC 한 화면에 버튼까지 보이도록). */}
+        <div className="flex flex-col gap-2 pt-6 md:pt-2">
             {/* 외부 사이트로 나가는 링크라 next/link 가 아니라 <a> 를 쓴다[NA-006 예외]. 새 창이 아니라
                 같은 창에서 이동했다가 로그인 뒤 돌아오는 흐름이다. */}
             <Button asChild size="xl" className="w-full">
@@ -288,30 +270,17 @@ const OrgLoginPanel = () => {
     )
 }
 
-const LoginScreen = ({userType}: {userType: LoginUserType}) => (
+// 기업 · 기관 로그인 화면이 같은 화면을 쓴다(첫 탭은 기업회원).
+const LoginScreen = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="grid-layout gap-y-10 pt-10 pb-15 *:col-span-full">
-            {/* 브레드크럼만 둔다 — 화면 제목은 가운데 묶음이 맡으므로 왼쪽 제목을 두면 같은 말이 두 번 나온다.
-                좁은 화면(md 미만)에서는 시안대로 감춘다 — 가운데 제목이 바로 오고 경로는 헤더로 돌아갈 수 있다. */}
-            <div className="hidden justify-end md:flex">
-                <div className={breadcrumbPillClassName}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href={`/${userType}/home`}>홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>{LOGIN_TITLE}</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-            </div>
+        {/* 브레드크럼 없이 가운데 제목부터 시작한다. 위 여백은 화면 높이에 따라 늘고 준다(25dvh − 140) —
+            낮은 화면에서는 짧게 잡아 로그인 버튼까지 한 화면에 보이고, 높은 화면에서는 시안 여백을 확보한다.
+            좁은 화면 16 ~ 40(높이 720 이상 40), md 부터 24 ~ 84(높이 900 이상 84 — 시안 83, 1366×657 → 24). */}
+        <div className="grid-layout gap-y-10 pt-[clamp(--spacing(4),calc(25dvh---spacing(35)),--spacing(10))] pb-15 *:col-span-full md:pt-[clamp(--spacing(6),calc(25dvh---spacing(35)),--spacing(21))]">
             <div className="mx-auto flex w-full max-w-198 flex-col">
                 {/* 가운데 제목 묶음 — 페이지 제목(위 PageTitleBar)과 같은 말이라 h2 로 두어 제목 단계를 지킨다[6.4.2].
-                    아래 여백만 넓다(좁은 화면 40 · md 부터 80). 나머지 사이는 24 다. */}
-                <div className="flex flex-col items-center gap-1 pb-10 text-center md:pb-20">
+                    아래 여백(좁은 화면 40 · md 부터 32) 뒤에 탭, 탭과 아래 카드 사이는 24 다. */}
+                <div className="flex flex-col items-center gap-1 pb-10 text-center md:pb-8">
                     <h1 className="typo-display-l-bold text-foreground break-keep">{LOGIN_TITLE}</h1>
                     <p className="typo-title-l-regular text-label-foreground break-keep">{LOGIN_DESCRIPTION}</p>
                 </div>
@@ -322,13 +291,6 @@ const LoginScreen = ({userType}: {userType: LoginUserType}) => (
                     <TabsList variant="plain" aria-label="회원 유형" className={memberTypeTabListClassName}>
                         {MEMBER_TABS.map((tab) => (
                             <TabsTrigger key={tab.id} value={tab.id} className={memberTypeTabClassName}>
-                                {/* 유형 그림 — 옆에 유형 이름이 있어 장식이다(alt="")[5.1.1]. 좁은 화면에서는 그리지 않는다. */}
-                                <Image
-                                    src={tab.image}
-                                    alt=""
-                                    sizes="96px"
-                                    className={memberTypeTabIllustrationClassName}
-                                />
                                 <span className="truncate">{tab.label}</span>
                             </TabsTrigger>
                         ))}
@@ -364,4 +326,4 @@ const LoginScreen = ({userType}: {userType: LoginUserType}) => (
 )
 
 export {LoginScreen}
-export type {LoginUserType, MemberType}
+export type {MemberType}
