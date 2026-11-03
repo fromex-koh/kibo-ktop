@@ -104,7 +104,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; data: GradeHi
 const USAGE_CODE = `import {GradeHistoryChart} from '@/components/custom/grade-history-chart'
 
 <GradeHistoryChart
-  ariaLabel="기업신용등급 이전평가이력"
+  ariaLabel="기업신용등급 평가이력"
   data={[
     {id: '2023-09-03', label: '23.09월', grade: 'A-', value: 66.7},
     {id: '2024-11-04', label: '24.11월', grade: 'BBB+', value: 62.5},
@@ -135,7 +135,7 @@ const toCashFlowValue = (grade: string) => {
 
 const LOADING_CODE = `import {GradeHistoryChartSkeleton} from '@/components/composite/grade-history-chart-skeleton'
 
-{isLoading ? <GradeHistoryChartSkeleton label="이전평가이력을 불러오는 중입니다." /> : <GradeHistoryChart … />}`
+{isLoading ? <GradeHistoryChartSkeleton label="평가이력을 불러오는 중입니다." /> : <GradeHistoryChart … />}`
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
@@ -243,7 +243,7 @@ const GradeHistoryChartGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card flex max-w-147 min-w-0 flex-col gap-6 rounded-sm border p-6">
-                    <GradeHistoryChart ariaLabel="기업신용등급 이전평가이력" data={REPORT_DATA} />
+                    <GradeHistoryChart ariaLabel="기업신용등급 평가이력" data={REPORT_DATA} />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
@@ -268,8 +268,8 @@ const GradeHistoryChartGuidePage = () => (
                             않습니다.
                         </p>
                         <div className="grid gap-6 xl:grid-cols-2">
-                            <GradeHistoryChartSkeleton label="이전평가이력을 불러오는 중입니다." />
-                            <GradeHistoryChart ariaLabel="기업신용등급 이전평가이력" data={REPORT_DATA} />
+                            <GradeHistoryChartSkeleton label="평가이력을 불러오는 중입니다." />
+                            <GradeHistoryChart ariaLabel="기업신용등급 평가이력" data={REPORT_DATA} />
                         </div>
                         <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="복사" />
                     </div>

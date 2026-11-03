@@ -45,7 +45,7 @@ const USE_ROWS = [
     {
         key: 'patent-tables',
         cells: [
-            'K-BIGx 웹 보고서 · 기술혁신정보 > 특허 보유현황 · 우수특허 — 특허명 · 출원인 · 권리자(각각) · 기술분야',
+            'K-BIGx 웹 보고서 · 기술혁신정보 > 특허보유 현황 · 우수특허 — 특허명 · 출원인 · 권리자(각각) · 기술분야',
             '2',
         ],
     },
@@ -68,7 +68,7 @@ const USE_ROWS = [
     },
     {
         key: 'donut-legend',
-        cells: ['PercentageDonutChart 범례 — 분류명(진단브리핑 기업 보유기술 · 기술 보유현황 · 담보 현황)', '1'],
+        cells: ['PercentageDonutChart 범례 — 분류명(진단브리핑 기업 보유기술 · 기술보유 현황 · 담보 현황)', '1'],
     },
 ] as const
 

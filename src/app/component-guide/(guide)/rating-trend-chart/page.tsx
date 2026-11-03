@@ -83,7 +83,7 @@ import {criGradePercentage, findCriGrade} from '@/content/service/cri-grades'
 
 // 시간순(오래된 것부터)으로 넘깁니다. rank 는 등급표 순서(클수록 위)입니다.
 <RatingTrendChart
-  ariaLabel="기업신용등급 이전평가이력"
+  ariaLabel="기업신용등급 평가이력"
   data={ratingHistory.map((item) => {
     const grade = findCriGrade(item.grade)
     return {
@@ -98,15 +98,15 @@ import {criGradePercentage, findCriGrade} from '@/content/service/cri-grades'
 const LOADING_CODE = `import {RatingTrendChartSkeleton} from '@/components/composite/rating-trend-chart-skeleton'
 
 {isLoading ? (
-  <RatingTrendChartSkeleton pointCount={3} label="이전평가이력을 불러오는 중입니다." />
+  <RatingTrendChartSkeleton pointCount={3} label="평가이력을 불러오는 중입니다." />
 ) : (
-  <RatingTrendChart data={history} ariaLabel="기업신용등급 이전평가이력" />
+  <RatingTrendChart data={history} ariaLabel="기업신용등급 평가이력" />
 )}`
 
 const PRINT_CODE = `// K-BIGx PDF 템플릿 — 선 · 글자 색을 kbx 토큰으로 넘깁니다(kbigx-print-credit.tsx).
 <RatingTrendChart
   data={history}
-  ariaLabel="기업신용등급 이전평가이력"
+  ariaLabel="기업신용등급 평가이력"
   colors={{
     line: 'var(--kbx-color-blue)',
     grid: 'var(--kbx-color-border)',
@@ -166,7 +166,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const RatingTrendChartGuidePage = () => (
     <GuidePageShell
         title="등급 이력 꺾은선 (RatingTrendChart)"
-        description="시점마다 받은 등급을 등급 높낮이 줄 위에 점으로 찍고 선으로 잇는 차트입니다. 세로축 없이 점 위 등급 글자로 읽고, 가장 최근 점은 채운 점 · 강조 색입니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보의 기업신용등급 이전평가이력 · 현금흐름등급 평가이력 그래프입니다."
+        description="시점마다 받은 등급을 등급 높낮이 줄 위에 점으로 찍고 선으로 잇는 차트입니다. 세로축 없이 점 위 등급 글자로 읽고, 가장 최근 점은 채운 점 · 강조 색입니다. K-BIGx 보고서 PDF 템플릿 신용/재무정보의 기업신용등급 평가이력 · 현금흐름등급 평가이력 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="rtc-basic" className="flex flex-col gap-6">
@@ -185,7 +185,7 @@ const RatingTrendChartGuidePage = () => (
                     title="템플릿 데이터"
                     description="A- → BBB+ → BBB0. 마지막(현재) 점은 채운 점 · 강조 색 글자."
                 >
-                    <RatingTrendChart data={STANDARD_DATA} ariaLabel="이전평가이력 예시" className="max-w-170" />
+                    <RatingTrendChart data={STANDARD_DATA} ariaLabel="평가이력 예시" className="max-w-170" />
                 </Example>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
@@ -229,7 +229,7 @@ const RatingTrendChartGuidePage = () => (
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
-                        <RatingTrendChartSkeleton label="이전평가이력을 불러오는 중입니다." />
+                        <RatingTrendChartSkeleton label="평가이력을 불러오는 중입니다." />
                     </Example>
                     <Example title="불러온 뒤" description="같은 자리에 차트가 그려집니다.">
                         <RatingTrendChart data={STANDARD_DATA} ariaLabel="불러온 뒤 예시" />
@@ -242,10 +242,10 @@ const RatingTrendChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="rtc-print" className="flex flex-col gap-6">
                 <SectionHeading id="rtc-print" title="5. K-BIGx PDF 템플릿에서">
-                    이전평가이력 · 평가이력 소제목 아래 16 에 그래프(3) · 표(2)를 48 간격으로 나란히 둡니다.
-                    기업신용등급 표는 최근 것부터 지금 등급을 뺀 지난 평가만, 현금흐름등급 표는 평가이력 전체를 최근
-                    것부터 적습니다. 현금흐름등급 높낮이(rank)는 CF1 이 위가 되도록 7 − 단계 숫자(cashFlowLevel)입니다.
-                    확인 화면:{' '}
+                    기업신용등급 · 현금흐름등급 평가이력 소제목 아래 16 에 그래프(3) · 표(2)를 48 간격으로 나란히
+                    둡니다. 기업신용등급 표는 최근 것부터 지금 등급을 뺀 지난 평가만, 현금흐름등급 표는 평가이력 전체를
+                    최근 것부터 적습니다. 현금흐름등급 높낮이(rank)는 CF1 이 위가 되도록 7 − 단계
+                    숫자(cashFlowLevel)입니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
                         target="_blank"

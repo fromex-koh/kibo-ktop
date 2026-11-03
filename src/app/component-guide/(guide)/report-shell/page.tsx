@@ -234,7 +234,7 @@ const KBX_PART_ROWS = [
         key: 'table',
         cells: [
             <code key="p">KbxTable</code>,
-            '표. density default · compact · dense · narrow · snug · list · stacked. 열 옵션 isNarrow · headerClassName · hasHeaderDivider · group(두 단 머리), 합계 줄 isTotal, 빈 표 emptyText.',
+            '표. density default · compact · dense · narrow · snug · list · stacked. 열 옵션 isNarrow · headerClassName · hasDivider · group(두 단 머리), 합계 줄 isTotal, 빈 표 emptyText.',
         ],
     },
     {
@@ -312,7 +312,7 @@ const KBX_PART_ROWS = [
         key: 'private',
         cells: [
             <code key="p">KbxPrivateContent</code>,
-            "비공개 — 웹 PrivateContent 와 같은 모양(흐린 가짜 값 + 흰 면 80% + 안내). 신용/재무정보의 열람 케이스(?case=)별 가림에 씁니다. 기업신용정보 표는 흐리지 않고(법인열람 · 개인열람) 값 줄을 '비공개' 한 줄로 바꾸고 상태 알약을 뺍니다(상태가 '해당없음' 이면 그대로).",
+            "비공개 — 웹 PrivateContent 와 같은 모양(흐린 가짜 값 + 흰 면 80% + 안내). 신용/재무정보의 열람 케이스(?case=)별 가림에 씁니다. 기업신용정보 표는 흐리지 않습니다 — 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납(법인열람 · 개인열람)은 값 줄을 '열람불가(제공 대상 외 정보)' 한 줄로 바꾸고 상태 알약을 뺍니다(받은 상태가 '해당없음' 이어도). 개인열람의 법인등기정보는 [해당없음] 알약 + '해당사항 없음' 줄입니다.",
         ],
     },
     {
@@ -386,7 +386,7 @@ const KBX_FILE_ROWS = [
         key: 'innovation',
         cells: [
             <code key="f">kbigx-print-innovation.tsx</code>,
-            '기술혁신정보 8쪽 — 보유기술 / 특허 보유현황 / 특허기술 분석 / 경쟁기업 / 우수특허 / 이머징 기술 · R&D 이슈 / R&D 전문기관 / 정부 R&D 과제',
+            '기술혁신정보 8쪽 — 보유기술 / 특허보유 현황 / 특허기술 분석 / 경쟁기업 / 우수특허 / 이머징 기술 · R&D 이슈 / R&D 전문기관 / 정부 R&D 과제',
             joinNodes([
                 chartLink('DonutListChart', '/component-guide/donut-list-chart'),
                 chartLink('DualBarTable', '/component-guide/dual-bar-table'),
@@ -600,7 +600,7 @@ const KBX_TEXT_ROWS = [
         key: 'row-count',
         cells: [
             '행 수 조절',
-            '기업현황 1 경영진 · 주주 · 관계기업(기본 5 · 5 · 3행, 1 ~ 10행), 정부 R&D 접수기간 도래 과제(남은 높이만큼)',
+            '기업현황 1 관계기업(기본 3행, 1 ~ 10행 — 경영진 · 주주는 5행 고정), 정부 R&D 접수기간 도래 과제(남은 높이만큼)',
         ],
     },
 ] as const

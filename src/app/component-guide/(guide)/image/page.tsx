@@ -345,9 +345,10 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
             {
                 key: 'login',
                 title: '로그인 회원 구분 탭',
-                description: '로그인 회원 구분 탭 그림입니다. md 이상에서만 보입니다.',
+                description:
+                    '로그인 회원 구분 탭 그림이었습니다. 통합테스트 조치로 탭에서 그림을 빼 지금은 화면에서 쓰지 않습니다(파일만 남겨 둡니다).',
                 folder: 'public/images/login/',
-                usedIn: 'custom/login-screen.tsx (theme/member-type-tabs.variants.ts)',
+                usedIn: '사용처 없음 (예전 custom/login-screen.tsx 회원 구분 탭)',
                 size: 'size-24 object-contain',
                 grid: 'narrow',
                 items: [

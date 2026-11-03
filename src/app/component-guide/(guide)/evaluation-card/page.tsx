@@ -18,6 +18,7 @@ const DEMO_ITEM: VerificationApplicationItem = {
     model: 'ktrs-fm',
     grade: 'AA',
     receivedAt: '2026-05-15',
+    receivedTime: '14:26',
     companyName: '(주)테크놀로지',
     businessNumber: '683-68-00428',
     verifyHref: '#',
@@ -56,7 +57,7 @@ const BADGE_CODE = `import {CountBadge} from '@/components/custom/evaluation-car
 const DETAIL_CODE = `import {EvaluationDetail, EvaluationDetailList} from '@/components/custom/evaluation-card'
 
 <EvaluationDetailList>
-  <EvaluationDetail label="접수일" value="2026-05-15" />
+  <EvaluationDetail label="접수일" value="2026-05-15 14:26" />
   <EvaluationDetail label="기업명" value="(주)테크놀로지" />
   <EvaluationDetail label="기업 사업자번호" value="683-68-00428" />
 </EvaluationDetailList>`
@@ -232,12 +233,12 @@ const EvaluationCardGuidePage = () => (
                         </p>
                         <div className="border-border flex flex-col gap-6 rounded-md border p-6">
                             <EvaluationDetailList>
-                                <EvaluationDetail label="접수일" value="2026-05-15" />
+                                <EvaluationDetail label="접수일" value="2026-05-15 14:26" />
                                 <EvaluationDetail label="기업명" value="(주)테크놀로지" />
                                 <EvaluationDetail label="기업 사업자번호" value="683-68-00428" />
                             </EvaluationDetailList>
                             <EvaluationDetailList>
-                                <EvaluationDetail label="접수일" value="2026-05-15" />
+                                <EvaluationDetail label="접수일" value="2026-05-15 14:26" />
                                 <EvaluationDetail
                                     label="기업명"
                                     value="주식회사 대한민국첨단기술융합연구개발센터글로벌지주"

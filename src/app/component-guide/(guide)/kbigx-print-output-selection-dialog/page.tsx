@@ -141,9 +141,9 @@ const KbigxPrintOutputSelectionDialogGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         마이페이지 K-BIGx 보고서 이력(기업 · 기관)의 카드 버튼은 KBigxReportDownloadButton 이 이 모달을
-                        엽니다. 모달 요약은 카드의 기업명 · 조회일시이고, 미리보기는 카드 id 로 보고서를 다시
-                        조회합니다. 카드 값을 보고서로 넘기지 않으므로 카드와 PDF 의 같은 정보는 보고서 API 가 맞춰 내려
-                        줍니다.
+                        엽니다. 모달 요약은 카드의 기업명 · 조회일시의 날짜(조회기준일)이고, 미리보기는 카드 id 로
+                        보고서를 다시 조회합니다. 카드 값을 보고서로 넘기지 않으므로 카드와 PDF 의 같은 정보는 보고서
+                        API 가 맞춰 내려 줍니다.
                     </p>
                 </div>
                 <CodeBlock code={HISTORY_USAGE_CODE} language="tsx" copyLabel="복사" />

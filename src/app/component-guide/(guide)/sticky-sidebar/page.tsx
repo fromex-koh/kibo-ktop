@@ -74,7 +74,7 @@ const MENU_ITEMS: readonly {icon: LucideIcon; label: string; active?: boolean}[]
     {icon: BriefcaseBusiness, label: '대표자(경영자) 역량 및 경력'},
     {icon: FileSearch, label: '평가결과 조회'},
     {icon: NotepadText, label: 'K-BIGx 보고서 이력'},
-    {icon: CreditCard, label: '유료 서비스 관리'},
+    {icon: CreditCard, label: '이용권 관리'},
     {icon: MessageCircleMore, label: '1:1 문의'},
 ]
 
