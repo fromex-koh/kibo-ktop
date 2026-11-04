@@ -60,7 +60,7 @@ const USAGE_ROWS = [
         key: 'platform',
         cells: [
             '플랫폼 소개 > 기술평가(EvaluationModelTabs)',
-            '탭 — 카드가 탭 단추. 처음엔 아무것도 고르지 않은 상태이고, 누르면 아래에 모형 소개(구조도 포함)가 떠오르며 나타나고 그 위치로 스크롤. 화면을 열면 카드 3장이 차례로 떠오름(0.3 · 0.4 · 0.5초 뒤)',
+            '탭 — 카드가 탭 단추. 처음엔 아무것도 고르지 않은 상태이고, 누르면 아래에 모형 소개가 나타나며 그 위치로 스크롤',
             'hover · 고른 탭(data-state=active) · 키보드 포커스(focus-visible)',
             'PC(xl)만 — isArrowDesktopOnly',
         ],
@@ -135,8 +135,8 @@ const EvaluationModelCardGuidePage = () => (
                         기본 모양
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        모형별 파스텔 면 · 약칭(14 Bold) · 제목(28 Bold) · 설명(14) · 그림 자리(높이 144) · 짙은 원형
-                        화살표(48)입니다. 아래는 겉모습만 보인 것이고, 실제 화면은 라디오나 탭으로 감쌉니다 —{' '}
+                        모형별 면 색 · 약칭 · 제목 · 설명 · 그림 · 원형 화살표로 이루어집니다. 아래는 겉모습만 보인
+                        것이고, 실제 화면은 라디오나 탭으로 감쌉니다 —{' '}
                         <Link href="/corp/home/technology-evaluation-model-selection" className={LINK_CLASS}>
                             평가모형 선택
                         </Link>{' '}
@@ -188,7 +188,7 @@ const EvaluationModelCardGuidePage = () => (
                             </li>
                             <li>
                                 제목은 단어 단위로 끊고, 한 단어가 칸보다 길면 그 안에서 줄을 바꿉니다 — 태블릿 3열에서
-                                &apos;혁신성장역량지수&apos;가 두 줄이 됩니다(시안과 같음).
+                                &apos;혁신성장역량지수&apos;가 두 줄이 됩니다.
                             </li>
                             <li>테두리 — 바깥 상자(1px 여백)의 면을 그라데이션으로 칠합니다. 평소에는 투명합니다.</li>
                         </ul>

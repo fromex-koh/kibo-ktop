@@ -15,7 +15,7 @@ import {
 // [퍼블리싱 가이드 전용] 가이드 제목 옆 배지.
 //   · 컴포넌트 폴더 배지 — 그 컴포넌트가 src/components 의 어느 폴더에 있는지(COMPONENT_LAYER_BADGE).
 //     가이드 홈의 폴더 카드와 각 가이드 제목 옆이 함께 쓴다.
-//   · bigx print template 배지 — K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트(KBIGX_PRINT_BADGE).
+//   · bigx pdf template 배지 — K-BIGx 보고서 PDF 템플릿에서 쓰는 컴포넌트(KBIGX_PRINT_BADGE).
 // 어느 가이드에 붙는지는 메뉴 목록(constants/publishing-guide.ts 의 layers · isKbigxPrint)에서 정한다.
 
 type GuideTitleBadgeProps = {
@@ -55,7 +55,7 @@ const ComponentLayerBadge = ({layer}: {layer: ComponentLayer}) => <GuideTitleBad
 const KbigxPrintBadge = () => <GuideTitleBadge {...KBIGX_PRINT_BADGE} />
 
 // 가이드 화면 제목 옆 — 지금 주소가 메뉴 목록에 폴더(layers)나 인쇄 템플릿 표시(isKbigxPrint)와 함께 등록돼 있을 때만 나온다.
-// 순서: 폴더 배지 → bigx print template 배지.
+// 순서: 폴더 배지 → bigx pdf template 배지.
 const GuideTitleLayerBadges = () => {
     const pathname = usePathname()
     const layers = GUIDE_LAYERS_BY_HREF.get(pathname) ?? []

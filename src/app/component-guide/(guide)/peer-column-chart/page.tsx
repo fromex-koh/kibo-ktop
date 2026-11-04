@@ -120,7 +120,7 @@ const PROPS_ITEMS = [
     [
         'PeerColumnChart',
         'loadingLabel',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'비교 막대를 불러오는 중입니다.'",
         'string',
     ],
@@ -170,7 +170,7 @@ const PeerColumnChartGuidePage = () => (
             <section aria-labelledby="pcc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="pcc-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                 </div>
                 <div className={BLOCKS}>
@@ -226,7 +226,7 @@ const PeerColumnChartGuidePage = () => (
                         항목 이름은 막대 위 값과 한 덩어리로 읽히고, 아래 이름 줄은 읽지 않습니다[5.1.1].
                     </li>
                     <li>값은 막대 위 글자로 항상 적혀 있습니다. 신청기업은 색과 함께 이름으로도 구분합니다[5.3.1].</li>
-                    <li>숨김 표와 말풍선은 없습니다. 값 전체가 글자로 노출되기 때문입니다.</li>
+                    <li>숨김 표와 툴팁은 없습니다. 값 전체가 글자로 노출되기 때문입니다.</li>
                 </ul>
             </section>
         </BaseCard>

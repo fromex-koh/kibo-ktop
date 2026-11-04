@@ -17,16 +17,16 @@ const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 type CaseProps = Pick<SegmentMeterProps, 'value' | 'total' | 'color'>
 
 const TONES = [
-    {label: '우수', color: 'var(--raw-blue-500)', value: 9},
-    {label: '양호', color: 'var(--raw-mint-700)', value: 7},
-    {label: '보통', color: 'var(--raw-orange-500)', value: 5},
-    {label: '미흡', color: 'var(--raw-error-500)', value: 3},
-    {label: '취약', color: 'var(--raw-gray-700)', value: 1},
+    {label: '우수', color: 'var(--ds-blue-500)', value: 9},
+    {label: '양호', color: 'var(--ds-mint-700)', value: 7},
+    {label: '보통', color: 'var(--ds-orange-500)', value: 5},
+    {label: '미흡', color: 'var(--ds-error-500)', value: 3},
+    {label: '취약', color: 'var(--ds-gray-700)', value: 1},
 ] as const
 
 const USAGE_CODE = `import {SegmentMeter} from '@/components/custom/segment-meter'
 
-<SegmentMeter value={7} total={10} color="var(--raw-mint-700)" ariaLabel="인프라 10단계 중 7단계" />`
+<SegmentMeter value={7} total={10} color="var(--ds-mint-700)" ariaLabel="인프라 10단계 중 7단계" />`
 
 const DATA_CODE = `// value 는 도달 단계(정수)입니다. 점수(63.7)가 아니라 백엔드가 준 단계(level)를 그대로 넘깁니다.
 <SegmentMeter
@@ -41,32 +41,32 @@ const LOADING_CODE = `import {SegmentMeterSkeleton} from '@/components/composite
 <SegmentMeterSkeleton total={10} />`
 
 const SPECIAL_CASES: readonly {title: string; description: string; meter: CaseProps}[] = [
-    {title: '0단계', description: '모든 칸을 비웁니다.', meter: {value: 0, color: 'var(--raw-blue-500)'}},
-    {title: '가득 참', description: '모든 칸을 채웁니다.', meter: {value: 10, color: 'var(--raw-blue-500)'}},
+    {title: '0단계', description: '모든 칸을 비웁니다.', meter: {value: 0, color: 'var(--ds-blue-500)'}},
+    {title: '가득 참', description: '모든 칸을 채웁니다.', meter: {value: 10, color: 'var(--ds-blue-500)'}},
     {
         title: '소수 단계',
         description: '반올림합니다(6.5 → 7). 칸을 반만 채우지 않습니다.',
-        meter: {value: 6.5, color: 'var(--raw-mint-700)'},
+        meter: {value: 6.5, color: 'var(--ds-mint-700)'},
     },
     {
         title: '범위를 벗어난 값',
         description: '0 보다 작으면 0, 전체보다 크면 가득 찬 칸으로 맞춥니다(12 → 10).',
-        meter: {value: 12, color: 'var(--raw-error-500)'},
+        meter: {value: 12, color: 'var(--ds-error-500)'},
     },
     {
         title: '점수를 잘못 넘겼을 때',
         description: '점수(63.7)를 넘기면 가득 찬 칸으로 보입니다. 단계(정수)를 넘겨야 합니다.',
-        meter: {value: 63.7, color: 'var(--raw-orange-500)'},
+        meter: {value: 63.7, color: 'var(--ds-orange-500)'},
     },
     {
         title: '단계 수가 다를 때',
         description: '전체 단계 수만큼 칸을 그립니다(5단계 중 3단계).',
-        meter: {value: 3, total: 5, color: 'var(--raw-blue-500)'},
+        meter: {value: 3, total: 5, color: 'var(--ds-blue-500)'},
     },
     {
         title: '단계 수가 너무 많을 때',
         description: '칸은 20 개까지만 그립니다(total 100 → 20).',
-        meter: {value: 70, total: 100, color: 'var(--raw-blue-500)'},
+        meter: {value: 70, total: 100, color: 'var(--ds-blue-500)'},
     },
 ] as const
 
@@ -162,7 +162,7 @@ const SegmentMeterGuidePage = () => (
             <section aria-labelledby="sm-variants" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="sm-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
@@ -194,7 +194,7 @@ const SegmentMeterGuidePage = () => (
                             </div>
                             <div className="flex min-w-0 flex-col gap-2">
                                 <p className="typo-body-xl-bold text-foreground">불러온 뒤</p>
-                                <SegmentMeter value={7} color="var(--raw-mint-700)" />
+                                <SegmentMeter value={7} color="var(--ds-mint-700)" />
                             </div>
                         </div>
                         <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="로딩 코드 복사" />
@@ -238,9 +238,11 @@ const SegmentMeterGuidePage = () => (
                         쪽에서 둡니다.
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 칸이
-                        차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
-                        동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        칸이 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). 움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

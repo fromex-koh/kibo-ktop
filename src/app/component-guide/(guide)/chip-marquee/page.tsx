@@ -21,9 +21,9 @@ const USAGE_CODE = `import {ChipMarquee} from '@/components/custom/chip-marquee'
 <ChipMarquee items={['녹색금융 수혜기업', 'CBAM 대응 기업', …]} label="이런 기업에 적합합니다" className="w-full" />`
 
 const PROPS_ITEMS = [
-    ['ChipMarquee', 'items', '칩 글 목록(필수). 링크가 아닌 꾸밈 목록입니다.', '-', 'readonly string[]'],
-    ['ChipMarquee', 'label', '흐르는 목록의 이름 — 화면 낭독기에 "(포커스하면 멈춤)"과 함께 읽힙니다.', '-', 'string'],
-    ['ChipMarquee', 'className', '바깥 칸 클래스(폭 등).', '-', 'string'],
+    ['ChipMarquee', 'items', '칩 글 목록입니다. 링크가 아닌 꾸밈 목록입니다.', '-', 'readonly string[]'],
+    ['ChipMarquee', 'label', '흐르는 목록의 이름 — 스크린리더에 "(포커스하면 멈춤)"과 함께 읽힙니다.', '-', 'string'],
+    ['ChipMarquee', 'className', '바깥 칸에 덧붙일 클래스(폭 등)입니다.', '-', 'string'],
 ] as const
 
 const ChipMarqueeGuidePage = () => (
@@ -55,24 +55,20 @@ const ChipMarqueeGuidePage = () => (
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <ul className={LIST_CLASS}>
                     <li>
-                        끊김 없는 흐름 — 같은 목록을 네 벌 이어 붙이고 한 바퀴(60초)에 절반만큼 같은 속도로
-                        옮깁니다(animate-marquee · 가속 없음). 절반 지점이 처음 모습과 같아 이음매 · 멈칫하는 느낌이
-                        없고, 넓은 화면에서도 끝 빈자리가 드러나지 않습니다.
+                        같은 목록을 이어 붙여 한 바퀴 60초로 같은 속도로 흐릅니다(<code>animate-marquee</code>).
+                        이음매가 보이지 않고 넓은 화면에서도 끝 빈자리가 드러나지 않습니다.
                     </li>
                     <li>
-                        멈춤(useAutoplayPause) — 마우스를 올리면 멈추고 벗어나면 다시 흐릅니다. 터치하면 멈추고 다른
-                        곳을 누르면 다시 흐릅니다. 키보드 포커스가 들어와도 멈춥니다[6.2.2]. 멈춘 자리에서 그대로 이어서
-                        흐릅니다.
+                        마우스를 올리거나 터치하거나 키보드 포커스가 들어오면 멈추고, 벗어나면 멈춘 자리에서 이어
+                        흐릅니다[6.2.2].
                     </li>
                     <li>
-                        칩 — 옅은 파랑 면(blue.10) · navy.200 테두리 · 반경 16 · 여백 24 × 16 · 16 Bold navy.600.
-                        마우스를 올린 칩만 남색 면(navy.500) · 흰 글자입니다(시안의 hover 예시). 다크는 시안대로
-                        navy.800 면 · navy.500 테두리 · navy.300 글자이고, 마우스를 올리면 navy.300 면 · 짙은 글자 ·
-                        테두리 없음입니다 (chip-marquee-* 토큰).
+                        칩 색 · 크기는 <code>chip-marquee-*</code> 토큰입니다. 마우스를 올리면 남색 면으로 바뀌고,
+                        다크는 토큰이 자동으로 바꿉니다.
                     </li>
                     <li>
-                        동작 줄이기면 흐르지 않고 줄바꿈된 목록 한 벌로 보입니다[6.3.1]. 화면 낭독기는 첫 벌만
-                        읽습니다(나머지는 aria-hidden).
+                        동작 줄이기 설정이면 흐르지 않고 줄바꿈된 목록 한 벌로 보입니다[6.3.1]. 스크린리더는 첫 벌만
+                        읽습니다(나머지는 <code>aria-hidden</code>).
                     </li>
                 </ul>
             </section>

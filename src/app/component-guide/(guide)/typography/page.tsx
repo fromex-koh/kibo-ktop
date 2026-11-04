@@ -35,8 +35,8 @@ const LINE_HEIGHT: Record<string, number> = tokens.lineHeight
 const LETTER_SPACING: Record<string, string> = tokens.letterSpacing
 type TypographyEntry = [string, TypographyToken]
 
-// 타이포그래피 스케일 그룹 — Figma '크기(font-size)' 프레임의 분류(Display·Heading·Title·Body·
-// Caption·Micro) 순서 그대로 표를 나눈다. tokens.json 순서를 유지한 채 첫 매칭 그룹에 담는다.
+// 타이포그래피 스케일 그룹 — Display·Heading·Title·Body·Caption·Micro 분류 순서로 표를 나눈다.
+// tokens.json 순서를 유지한 채 첫 매칭 그룹에 담는다.
 // 마지막 '화면 전용'은 어디에도 안 걸리는 토큰을 받는 자리다 — 없으면 새 토큰이 표에서 조용히 빠진다.
 const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Display', match: (n) => n.startsWith('display-')},
@@ -405,7 +405,7 @@ const TypographyGuidePage = () => (
             />
         </TypographySectionCard>
 
-        {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}
+        {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 분류별 표로 나눈다 */}
         <TypographySectionCard aria-labelledby="typo-tokens" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 id="typo-tokens" className="typo-h4-bold">

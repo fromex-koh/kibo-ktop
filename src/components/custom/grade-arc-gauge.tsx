@@ -57,7 +57,7 @@ const SIZE_CLASSNAMES: Record<
     md: {
         box: 'w-grade-gauge-md',
         grade: 'typo-h4-bold',
-        color: 'var(--raw-purple-500)',
+        color: 'var(--ds-purple-500)',
         gradeOffset: 'pb-6',
         labelOffset: 'pb-1',
     },
@@ -115,7 +115,7 @@ const GradeArcGauge = ({
                     <path
                         d={ARC_PATH}
                         fill="none"
-                        stroke="var(--raw-gray-50)"
+                        stroke="var(--ds-gauge-track)"
                         strokeWidth={ARC_STROKE}
                         strokeLinecap="round"
                     />

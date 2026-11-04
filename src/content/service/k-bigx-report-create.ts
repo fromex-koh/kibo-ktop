@@ -1,7 +1,6 @@
-// 기업혁신성장 보고서 생성 모달(KbigxReportCreateDialog)의 문구 · 목업 — 시안
-// "K-BIGx 보고서_기업혁신성장 보고서 생성"(40007590:14037) 그대로다.
+// 기업혁신성장 보고서 생성 모달(KbigxReportCreateDialog)의 문구 · 목업.
 //
-// [프론트엔드 연동] 기업명·특허 정보는 보고서 검색 결과에서 고른 행의 값으로 바꿔 넘긴다(아래는 시안 목업).
+// [프론트엔드 연동] 기업명 · 특허 정보는 조회 화면에서 고른 기업 · 특허 값으로 넘긴다(아래 MOCK_* 는 report-create 확인 화면용).
 
 type ReportCreatePatent = readonly {label: string; value: string}[]
 
@@ -17,8 +16,8 @@ const REPORT_CREATE_PAID_NOTICE = {
     ],
 } as const
 
-// 특허수가 없는 기업 — 시안 "…_기업혁신성장 보고서 생성_특허수가 없는 기업"(40007590:13996).
-// 특허 정보 상자 대신 이 안내만 보인다(유료 안내도 대신한다 — 이용횟수가 차감되지 않는다).
+// 특허수가 없는 기업의 기본 안내 — notice 를 넘기지 않을 때 특허 정보 상자 대신 보인다.
+// 차감 여부는 케이스마다 달라, 조회 화면은 getInnovationGrowthReportNotice 로 notice 를 넘긴다(둘째 줄이 케이스별로 바뀜).
 const REPORT_CREATE_NO_PATENT_NOTICE = {
     title: '보유 특허 정보가 확인되지 않습니다',
     items: ['기술혁신정보를 제외한 보고서가 생성됩니다.', '보고서를 생성하실 경우 이용횟수는 차감되지 않습니다.'],

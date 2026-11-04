@@ -226,7 +226,10 @@ const API_ROWS = [
                 default | xl | lg | md | sm | xs | icon | icon-xl | icon-lg | icon-md | icon-sm | icon-xs
             </code>,
             <code key="default">default</code>,
-            '일반 버튼 또는 아이콘 전용 버튼의 크기를 선택합니다. <code>default</code> · <code>icon</code> 은 높이 40px 에 최소 높이 44px(<code>min-h-11</code>)이 걸려 실제로는 44px 입니다.',
+            <span key="note">
+                일반 버튼 또는 아이콘 전용 버튼의 크기를 선택합니다. <code>default</code> · <code>icon</code> 은 높이
+                40px 에 최소 높이 44px(<code>min-h-11</code>)이 걸려 실제로는 44px 입니다.
+            </span>,
         ],
     },
     {

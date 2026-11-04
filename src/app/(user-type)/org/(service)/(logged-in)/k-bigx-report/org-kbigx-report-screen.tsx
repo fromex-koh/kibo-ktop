@@ -3,7 +3,8 @@ import {
     getInnovationGrowthInitialResult,
     type InnovationGrowthReportPreview,
 } from '@/components/custom/innovation-growth-report-screen'
-import {KbigxReportIntro} from '@/components/custom/k-bigx-report-sections'
+import {KbigxReportFrame} from '@/components/custom/k-bigx-report-sections'
+import {INNOVATION_GROWTH_SCREEN_TITLE} from '@/content/service/innovation-growth-report'
 import {innovationReportPath} from '@/content/service/k-bigx-innovation-report'
 import {BulkDataSearchForm, type BulkDataSearchFormProps} from './bulk-data-search/bulk-data-search-form'
 import {OrgKbigxReportTabs} from './org-kbigx-report-tabs'
@@ -25,15 +26,19 @@ type OrgKbigxReportScreenProps = {
     bulk?: BulkDataSearchFormProps
 }
 
-// 세로 간격 — 소개 · 탭 · 본문 사이 40, 아래 60(기업혁신성장 조회와 같은 틀).
 const OrgKbigxReportScreen = ({innovationPreview = 'search', bulk}: OrgKbigxReportScreenProps) => (
-    <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="grid-layout gap-y-10 pt-10 pb-15 *:col-span-full">
-            <KbigxReportIntro title="기업혁신성장" homeHref="/org/home" moreHref="/org/platform/k-bigx-report" />
+    <main id="main" tabIndex={-1} className="bg-background flex-1 overflow-x-clip">
+        {/* 화면 틀(isolate 포함) · 제목 · 소개 띠는 KbigxReportFrame 이 함께 그린다. */}
+        <KbigxReportFrame
+            title={INNOVATION_GROWTH_SCREEN_TITLE}
+            homeHref="/org/home"
+            moreHref="/org/platform/k-bigx-report"
+        >
             <OrgKbigxReportTabs
                 innovationPanel={
                     <InnovationGrowthReportLookup
-                        initialResult={getInnovationGrowthInitialResult(innovationPreview)}
+                        userType="org"
+                        initialResult={getInnovationGrowthInitialResult(innovationPreview, 'org')}
                         reportHref={innovationReportPath('org')}
                     />
                 }
@@ -45,7 +50,7 @@ const OrgKbigxReportScreen = ({innovationPreview = 'search', bulk}: OrgKbigxRepo
                     />
                 }
             />
-        </div>
+        </KbigxReportFrame>
     </main>
 )
 

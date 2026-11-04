@@ -41,7 +41,7 @@ const PROPS_ITEMS = [
     [
         'ActionCheck',
         'onAnimationComplete',
-        '재생이 끝나 마지막 프레임에 고정됐을 때 호출합니다. 모션 감소 상태에서도 호출됩니다.',
+        '재생이 끝나 마지막 프레임에 고정됐을 때 호출합니다. 동작 줄이기 상태에서도 호출됩니다.',
         'undefined',
         '() => void',
     ],
@@ -50,7 +50,7 @@ const PROPS_ITEMS = [
         'className · div props',
         '래퍼 div 에 전달합니다. children 과 role 은 받지 않습니다.',
         'undefined',
-        "ComponentProps<'div'>",
+        "ComponentPropsWithoutRef<'div'>",
     ],
 ] as const
 

@@ -159,7 +159,7 @@ const PROPS_ITEMS = [
     [
         'ButterflyBarSide',
         'color',
-        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>)를 씁니다. 다크에서는 밝은 단계로 바뀝니다.',
         '-',
         'string',
     ],
@@ -176,7 +176,7 @@ const PROPS_ITEMS = [
     [
         'ButterflyBarChartSkeleton',
         'label',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -196,7 +196,7 @@ const SPECIAL_CASES = [
     },
     {
         title: '아주 작은 값',
-        description: '0 보다 크면 막대를 최소 2 로 그려 0 과 구분합니다.',
+        description: '0 보다 크면 막대를 최소 2px 로 그려 0 과 구분합니다.',
         data: TINY_DATA,
     },
     {
@@ -244,8 +244,8 @@ const ButterflyBarChartGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         항목마다 <code>left</code> · <code>right</code> 값을 한 행으로 넘깁니다. 막대 길이는 쪽마다 그
-                        쪽의 가장 큰 값을 기준으로 따로 재므로 두 쪽은 서로 견주지 않습니다. 값은 늘 글자로 적혀
-                        말풍선이 없습니다.
+                        쪽의 가장 큰 값을 기준으로 따로 재므로 두 쪽은 서로 견주지 않습니다. 값은 늘 글자로 적혀 툴팁이
+                        없습니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card flex min-w-0 flex-col gap-4 rounded-sm border p-6">
@@ -267,7 +267,7 @@ const ButterflyBarChartGuidePage = () => (
             <section aria-labelledby="bbc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="bbc-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         값 글자가 카드를 넘거나 줄이 어긋날 수 있는 경우는 컴포넌트가 처리합니다.
@@ -333,7 +333,7 @@ const ButterflyBarChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>aria-hidden</code> 으로 감추고, 같은 값이 숨김 표(<code>caption</code> ·{' '}
-                        <code>th scope</code>)로 들어 있어 화면 낭독기가 표로 읽습니다. 표의 항목 칸 머리는{' '}
+                        <code>th scope</code>)로 들어 있어 스크린리더가 표로 읽습니다. 표의 항목 칸 머리는{' '}
                         <code>categoryTitle</code> 입니다[5.1.1].
                     </li>
                     <li>
@@ -341,10 +341,12 @@ const ButterflyBarChartGuidePage = () => (
                     </li>
                     <li>긴 숫자를 줄여 적어도 숨김 표에는 원래 값이 있습니다.</li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때
                         막대가 가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가
-                        옅게 나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작
-                        줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        옅게 나타납니다(<code>--animate-chart-label</code> · 0.3초). 움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

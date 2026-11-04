@@ -67,7 +67,7 @@ type DatePickerProps = {
     onInvalid?: ComponentPropsWithoutRef<'input'>['onInvalid']
     /** 고르는 단위. month 면 달력 대신 12개월 격자가 열리고 값도 연월까지만 다룬다. */
     granularity?: DatePickerGranularity
-    /** 시안 date_input 의 large(48px) · medium(40px). Select 와 같은 축이다. */
+    /** 디자인 date_input 의 large(48px) · medium(40px). Select 와 같은 축이다. */
     size?: 'lg' | 'md'
     className?: string
 } & Pick<ComponentPropsWithoutRef<'button'>, 'aria-invalid' | 'aria-describedby'>
@@ -345,8 +345,8 @@ const DatePicker = ({
             startMonth={minDate}
             endMonth={maxDate}
             locale={ko}
-            // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
-            // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
+            // 디자인 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
+            // captionLayout="dropdown" 을 쓰고, 표기만 디자인대로(월 2자리·연도 뒤 '년') 맞춘다.
             navLayout="around"
             captionLayout="dropdown"
             formatters={{
@@ -363,7 +363,7 @@ const DatePicker = ({
                 dropdown: 'static inset-auto opacity-100',
                 caption_label: 'sr-only',
             }}
-            // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
+            // react-day-picker 는 연도를 먼저 그리는데 디자인은 월이 앞이다.
             // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
             // 자식 순서 자체를 바꾼다.
             components={{

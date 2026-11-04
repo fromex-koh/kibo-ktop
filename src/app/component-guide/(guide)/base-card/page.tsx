@@ -32,7 +32,10 @@ const PADDING_USAGE_CODE = `{/* 기본(md) — 패딩 24px */}
 {/* lg — 패딩 32px */}
 <BaseCard padding="lg">…</BaseCard>`
 
-const OUTLINED_USAGE_CODE = `<BaseCard variant="outlined" padding="lg">
+const OUTLINED_USAGE_CODE = `import {Icon} from '@/components/custom/icon'
+import {ListMarker} from '@/components/custom/list-marker'
+
+<BaseCard variant="outlined" padding="lg">
   <div className="flex flex-col gap-4">
     <div className="flex items-center gap-2">
       <Icon symbol="alert" variant="solid" className="size-icon-lg shrink-0 bg-icon-solid-neutral text-icon-solid-neutral-foreground" />

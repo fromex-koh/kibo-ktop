@@ -34,7 +34,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-auth-find-account",
@@ -768,15 +768,15 @@
             "key": "corp-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -807,20 +807,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -840,6 +826,48 @@
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
             "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
@@ -1224,14 +1252,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend",
@@ -1280,21 +1308,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspension-history",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-refundable",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change",
@@ -1308,21 +1336,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason-refund-processing",
@@ -1511,7 +1539,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.9",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-auth-find-account",
@@ -2007,15 +2035,15 @@
             "key": "org-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -2053,20 +2081,6 @@
             "isCurrent": false
         },
         {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -2086,6 +2100,48 @@
             "implementationStatus": "in-progress",
             "version": "v3.4.2",
             "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.5.0",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",

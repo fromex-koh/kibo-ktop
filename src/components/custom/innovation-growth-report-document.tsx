@@ -113,7 +113,7 @@ const TECH_INDEX_NO_SCORE_TEXT = '기술신용평가(TCB) 이력이 없어 산�
 // 차감 알림 식별자 — 같은 알림이 겹쳐 뜨지 않게 한다(새로고침 · 다시 그리기).
 const INNOVATION_REPORT_CREATED_TOAST_ID = 'k-bigx-innovation-report-created'
 // [퍼블리싱 확인용] 토스트를 보려고 ?from=use 없이도 화면을 열면 차감 알림을 띄운다.
-// 연동할 때는 false 로 바꾸거나 이 상수를 지운다 — 그러면 [이용권 사용]을 거쳐 열렸을 때(?from=use)만 뜬다.
+// 연동할 때는 false 로 바꾸거나 이 상수를 지운다 — 그러면 차감되어 열렸을 때(?from=use)만 뜬다.
 const PUBLISHING_ALWAYS_SHOW_CREATED_TOAST = true
 // 재무비율진단 평가지표 — 5줄 고정(인쇄본과 같다). creditFinance.ratios 에서 같은 label 로 찾고, 없거나 다섯 단계 밖 값이면
 // 그 줄의 단계 칸마다 '-'. 부문별 비교 레이더 축도 같은 다섯 지표다(값이 없으면 0 으로 그린다 — 레이더는 꼭짓점을 비울 수 없다).
@@ -224,8 +224,11 @@ const StatementTable = ({years, statements}: Pick<InnovationGrowthReport['credit
 
 type InnovationGrowthReportDocumentProps = {
     report: InnovationGrowthReport
-    /** [이용권 사용]을 거쳐 열렸는지 — true 면 '이용권이 차감되어 보고서를 생성하였습니다.' 알림을 띄운다. */
+    /** 차감되어 열렸는지(?from=use) — true 면 '이용권이 차감되어 보고서를 생성하였습니다.' 알림을 띄운다. */
     isJustCreated?: boolean
+    /** 차감 없이 열린 보고서(?from=free · 자사조회 · 기관회원). [퍼블리싱 확인용] PUBLISHING_ALWAYS_SHOW_CREATED_TOAST 가
+     *  켜져 있어도 차감 알림을 막는다 — 그 상수를 지우면 없어도 된다. */
+    isFreeReport?: boolean
     /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH). 주면 [보고서 다운로드]가 보고서 내용 선택 모달을 열고, 모달의 [보고서 미리보기]가 인쇄본을 새 탭으로 연다. 없으면 동작 없는 버튼이다. */
     printPath?: string
 }
@@ -233,7 +236,12 @@ type InnovationGrowthReportDocumentProps = {
 // 혁신성장역량지수 점수 — 게이지와 같이 소수 첫째 자리까지(73.8).
 const techIndexScoreFormatter = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 
-const ReportDocumentBody = ({report, isJustCreated = false, printPath}: InnovationGrowthReportDocumentProps) => {
+const ReportDocumentBody = ({
+    report,
+    isJustCreated = false,
+    isFreeReport = false,
+    printPath,
+}: InnovationGrowthReportDocumentProps) => {
     // 기업 정보 — 값이 비면(빈 글자 · 공백) '-'. 모든 값이 비면 표 대신 같은 높이의 빈 상태를 보인다.
     // [프론트엔드 연동] 받지 못한 값은 빈 글자로 보낸다('-' 로 보내도 빈 값으로 본다).
     const companyRows = report.company.rows.map((row) => ({
@@ -242,17 +250,17 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
         value: row.value?.trim() || EMPTY_VALUE,
     }))
     const hasCompanyInfo = companyRows.some((row) => row.value !== EMPTY_VALUE)
-    // [이용권 사용]을 거쳐 열렸을 때(?from=use) 차감 알림을 한 번 띄운다 — 확인 토스트(체크 표시 · 머리 아래 가운데 · 4초).
+    // 차감되어 열렸을 때(?from=use) 차감 알림을 한 번 띄운다 — 확인 토스트(체크 표시 · 머리 아래 가운데 · 4초).
     // 이 문서의 effect 가 루트의 Toaster 보다 먼저 돌아 바로 부르면 아무도 받지 못하므로 한 틱 미룬다.
-    // [프론트엔드 연동] 차감 성공 여부는 새 창을 여는 쪽(조회횟수 차감안내 모달)이 알고 있다 — 성공했을 때만 ?from=use 를 붙여 연다.
+    // [프론트엔드 연동] 차감 성공 여부는 새 창을 여는 보고서 생성 모달(KbigxReportCreateDialog)이 안다 — 성공했을 때만 ?from=use 를 붙여 연다.
     useEffect(() => {
-        if (!isJustCreated && !PUBLISHING_ALWAYS_SHOW_CREATED_TOAST) return
+        if (isFreeReport || (!isJustCreated && !PUBLISHING_ALWAYS_SHOW_CREATED_TOAST)) return
         const timer = window.setTimeout(
             () => showCheckToast(INNOVATION_REPORT_CREATED_TOAST, {id: INNOVATION_REPORT_CREATED_TOAST_ID}),
             0,
         )
         return () => window.clearTimeout(timer)
-    }, [isJustCreated])
+    }, [isFreeReport, isJustCreated])
 
     // 모바일 [더보기]가 여는 PC 화면 주소 — 지금 주소에 ?view=pc 를 붙인다. 차감 알림 표시(?from=use)는 새 창에서 다시 뜨지 않게 뺀다.
     const pathname = usePathname()

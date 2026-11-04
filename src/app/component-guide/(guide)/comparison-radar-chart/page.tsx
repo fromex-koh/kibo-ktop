@@ -128,7 +128,7 @@ const STYLE_ROWS = [
         cells: [
             <code key="name">TECH_INDEX_RADAR_STYLE</code>,
             <code key="file">tech-index-radar-style.ts</code>,
-            '같은 구조에 반지름 70 · 축 이름 12 · 말풍선 없음. K-BIGx Tech-Index 탭의 혁신성장역량지수 부문별 지표 비교 카드용입니다.',
+            '같은 구조에 반지름 70 · 축 이름 12 · 툴팁 없음. K-BIGx Tech-Index 탭의 혁신성장역량지수 부문별 지표 비교 카드용입니다.',
         ],
     },
 ] as const
@@ -227,7 +227,7 @@ const STYLE_PROP_ROWS = toRows([
     ],
     [
         'tickGap',
-        '축 끝 ↔ 축 이름 거리입니다. 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘립니다(K-BIGx PDF 템플릿 진단브리핑 14).',
+        '축 끝 ↔ 축 이름 거리입니다. 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘립니다.',
         '8',
         'number',
     ],
@@ -248,7 +248,7 @@ const STYLE_PROP_ROWS = toRows([
     ],
     [
         'fixedSize',
-        '칸 폭을 재지 않고 이 크기(px)로 그립니다. 용지를 축소해 보여 주는 PDF 템플릿(K-BIGx 진단브리핑 420 × 312 · Tech-Index 509 × 416)에서 처음에 줄어든 크기로 그려지는 것을 막습니다. 주면 말풍선은 그리지 않습니다. 없으면 칸 폭에 맞춥니다(웹 화면).',
+        '칸 폭을 재지 않고 이 크기(px)로 그립니다. 용지를 축소해 보여 주는 PDF 템플릿에서 줄어든 크기로 그려지는 것을 막습니다. 주면 툴팁은 그리지 않습니다. 없으면 칸 폭에 맞춥니다(웹 화면).',
         'undefined',
         '{width: number; height: number}',
     ],
@@ -262,7 +262,7 @@ const BEHAVIOR_PROP_ROWS = toRows([
         "'outline'",
         "'outline' | 'swatch'",
     ],
-    ['showTooltip', '값 위에 올렸을 때의 말풍선과 강조 점입니다.', 'true', 'boolean'],
+    ['showTooltip', '값 위에 올렸을 때의 툴팁과 강조 점입니다.', 'true', 'boolean'],
     [
         'animate',
         '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
@@ -270,7 +270,7 @@ const BEHAVIOR_PROP_ROWS = toRows([
         'boolean',
     ],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
-    ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'레이더 차트를 불러오는 중입니다.'", 'string'],
+    ['loadingLabel', '불러오는 중에 스크린리더가 읽을 문구입니다.', "'레이더 차트를 불러오는 중입니다.'", 'string'],
     [
         'skeletonType',
         '스켈레톤 모양입니다. 기본은 gridType 과 축 수로 고릅니다.',
@@ -513,23 +513,20 @@ const ComparisonRadarChartGuidePage = () => (
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 붙입니다[5.1.1].
                     </li>
                     <li>
-                        지표별 값을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어 화면
-                        낭독기가 전체 수치를 읽습니다[7.3.2].
+                        지표별 값을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어
+                        스크린리더가 전체 수치를 읽습니다[7.3.2].
                     </li>
                     <li>두 계열은 색뿐 아니라 실선과 점선, 점 유무로도 구분하고 범례 텍스트를 함께 둡니다[5.3.1].</li>
                     <li>
-                        <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
-                    </li>
-                    <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>
@@ -557,7 +554,11 @@ const ComparisonRadarChartGuidePage = () => (
                         />
                         <p className="typo-body-l-regular text-label-foreground">
                             <code>ComparisonRadarItem</code>:{' '}
-                            <code>{'{id: string; label: string; primaryValue: number; comparisonValue?: number}'}</code>
+                            <code>
+                                {
+                                    '{id: string; label: string; primaryValue: number; comparisonValue?: number; primaryValueText?: string}'
+                                }
+                            </code>
                         </p>
                     </div>
                     <div className={BLOCK_CLASS}>

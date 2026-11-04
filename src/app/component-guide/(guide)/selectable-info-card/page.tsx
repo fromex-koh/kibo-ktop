@@ -51,7 +51,17 @@ const CHOICE_ROWS = [
         cells: [
             <code key="component">SelectableInfoCard</code>,
             '하나만',
-            '항목 이름 · 값 여러 줄로 된 정보 카드 목록(검색된 기업 · 특허). 컨트롤 표시가 없습니다.',
+            '항목 이름 · 값 여러 줄로 된 정보 카드 목록. 컨트롤 표시가 없습니다.',
+        ],
+    },
+    {
+        key: 'list',
+        cells: [
+            <Link key="component" href="/component-guide/selectable-list-card" className={LINK_CLASS}>
+                SelectableListCard
+            </Link>,
+            '하나만',
+            '건수가 많은 검색 결과의 한 줄 카드(검색된 기업 · 특허). 라디오 표시가 있습니다.',
         ],
     },
     {

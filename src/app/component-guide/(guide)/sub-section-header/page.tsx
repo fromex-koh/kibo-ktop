@@ -93,7 +93,9 @@ const CHOICE_ROWS = [
         key: 'section-header',
         cells: [
             '페이지 안 섹션의 제목',
-            <code key="c">SectionHeader</code>,
+            <Link key="c" href="/component-guide/section-header" className={LINK_CLASS}>
+                SectionHeader
+            </Link>,
             'h2 입니다. 기본 typo-h4-bold, size="lg" 는 typo-h1-bold 입니다.',
         ],
     },
@@ -101,9 +103,7 @@ const CHOICE_ROWS = [
         key: 'sub-section-header',
         cells: [
             '섹션 안의 하위 구획 제목',
-            <Link key="c" href="/component-guide/sub-section-header" className={LINK_CLASS}>
-                SubSectionHeader
-            </Link>,
+            <code key="c">SubSectionHeader</code>,
             'h3 이며 typo-title-l-bold 로 한 단계 작습니다. h2 섹션 안에서만 씁니다.',
         ],
     },
@@ -205,7 +205,7 @@ const SubSectionHeaderGuidePage = () => (
                         <h3 className="typo-title-m-bold text-foreground">리스트형 설명</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             안내가 여러 줄이면 <code>SubSectionHeaderDescription</code> 에 <code>asChild</code> 를 주고{' '}
-                            <code>ul</code> + <code>ListMarker level={2}</code>(대시) 목록을 넣습니다.
+                            <code>ul</code> + <code>{'<ListMarker level={2} />'}</code>(대시) 목록을 넣습니다.
                         </p>
                         <div className="border-border rounded-xl border p-6">
                             <SubSectionHeader>

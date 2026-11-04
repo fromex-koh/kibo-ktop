@@ -181,6 +181,54 @@ const DEFAULT_ROWS = [
     },
 ] as const
 
+const GLOW_CODE = `// 감싼 화면 틀에 isolate — 글로우가 틀 맨 뒤에 깔려 주변 글을 덮지 않는다.
+// K-BIGx 화면은 KbigxReportFrame(isolate 틀 포함) 안에 두면 된다.
+<div className="grid-layout isolate …">
+  <SelectSearchForm
+    options={…}
+    onSearch={handleSearch}
+    onReset={handleReset}
+    // K-BIGx 기업혁신성장 조회: 검색 전에만 켠다 — 검색하면 끄고 [초기화]로 첫 화면에 돌아오면 다시 켠다.
+    hasGlow={searchStatus === 'idle'}
+  />
+</div>`
+
+const GLOW_COLUMNS = [
+    {key: 'item', header: '항목', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start', wrap: true},
+] as const
+
+const GLOW_ROWS = [
+    {
+        key: 'line',
+        cells: ['테두리 선', '카드 둘레 2px 를 search-glow-start → middle → end 그라데이션이 4초에 한 바퀴 돕니다.'],
+    },
+    {
+        key: 'blur',
+        cells: [
+            '바깥 번짐',
+            '카드보다 4px 큰 판을 blur-md(12px)로 흐려 카드 밖 16px 안팎에서 희뿌옇게 사라집니다. 모서리도 둥글게 퍼집니다. 평소 60%.',
+        ],
+    },
+    {key: 'focus', cells: ['포커스', '카드 안에 키보드 포커스가 오면 번짐이 90% 로 진해집니다.']},
+    {key: 'motion', cells: ['동작 줄이기', 'prefers-reduced-motion 이면 돌지 않고 멈춘 그라데이션만 보입니다.']},
+    {
+        key: 'layer',
+        cells: [
+            '층',
+            '카드 뒤(z -1 · -2)에 깔려 카드 밖으로 나온 부분만 보이고 주변 글을 덮지 않습니다. 감싼 틀에 isolate 가 필요합니다.',
+        ],
+    },
+    {
+        key: 'file',
+        cells: [
+            '파일',
+            'src/styles/select-search-form.css(@property · 마스크) — 컴포넌트가 import 합니다. 색은 토큰만 씁니다.',
+        ],
+    },
+    {key: 'where', cells: ['쓰는 곳', 'K-BIGx 기업혁신성장 조회(기업 · 기관) 검색 전 첫 화면']},
+]
+
 const PROPS_ITEMS = [
     [
         'SelectSearchForm',
@@ -203,6 +251,13 @@ const PROPS_ITEMS = [
         '셀렉트에서 고른 기준이 바뀔 때(검색 전에도) 호출됩니다. [초기화]로 처음 기준에 돌아갈 때도 부릅니다. 고른 기준에 따라 폼 밖의 안내를 바꿀 때 씁니다(예: K-BIGx 기업혁신성장보고서조회의 특허 검색 범위 안내 · 기업정보 제공법적 근거).',
         '-',
         '(type: string) => void',
+    ],
+    [
+        'SelectSearchForm',
+        'isKeywordClearedOnTypeChange',
+        '기준을 바꾸면 직접 입력한 값도 비웁니다. 결과를 처음 상태로 되돌리는 일은 사용처가 onTypeChange 에서 합니다.',
+        'false',
+        'boolean',
     ],
     ['SelectSearchForm', 'isSearching', '조회 중입니다. [검색하기] · [초기화]가 눌리지 않습니다.', 'false', 'boolean'],
     [
@@ -240,6 +295,13 @@ const PROPS_ITEMS = [
         '셀렉트 접근성 이름과 버튼 글자입니다.',
         "'검색 기준' · '검색하기' · '검색 중' · '초기화'",
         'string',
+    ],
+    [
+        'SelectSearchForm',
+        'hasGlow',
+        '테두리 글로우(도는 그라데이션 선 + 바깥 번짐)를 켭니다. 감싼 틀에 isolate 가 있어야 보입니다.',
+        'false',
+        'boolean',
     ],
     ['SelectSearchForm', 'className', '카드(form)에 덧붙일 클래스입니다.', '-', 'string'],
 ] as const
@@ -295,6 +357,23 @@ const SelectSearchFormGuidePage = () => (
                         <CodeBlock code={DEFAULTS_CODE} language="tsx" copyLabel="복사" />
                     </div>
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="ssf-glow" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="ssf-glow" className="typo-h4-bold">
+                        테두리 글로우
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>hasGlow</code> 를 주면 카드 테두리를 따라 그라데이션이 돌고 바깥으로 빛이 번집니다. 언제
+                        켤지는 사용처가 정합니다. 아래 데모는 검색하면 꺼지고 [초기화]로 다시 켜집니다.
+                    </p>
+                </div>
+                <SelectSearchFormDemo withGlow />
+                <CodeBlock code={GLOW_CODE} language="tsx" copyLabel="복사" />
+                <Table caption="테두리 글로우 규칙" columns={GLOW_COLUMNS} rows={GLOW_ROWS} size="md" />
             </section>
         </BaseCard>
 

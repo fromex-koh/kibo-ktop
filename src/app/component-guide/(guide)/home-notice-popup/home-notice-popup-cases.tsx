@@ -17,7 +17,7 @@ const MEDIUM_BODY = [
     'K-BIGx 기업혁신성장 보고서의 구성과 조회 화면이 새로워졌습니다.',
     '',
     '· Tech-Index 표준정보 비교와 혁신역량별 분석 항목이 추가되었습니다.',
-    '· 보고서를 화면에서 확인한 뒤 바로 인쇄하거나 PDF 로 저장할 수 있습니다.',
+    '· 보고서를 화면에서 확인한 뒤 PDF 로 내려받을 수 있습니다.',
 ].join('\n')
 const LONG_BODY = [
     '안정적인 서비스 제공을 위해 시스템 정기 점검을 실시합니다.',
@@ -231,7 +231,7 @@ const HomeNoticePopupCases = ({group}: {group: keyof typeof NOTICE_CASE_GROUPS})
                         className="border-subtle-3 flex items-center justify-between gap-4 border-b py-4"
                     >
                         <div className="flex min-w-0 flex-col gap-1">
-                            <h3 className="typo-body-xl-bold text-foreground">{noticeCase.title}</h3>
+                            <h4 className="typo-body-xl-bold text-foreground">{noticeCase.title}</h4>
                             <p className="typo-body-l-regular text-label-foreground break-keep">
                                 {noticeCase.description}
                             </p>

@@ -217,7 +217,7 @@ const PROPS_ITEMS = [
 const ListPatternsGuidePage = () => (
     <GuidePageShell
         title="목록 패턴 (List)"
-        description="목록 컴포넌트를 고르는 기준과, 화면 목록 6종(공지사항·자료실·FAQ·1:1 문의·평가결과 조회)이 공유하는 골격과 규칙입니다."
+        description="목록 컴포넌트를 고르는 기준과, 화면 목록 6종(공지사항 · 자료실 · FAQ · 1:1 문의 · 기업 · 기관 평가결과 조회)이 공유하는 골격과 규칙입니다."
     >
         <BaseCard>
             <section aria-labelledby="list-patterns-choice" className="flex flex-col gap-6">
@@ -272,8 +272,8 @@ const ListPatternsGuidePage = () => (
                             </li>
                         </ol>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>InquiryList</code> · <code>EvaluationResultList</code> 는 목록 위에 “총 N건”도
-                            그립니다.
+                            <code>InquiryList</code> · <code>EvaluationResultList</code> ·{' '}
+                            <code>OrgEvaluationHistoryList</code> 는 목록 위에 “총 N건”도 그립니다.
                         </p>
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
@@ -337,7 +337,8 @@ const ListPatternsGuidePage = () => (
                         <code>aria-controls</code> 로 잇습니다[8.2.1].
                     </li>
                     <li>
-                        페이지를 넘기면 맨 위로 올라가며, 모션 감소 설정이면 부드러운 스크롤 없이 즉시 올립니다[6.3.1].
+                        페이지를 넘기면 맨 위로 올라가며, 동작 줄이기 설정이면 부드러운 스크롤 없이 즉시
+                        올립니다[6.3.1].
                     </li>
                     <li>
                         상태는 배지 글자를 함께 두어 색만으로 전하지 않습니다[5.3.1]. 링크 글자는 목적지를 알 수 있어야

@@ -22,7 +22,7 @@ type CaseProps = Pick<
     'mean' | 'standardDeviation' | 'value' | 'markerLabel' | 'markerLabelBelow' | 'min' | 'max' | 'tickStep'
 >
 
-// 보고서(Tech-Index 탭)와 같은 값 — 점 글자는 늘 점 아래(시안).
+// 보고서(Tech-Index 탭)와 같은 값 — 점 글자는 늘 점 아래.
 const REPORT_CASE: CaseProps = {
     mean: 50.5,
     standardDeviation: 21.5,
@@ -213,7 +213,7 @@ const DATA_ROWS = toRows([
 
 const FRAME_ROWS = toRows([
     ['variant', "'plain' 은 세로 점선만 두고 점 글자를 늘 점 아래에 붙입니다.", "'cells'", "'cells' | 'plain'"],
-    ['color', '곡선 · 점 색입니다. 토큰 변수를 씁니다.', "'var(--raw-blue-500)'", 'string'],
+    ['color', '곡선 · 점 색입니다. 토큰 변수를 씁니다.', "'var(--ds-blue-500)'", 'string'],
     ['heightClassName', '칸 높이 클래스입니다. 가로 눈금 글자 자리를 포함합니다.', "'h-49'", 'string'],
     [
         'yTicks',
@@ -235,7 +235,7 @@ const STATE_ROWS = toRows([
         'boolean',
     ],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
-    ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'그래프를 불러오는 중입니다.'", 'string'],
+    ['loadingLabel', '불러오는 중에 스크린리더가 읽을 문구입니다.', "'그래프를 불러오는 중입니다.'", 'string'],
 ])
 
 const BLOCK_CLASS = 'flex flex-col gap-4 py-8 last:pb-0'
@@ -372,12 +372,7 @@ const DistributionCurveChartGuidePage = () => (
                         점수 분포인지 등급별 비율인지로 고릅니다.
                     </p>
                 </div>
-                <Table
-                    caption="DistributionCurveChart · GradeDistributionChart 사용 기준"
-                    columns={CHOICE_COLUMNS}
-                    rows={CHOICE_ROWS}
-                    size="md"
-                />
+                <Table caption="분포 차트 컴포넌트 사용 기준" columns={CHOICE_COLUMNS} rows={CHOICE_ROWS} size="md" />
             </section>
         </BaseCard>
 
@@ -403,15 +398,15 @@ const DistributionCurveChartGuidePage = () => (
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 문단이 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>
@@ -459,7 +454,7 @@ const DistributionCurveChartGuidePage = () => (
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">DistributionCurveChartSkeleton</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>label</code>(<code>string</code>, 기본 “그래프를 불러오는 중입니다.”)은 화면 낭독기가
+                            <code>label</code>(<code>string</code>, 기본 “그래프를 불러오는 중입니다.”)은 스크린리더가
                             읽을 문구입니다.
                         </p>
                     </div>

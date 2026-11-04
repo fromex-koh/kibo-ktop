@@ -252,6 +252,11 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'service-hero-navy-band': 'bg-service-hero-navy-band',
     'service-hero-navy-glow-left': 'bg-service-hero-navy-glow-left',
     'service-hero-navy-glow-right': 'bg-service-hero-navy-glow-right',
+    'search-glow-start': 'bg-search-glow-start',
+    'search-glow-middle': 'bg-search-glow-middle',
+    'search-glow-end': 'bg-search-glow-end',
+    'service-intro-glow': 'bg-service-intro-glow',
+    'service-intro-glow-soft': 'bg-service-intro-glow-soft',
     'service-glass-border': 'bg-service-glass-border',
     'service-hero-marker': 'bg-service-hero-marker',
     'procedure-step-number': 'bg-procedure-step-number',
@@ -482,6 +487,8 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'service-accent-green', match: (n) => n === 'service-accent-green'},
     {name: 'service-hero-green (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-green-')},
     {name: 'service-hero-navy (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-navy-')},
+    {name: 'service-intro-glow (K-BIGx 소개 띠 그림 뒤 원)', match: (n) => n.startsWith('service-intro-glow')},
+    {name: 'search-glow (검색 카드 테두리 글로우)', match: (n) => n.startsWith('search-glow-')},
     {name: 'service-glass-border (소개 히어로 안내 카드 테두리)', match: (n) => n === 'service-glass-border'},
     {name: 'service-hero-marker (소개 히어로 카드 목록 점)', match: (n) => n === 'service-hero-marker'},
     {name: 'procedure-step-number (절차 단계 번호 면)', match: (n) => n === 'procedure-step-number'},
@@ -644,22 +651,18 @@ const SEMANTIC_TABLE_COLUMNS = [
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
 // note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
 const SemanticTable = ({
-    number,
     title,
     tokens,
     usage,
     note,
 }: {
-    number: string
     title: string
     tokens: SemanticEntry[]
     usage?: ReactNode
     note?: ReactNode
 }) => (
     <section className="border-border flex flex-col gap-4 border-b pb-8 last:border-b-0 last:pb-0">
-        <h3 className="typo-title-m-bold text-foreground">
-            {number}. {title}
-        </h3>
+        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
         <Table
@@ -756,14 +759,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'platform-* (플랫폼 소개)': (
         <>
-            플랫폼 소개 화면 전용입니다. platform-banner 는 남색 소개 배너 바탕(배너 사진의 남색과 같아 사진을 못
-            불러와도 같은 띠로 보임), -foreground 는 배너 글자(다크는 흰색 대신 gray.10), platform-hero-overlay 는 상단
-            대표 사진 위 어두운 막(60%)이자 사진 칸 바탕(사진을 못 불러와도 흰 글자가 읽히고, 대비 검사기도 이 색으로
-            계산)입니다. platform-audience 는 이용 대상 목록의 이용자 이름(중소기업고객 등),
+            플랫폼 소개 화면 전용입니다. platform-banner 는 남색 소개 배너 바탕(사진을 못 불러와도 같은 띠로 보임),
+            -foreground 는 배너 글자, platform-hero-overlay 는 상단 대표 사진 위 어두운 막(60%)이자 사진 칸 바탕(사진을
+            못 불러와도 흰 글자가 읽힘)입니다. platform-audience 는 이용 대상 목록의 이용자 이름,
             platform-carousel-nav-border 는 개요 카드 [이전] 버튼 테두리, platform-carousel-marker 는 고른 개요 카드의
-            설명 점입니다 — 라이트는 기존 색 그대로이고 다크만 시안 값으로 갈립니다. platform-kbigx-flow-* 는 K-BIGx
-            보고서 소개 생성 흐름도의 판(surface 바깥 판 · 점선 묶음, board 안쪽 판, source-border 점선, applicant
-            신청기업 칸 면 · 글자)입니다.
+            설명 점입니다. platform-kbigx-flow-* 는 K-BIGx 보고서 소개 생성 흐름도의 판(surface 바깥 판 · 점선 묶음,
+            board 안쪽 판, source-border 점선, applicant 신청기업 칸 면 · 글자)입니다.
         </>
     ),
     'menu-overlay (서비스 헤더 전체 메뉴)': (
@@ -844,25 +845,40 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'service-accent-green': (
         <>
             탄소중립 화면의 초록 강조 글자입니다 — 히어로 큰 제목 둘째 줄 · &apos;진단 시작하기&apos; 링크의 hover ·
-            포커스. 라이트는 시안 mint.800 이고, 다크는 시안대로 밝은 mint.200 입니다.
+            포커스. 라이트는 mint.800, 다크는 밝은 mint.200 입니다.
         </>
     ),
     'service-hero-green (띠 / 번진 원)': (
         <>
-            플랫폼 소개 &gt; 탄소중립 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 시안
-            값(green.100 · mint.100 · warning.50)이고, 다크는 시안대로 짙은 초록 띠(success.900) 위에 왼쪽 mint.900 ·
-            오른쪽 success.800 원이 은은하게 번집니다.
+            플랫폼 소개 &gt; 탄소중립 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 green.100
+            · mint.100 · warning.50 이고, 다크는 짙은 초록 띠(success.900) 위에 왼쪽 mint.900 · 오른쪽 success.800 원이
+            은은하게 번집니다.
         </>
     ),
     'service-hero-navy (띠 / 번진 원)': (
         <>
-            플랫폼 소개 &gt; K-BIGx 보고서 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 시안
-            값(navy.100 · blue.200 · purple.200)이고, 다크는 시안대로 짙은 남색 띠(navy.800) 위에 왼쪽 blue.900 · 오른쪽
-            purple.900 원이 은은하게 번집니다.
+            플랫폼 소개 &gt; K-BIGx 보고서 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는
+            navy.100 · blue.200 · purple.200 이고, 다크는 짙은 남색 띠(navy.800) 위에 왼쪽 blue.900 · 오른쪽 purple.900
+            원이 은은하게 번집니다.
         </>
     ),
     'service-hero-marker (소개 히어로 카드 목록 점)': (
         <>소개 화면 히어로 유리 카드의 목록 점입니다. 라이트 gray.500 · 다크 gray.100.</>
+    ),
+    'service-intro-glow (K-BIGx 소개 띠 그림 뒤 원)': (
+        <>
+            K-BIGx 보고서 소개 띠(ServiceIntroBanner hasIllustrationGlow)의 그림 뒤 원형 그라데이션입니다. 가운데
+            service-intro-glow → 28% service-intro-glow-soft → 72% 투명으로 번집니다(<code>bg-radial</code> from · via ·
+            to). 라이트 extra.ice · extra.glacier, 다크 extra.marine · extra.harbor — 연한 파랑을 화면 바탕 위에 얹었을
+            때 보이는 색입니다.
+        </>
+    ),
+    'search-glow (검색 카드 테두리 글로우)': (
+        <>
+            검색 카드(SelectSearchForm hasGlow) 테두리를 도는 그라데이션 색입니다. start(extra.teal) →
+            middle(extra.sapphire) → end(extra.violet) → start 로 이어지고, 라이트 · 다크 값이 같습니다. 손으로 쓰는 CSS
+            (styles/select-search-form.css)에서 var(--ds-search-glow-*) 로 씁니다.
+        </>
     ),
     'service-glass-border (소개 히어로 안내 카드 테두리)': (
         <>
@@ -872,8 +888,8 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'procedure-step-number (절차 단계 번호 면)': (
         <>
-            절차 단계(ProcedureSteps)의 번호 칸 면입니다. 라이트는 gray.500, 다크는 시안대로 밝은 gray.200 이고 번호
-            글자는 primary-foreground 입니다. K-BIGx 보고서 · 특허평가 · 탄소중립 소개가 함께 씁니다.
+            절차 단계(ProcedureSteps)의 번호 칸 면입니다. 라이트는 gray.500, 다크는 밝은 gray.200 이고 번호 글자는
+            primary-foreground 입니다. K-BIGx 보고서 · 특허평가 · 탄소중립 소개가 함께 씁니다.
         </>
     ),
     'rolling-accordion-marker (자동 롤링 아코디언 목록 점)': (
@@ -894,24 +910,24 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'rolling-accordion-surface (자동 롤링 아코디언 판)': (
         <>
-            자동 롤링 아코디언(RollingAccordion)의 글 판입니다. 라이트는 panel-subtle 과 같은 gray.10, 다크는 시안대로
-            페이지 바탕과 같은 gray.900 입니다. 기술평가 · K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
+            자동 롤링 아코디언(RollingAccordion)의 글 판입니다. 라이트는 panel-subtle 과 같은 gray.10, 다크는 페이지
+            바탕과 같은 gray.900 입니다. 기술평가 · K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
         </>
     ),
     'service-target-band / chip-marquee (면 / 테두리 / 글자)': (
         <>
             탄소중립 &apos;이런 기업에 적합합니다&apos; 띠(service-target-band)와 그 위 칩 마퀴(ChipMarquee)의 칩 면 ·
-            테두리 · 글자 · 마우스를 올린 면(hover)입니다. 라이트는 시안(blue.50 띠 · blue.10 칩 · navy.200 테두리 ·
-            navy.600 글자 · navy.500 hover). 다크는 시안대로 blue.900 띠 위에 navy.800 칩 · navy.500 테두리 · navy.300
-            글자이고, hover 면은 navy.300 에 짙은 글자(primary-foreground)이며 테두리도 면과 같은 navy.300 이라 보이지
+            테두리 · 글자 · 마우스를 올린 면(hover)입니다. 라이트는 blue.50 띠 · blue.10 칩 · navy.200 테두리 · navy.600
+            글자 · navy.500 hover 입니다. 다크는 blue.900 띠 위에 navy.800 칩 · navy.500 테두리 · navy.300 글자이고,
+            hover 면은 navy.300 에 짙은 글자(primary-foreground)이며 테두리도 면과 같은 navy.300 이라 보이지
             않습니다(hover-border — 라이트는 평소 테두리 navy.200 그대로).
         </>
     ),
     'pill-tab (트랙 / 고른 면 / 글자)': (
         <>
             알약 전환 탭(theme/pill-tabs.variants.ts)의 트랙(track) · 고른 항목 면(active) ·
-            글자(active-foreground)입니다 — 플랫폼 소개 &gt; 탄소중립의 플랫폼 전환. 라이트는 시안(트랙 green.50 · 고른
-            면 mint.800 · 흰 굵은 글자). 다크는 시안대로 짙은 초록 트랙(green.900) 위에 같은 mint.800 고른 면 · gray.10
+            글자(active-foreground)입니다 — 플랫폼 소개 &gt; 탄소중립의 플랫폼 전환. 라이트는 트랙 green.50 · 고른 면
+            mint.800 · 흰 굵은 글자 입니다. 다크는 짙은 초록 트랙(green.900) 위에 같은 mint.800 고른 면 · gray.10
             글자입니다.
         </>
     ),
@@ -938,7 +954,7 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
 }
 
-// 색상(Semantic) — 프로젝트가 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
+// 색상(Semantic) — 프로젝트가 실제로 쓰는 시맨틱 토큰(--ds). 슬롯 가족별로 표를 나눈다.
 // 적용 규칙 카드 — 규칙마다 설명 · 사용 · 금지를 같은 자리에 둔다.
 const SEMANTIC_RULES = [
     {
@@ -982,7 +998,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="semantic-rule" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
-                            1. 시맨틱 색상 적용 방식
+                            시맨틱 색상 적용 방식
                         </h2>
                         <p className="typo-body-l-regular text-label-foreground">
                             색 값이나 단계가 아니라 UI 에서 맡는 역할로 클래스를 고릅니다.
@@ -1023,7 +1039,7 @@ const SemanticColorGuidePage = () => (
 
                     <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
                         <div className="flex flex-col gap-2">
-                            <h3 className="typo-title-m-bold text-foreground">1-1. 테마별 동일 토큰 세트</h3>
+                            <h3 className="typo-title-m-bold text-foreground">테마별 동일 토큰 세트</h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 light · dark · mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
                             </p>
@@ -1070,7 +1086,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="std-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="std-slots" className="typo-h4-bold text-foreground">
-                            2. shadcn 표준 슬롯{' '}
+                            shadcn 표준 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -1087,10 +1103,9 @@ const SemanticColorGuidePage = () => (
                             를 따릅니다.
                         </p>
                     </div>
-                    {STANDARD_GROUPED.map((group, index) => (
+                    {STANDARD_GROUPED.map((group) => (
                         <SemanticTable
                             key={group.name}
-                            number={`2-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -1104,7 +1119,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="custom-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="custom-slots" className="typo-h4-bold text-foreground">
-                            3. 프로젝트 커스텀 슬롯{' '}
+                            프로젝트 커스텀 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -1112,10 +1127,9 @@ const SemanticColorGuidePage = () => (
                             의미를 표현할 수 없을 때만 사용합니다.
                         </p>
                     </div>
-                    {CUSTOM_GROUPED.map((group, index) => (
+                    {CUSTOM_GROUPED.map((group) => (
                         <SemanticTable
                             key={group.name}
-                            number={`3-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -1128,7 +1142,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="component-recipes" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="component-recipes" className="typo-h4-bold text-foreground">
-                            4. 컴포넌트 전용 레시피 토큰{' '}
+                            컴포넌트 전용 레시피 토큰{' '}
                             <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -1136,13 +1150,8 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    {RECIPE_GROUPED.map((group, index) => (
-                        <SemanticTable
-                            key={group.name}
-                            number={`4-${index + 1}`}
-                            title={group.name}
-                            tokens={group.tokens}
-                        />
+                    {RECIPE_GROUPED.map((group) => (
+                        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
                     ))}
                 </section>
             </BaseCard>

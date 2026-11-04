@@ -2208,7 +2208,7 @@ const TotalTiles = ({totals}: {totals: readonly {label: string; value: string}[]
                     SUMMARY_TOTAL_TONE_CLASS[index % SUMMARY_TOTAL_TONE_CLASS.length],
                 )}
             >
-                <dt className="typo-body-s-regular text-foreground-subtle">{total.label}</dt>
+                <dt className="typo-body-m-regular text-foreground-subtle">{total.label}</dt>
                 <dd className="typo-title-l-bold text-foreground">{total.value}</dd>
             </div>
         ))}
@@ -2317,7 +2317,7 @@ const AccessibilityExceptionsPage = () => (
                     <dt className="font-bold">검사 대상</dt>
                     <dd>
                         탄소를 제외한 기업·기관 화면을 <code className="font-mono">next build</code> 후 운영 모드로
-                        실행하여, 서버가 응답한 초기 HTML을 검사합니다
+                        실행하여, 서버가 응답한 초기 HTML을 검사합니다.
                     </dd>
                 </div>
                 <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
@@ -2363,10 +2363,10 @@ const AccessibilityExceptionsPage = () => (
                                         <ReferenceLink href="https://validator.w3.org/">
                                             W3C Markup Validation Service
                                         </ReferenceLink>
-                                        와 같은 엔진을 사용합니다
+                                        와 같은 엔진을 사용합니다.
                                     </span>
                                 </li>
-                                <li className="typo-body-s-regular text-foreground-subtle flex">
+                                <li className="typo-body-m-regular text-foreground-subtle flex">
                                     <ListMarker type="unordered-small" />
                                     <span className="min-w-0">
                                         Nu Html Checker는 MIT 라이선스로 사용·수정·배포·상업적 이용이 허용됩니다. 검사기
@@ -2398,7 +2398,7 @@ const AccessibilityExceptionsPage = () => (
                                 <li className="flex">
                                     <ListMarker type="unordered-small" />
                                     <span className="min-w-0">
-                                        자동 수집하지 않고 브라우저에서 수동으로 검사해 기록합니다
+                                        자동 수집하지 않고 브라우저에서 수동으로 검사해 기록합니다.
                                     </span>
                                 </li>
                             </ul>
@@ -3922,7 +3922,7 @@ const AccessibilityExceptionsPage = () => (
                         ) : null}
                         {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
                         <div className="divide-subtle-3 flex flex-col divide-y">
-                            {ACTIVE_PROJECT_ISSUES.map((issue, index) => (
+                            {ACTIVE_PROJECT_ISSUES.map((issue) => (
                                 <section
                                     key={issue.kind}
                                     aria-labelledby={`project-issue-${issue.kind}`}
@@ -3933,7 +3933,7 @@ const AccessibilityExceptionsPage = () => (
                                             className="typo-title-l-bold scroll-mt-24"
                                             id={`project-issue-${issue.kind}`}
                                         >
-                                            {index + 1}. {issue.title}
+                                            {issue.title}
                                         </SectionHeaderTitle>
                                         <SectionHeaderDescription>
                                             {issue.routes.length}개 화면에서 재현

@@ -54,8 +54,6 @@ const LARGE = toItems([
     ['평균', 2.5, 'average'],
 ])
 const SHARED_MAX = rankBarScaleMax(SMALL, LARGE)
-const SMALL_COLORS = {bar: 'var(--ds-navy-500)'}
-const LARGE_COLORS = {bar: 'var(--ds-blue-500)'}
 // PDF 템플릿 색 — kbigx-print-innovation.tsx 의 rankColors 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
 const printColors = (bar: string) => ({
     bar,
@@ -63,6 +61,18 @@ const printColors = (bar: string) => ({
     averageLine: 'var(--kbx-color-chart-average-line)',
     subjectBar: 'var(--kbx-color-chart-subject)',
 })
+// 예시 목록은 서비스 화면(K-BIGx 보고서 PDF 템플릿)과 같은 색으로 그린다 — 제목 줄 연보라 면 · 남색 글자 · 남색 위 선,
+// 100억원 이하 보라 · 초과 파랑 막대. 글자 크기만 가이드 폭에 맞춰 웹 크기로 둔다. Example 이 .kbigx-print 로 감싼다.
+const SMALL_COLORS = printColors('var(--kbx-color-purple)')
+const LARGE_COLORS = printColors('var(--kbx-color-blue)')
+const SERVICE_LIST_STYLE = {
+    listClassName: 'typo-body-l-regular text-kbx-foreground border-kbx-primary border-t-2',
+    titleClassName: 'bg-kbx-surface text-kbx-primary typo-body-xl-bold px-3.5 py-2.5',
+    rowClassName: 'border-kbx-border-subtle border-b py-2',
+    averageRowClassName: 'border-t-kbx-foreground text-kbx-foreground-subtle border-t-2 font-bold',
+    subjectRowClassName: 'bg-kbx-surface text-kbx-primary font-extrabold',
+    highlightIconClassName: 'text-kbx-star size-5 fill-current',
+} as const
 
 // 3. 엣지 케이스.
 const EDGE_CASES = [
@@ -80,7 +90,8 @@ const EDGE_CASES = [
     {
         key: 'long',
         title: '이름이 길 때',
-        description: '이름 칸 안에서 줄을 바꾸고 그만큼 행이 높아집니다. 강조 별은 이름 뒤에 붙습니다.',
+        description:
+            '이름 칸 안에서 줄을 바꾸고 그만큼 행이 높아집니다. 강조 별은 이름 뒤에 붙습니다. PDF 템플릿은 renderName 으로 한 줄 말줄임(…)만 하고 툴팁은 없습니다(웹은 DivergingRankChart 가 툴팁을 보입니다).',
         items: toItems([
             ['(주)글로벌테크놀로지솔루션즈코리아', 19.2, 'default', true],
             ['스마트 모빌리티 시스템즈', 12.1],
@@ -145,10 +156,12 @@ const PRINT_CODE = `// K-BIGx PDF 템플릿 — 20px · 줄 여백 8 · 이름 �
   averageRowClassName="border-t-kbx-foreground kbx-border-t-regular text-kbx-foreground-subtle font-kbx-bold"
   subjectRowClassName="bg-kbx-surface text-kbx-primary font-kbx-extrabold"
   nameClassName="w-42.5 pl-3.5"
+  barClassName="h-4"
   valueClassName="w-18"
   highlightValueClassName="font-kbx-bold"
   highlightIconClassName="size-kbx-22 text-kbx-star fill-current"
   highlightLabel="고성장"
+  renderName={(name) => <span className="block truncate">{name}</span>} // 이름 한 줄 · 말줄임
 />`
 
 const PROPS_ITEMS = [
@@ -177,7 +190,7 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['RankBarList', 'formatValue', '값 글자 형식입니다.', "'23.5%'", '(value: number) => string'],
-    ['RankBarList', 'highlightLabel', '강조 별의 이름(화면 낭독기용)입니다.', "'강조'", 'string'],
+    ['RankBarList', 'highlightLabel', '강조 별의 이름(스크린리더용)입니다.', "'강조'", 'string'],
     ['RankBarList', 'emptyText', '항목이 없을 때 문구입니다.', "'표시할 데이터가 없습니다.'", 'string'],
     [
         'RankBarList',
@@ -238,7 +251,7 @@ const Example = ({title, description, children}: {title: string; description: st
     <div className="flex flex-col gap-2">
         <p className="typo-body-xl-bold text-foreground">{title}</p>
         <p className="typo-body-m-regular text-foreground-subtle break-keep">{description}</p>
-        <div className="border-subtle-3 bg-card rounded-sm border p-6">{children}</div>
+        <div className="kbigx-print bg-kbx-paper border-subtle-3 rounded-sm border p-6">{children}</div>
     </div>
 )
 
@@ -258,7 +271,7 @@ const RankBarListGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="rbl-basic" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-basic" title="1. 기본 사용">
+                <SectionHeading id="rbl-basic" title="기본 사용">
                     서버에서 바로 그리는 목록입니다. 두 목록을 가운데 축에서 좌우로 펼치는 웹 화면용은{' '}
                     <Link href="/component-guide/diverging-rank-chart" className={LINK_CLASS}>
                         DivergingRankChart
@@ -276,6 +289,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={SMALL_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                         <RankBarList
@@ -284,6 +298,7 @@ const RankBarListGuidePage = () => (
                             items={LARGE}
                             max={SHARED_MAX}
                             colors={LARGE_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </div>
@@ -294,7 +309,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-rule" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="rbl-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>위 굵은 선 → 제목 줄(옅은 면) → 값 줄 [이름 | 막대 | 값], 줄마다 아래 옅은 선입니다.</li>
                     <li>
@@ -312,7 +327,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-edge" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-edge" title="3. 엣지 케이스">
+                <SectionHeading id="rbl-edge" title="엣지 케이스">
                     값 범위 · 이름 길이 · 항목 수에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid items-start gap-6 xl:grid-cols-2">
@@ -322,12 +337,14 @@ const RankBarListGuidePage = () => (
                                 titleAs="h3"
                                 title="매출 100억원 이하"
                                 items={item.items}
+                                colors={SMALL_COLORS}
+                                {...SERVICE_LIST_STYLE}
                                 highlightLabel="고성장"
                             />
                         </Example>
                     ))}
                     <Example title="항목 없음" description="제목 아래 emptyText 한 줄만 보입니다.">
-                        <RankBarList titleAs="h3" title="매출 100억원 초과" items={[]} />
+                        <RankBarList titleAs="h3" title="매출 100억원 초과" items={[]} {...SERVICE_LIST_STYLE} />
                     </Example>
                 </div>
             </section>
@@ -335,7 +352,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-loading" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-loading" title="4. 불러오는 중 (RankBarListSkeleton)">
+                <SectionHeading id="rbl-loading" title="불러오는 중 (RankBarListSkeleton)">
                     제목 줄과 값 줄(이름 · 막대 · 값 자리)을 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤
                     서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -350,6 +367,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={SMALL_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </Example>
@@ -360,7 +378,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-print" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="rbl-print" title="K-BIGx PDF 템플릿에서">
                     기술혁신정보 4쪽 — 소제목 오른쪽에 &apos;★ 고성장 기업&apos; 범례, 그 아래 두 목록을 48 간격으로
                     나란히 둡니다. 확인 화면:{' '}
                     <Link
@@ -379,8 +397,8 @@ const RankBarListGuidePage = () => (
                         사업실적 그래프의 평균과 같은 표현이고, 색을 빼도(흑백 인쇄) 사선 막대 = 평균으로 읽힙니다.
                     </li>
                     <li>
-                        100억원 이하 막대는 보라(#6B6EEB) · 초과는 파랑이고, 조회기업 막대는 진남(#183A6D — 경쟁기업
-                        사업실적 그래프의 조회기업과 같은 색)입니다. 이하 막대가 보라라 진남 조회기업과 겹치지 않습니다.
+                        100억원 이하 막대는 보라 · 초과는 파랑이고, 조회기업 막대는 경쟁기업 사업실적 그래프와 같은
+                        진남입니다. 이하 막대가 보라라 진남 조회기업과 헷갈리지 않습니다.
                     </li>
                 </ul>
                 <Example
@@ -394,6 +412,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={printColors('var(--kbx-color-purple)')}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                         <RankBarList
@@ -402,6 +421,7 @@ const RankBarListGuidePage = () => (
                             items={LARGE}
                             max={SHARED_MAX}
                             colors={printColors('var(--kbx-color-blue)')}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </div>
@@ -412,7 +432,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-a11y" title="6. 접근성" />
+                <SectionHeading id="rbl-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         순위 목록(ol)이라 항목 순서 · 이름 · 값을 글자로 읽습니다. 막대는 꾸밈이라 낭독하지 않습니다.
@@ -431,7 +451,7 @@ const RankBarListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rbl-props" className="flex flex-col gap-6">
-                <SectionHeading id="rbl-props" title="7. Props API">
+                <SectionHeading id="rbl-props" title="Props API">
                     <code>title</code> · <code>items</code> 가 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="RankBarList · RankBarListSkeleton Props 목록" />

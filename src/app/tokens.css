@@ -210,6 +210,13 @@
   --raw-extra-graphite: #5c6170;
   --raw-extra-fog: #8a8eb0;
   --raw-extra-ink: #000e43;
+  --raw-extra-ice: #d0def8;
+  --raw-extra-glacier: #e0e9f7;
+  --raw-extra-marine: #27334a;
+  --raw-extra-harbor: #222a38;
+  --raw-extra-teal: #00e0b0;
+  --raw-extra-sapphire: #2f6bff;
+  --raw-extra-violet: #9b5cff;
 
   /* scale (라이트 = raw identity) */
   --ds-blue-10: var(--raw-blue-10);
@@ -497,6 +504,11 @@
   --ds-service-hero-navy-band: var(--raw-navy-100);
   --ds-service-hero-navy-glow-left: var(--raw-blue-200);
   --ds-service-hero-navy-glow-right: var(--raw-purple-200);
+  --ds-service-intro-glow: var(--raw-extra-ice);
+  --ds-service-intro-glow-soft: var(--raw-extra-glacier);
+  --ds-search-glow-start: var(--raw-extra-teal);
+  --ds-search-glow-middle: var(--raw-extra-sapphire);
+  --ds-search-glow-end: var(--raw-extra-violet);
   --ds-service-glass-border: var(--raw-white-a90);
   --ds-service-hero-marker: var(--raw-gray-500);
   --ds-procedure-step-number: var(--raw-gray-500);
@@ -908,6 +920,11 @@
   --ds-service-hero-navy-band: var(--raw-navy-100);
   --ds-service-hero-navy-glow-left: var(--raw-blue-200);
   --ds-service-hero-navy-glow-right: var(--raw-purple-200);
+  --ds-service-intro-glow: var(--raw-extra-ice);
+  --ds-service-intro-glow-soft: var(--raw-extra-glacier);
+  --ds-search-glow-start: var(--raw-extra-teal);
+  --ds-search-glow-middle: var(--raw-extra-sapphire);
+  --ds-search-glow-end: var(--raw-extra-violet);
   --ds-service-glass-border: var(--raw-white-a90);
   --ds-service-hero-marker: var(--raw-gray-500);
   --ds-procedure-step-number: var(--raw-gray-500);
@@ -1319,6 +1336,11 @@
   --ds-service-hero-navy-band: var(--raw-navy-800);
   --ds-service-hero-navy-glow-left: var(--raw-blue-900);
   --ds-service-hero-navy-glow-right: var(--raw-purple-900);
+  --ds-service-intro-glow: var(--raw-extra-marine);
+  --ds-service-intro-glow-soft: var(--raw-extra-harbor);
+  --ds-search-glow-start: var(--raw-extra-teal);
+  --ds-search-glow-middle: var(--raw-extra-sapphire);
+  --ds-search-glow-end: var(--raw-extra-violet);
   --ds-service-glass-border: var(--raw-white-a25);
   --ds-service-hero-marker: var(--raw-gray-100);
   --ds-procedure-step-number: var(--raw-gray-200);
@@ -1730,6 +1752,11 @@
   --ds-service-hero-navy-band: var(--raw-navy-800);
   --ds-service-hero-navy-glow-left: var(--raw-blue-900);
   --ds-service-hero-navy-glow-right: var(--raw-purple-900);
+  --ds-service-intro-glow: var(--raw-extra-marine);
+  --ds-service-intro-glow-soft: var(--raw-extra-harbor);
+  --ds-search-glow-start: var(--raw-extra-teal);
+  --ds-search-glow-middle: var(--raw-extra-sapphire);
+  --ds-search-glow-end: var(--raw-extra-violet);
   --ds-service-glass-border: var(--raw-white-a25);
   --ds-service-hero-marker: var(--raw-gray-100);
   --ds-procedure-step-number: var(--raw-gray-200);
@@ -2022,6 +2049,11 @@
   --color-service-hero-navy-band: var(--ds-service-hero-navy-band);
   --color-service-hero-navy-glow-left: var(--ds-service-hero-navy-glow-left);
   --color-service-hero-navy-glow-right: var(--ds-service-hero-navy-glow-right);
+  --color-service-intro-glow: var(--ds-service-intro-glow);
+  --color-service-intro-glow-soft: var(--ds-service-intro-glow-soft);
+  --color-search-glow-start: var(--ds-search-glow-start);
+  --color-search-glow-middle: var(--ds-search-glow-middle);
+  --color-search-glow-end: var(--ds-search-glow-end);
   --color-service-glass-border: var(--ds-service-glass-border);
   --color-service-hero-marker: var(--ds-service-hero-marker);
   --color-procedure-step-number: var(--ds-procedure-step-number);
@@ -2647,6 +2679,11 @@
     --ds-service-hero-navy-band: var(--raw-navy-100);
     --ds-service-hero-navy-glow-left: var(--raw-blue-200);
     --ds-service-hero-navy-glow-right: var(--raw-purple-200);
+    --ds-service-intro-glow: var(--raw-extra-ice);
+    --ds-service-intro-glow-soft: var(--raw-extra-glacier);
+    --ds-search-glow-start: var(--raw-extra-teal);
+    --ds-search-glow-middle: var(--raw-extra-sapphire);
+    --ds-search-glow-end: var(--raw-extra-violet);
     --ds-service-glass-border: var(--raw-white-a90);
     --ds-service-hero-marker: var(--raw-gray-500);
     --ds-procedure-step-number: var(--raw-gray-500);

@@ -47,7 +47,7 @@ const pairData = (score: number, average: number, color: string) =>
         ['전체기업', average, false, 'var(--ds-gray-200)'],
     ])
 
-// 3. 엣지 케이스.
+// 엣지 케이스.
 const EDGE_CASES = [
     {
         key: 'zero',
@@ -213,13 +213,13 @@ const PROPS_ITEMS = [
         'ValueColumnChartSkeleton',
         'variant · itemCount',
         '실제 차트와 같은 모양 · 항목 수입니다.',
-        "'wide' · 6(narrow 3)",
+        "'wide' · 6(narrow 3 · compact 2)",
         "'wide' | 'compact' | 'narrow' · number",
     ],
     [
         'ValueColumnChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -249,7 +249,7 @@ const ValueColumnChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="vcc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-basic" title="1. 기본 사용 (wide)">
+                <SectionHeading id="vcc-basic" title="기본 사용 (wide)">
                     서버에서 바로 그리는 SVG 막대입니다. 세로축 · 툴팁이 있는 웹 화면용은{' '}
                     <Link href="/component-guide/column-chart" className={LINK_CLASS}>
                         ColumnChart
@@ -258,7 +258,7 @@ const ValueColumnChartGuidePage = () => (
                 </SectionHeading>
                 <Example
                     title="템플릿 데이터"
-                    description="막대는 모두 같은 폭(64)이고 가장 큰 값(PDF 템플릿은 max 100)이 높이 260 입니다. 웹 기본 색 — 신청기업(강조)은 보라 막대 · 굵은 보라 글자(PDF 템플릿 색은 5절)."
+                    description="막대는 모두 같은 폭(64)이고 가장 큰 값(PDF 템플릿은 max 100)이 높이 260 입니다. 웹 기본 색 — 신청기업(강조)은 보라 막대 · 굵은 보라 글자(PDF 템플릿 색은 아래 'K-BIGx PDF 템플릿에서')."
                 >
                     <ValueColumnChart data={TYPE_DATA} ariaLabel="기업 유형별 Tech-Index 비교 예시" />
                 </Example>
@@ -268,7 +268,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-compact" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-compact" title="2. 카드 안 작은 막대 (compact · narrow)">
+                <SectionHeading id="vcc-compact" title="카드 안 작은 막대 (compact · narrow)">
                     0~100 눈금 · 칸 사이 점선 · 막대마다 색. 강조 항목 값은 진하게, 나머지는 옅게 적습니다.
                 </SectionHeading>
                 <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
@@ -299,7 +299,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="vcc-edge" title="엣지 케이스">
                     0 값 · 같은 값 · 항목 수 · 이름 길이 · 값 글자 길이에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -322,7 +322,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-loading" title="4. 불러오는 중 (ValueColumnChartSkeleton)">
+                <SectionHeading id="vcc-loading" title="불러오는 중 (ValueColumnChartSkeleton)">
                     같은 그림 범위에 막대 · 값 글자 · 이름 자리를 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로
                     그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -355,7 +355,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-print" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="vcc-print" title="K-BIGx PDF 템플릿에서">
                     Tech-Index 2쪽 — 기업 유형별 Tech-Index 비교(wide)와 4대 혁신역량 부분별 비교 카드 넷(compact). 확인
                     화면:{' '}
                     <Link
@@ -398,7 +398,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-a11y" title="6. 접근성" />
+                <SectionHeading id="vcc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 항목마다 값을
@@ -415,7 +415,7 @@ const ValueColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vcc-props" className="flex flex-col gap-6">
-                <SectionHeading id="vcc-props" title="7. Props API">
+                <SectionHeading id="vcc-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="ValueColumnChart · ValueColumnChartSkeleton Props 목록" />

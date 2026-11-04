@@ -26,8 +26,8 @@ const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
-const BASE_COLOR = 'var(--raw-gray-100)'
-const SERIES_COLORS = ['var(--raw-blue-500)', 'var(--raw-purple-500)'] as const
+const BASE_COLOR = 'var(--ds-muted)'
+const SERIES_COLORS = ['var(--ds-blue-500)', 'var(--ds-purple-500)'] as const
 
 const BALANCE_BASE: OverlayColumnSeries = {key: 'totalAssets', label: '총자산', color: BASE_COLOR}
 const BALANCE_SERIES: OverlayColumnSeries[] = [
@@ -109,10 +109,10 @@ const USAGE_CODE = `import {OverlayColumnChart} from '@/components/custom/overla
   ariaLabel="연도별 재무상태 — 총자산 대비 부채총계 · 자본총계"
   unit="백만원"
   data={data}
-  base={{key: 'totalAssets', label: '총자산', color: 'var(--raw-gray-100)'}}
+  base={{key: 'totalAssets', label: '총자산', color: 'var(--ds-muted)'}}
   series={[
-    {key: 'liabilities', label: '부채총계', color: 'var(--raw-blue-500)'},
-    {key: 'equity', label: '자본총계', color: 'var(--raw-purple-500)'},
+    {key: 'liabilities', label: '부채총계', color: 'var(--ds-blue-500)'},
+    {key: 'equity', label: '자본총계', color: 'var(--ds-purple-500)'},
   ]}
 />`
 
@@ -187,7 +187,7 @@ const PROPS_ITEMS = [
     ['OverlayColumnChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['OverlayColumnSeries', 'key', 'data 의 values 키와 같아야 막대가 그려집니다.', '-', 'string'],
     ['OverlayColumnSeries', 'label', '범례 · 숨김 표에 쓰는 이름입니다.', '-', 'string'],
-    ['OverlayColumnSeries', 'color', '막대 색입니다.', '-', 'string'],
+    ['OverlayColumnSeries', 'color', '막대 색입니다. 다크에서도 보이게 var(--ds-*) 를 넘깁니다.', '-', 'string'],
     ['OverlayColumnItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['OverlayColumnItem', 'label', '칸 아래 항목 이름입니다.', '-', 'string'],
     [
@@ -315,7 +315,7 @@ const OverlayColumnChartGuidePage = () => (
             <section aria-labelledby="occ-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="occ-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         값 글자가 겹치거나 막대가 칸을 넘을 수 있는 경우는 컴포넌트가 처리합니다.
@@ -381,24 +381,24 @@ const OverlayColumnChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 같은 값이
-                        숨김 표(<code>caption</code> · <code>th scope</code>)로 들어 있어 화면 낭독기가 표로 읽습니다.
-                        긴 숫자를 줄여 적어도 표에는 원래 값이 있습니다[5.1.1].
+                        숨김 표(<code>caption</code> · <code>th scope</code>)로 들어 있어 스크린리더가 표로 읽습니다. 긴
+                        숫자를 줄여 적어도 표에는 원래 값이 있습니다[5.1.1].
                     </li>
                     <li>
                         값은 막대마다 글자로 적혀 있고, 막대는 범례 이름으로 구분합니다. 색만으로 전하지
                         않습니다[5.3.1].
                     </li>
-                    <li>말풍선은 없습니다.</li>
+                    <li>툴팁은 없습니다.</li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

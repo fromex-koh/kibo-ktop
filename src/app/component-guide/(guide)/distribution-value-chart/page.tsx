@@ -104,7 +104,7 @@ const PROPS_ITEMS = [
     [
         'DistributionValueChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -134,7 +134,7 @@ const DistributionValueChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dvc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-basic" title="1. 기본 사용">
+                <SectionHeading id="dvc-basic" title="기본 사용">
                     서버에서 바로 그리는 SVG 곡선입니다. 화면 폭에 맞춰 늘어나는 웹 화면용은{' '}
                     <Link href="/component-guide/distribution-curve-chart" className={LINK_CLASS}>
                         DistributionCurveChart
@@ -159,7 +159,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="dvc-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>그림 1168 × 336. 가로 범위(0~100)는 x 20 ~ 1148, 바닥선 y 290, 아래 눈금 숫자 20px.</li>
                     <li>
@@ -174,7 +174,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="dvc-edge" title="엣지 케이스">
                     점 자리 · 범위 · 표준편차에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -189,7 +189,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-loading" title="4. 불러오는 중 (DistributionValueChartSkeleton)">
+                <SectionHeading id="dvc-loading" title="불러오는 중 (DistributionValueChartSkeleton)">
                     같은 그림 범위에 종 모양 면 · 바닥선 · 눈금 숫자 자리를 그립니다. PDF 템플릿은 데이터를 받은 뒤
                     서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -213,8 +213,8 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-print" title="5. K-BIGx PDF 템플릿에서">
-                    Tech-Index 1쪽 — 소제목 오른쪽 &apos;전체 평균 50.5점&apos;, 아래 16 간격에 요약 상자. 확인 화면:{' '}
+                <SectionHeading id="dvc-print" title="K-BIGx PDF 템플릿에서">
+                    Tech-Index 1쪽 표준정보 비교 그래프에 씁니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=tech-index"
                         target="_blank"
@@ -231,7 +231,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-a11y" title="6. 접근성" />
+                <SectionHeading id="dvc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 평균 · 점수 ·
@@ -247,7 +247,7 @@ const DistributionValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dvc-props" className="flex flex-col gap-6">
-                <SectionHeading id="dvc-props" title="7. Props API">
+                <SectionHeading id="dvc-props" title="Props API">
                     <code>ariaLabel</code> · <code>mean</code> · <code>standardDeviation</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable

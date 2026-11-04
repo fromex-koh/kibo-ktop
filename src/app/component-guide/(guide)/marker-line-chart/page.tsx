@@ -73,7 +73,7 @@ const CASH_DATA = toData([
     [120, 1350, 550],
     [910, 2370, 1160],
 ])
-// 3. 엣지 케이스.
+// 엣지 케이스.
 const TWO_SERIES = toSeries(['영업이익률', '부채비율'])
 const TWO_DATA = toData([
     [7.84, 8.52, 8.39],
@@ -220,7 +220,7 @@ const PROPS_ITEMS = [
     [
         'MarkerLineChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -253,7 +253,7 @@ const MarkerLineChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="mlc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-basic" title="1. 기본 사용">
+                <SectionHeading id="mlc-basic" title="기본 사용">
                     그림 폭 560 기준으로 그리고, 범례(MarkerLineLegend)는 그래프 아래에 따로 둡니다. 세로축 · 툴팁이
                     있는 웹 화면용 선 그래프는{' '}
                     <Link href="/component-guide/line-chart" className={LINK_CLASS}>
@@ -302,7 +302,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-rule" title="2. 짜임 · 계열 모양" />
+                <SectionHeading id="mlc-rule" title="짜임 · 계열 모양" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         점은 항목 칸 가운데, 칸 사이 세로 점선(y 16 ~ 260), 바닥선 y 260, 항목 이름 y 290(19px)입니다.
@@ -347,7 +347,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="mlc-edge" title="엣지 케이스">
                     계열 수 · 항목 수 · 값 없음에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -363,7 +363,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-loading" title="4. 불러오는 중 (MarkerLineChartSkeleton)">
+                <SectionHeading id="mlc-loading" title="불러오는 중 (MarkerLineChartSkeleton)">
                     차트와 같은 그림 범위(560 × 300)에 바닥선 · 선 · 점 · 항목 이름 자리를 그립니다. PDF 템플릿은
                     데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -381,7 +381,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="mlc-print" title="K-BIGx PDF 템플릿에서">
                     기업현황 재무현황 칸(폭 556) 안에서 표 → 그래프 → 범례 순서로 16 간격입니다. 신용/재무정보
                     재무비율진단은 <code>width={'{1168}'}</code> 로 표 아래 30 · 범례는 그래프 아래 10 입니다. 확인
                     화면:{' '}
@@ -401,14 +401,16 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-a11y" title="6. 접근성" />
+                <SectionHeading id="mlc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 계열마다
                         기간별 값을 화면에 보이지 않는 목록으로도 읽어 줍니다[5.1.1].
                     </li>
                     <li>계열을 색 · 선 모양 · 점 모양 세 가지로 구분해 색만으로 정보를 전하지 않습니다[5.3.1].</li>
-                    <li>범례 견본 그림은 꾸밈이라 낭독하지 않습니다(aria-hidden). 계열 이름은 글자로 읽습니다.</li>
+                    <li>
+                        범례 견본 그림은 꾸밈이라 스크린리더가 읽지 않습니다(aria-hidden). 계열 이름은 글자로 읽습니다.
+                    </li>
                     <li>
                         스켈레톤은 <code>role=&quot;status&quot;</code> 와 숨김 문구로 불러오는 중임을 알립니다.
                     </li>
@@ -418,7 +420,7 @@ const MarkerLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mlc-props" className="flex flex-col gap-6">
-                <SectionHeading id="mlc-props" title="7. Props API">
+                <SectionHeading id="mlc-props" title="Props API">
                     <code>data</code> · <code>series</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable

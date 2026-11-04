@@ -12,7 +12,8 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/co
 
 export const metadata: Metadata = {title: '아코디언 (Accordion)'}
 
-const USAGE_CODE = `import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
+const USAGE_CODE = `import {QaMark} from '@/components/custom/qa-mark'
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
 
 <Accordion type="single" collapsible>
   <AccordionItem value="fee">

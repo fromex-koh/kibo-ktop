@@ -1458,20 +1458,6 @@
                                     "key": "corp-k-bigx-report-innovation-growth-report-search-result-company"
                                 },
                                 {
-                                    "label": "기업 선택(특허 있음)",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected"
-                                },
-                                {
-                                    "label": "기업 선택(특허 없음)",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent"
-                                },
-                                {
                                     "label": "기업 검색 결과 없음",
                                     "screenId": null,
                                     "status": "완료",
@@ -1491,6 +1477,48 @@
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent-not-found"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감] 특허 있음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감] 특허 있음 · 재무정보 없음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감] 특허 없음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감] 개인기업 · 특허 없음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-individual"
+                                },
+                                {
+                                    "label": "[타사조회 · 생성불가] 특허 없음 · 재무정보 없음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-blocked"
+                                },
+                                {
+                                    "label": "[자사조회 · 차감 없음] 특허 · 재무정보 유무 무관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-self"
                                 }
                             ]
                         },
@@ -3672,20 +3700,6 @@
                                     "key": "org-k-bigx-report-innovation-growth-report-search-result-company"
                                 },
                                 {
-                                    "label": "기업 선택(특허 있음)",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected"
-                                },
-                                {
-                                    "label": "기업 선택(특허 없음)",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent"
-                                },
-                                {
                                     "label": "기업 검색 결과 없음",
                                     "screenId": null,
                                     "status": "완료",
@@ -3705,6 +3719,48 @@
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-k-bigx-report-innovation-growth-report-search-result-patent-not-found"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감 없음] 특허 있음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감 없음] 특허 있음 · 재무정보 없음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감 없음] 특허 없음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감 없음] 개인기업 · 특허 없음 · 재무정보 있음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-individual"
+                                },
+                                {
+                                    "label": "[타사조회 · 차감 없음] 특허 없음 · 재무정보 없음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-blocked"
+                                },
+                                {
+                                    "label": "[자사조회 · 차감 없음] 특허 · 재무정보 유무 무관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-search-result-company-self"
                                 }
                             ]
                         },

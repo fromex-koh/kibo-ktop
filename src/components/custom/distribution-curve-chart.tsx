@@ -60,7 +60,7 @@ type DistributionCurveChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'childr
      * 읽히도록 그린다(꼭대기는 peakValue, 바닥은 0). 주지 않으면 세로 눈금 없이 곡선만 그린다.
      */
     yTicks?: readonly number[]
-    /** 눈금을 줄 때 곡선 꼭대기가 가리키는 값(예: 3.7). 주지 않으면 첫 눈금보다 한 칸 아래로 둔다. */
+    /** 눈금을 줄 때 곡선 꼭대기가 가리키는 값(예: 3.7). 주지 않으면 첫 눈금보다 반 칸 아래로 둔다. */
     peakValue?: number
     /** 세로 눈금 위에 적는 이름(예: '상대빈도수'). */
     yAxisLabel?: string

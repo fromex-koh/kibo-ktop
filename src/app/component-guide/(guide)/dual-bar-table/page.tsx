@@ -14,9 +14,15 @@ export const metadata: Metadata = {title: '두 값 막대 표 (DualBarTable)'}
 
 const LINK_CLASS = 'text-primary underline underline-offset-4'
 
-// 웹 화면 보고서와 같은 계열 색(다크에서도 보이는 보고서 계열 색).
-const LEFT = {title: '기업수', color: 'var(--ds-report-series-3)'}
-const RIGHT = {title: '특허수', color: 'var(--ds-report-series-2)'}
+// 예시 표는 서비스 화면(K-BIGx 보고서 PDF 템플릿)과 같은 색으로 그린다 — 머리 줄 연보라 면 · 남색 글자 · 남색 위 선.
+// 글자 크기만 가이드 폭에 맞춰 웹 크기(typo-body-l)로 둔다. kbx 색은 .kbigx-print 안에서만 값이 있어 Example 이 감싼다.
+const LEFT = {title: '기업수', color: 'var(--kbx-color-chart-series-1)'}
+const RIGHT = {title: '특허수', color: 'var(--kbx-color-chart-series-2)'}
+const SERVICE_TABLE_STYLE = {
+    tableClassName: 'typo-body-l-regular text-kbx-foreground border-kbx-primary border-t-2',
+    headClassName: 'bg-kbx-surface text-kbx-primary py-2.5 font-bold',
+    rowClassName: 'border-kbx-border border-b py-2',
+} as const
 
 // 이름 · 기업수 · 특허수 → 표 데이터.
 const toData = (rows: readonly (readonly [string, number, number])[]): DualBarTableItem[] =>
@@ -113,7 +119,7 @@ const LOADING_CODE = `import {DualBarTableSkeleton} from '@/components/composite
   <DualBarTable {...tableProps} />
 )}`
 
-const PRINT_CODE = `// K-BIGx PDF 템플릿 — 21px · 머리 줄 위아래 10 · 값 줄 7 · 이름 열 170 · 막대 18 · 숫자 칸 90(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — kbx 클래스로 글자 · 선 · 칸 크기를 바꿉니다(kbigx-print-innovation.tsx).
 <DualBarTable
   caption="매출 규모별 기업수(개) · 특허수(건)"
   categoryTitle="매출 규모"
@@ -165,7 +171,7 @@ const PROPS_ITEMS = [
     [
         'DualBarTableItem',
         'left · right',
-        "두 열의 값입니다. 0 이하는 막대를 그리지 않습니다. 숫자가 아니면(NaN) 값 없음 — 막대 없이 '-'(0 은 '0'). K-BIGx 매출 규모 표는 5행 고정(toMarketScaleRows)이라 데이터가 없어도 5행 모두 '-'.",
+        "두 열의 값입니다. 0 이하는 막대를 그리지 않습니다. 숫자가 아니면(NaN) 막대 없이 '-' 를 적습니다(0 은 '0').",
         '-',
         'number',
     ],
@@ -183,7 +189,7 @@ const Example = ({title, description, children}: {title: string; description: st
     <div className="flex flex-col gap-2">
         <p className="typo-body-xl-bold text-foreground">{title}</p>
         <p className="typo-body-m-regular text-foreground-subtle break-keep">{description}</p>
-        <div className="border-subtle-3 bg-card rounded-sm border p-6">{children}</div>
+        <div className="kbigx-print bg-kbx-paper border-subtle-3 rounded-sm border p-6">{children}</div>
     </div>
 )
 
@@ -203,7 +209,7 @@ const DualBarTableGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dbt-basic" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-basic" title="1. 기본 사용">
+                <SectionHeading id="dbt-basic" title="기본 사용">
                     서버에서 바로 그리는 표입니다. 가운데 축에서 좌우로 뻗는 웹 화면용 막대는{' '}
                     <Link href="/component-guide/butterfly-bar-chart" className={LINK_CLASS}>
                         ButterflyBarChart
@@ -219,6 +225,7 @@ const DualBarTableGuidePage = () => (
                         categoryTitle="매출 규모"
                         left={LEFT}
                         right={RIGHT}
+                        {...SERVICE_TABLE_STYLE}
                         data={STANDARD_DATA}
                     />
                 </Example>
@@ -228,7 +235,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-rule" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="dbt-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>표 위에 굵은 선, 머리 줄은 옅은 면, 값 줄마다 아래 옅은 선을 둡니다.</li>
                     <li>첫 칸은 항목 이름(굵게), 다음 두 칸은 [막대 | 숫자(오른쪽 정렬)] 이고 열 사이는 32 입니다.</li>
@@ -243,7 +250,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-edge" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-edge" title="3. 엣지 케이스">
+                <SectionHeading id="dbt-edge" title="엣지 케이스">
                     항목 수 · 0 값 · 값 차이 · 이름 길이에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -254,6 +261,7 @@ const DualBarTableGuidePage = () => (
                                 categoryTitle="매출 규모"
                                 left={LEFT}
                                 right={RIGHT}
+                                {...SERVICE_TABLE_STYLE}
                                 data={item.data}
                             />
                         </Example>
@@ -264,6 +272,7 @@ const DualBarTableGuidePage = () => (
                             categoryTitle="매출 규모"
                             left={LEFT}
                             right={RIGHT}
+                            {...SERVICE_TABLE_STYLE}
                             data={[]}
                         />
                     </Example>
@@ -273,7 +282,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-loading" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-loading" title="4. 불러오는 중 (DualBarTableSkeleton)">
+                <SectionHeading id="dbt-loading" title="불러오는 중 (DualBarTableSkeleton)">
                     같은 표 짜임에 이름 · 막대 · 숫자 자리를 회색으로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서
                     바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -287,6 +296,7 @@ const DualBarTableGuidePage = () => (
                             categoryTitle="매출 규모"
                             left={LEFT}
                             right={RIGHT}
+                            {...SERVICE_TABLE_STYLE}
                             data={STANDARD_DATA}
                         />
                     </Example>
@@ -297,9 +307,9 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-print" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-print" title="5. K-BIGx PDF 템플릿에서">
-                    기술혁신정보 3쪽 — 소제목 오른쪽에 기업수 · 특허수 범례(KbxLegend density=&quot;unit&quot;), 표 아래
-                    28 간격에 기업수 · 특허수 비중 도넛(DonutListChart)을 나란히 둡니다. 확인 화면:{' '}
+                <SectionHeading id="dbt-print" title="K-BIGx PDF 템플릿에서">
+                    기술혁신정보 3쪽 매출 규모별 기업 및 특허 현황에 씁니다. 행은 5구간 고정이라 값이 없어도 5행 모두
+                    &apos;-&apos; 로 그립니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=innovation"
                         target="_blank"
@@ -312,9 +322,8 @@ const DualBarTableGuidePage = () => (
                 </SectionHeading>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        기업수는 진남(chart-series-1), 특허수는 파랑(chart-series-2) — 범례 순서와 명도 순서(진함 →
-                        중간)가 같아 흑백 인쇄에서도 두 계열이 갈립니다. 범례 칩(bg-kbx-chart-series-1 · 2)도 같은
-                        토큰입니다.
+                        기업수는 진남(chart-series-1), 특허수는 파랑(chart-series-2)입니다. 명도 차이가 있어 흑백
+                        인쇄에서도 두 계열이 갈리며, 범례 칩도 같은 토큰을 씁니다.
                     </li>
                 </ul>
                 <Example
@@ -327,6 +336,7 @@ const DualBarTableGuidePage = () => (
                             categoryTitle="매출 규모"
                             left={PRINT_LEFT}
                             right={PRINT_RIGHT}
+                            {...SERVICE_TABLE_STYLE}
                             data={STANDARD_DATA}
                         />
                     </div>
@@ -337,7 +347,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-a11y" title="6. 접근성" />
+                <SectionHeading id="dbt-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         실제 표(table)라 <code>caption</code> · 열 머리(<code>scope=&quot;col&quot;</code>) · 행 머리(
@@ -357,7 +367,7 @@ const DualBarTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dbt-props" className="flex flex-col gap-6">
-                <SectionHeading id="dbt-props" title="7. Props API">
+                <SectionHeading id="dbt-props" title="Props API">
                     <code>caption</code> · <code>categoryTitle</code> · <code>left</code> · <code>right</code> ·{' '}
                     <code>data</code> 가 필수입니다.
                 </SectionHeading>

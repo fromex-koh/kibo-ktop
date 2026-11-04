@@ -236,7 +236,7 @@ const PROPS_ITEMS = [
     [
         'ComboValueChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -268,7 +268,7 @@ const ComboValueChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="cvc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-basic" title="1. 기본 사용">
+                <SectionHeading id="cvc-basic" title="기본 사용">
                     서버에서 바로 그리는 SVG 차트입니다. 세로축 · 툴팁이 있는 웹 화면용은{' '}
                     <Link href="/component-guide/combo-bar-line-chart" className={LINK_CLASS}>
                         ComboBarLineChart
@@ -277,7 +277,7 @@ const ComboValueChartGuidePage = () => (
                 </SectionHeading>
                 <Example
                     title="템플릿 데이터"
-                    description="웹 기본 색 — 조회기업은 민트 막대 · 굵은 남색 글자, 평균은 보라 막대(PDF 템플릿 색은 5절). 막대는 30 부터 섭니다(값 차이가 작음)."
+                    description="웹 기본 색 — 조회기업은 민트 막대 · 굵은 primary 글자, 평균은 보라 막대입니다. 값 차이가 작아 막대는 30 부터 섭니다."
                 >
                     <ComboValueChart {...chartLabels} data={STANDARD_DATA} ariaLabel="경쟁기업 사업실적 예시" />
                 </Example>
@@ -287,24 +287,21 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="cvc-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        그림 1168 × 480. 항목 칸은 폭을 항목 수로 나누고 칸 사이에 세로 점선, 아래에 바닥선(y 438)을
-                        긋습니다.
+                        그림은 1168 × 480 비율로 폭에 맞춰 줄어듭니다. 항목 칸은 폭을 항목 수로 나누고 칸 사이에 세로
+                        점선, 아래에 바닥선을 긋습니다.
                     </li>
-                    <li>
-                        막대는 폭 60 · 위 모서리 둥글림 8 이고, 가장 큰 값이 y 66.5 까지 섭니다. 값 글자는 막대 끝 9
-                        위에 적습니다.
-                    </li>
+                    <li>막대는 폭 60 · 위 모서리 둥글림 8 이고, 값 글자는 막대 끝 바로 위에 적습니다.</li>
                     <li>
                         막대 바닥 — 값 차이가 작으면 가장 작은 값에서 차이의 절반만큼 아래를 차이의 자릿수로 내린 값부터
                         그립니다(31.2 − 0.8 → 30). 0 이하면 0 부터. 바닥이 0 이 아니면 막대 길이는 값의 비율이 아니라 값
                         글자로 읽습니다.
                     </li>
                     <li>
-                        선은 막대와 따로 된 눈금입니다 — 가장 큰 값 y 220, 가장 작은 값 y 383.4 사이에서 오르내리고, 점
-                        위 15 에 흰 글자를 얹습니다. 점 글자가 막대 밖으로 나가면 값 글자 색으로 바꿉니다.
+                        선은 막대와 따로 된 눈금으로 그림 아래쪽 띠 안에서 오르내리고, 점 위에 흰 글자를 얹습니다. 점
+                        글자가 막대 밖으로 나가면 값 글자 색으로 바꿉니다.
                     </li>
                     <li>
                         범례 · 단위는 그리지 않습니다 — 제목 줄 오른쪽에 둡니다(PDF 템플릿 &apos;단위: 백만원, %&apos;).
@@ -315,7 +312,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="cvc-edge" title="엣지 케이스">
                     값 범위 · 빈 선 값 · 항목 수 · 이름 길이에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -330,7 +327,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-loading" title="4. 불러오는 중 (ComboValueChartSkeleton)">
+                <SectionHeading id="cvc-loading" title="불러오는 중 (ComboValueChartSkeleton)">
                     같은 그림 범위(1168 × 480)에 막대 · 값 글자 · 이름 자리를 그립니다. PDF 템플릿은 데이터를 받은 뒤
                     서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -348,7 +345,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-print" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="cvc-print" title="K-BIGx PDF 템플릿에서">
                     기술혁신정보 4쪽 — 소제목 오른쪽에 &apos;단위: 백만원, %&apos;, 그 아래 16 간격에 차트를 둡니다.
                     확인 화면:{' '}
                     <Link
@@ -367,7 +364,7 @@ const ComboValueChartGuidePage = () => (
                         파랑 · 평균 옅은 바탕 + 파랑 사선 · 테두리(가장 밝음, <code>averageLine</code>).
                     </li>
                     <li>
-                        선(영업이익률)은 짙은 남색(#0B1640, chart-trend) 한 줄이고 흰 바깥 테두리(<code>lineHalo</code>
+                        선(영업이익률)은 짙은 남색(chart-trend) 한 줄이고 흰 바깥 테두리(<code>lineHalo</code>
                         )는 두지 않습니다(PDF 템플릿). 사선 평균 막대 위 점 글자는 흰 글자 대신 진한 글자 + 흰
                         테두리(marker 색)입니다.
                     </li>
@@ -395,7 +392,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-a11y" title="6. 접근성" />
+                <SectionHeading id="cvc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 항목마다 막대
@@ -412,7 +409,7 @@ const ComboValueChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cvc-props" className="flex flex-col gap-6">
-                <SectionHeading id="cvc-props" title="7. Props API">
+                <SectionHeading id="cvc-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> · <code>barLabel</code> · <code>lineLabel</code> 이
                     필수입니다.
                 </SectionHeading>

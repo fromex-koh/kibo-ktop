@@ -235,7 +235,7 @@ const READY_MADE_ROWS = [
         key: 'confirm',
         cells: [
             <code key="c">ConfirmDialog</code>,
-            '되돌리기 어려운 일(초기화 · 상태 변경)을 하기 전 · 다른 사이트로 넘어가기 전(탄소중립 소개의 진단 바로가기 — [확인] 이 새 탭을 엶)',
+            '되돌리기 어려운 일(초기화 · 상태 변경)을 하기 전 · 다른 사이트로 넘어가기 전',
             '제목 + 물음 + 덧붙임 · [취소] [확인]',
             'title · question · notice · onConfirm (대상은 ConfirmTarget 으로 굵게)',
         ],
@@ -375,7 +375,7 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-basic" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-basic" className="typo-h4-bold">
-                        1. 기본 사용
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>Dialog</code> 안에 <code>DialogTrigger</code> 와 <code>DialogContent</code> 를 둡니다.
@@ -387,7 +387,7 @@ const DialogGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className={BLOCK_CLASS}>
-                        <h3 className={H3_CLASS}>1-1. 구획과 스크롤</h3>
+                        <h3 className={H3_CLASS}>구획과 스크롤</h3>
                         <p className={DESC_CLASS}>
                             여백은 카드가 통째로 갖지 않고 구획이 각자 갖습니다. 그래야 본문이 스크롤될 때 글이 머리·CTA
                             여백 아래로 들어가며 잘립니다. 카드 높이는 화면의 80%(<code>size.modal-max-h</code>
@@ -408,7 +408,7 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-cases" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-cases" className="typo-h4-bold">
-                        2. 케이스 예시
+                        케이스 예시
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         자주 쓰는 구성입니다. 표에서 슬롯 조합을 확인하고, 버튼을 눌러 실제 동작을 확인합니다.
@@ -636,12 +636,13 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-ready-made" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-ready-made" className="typo-h4-bold">
-                        3. 완성된 모달
+                        완성된 모달
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>composite/</code> 에 있는 모달입니다. 문구 · 버튼 · 여백이 정해져 있어 넘기는 값만
-                        다릅니다. 모두 <code>children</code>(여는 버튼) · <code>defaultOpen</code> · <code>open</code> ·{' '}
-                        <code>onOpenChange</code> 로 여는 방식을 고릅니다.
+                        다릅니다. <code>children</code>(여는 버튼) · <code>defaultOpen</code> · <code>open</code> ·{' '}
+                        <code>onOpenChange</code> 로 여는 방식을 고릅니다. <code>ProcessingDialog</code> 는 여는 버튼
+                        없이 <code>open</code> 으로만 엽니다.
                     </p>
                 </div>
                 <Table caption="완성된 모달 목록" columns={READY_MADE_COLUMNS} rows={READY_MADE_ROWS} size="md" />
@@ -653,7 +654,7 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-choice" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-choice" className="typo-h4-bold">
-                        4. 컴포넌트 선택
+                        컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         사용자의 답이 필요한지, 화면에 얼마나 남아야 하는지로 고릅니다.
@@ -672,7 +673,7 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-a11y" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-a11y" className="typo-h4-bold">
-                        5. 접근성
+                        접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         동작은 업스트림(Radix)이 처리하므로 사용처는 구조만 맞춥니다. theme 는 스타일만 담당합니다.
@@ -703,7 +704,7 @@ const DialogGuidePage = () => (
             <section aria-labelledby="dialog-props" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="dialog-props" className="typo-h4-bold">
-                        6. Props API
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         주요 속성입니다. 표에 없는 속성은 Radix Dialog 의 같은 이름 컴포넌트 props 를 따릅니다.

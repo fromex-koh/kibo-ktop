@@ -96,7 +96,7 @@ const OverlayGuidePage = () => (
                         사용 규칙
                     </h2>
                 </div>
-                <ul className="text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         <code>bg-black/10</code>·<code>bg-[rgba(...)]</code> 같은 직접 투명도는 쓰지 않습니다. 단계는{' '}
                         <code>tokens.json</code> 의 <code>overlay</code> 를 수정하고 <code>yarn tokens</code> 를 실행해

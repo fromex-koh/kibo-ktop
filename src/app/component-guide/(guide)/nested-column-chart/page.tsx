@@ -56,7 +56,7 @@ const INCOME_DATA = toData(INCOME_KEYS, [
     [980, 1210, 1350],
     [610, -240, 820],
 ])
-// 3. 엣지 케이스.
+// 엣지 케이스.
 const DEEP_LOSS_DATA = toData(INCOME_KEYS, [
     [12500, 9800, 16100],
     [980, -3200, 1350],
@@ -245,7 +245,7 @@ const PROPS_ITEMS = [
     [
         'NestedColumnChart',
         'missingValueText',
-        "값이 없는 막대(그 계열 값이 없거나 숫자가 아님) 자리에 적을 글자입니다(예: '-'). 막대 없이 값이 0 일 때 값 글자 자리(바닥선 바로 위)에 적고, 한 항목의 막대가 모두 없으면 가운데에 하나만 적습니다. 주지 않으면 그 자리를 비웁니다.",
+        "값이 없거나 숫자가 아닌 막대 자리에 적을 글자입니다(예: '-'). 바닥선 바로 위에 적고, 한 항목의 막대가 모두 없으면 가운데에 하나만 적습니다. 주지 않으면 자리를 비웁니다.",
         '-',
         'string',
     ],
@@ -261,7 +261,7 @@ const PROPS_ITEMS = [
     [
         'NestedColumnChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -292,7 +292,7 @@ const NestedColumnChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ncc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-basic" title="1. 기본 사용">
+                <SectionHeading id="ncc-basic" title="기본 사용">
                     그림 폭 560 기준으로 그리고, 칸 폭에 맞춰 같은 비율로 줄어듭니다. 세로축 · 툴팁이 있는 웹 화면용은{' '}
                     <Link href="/component-guide/overlay-column-chart" className={LINK_CLASS}>
                         OverlayColumnChart
@@ -323,7 +323,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-rule" title="2. 짜임 · 크기 규칙" />
+                <SectionHeading id="ncc-rule" title="짜임 · 크기 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>바닥선(0 선)은 y 300, 가장 큰 값의 막대 끝은 바닥선 위 246.4 입니다.</li>
                     <li>
@@ -344,7 +344,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="ncc-edge" title="엣지 케이스">
                     데이터에 따라 막대 · 글자가 그림 밖으로 나가거나 서로 겹치지 않도록 자동으로 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -365,7 +365,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-loading" title="4. 불러오는 중 (NestedColumnChartSkeleton)">
+                <SectionHeading id="ncc-loading" title="불러오는 중 (NestedColumnChartSkeleton)">
                     차트와 같은 그림 범위(560 × 354)에 바닥선 · 기준 막대 · 구성 막대 · 글자 자리를 그립니다. PDF
                     템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -388,7 +388,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-print" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="ncc-print" title="K-BIGx PDF 템플릿에서">
                     재무현황 칸(폭 556) 안에서 표 → 범례 → 그래프 순서로 16 간격입니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=company"
@@ -406,7 +406,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-a11y" title="6. 접근성" />
+                <SectionHeading id="ncc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 항목마다 기준
@@ -423,7 +423,7 @@ const NestedColumnChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ncc-props" className="flex flex-col gap-6">
-                <SectionHeading id="ncc-props" title="7. Props API">
+                <SectionHeading id="ncc-props" title="Props API">
                     <code>data</code> · <code>base</code> · <code>series</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="NestedColumnChart · NestedColumnChartSkeleton Props 목록" />

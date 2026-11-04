@@ -39,7 +39,7 @@ const Diagram = MODEL_DIAGRAMS[modelId]
 const DIAGRAM_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
     {key: 'parts', header: '구성(위 → 아래)', align: 'start', wrap: true},
-    {key: 'size', header: '시안 크기(PC)', align: 'start', wrap: true},
+    {key: 'size', header: '기준 크기(PC)', align: 'start', wrap: true},
 ] as const
 
 const DIAGRAM_ROWS = [
@@ -100,11 +100,7 @@ const COLOR_ROWS = [
     {key: 'inset', cells: ['판 위 회색 묶음(Tech-Index 4대 부문)', 'bg-panel-inset (gray.50)', 'gray.700']},
     {
         key: 'icon',
-        cells: [
-            '모형 아이콘 칸(KTRS-FM)',
-            'bg-model-icon-surface (navy.100 #e8eff8 — 시안 값)',
-            'navy.500 — 판 위에서 또렷하게',
-        ],
+        cells: ['모형 아이콘 칸(KTRS-FM)', 'bg-model-icon-surface (navy.100 #e8eff8)', 'navy.500 — 판 위에서 또렷하게'],
     },
     {
         key: 'head',
@@ -175,7 +171,7 @@ const MOTION_ROWS = [
 const ModelStructureDiagramGuidePage = () => (
     <GuidePageShell
         title="평가모형 구조도 (ModelStructureDiagram)"
-        description="플랫폼 소개 > 기술평가의 모형별 구조도입니다. 시안 그림을 이미지 대신 글 · 도형으로 옮겨 화면 낭독기가 읽고, 모바일에서도 글자가 줄지 않습니다."
+        description="플랫폼 소개 > 기술평가의 모형별 구조도입니다. 이미지 대신 글 · 도형으로 그려 스크린리더가 읽고, 모바일에서도 글자가 줄지 않습니다."
     >
         <BaseCard>
             <section aria-labelledby="model-structure-diagram-usage" className="flex flex-col gap-6">
@@ -274,7 +270,7 @@ const ModelStructureDiagramGuidePage = () => (
                         모션
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        동작 줄이기 설정이면 모두 없이 처음부터 제자리 · 다 그려진 모습입니다[6.3.1]. 값은{' '}
+                        동작 줄이기 설정이면 움직임 없이 처음부터 제자리에 다 그려진 모습입니다[6.3.1]. 값은{' '}
                         <Link href="/component-guide/motion" className={LINK_CLASS}>
                             모션 가이드
                         </Link>

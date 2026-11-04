@@ -1,0 +1,82 @@
+@reference '../app/globals.css';
+
+/* ─────────────────────────────────────────────────────────────────────────────────────────────
+   검색 카드 테두리 글로우 — 테두리를 따라 도는 그라데이션 선(2px) + 바깥으로 번지는 빛
+   사용처: src/components/composite/select-search-form.tsx(hasGlow → .select-search-form-glow)
+           — K-BIGx 기업혁신성장 조회(innovation-growth-report-lookup.tsx)가 검색 전에만 켠다.
+
+   색: search-glow-start → middle → end → start(토큰). 4초에 한 바퀴 돈다. 동작 줄이기면 돌지 않는다.
+   층: 선 · 빛은 카드 뒤(z -1 · -2)에 깔려 카드 밖으로 나온 부분만 보이고 주변 글을 덮지 않는다.
+       감싼 틀에 isolate 가 있어야 한다(K-BIGx 는 KbigxReportFrame).
+   빛: 범위는 좁게(카드 밖 16px 안팎), 끝은 희뿌옇게 — 카드보다 4px 큰 판을 흐려(blur-md 12px)
+       카드에 붙은 곳이 가장 진하고 멀어질수록 서서히 사라진다. 모서리도 둥글게 퍼진다.
+       평소 60%, 검색 칸에 포커스가 있으면 90% 로 진해진다.
+   ───────────────────────────────────────────────────────────────────────────────────────────── */
+
+@property --select-search-form-glow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes select-search-form-glow-spin {
+    to {
+        --select-search-form-glow-angle: 360deg;
+    }
+}
+
+.select-search-form-glow {
+    position: relative;
+    --select-search-form-glow-opacity: 0.6;
+}
+
+.select-search-form-glow::before,
+.select-search-form-glow::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    background: conic-gradient(
+        from var(--select-search-form-glow-angle),
+        var(--ds-search-glow-start),
+        var(--ds-search-glow-middle),
+        var(--ds-search-glow-end),
+        var(--ds-search-glow-start)
+    );
+    animation: select-search-form-glow-spin 4s linear infinite;
+}
+
+/* 테두리 선 — 카드보다 2px 큰 판을 칠하고 카드 자리는 비운다. */
+.select-search-form-glow::before {
+    z-index: -1;
+    inset: calc(--spacing(0.5) * -1); /* -2px */
+    padding: --spacing(0.5); /* 2px */
+    border-radius: calc(var(--radius-2xl) + --spacing(0.5));
+    mask:
+        linear-gradient(black 0 0) content-box exclude,
+        linear-gradient(black 0 0);
+}
+
+/* 번지는 빛 — 카드보다 4px 큰 판을 흐려(blur-md 12px · 60%) 카드 밖 16px 안팎까지만 번지게 한다.
+   카드에 붙은 곳이 가장 진하고 멀어질수록 희뿌옇게 사라진다. 판이 둥근 모서리라 흐림도 모서리를 따라 둥글게 퍼진다.
+   마스크를 걸지 않는다 — 마스크는 판 경계 밖으로 퍼지는 흐림을 잘라 끝이 또렷하게 끊기고,
+   가로 · 세로 그라데이션 마스크는 모서리를 직각으로 만든다. 판의 안쪽은 카드 면(bg-card)이 덮는다. */
+.select-search-form-glow::after {
+    z-index: -2;
+    inset: calc(--spacing(1) * -1); /* -4px */
+    border-radius: calc(var(--radius-2xl) + --spacing(1));
+    filter: blur(var(--blur-md));
+    opacity: var(--select-search-form-glow-opacity);
+    transition: opacity 0.3s;
+}
+
+/* 포커스 때 강조 — 검색 칸 · 기준 고르기에 키보드 포커스가 오면 빛이 진해진다. */
+.select-search-form-glow:has(:focus-visible) {
+    --select-search-form-glow-opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .select-search-form-glow::before,
+    .select-search-form-glow::after {
+        animation: none;
+    }
+}

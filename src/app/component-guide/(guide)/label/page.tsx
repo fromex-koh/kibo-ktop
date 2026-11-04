@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {cn} from '@/lib/utils'
@@ -115,7 +117,7 @@ const API_ROWS = [
         cells: [
             <code key="prop">className</code>,
             <code key="type">string</code>,
-            '입력 필드의 강조 스타일이나 간격을 확장합니다.',
+            '굵기 · 색 · 간격 같은 스타일을 덧붙입니다.',
         ],
     },
 ] as const
@@ -258,8 +260,8 @@ const LabelGuidePage = () => (
                         &quot;(필수)&quot; 문구를 함께 둡니다. 색만으로 필수를 알리지 않습니다[5.3.1].
                     </li>
                     <li>
-                        라디오 묶음처럼 연결할 컨트롤이 하나가 아니면 <code>asChild</code> 로 <code>span</code> 에 라벨
-                        모양만 입히고, 묶음이 <code>aria-labelledby</code> 로 그 <code>id</code> 를 가리킵니다.
+                        묶음 제목은 묶음(<code>RadioGroup</code> 등)이 <code>aria-labelledby</code> 로 가리켜야 이름으로
+                        읽힙니다[7.4.1].
                     </li>
                 </ul>
             </section>

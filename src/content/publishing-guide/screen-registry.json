@@ -893,20 +893,6 @@
             "name": "기업 검색 결과"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/selected",
-            "name": "기업 선택(특허 있음)"
-        },
-        {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
-            "name": "기업 선택(특허 없음)"
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "screenId": null,
             "userType": "기업",
@@ -926,6 +912,48 @@
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/search-result/patent/not-found",
             "name": "특허 검색 결과 없음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/selected",
+            "name": "[타사조회 · 차감] 특허 있음 · 재무정보 있음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/patent-no-finance",
+            "name": "[타사조회 · 차감] 특허 있음 · 재무정보 없음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
+            "name": "[타사조회 · 차감] 특허 없음 · 재무정보 있음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/individual",
+            "name": "[타사조회 · 차감] 개인기업 · 특허 없음 · 재무정보 있음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/blocked",
+            "name": "[타사조회 · 생성불가] 특허 없음 · 재무정보 없음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/self",
+            "name": "[자사조회 · 차감 없음] 특허 · 재무정보 유무 무관"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
@@ -2139,20 +2167,6 @@
             "name": "기업 검색 결과"
         },
         {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/selected",
-            "name": "기업 선택(특허 있음)"
-        },
-        {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
-            "name": "기업 선택(특허 없음)"
-        },
-        {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "screenId": null,
             "userType": "기관",
@@ -2172,6 +2186,48 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/search-result/patent/not-found",
             "name": "특허 검색 결과 없음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/selected",
+            "name": "[타사조회 · 차감 없음] 특허 있음 · 재무정보 있음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/patent-no-finance",
+            "name": "[타사조회 · 차감 없음] 특허 있음 · 재무정보 없음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
+            "name": "[타사조회 · 차감 없음] 특허 없음 · 재무정보 있음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/individual",
+            "name": "[타사조회 · 차감 없음] 개인기업 · 특허 없음 · 재무정보 있음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/blocked",
+            "name": "[타사조회 · 차감 없음] 특허 없음 · 재무정보 없음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/self",
+            "name": "[자사조회 · 차감 없음] 특허 · 재무정보 유무 무관"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",

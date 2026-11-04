@@ -165,7 +165,12 @@ const ServiceGlassCardList = ({children, className}: {children: ReactNode; class
     <ul className={cn('grid w-full gap-4 md:grid-cols-3 md:gap-6', className)}>{children}</ul>
 )
 
-type ServiceFeature = {icon: ReactNode; title: string; description: string}
+type ServiceFeature = {
+    icon: ReactNode
+    /** 기능 이름 — 목록의 key 로도 쓰여 한 목록 안에서 서로 달라야 한다. */
+    title: string
+    description: string
+}
 
 const FEATURE_COLUMNS_CLASS = {2: 'md:grid-cols-2', 3: 'md:grid-cols-3'} as const
 

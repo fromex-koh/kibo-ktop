@@ -203,28 +203,28 @@ const LEADER_RULE_ROWS = [
         key: 'column',
         cells: [
             '선이 엇갈리거나 원을 가로지를 때(세로줄 배치)',
-            '작은 조각이 한쪽에 많이 몰리면 그쪽만 라벨을 원 바깥 세로줄에 놓습니다. 선은 보고서 차트의 꺾은 지시선입니다: 조각 바로 바깥에서 라벨 높이까지 세로로 오르내린 뒤 꺾여, 가로선으로 라벨에 닿습니다. 세로 · 가로로만 꺾여 이웃 선과 엇갈리지 않습니다. 라벨 묶음은 원래 자리들의 평균 높이를 중심으로 위아래로 고르게 펼쳐 원 위 · 아래 빈 자리까지 씁니다.',
+            '작은 조각이 한쪽에 많이 몰리면 그쪽 라벨만 원 바깥 세로줄에 놓습니다. 선은 세로 · 가로로만 꺾여 이웃 선과 엇갈리지 않습니다.',
         ],
     },
     {
         key: 'rotate',
         cells: [
             '라벨이 한쪽에 몰릴 때(원 돌리기)',
-            '세로줄 배치가 생기거나, 위로 밀어 올린 라벨 때문에 그림 높이가 420 을 넘으면(한 분류가 아주 클 때) 원을 15° 씩 돌려 보며 가장 깔끔한 각도를 고릅니다. 기준은 ① 선끼리 엇갈림 · 선이 원을 가로지름 · 라벨끼리 겹침 · 선이 다른 라벨 글자를 지남의 합이 가장 적고 ② 그다음 그림 높이가 가장 낮은 쪽입니다. 큰 조각이 아래 · 옆으로 가면서 작은 조각이 양옆으로 나뉘어, 왼쪽에만 쌓이던 라벨이 오른쪽 · 위 · 아래 빈 자리도 씁니다. 돌린 배치에서는 라벨 묶음을 위로만 밀지 않고 위아래로 고르게 펼칩니다. 엉키지 않고 높이도 넘지 않는 데이터는 돌리지 않고 12시에서 시작합니다(템플릿 모양).',
+            '세로줄 배치가 생기거나 그림 높이가 420 을 넘으면 원을 15° 단위로 돌려, 라벨이 가장 덜 엉키는 각도를 자동으로 고릅니다. 엉키지 않는 데이터는 돌리지 않고 12시에서 시작합니다.',
         ],
     },
     {
         key: 'row',
         cells: [
             '원 위 · 아래가 비어 있을 때(가로줄 배치)',
-            '원 돌리기와 함께, 12시 · 6시 근처(30° · 45° 안) 조각의 라벨을 원 위 · 아래에 가로로 나란히 놓는 배치도 비교합니다. 라벨은 조각 방향 가운데 정렬, 한 줄 160 폭으로 접고, 겹치면 좌우로 고르게 펼칩니다. 그림 폭에 다 들어가지 않으면 이 배치는 쓰지 않습니다.',
+            '12시 · 6시 근처 조각의 라벨은 원 위 · 아래에 가로로 나란히 놓을 수 있습니다. 그림 폭에 다 들어가지 않으면 이 배치는 쓰지 않습니다.',
         ],
     },
     {
         key: 'wrap',
         cells: [
             '라벨이 길 때(줄바꿈)',
-            '라벨 자리에서 그림 가장자리까지 남은 폭에 맞춰 줄을 바꿉니다. 이름은 maxLabelLines(PDF 템플릿 2)줄까지 적고 넘치면 마지막 줄 끝에서 말줄임합니다. 비중 · 건수가 마지막 이름 줄에 들어가지 않으면 다음 줄로 내립니다. 줄이 늘면 이웃 라벨과의 간격을 그만큼 늘리고, 그림 높이만 늘어납니다.',
+            '라벨 자리에서 그림 가장자리까지 남은 폭에 맞춰 줄을 바꿉니다. 이름은 maxLabelLines 줄까지 적고 넘치면 말줄임합니다. 줄이 늘면 그림 높이도 늘어납니다.',
         ],
     },
     {
@@ -278,7 +278,7 @@ const PROPS_ITEMS = [
     [
         'CalloutPieChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -309,7 +309,7 @@ const CalloutPieChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="cpc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-basic" title="1. 기본 사용">
+                <SectionHeading id="cpc-basic" title="기본 사용">
                     K-BIGx 보고서 PDF 템플릿의 기업 보유기술 · 신용/담보 비중 원형 차트입니다. 가운데가 빈 도넛과 범례
                     모양은{' '}
                     <Link href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
@@ -330,10 +330,9 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-label-rule" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-label-rule" title="2. 라벨 기준 (모두 지시선)">
+                <SectionHeading id="cpc-label-rule" title="라벨 기준 (모두 지시선)">
                     비중과 관계없이 모든 분류를 지시선 끝에 &apos;이름 비중 건수&apos;로 적습니다. 조각 안에는 글자를
-                    적지 않습니다 — 가장 큰 조각 안에 적던 방식은 조각 모양에 따라 어색하게 놓이는 경우가 있어
-                    없앴습니다(분류가 하나뿐이어도 지시선 라벨입니다).
+                    적지 않습니다(분류가 하나뿐이어도 지시선 라벨입니다).
                 </SectionHeading>
                 <div className="grid gap-6 md:grid-cols-2">
                     <Example title="큰 분류가 있을 때" description="50% 조각도 다른 분류처럼 지시선 라벨입니다.">
@@ -356,7 +355,7 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-scenario" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-scenario" title="3. 데이터에 따른 모양">
+                <SectionHeading id="cpc-scenario" title="데이터에 따른 모양">
                     버튼으로 분포 · 항목 수를 바꿔 보면 라벨 자리와 원 위치가 데이터에 따라 저절로 정해지는 것을 볼 수
                     있습니다.
                 </SectionHeading>
@@ -368,7 +367,7 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-leader" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-leader" title="4. 지시선 모양">
+                <SectionHeading id="cpc-leader" title="지시선 모양">
                     선이 서로 엇갈리거나 원을 가로지르지 않도록 경우에 따라 배치를 바꿉니다.
                 </SectionHeading>
                 <Table
@@ -400,7 +399,7 @@ const CalloutPieChartGuidePage = () => (
                     </Example>
                     <Example
                         title="세로줄 배치 · 꺾은 지시선"
-                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 425). PDF 템플릿 칸(387)에서는 이름을 1줄로 줄여 0.95배로 들어갑니다(7번 참고)."
+                        description="80% 뒤로 이름이 긴 작은 조각 7개가 몰리면 돌린 뒤에도 선이 엉키는 쪽을 세로줄에 놓고, 선을 세로 → 가로로 꺾어 잇습니다. 8개 안에서 가장 긴 그림입니다(높이 약 425). PDF 템플릿 칸(387)에서는 이름을 1줄로 줄여 0.95배로 들어갑니다(아래 '칸 높이가 모자랄 때' 참고)."
                     >
                         <CalloutPieChart
                             maxLabelLines={LABEL_MAX_LINES}
@@ -414,13 +413,13 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-edge" title="5. 엣지 케이스">
+                <SectionHeading id="cpc-edge" title="엣지 케이스">
                     라벨 · 값은 데이터마다 달라집니다. 원 크기는 그대로 두고, 길어진 이름은 2줄까지 줄을 바꾸고 넘치면
                     둘째 줄 끝에서 말줄임합니다. 비중 · 건수는 마지막 이름 줄 옆에 들어가지 않으면 다음 줄로 내립니다.
                 </SectionHeading>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-1. 지시선 라벨이 길 때</h3>
+                        <h3 className="typo-title-m-bold text-foreground">지시선 라벨이 길 때</h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="한 분류만 긴 경우"
@@ -492,7 +491,7 @@ const CalloutPieChartGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-2. 데이터 값이 클 때</h3>
+                        <h3 className="typo-title-m-bold text-foreground">데이터 값이 클 때</h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="큰 건수 · 소수 비중"
@@ -508,7 +507,7 @@ const CalloutPieChartGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">5-3. 데이터 구성</h3>
+                        <h3 className="typo-title-m-bold text-foreground">데이터 구성</h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <Example
                                 title="비중 합이 100 이 아닌 경우"
@@ -568,7 +567,7 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-loading" title="6. 불러오는 중 (CalloutPieChartSkeleton)">
+                <SectionHeading id="cpc-loading" title="불러오는 중 (CalloutPieChartSkeleton)">
                     차트와 같은 자리에 원 · 지시선 · 라벨 자리를 그립니다. 그림 범위가 같아 불러온 뒤 자리가 흔들리지
                     않습니다.
                 </SectionHeading>
@@ -590,11 +589,10 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-print" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-print" title="7. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="cpc-print" title="K-BIGx PDF 템플릿에서">
                     색을 값으로 받으므로 PDF 템플릿은 kbx 토큰을 넘깁니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로
-                    그려 스켈레톤 없이 나옵니다. 원형 그래프 라벨은 모두 원 밖 지시선 끝에 둡니다(현업 요청) —
-                    진단브리핑 기업 보유기술과 신용/재무정보 차입금 현황의 신용/담보 비중(예전 InsideLabelPieChart)이 이
-                    차트를 씁니다. 신용/담보 비중은 오른쪽 반 칸(556 × 330, <code>areaHeight</code> 330)에 두고 건수
+                    그려 스켈레톤 없이 나옵니다. 진단브리핑 기업 보유기술과 신용/재무정보 차입금 현황의 신용/담보 비중이
+                    이 차트를 씁니다. 신용/담보 비중은 오른쪽 반 칸(556 × 330, <code>areaHeight</code> 330)에 두고 건수
                     없이 비중만 적습니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=briefing"
@@ -619,12 +617,9 @@ const CalloutPieChartGuidePage = () => (
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
                 <h3 className="typo-title-m-bold text-foreground">칸 높이가 모자랄 때 — 원 크기 지키기</h3>
                 <p className="typo-body-l-regular text-label-foreground">
-                    <code>areaHeight</code> 와 <code>maxLabelLines</code> 를 함께 주면, 라벨이 칸보다 길어 그림 전체(원
-                    포함)가 줄어들 상황에서 라벨부터 줄입니다. 이름 2줄 → 이름 1줄 → 이름 1줄 + 비중 · 건수를 같은 줄에
-                    순서로 바꿔 보고, 칸에 들어가는 첫 단계를 씁니다. 칸 높이의 1.07배까지는 들어간 것으로 봅니다(표준
-                    8조각 · 목업은 이름 2줄 그대로 0.94배). 비중 · 건수를 이름 옆에 붙이는 단계에서도 이름이 세 글자도
-                    안 남으면(&apos;…&apos; 만 남는 등) 옆에 붙이지 않고 다음 줄로 내립니다. 아래는 PDF 템플릿 칸(556 ×
-                    387)과 같은 비율의 자리입니다.
+                    <code>areaHeight</code> 와 <code>maxLabelLines</code> 를 함께 주면, 라벨이 칸보다 길 때 원을 줄이지
+                    않고 라벨부터 줄입니다. 이름 2줄 → 이름 1줄 → 이름 1줄 + 비중 · 건수를 같은 줄에 순서로 바꿔, 칸에
+                    들어가는 첫 단계를 씁니다. 아래는 PDF 템플릿 칸(556 × 387)과 같은 비율의 자리입니다.
                 </p>
                 <div className="grid gap-6 md:grid-cols-2">
                     <Example
@@ -675,16 +670,8 @@ const CalloutPieChartGuidePage = () => (
                         위나 아래로 길어 칸에 여유가 없으면 라벨이 칸 밖으로 나가지 않는 만큼만 비켜 있습니다.
                     </li>
                     <li>
-                        원 크기는 늘 반지름 112(지름 224)이고 칸을 채우려고 키우지 않습니다. 그림 높이가 칸(387)보다 길
-                        때만 그림 전체가 같은 비율로 줄어듭니다. 표준 8조각(높이 401 → 0.97배) · 목업(412 → 0.94배) ·
-                        편중(397 → 0.98배)은 템플릿 모양 그대로 조금 줄어들고, 그보다 길어지는 경우는 위 &apos;칸 높이가
-                        모자랄 때&apos; 처럼 라벨을 줄여 원 크기를 지킵니다.
-                    </li>
-                    <li>
-                        PDF 템플릿에서 넣어 본 데이터(모두 8개 이하): 표준 · 목업 · 1개(짧은 · 긴 이름) · 2개(50:50) ·
-                        3개 · 편중 · 균형 · 긴 라벨 · 8조각 + 긴 이름 · 원 돌리기(90%) · 90% · 80% + 긴 이름 · 고른 8개
-                        + 긴 이름 · 큰 값 · 띄어쓰기 없는 이름. 모두 문서 쪽 수(28쪽) · R&amp;D 줄 위치가 같고, 쪽 넘침
-                        · 선 엇갈림 · 라벨 겹침 없이 소제목과 라벨 사이 32 이상이 남습니다.
+                        원 크기는 늘 반지름 112(지름 224)입니다. 그림 높이가 칸(387)보다 길 때만 전체가 같은 비율로 조금
+                        줄어들고, 더 길면 위 &apos;칸 높이가 모자랄 때&apos; 처럼 라벨을 줄입니다.
                     </li>
                 </ul>
             </section>
@@ -692,7 +679,7 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-a11y" title="8. 접근성" />
+                <SectionHeading id="cpc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 분류마다 이름
@@ -709,7 +696,7 @@ const CalloutPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="cpc-props" className="flex flex-col gap-6">
-                <SectionHeading id="cpc-props" title="9. Props API" />
+                <SectionHeading id="cpc-props" title="Props API" />
                 <PropsTable items={PROPS_ITEMS} caption="CalloutPieChart · CalloutPieChartSkeleton Props 목록" />
             </section>
         </BaseCard>

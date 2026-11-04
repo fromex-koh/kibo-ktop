@@ -45,7 +45,7 @@ const COLOR_CODE = `// 상태(tone)가 점수 구간 색을 정합니다.
 <ScoreGauge score={55.1} statusLabel="보통" tone="normal" ariaLabel="…" />
 
 // 상태 색에 없는 색이 필요할 때만 color(토큰 변수)로 덮습니다. tone 보다 우선합니다.
-<ScoreGauge score={55.1} statusLabel="보통" color="var(--raw-purple-500)" ariaLabel="…" />`
+<ScoreGauge score={55.1} statusLabel="보통" color="var(--ds-purple-500)" ariaLabel="…" />`
 
 const LOADING_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
@@ -229,7 +229,7 @@ const PROPS_ITEMS = [
 const ScoreGaugeGuidePage = () => (
     <GuidePageShell
         title="점수 원호 게이지 (ScoreGauge)"
-        description="0~100 점수를 위가 열린 굵은 원호로 보여 주고, 가운데에 점수 · 상태 · 보조 문구를 두는 게이지입니다."
+        description="0~100 점수를 위가 열린 굵은 원호로 보여 주고, 가운데에 점수 · 상태 · 보조 문구를 두는 게이지입니다. 원호 뼈대는 ArcGauge 가이드를 참고하세요."
     >
         <BaseCard>
             <section aria-labelledby="sg-basic" className="flex flex-col gap-6">
@@ -380,15 +380,15 @@ const ScoreGaugeGuidePage = () => (
                         상태가 글자(<code>statusLabel</code>)로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

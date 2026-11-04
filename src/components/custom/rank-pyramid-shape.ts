@@ -29,12 +29,8 @@ const TIERS = [
     tier(105.5, 161, [0, 0]),
     tier(165, 220, [0, BASE_RADIUS]),
 ] as const
-// 지시선 — 맨 위 단 오른쪽 변에서 대각선으로 올라간 뒤 수평으로 점까지. 점 x 248 · 글자 x 256.
-const LEADER_RISE_X = 7.5
-const LEADER_RISE_Y = 9.5
-const LEADER_DOT_X = 248
-const LEADER_TEXT_X = 256
-const LEADER_DOT_RADIUS = 3
+// 그림 폭 — 피라미드(258) 오른쪽에 여백을 둔 320. 이 폭이 카드 안 피라미드 크기 · 배치를 정하므로
+// 바꾸면 카드 배치가 달라진다.
 const VIEW_WIDTH = 320
 
 type Point = {x: number; y: number}
@@ -86,10 +82,6 @@ const tierPath = ({top, bottom, topHalf, bottomHalf, radius, isApex}: (typeof TI
           )
 }
 
-// 단 오른쪽 변 위의 점(y 높이).
-const rightEdgeAt = ({top, bottom, topHalf, bottomHalf}: (typeof TIERS)[number], y: number) =>
-    APEX_X + topHalf + ((bottomHalf - topHalf) * (y - top)) / (bottom - top)
-
 // 스켈레톤(ChartSkeleton type="rank-pyramid")이 같은 모양을 쓰도록 단 경로를 내보낸다.
 const RANK_PYRAMID_TIER_PATHS = TIERS.map(tierPath)
 const RANK_PYRAMID_VIEW_BOX = `0 0 ${VIEW_WIDTH} ${PYRAMID_HEIGHT}`
@@ -100,14 +92,8 @@ export {
     PYRAMID_HEIGHT,
     APEX_X,
     TIERS,
-    LEADER_RISE_X,
-    LEADER_RISE_Y,
-    LEADER_DOT_X,
-    LEADER_TEXT_X,
-    LEADER_DOT_RADIUS,
     VIEW_WIDTH,
     tierPath,
-    rightEdgeAt,
     RANK_PYRAMID_TIER_PATHS,
     RANK_PYRAMID_VIEW_BOX,
 }

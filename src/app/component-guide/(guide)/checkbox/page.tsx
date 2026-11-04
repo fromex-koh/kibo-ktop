@@ -17,7 +17,8 @@ import CheckboxIndeterminateDemo from './checkbox-indeterminate-demo'
 
 export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 
-const USAGE_CODE = `import {Checkbox} from '@/components/ui/checkbox'
+const USAGE_CODE = `import {cn} from '@/lib/utils'
+import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldLabel} from '@/components/ui/field'
 import {FIELD_FOCUS_RING} from '@/constants/form'
 

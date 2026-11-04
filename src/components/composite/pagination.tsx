@@ -137,7 +137,8 @@ const Pagination = ({
                                 onClick={() => goTo(item)}
                                 aria-label={`${item} 페이지`}
                                 aria-current={item === page ? 'page' : undefined}
-                                className={cn(paginationItemClassName, compact && 'size-8')}
+                                // compact 는 번호 칸이 최소 32 이고, 번호가 길면(1000쪽 이상) 칸이 함께 늘어난다.
+                                className={cn(paginationItemClassName, compact && 'h-8 w-auto min-w-8 px-1')}
                             >
                                 {item}
                             </button>

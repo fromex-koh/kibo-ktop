@@ -80,7 +80,7 @@ const STATE_ROWS = [
         cells: [
             '고른 카드(하나)',
             '옅은 파랑 면(primary-subtle) · 파란 테두리 · 번호 진한 파랑 · 제목 본문 색',
-            '설명 목록(점 + 16 Regular — 점은 platform-carousel-marker, 다크는 글자와 같은 gray.100). 설명이 비면 그림',
+            '설명 목록(점 색은 platform-carousel-marker). 설명이 비면 그림',
         ],
     },
     {
@@ -148,10 +148,8 @@ const CardCarouselGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         고른 카드는 늘 첫 칸에 오고 나머지가 번호 순서대로 뒤따릅니다(마지막 다음은 처음). 카드를
-                        누르거나 이전 · 다음 버튼을 누르면 카드 줄 전체가 밀려 그 카드가 첫 칸에 옵니다. 같은 카드를 두
-                        자리에 겹쳐 두지 않아 잔상이 생기지 않고, 밀려 나가는 카드는 흐려지며 사라지고 [이전]으로
-                        들어오는 카드는 투명하게 시작해 선명해집니다. 아래 데모는 카드 안이라 여백을 0 으로
-                        두었습니다(왼쪽 페이드 없음).
+                        누르거나 이전 · 다음 버튼을 누르면 카드 줄 전체가 밀려 그 카드가 첫 칸에 옵니다. 아래 데모는
+                        카드 안이라 여백을 0 으로 두었습니다(왼쪽 페이드 없음).
                     </p>
                 </div>
                 <CardCarousel
@@ -189,9 +187,8 @@ const CardCarouselGuidePage = () => (
                         </p>
                         <p className="typo-body-l-regular text-label-foreground">
                             왼쪽 페이드 — 왼쪽 여백 구간(콘텐츠 선 바깥)은 마스크로 투명하게 지워 밀려 나가는 카드가 뚝
-                            잘려 보이지 않습니다(탭 TabsScrollArea 의 가장자리 페이드와 같은 방식). 콘텐츠 선 안의 고른
-                            카드는 흐려지지 않고, 오른쪽 끝은 화면 끝에서 그대로 잘립니다. 왼쪽 여백이 0 이면 페이드도
-                            없습니다.
+                            잘려 보이지 않습니다. 콘텐츠 선 안의 고른 카드는 흐려지지 않고, 오른쪽 끝은 화면 끝에서
+                            그대로 잘립니다. 왼쪽 여백이 0 이면 페이드도 없습니다.
                         </p>
                         <CodeBlock code={BLEED_CODE} language="tsx" copyLabel="복사" />
                     </div>

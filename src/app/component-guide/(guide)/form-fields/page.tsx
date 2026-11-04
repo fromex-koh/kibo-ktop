@@ -134,6 +134,10 @@ const PART_ROWS = [
     {key: 'locked', cells: [<code key="part">LockedField</code>, '회원정보 등에서 자동으로 채워지는 읽기전용 칸']},
     {key: 'lookup', cells: [<code key="part">LookupField</code>, '조회 · 검색 · 중복확인 버튼이 붙는 칸']},
     {
+        key: 'label',
+        cells: [<code key="part">FieldLabel</code>, 'Field 로 감쌀 수 없는 칸에 라벨만 따로 둘 때(필수 표시 포함)'],
+    },
+    {
         key: 'notice',
         cells: [
             <code key="part">RequiredFieldsNotice</code>,
@@ -212,7 +216,7 @@ const FormFieldsGuidePage = () => (
             <section aria-labelledby="form-fields-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="form-fields-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                 </div>
                 <div className={SUB_LIST}>

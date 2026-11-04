@@ -68,6 +68,13 @@ const PROPS_ITEMS = [
         'false',
         'boolean',
     ],
+    [
+        'EmailField',
+        'onValueChange',
+        '합친 주소와 형식이 맞는지가 바뀔 때마다 알립니다(값이 있어야 열리는 버튼 등). 함수가 바뀔 때도 다시 불리므로 useCallback 등으로 고정해 넘깁니다.',
+        '-',
+        '(value: {email: string; isValid: boolean}) => void',
+    ],
     ['EmailField', 'className', '바깥 상자에 덧붙일 클래스.', 'undefined', 'string'],
 ] as const
 
@@ -88,7 +95,6 @@ const SUB_LIST = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-
 const SUB_BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const LIST_CLASS = 'typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5'
 
-// 이메일 입력 — Input·Select 를 조합한 프로젝트 폼 패턴. 상태를 들고 있어야 해서 client 컴포넌트다.
 const EmailFieldGuidePage = () => (
     <GuidePageShell
         title="이메일 입력 (EmailField)"

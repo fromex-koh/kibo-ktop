@@ -139,7 +139,7 @@ const PROPS_ITEMS = [
     [
         'RatingTrendChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'등급 이력을 불러오는 중입니다.'",
         'string',
     ],
@@ -170,7 +170,7 @@ const RatingTrendChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="rtc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-basic" title="1. 기본 사용">
+                <SectionHeading id="rtc-basic" title="기본 사용">
                     그림 680 × 280 기준으로 그리고 칸 폭에 맞춰 같은 비율로 줄어듭니다. 원호 · 툴팁이 있는 웹 화면용은{' '}
                     <Link href="/component-guide/grade-history-chart" className={LINK_CLASS}>
                         GradeHistoryChart
@@ -193,7 +193,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="rtc-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         받은 등급 가운데 서로 다른 등급마다 가로줄(x 90 ~ 680)을 긋습니다 — 높은 등급이 위(y 50), 낮은
@@ -210,7 +210,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-edge" title="3. 엣지 케이스" />
+                <SectionHeading id="rtc-edge" title="엣지 케이스" />
                 <div className="grid gap-6 xl:grid-cols-2">
                     {EDGE_CASES.map((item) => (
                         <Example key={item.key} title={item.title} description={item.description}>
@@ -223,7 +223,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-loading" title="4. 불러오는 중 (RatingTrendChartSkeleton)">
+                <SectionHeading id="rtc-loading" title="불러오는 중 (RatingTrendChartSkeleton)">
                     차트와 같은 그림 범위(680 × 280)에 등급 줄 · 선 · 점 · 등급 글자 · 시점 자리를 그립니다. PDF
                     템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -241,7 +241,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-print" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="rtc-print" title="K-BIGx PDF 템플릿에서">
                     기업신용등급 · 현금흐름등급 평가이력 소제목 아래 16 에 그래프(3) · 표(2)를 48 간격으로 나란히
                     둡니다. 기업신용등급 표는 최근 것부터 지금 등급을 뺀 지난 평가만, 현금흐름등급 표는 평가이력 전체를
                     최근 것부터 적습니다. 현금흐름등급 높낮이(rank)는 CF1 이 위가 되도록 7 − 단계
@@ -262,7 +262,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-a11y" title="6. 접근성" />
+                <SectionHeading id="rtc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 시점마다
@@ -278,7 +278,7 @@ const RatingTrendChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rtc-props" className="flex flex-col gap-6">
-                <SectionHeading id="rtc-props" title="7. Props API">
+                <SectionHeading id="rtc-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="RatingTrendChart · RatingTrendChartSkeleton Props 목록" />

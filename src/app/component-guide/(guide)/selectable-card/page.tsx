@@ -285,7 +285,7 @@ const CHOICE_ROWS = [
             <Link key="component" href="/component-guide/selectable-info-card" className={LINK_CLASS}>
                 SelectableInfoCard
             </Link>,
-            '검색된 기업·특허처럼 정보 카드입니다. 컨트롤 표시 없이 테두리로 선택을 보입니다.',
+            '항목 이름 · 값 여러 줄로 된 정보 카드입니다. 컨트롤 표시 없이 테두리로 선택을 보입니다.',
         ],
     },
     {
@@ -453,7 +453,11 @@ const SelectableCardGuidePage = () => (
 
                     <GuideCase
                         title="뱃지"
-                        description="radio 카드와 같은 <code>badges</code> 를 씁니다."
+                        description={
+                            <>
+                                radio 카드와 같은 <code>badges</code> 를 씁니다.
+                            </>
+                        }
                         code={CHECKBOX_BADGE_CODE}
                     >
                         <CheckboxBadgeDemo />

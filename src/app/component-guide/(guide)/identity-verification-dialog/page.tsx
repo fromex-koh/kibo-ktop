@@ -81,6 +81,13 @@ const PROPS_ITEMS = [
         '-',
         '(password: string) => void',
     ],
+    [
+        'IdentityVerificationDialog',
+        'errorMessage',
+        '서버가 돌려준 오류 문구(예: 비밀번호 불일치)를 칸 아래에 띄웁니다. 다음 제출(onSubmit) 때 바깥에서 비웁니다.',
+        '-',
+        'string',
+    ],
 ] as const
 
 const IdentityVerificationDialogGuidePage = () => (
@@ -95,8 +102,8 @@ const IdentityVerificationDialogGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        비밀번호를 비운 채 [확인]을 누르면 칸 아래 오류 문구가 뜹니다. 서버가 &apos;비밀번호가 일치하지
-                        않습니다&apos; 같은 답을 주면 같은 자리에 띄웁니다.
+                        비밀번호를 비운 채 [확인]을 누르면 칸 아래 오류 문구가 뜹니다. 서버의 &apos;비밀번호가 일치하지
+                        않습니다&apos; 같은 답도 같은 자리에 띄웁니다(<code>errorMessage</code> 로 넘깁니다).
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

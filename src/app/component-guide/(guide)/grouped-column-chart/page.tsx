@@ -106,67 +106,63 @@ const GROUPED_COLUMN_VARIATION_CODE = `import {
   GroupedColumnChart,
   type GroupedColumnItem,
   type GroupedColumnSeries,
-} from '@/components/custom/grouped-column-chart';
+} from '@/components/custom/grouped-column-chart'
 
 const series: GroupedColumnSeries[] = [
-  { key: 'assets', label: '총자산', color: 'var(--ds-chart-4)' },
-  { key: 'liabilities', label: '부채', color: 'var(--ds-chart-3)' },
-  { key: 'equity', label: '자본', color: 'var(--ds-chart-2)' },
-];
+  {key: 'assets', label: '총자산', color: 'var(--ds-chart-4)'},
+  {key: 'liabilities', label: '부채', color: 'var(--ds-chart-3)'},
+  {key: 'equity', label: '자본', color: 'var(--ds-chart-2)'},
+]
 
 const data: GroupedColumnItem[] = [
-  { id: '2022', label: '2022', values: { assets: 286.4, liabilities: 138.2, equity: 148.2 } },
-  { id: '2023', label: '2023', values: { assets: 305.2, liabilities: 141.8, equity: 163.4 } },
-  { id: '2024', label: '2024', values: { assets: 324.8, liabilities: 142.6, equity: 182.2 } },
-];
+  {id: '2022', label: '2022', values: {assets: 286.4, liabilities: 138.2, equity: 148.2}},
+  {id: '2023', label: '2023', values: {assets: 305.2, liabilities: 141.8, equity: 163.4}},
+  {id: '2024', label: '2024', values: {assets: 324.8, liabilities: 142.6, equity: 182.2}},
+]
 
-export default function BalanceSheetChart() {
-  return (
-    <GroupedColumnChart
-      data={data}
-      series={series}
-      showValueLabels
-      showLegend={false}
-      valueFractionDigits={1}
-      unit="억원"
-      yAxisStep={50}
-      ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
-    />
-  );
-}`
+const BalanceSheetChart = () => (
+  <GroupedColumnChart
+    data={data}
+    series={series}
+    showValueLabels
+    showLegend={false}
+    valueFractionDigits={1}
+    unit="억원"
+    yAxisStep={50}
+    ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
+  />
+)`
 
 const GROUPED_COLUMN_INCOME_CODE = `import {
   GroupedColumnChart,
   type GroupedColumnItem,
   type GroupedColumnSeries,
-} from '@/components/custom/grouped-column-chart';
+} from '@/components/custom/grouped-column-chart'
 
 const series: GroupedColumnSeries[] = [
-  { key: 'sales', label: '매출', color: 'var(--ds-chart-4)' },
-  { key: 'operatingProfit', label: '영업이익', color: 'var(--ds-chart-1)' },
-  { key: 'netIncome', label: '순이익', color: 'var(--ds-chart-3)' },
-];
+  {key: 'sales', label: '매출', color: 'var(--ds-chart-4)'},
+  {key: 'operatingProfit', label: '영업이익', color: 'var(--ds-chart-1)'},
+  {key: 'netIncome', label: '순이익', color: 'var(--ds-chart-3)'},
+]
 
 const data: GroupedColumnItem[] = [
-  { id: '2022', label: '2022', values: { sales: 221.6, operatingProfit: 28.4, netIncome: 20.8 } },
-  { id: '2023', label: '2023', values: { sales: 244.8, operatingProfit: 34.1, netIncome: 24.6 } },
-  { id: '2024', label: '2024', values: { sales: 267.4, operatingProfit: 38.2, netIncome: 28.6 } },
-];
+  {id: '2022', label: '2022', values: {sales: 221.6, operatingProfit: 28.4, netIncome: 20.8}},
+  {id: '2023', label: '2023', values: {sales: 244.8, operatingProfit: 34.1, netIncome: 24.6}},
+  {id: '2024', label: '2024', values: {sales: 267.4, operatingProfit: 38.2, netIncome: 28.6}},
+]
 
-export default function IncomeStatementChart() {
-  return (
-    <GroupedColumnChart
-      data={data}
-      series={series}
-      showValueLabels
-      showLegend={false}
-      valueFractionDigits={1}
-      unit="억원"
-      yAxisStep={50}
-      ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
-    />
-  );
-}`
+const IncomeStatementChart = () => (
+  <GroupedColumnChart
+    data={data}
+    series={series}
+    showValueLabels
+    showLegend={false}
+    valueFractionDigits={1}
+    unit="억원"
+    yAxisStep={50}
+    ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
+  />
+)`
 
 const GROUPED_COLUMN_DATA: GroupedColumnItem[] = [
     {id: 'assets', label: '총자산', values: {'2022': 11826, '2023': 17168, '2024': 18768}},
@@ -330,22 +326,22 @@ const PROPS_ITEMS = [
     [
         'GroupedColumnChart',
         'showTooltip',
-        '막대에 올렸을 때 뜨는 말풍선입니다. 끄면 hover 강조도 함께 사라집니다.',
+        '막대에 올렸을 때 뜨는 툴팁입니다. 끄면 hover 강조도 함께 사라집니다.',
         'true',
         'boolean',
     ],
     [
         'GroupedColumnChart',
         'animate',
-        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '그리는 움직임입니다. 안 주면 ChartReveal 설정을 따릅니다. 인쇄용 문서처럼 바로 그려야 하면 끕니다.',
         '문서 설정',
         'boolean',
     ],
-    ['GroupedColumnChart', 'unit', '단위입니다. 그림 위 "단위: …" 글자와 말풍선 · 숨김 표에 붙습니다.', '-', 'string'],
+    ['GroupedColumnChart', 'unit', '단위입니다. 그림 위 "단위: …" 글자와 툴팁 · 숨김 표에 붙습니다.', '-', 'string'],
     [
         'GroupedColumnChart',
         'valueFractionDigits',
-        '값 · 말풍선 · 숨김 표의 소수 자릿수입니다. 0~6 으로 맞춥니다.',
+        '값 · 툴팁 · 숨김 표의 소수 자릿수입니다. 0~6 으로 맞춥니다.',
         '0',
         'number',
     ],
@@ -353,7 +349,7 @@ const PROPS_ITEMS = [
     [
         'GroupedColumnChart',
         'missingValueText',
-        "값이 없는 막대(그 계열 값이 없거나 숫자가 아님) 자리에 막대 대신 적을 글자입니다(예: '-'). 값 글자와 같은 자리에 적고 말풍선 · 숨김 표도 이 글자로 읽습니다. 주지 않으면 그 자리를 비웁니다(숨김 표는 0).",
+        "값이 없거나 숫자가 아닌 막대 자리에 적을 글자입니다(예: '-'). 툴팁 · 숨김 표도 이 글자로 읽습니다. 주지 않으면 자리를 비웁니다(숨김 표는 0).",
         '-',
         'string',
     ],
@@ -388,11 +384,11 @@ const PROPS_ITEMS = [
     ],
     ['GroupedColumnChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['GroupedColumnSeries', 'key', 'data 의 values 키와 같아야 막대가 그려집니다.', '-', 'string'],
-    ['GroupedColumnSeries', 'label', '범례 · 말풍선에 보이는 이름입니다.', '-', 'string'],
+    ['GroupedColumnSeries', 'label', '범례 · 툴팁에 보이는 이름입니다.', '-', 'string'],
     [
         'GroupedColumnSeries',
         'color',
-        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>)를 씁니다. 다크에서 밝은 단계로 바뀝니다.',
         '-',
         'string',
     ],
@@ -436,7 +432,7 @@ const GroupedColumnChartGuidePage = () => (
             <section aria-labelledby="gcc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="gcc-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         모양은 <code>variant</code> 로 고릅니다.
@@ -528,7 +524,7 @@ const GroupedColumnChartGuidePage = () => (
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">좁은 폭 (cells)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            그래프는 최소 폭(576)을 지키고 그래프만 가로로 넘깁니다. 범례는 제자리에서 줄바꿈됩니다.
+                            그래프는 최소 폭(576px)을 지키고 그래프만 가로로 넘깁니다. 범례는 제자리에서 줄바꿈됩니다.
                         </p>
                         <GroupedColumnChart
                             variant="cells"
@@ -584,23 +580,23 @@ const GroupedColumnChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 같은 값이
-                        숨김 표(<code>caption</code> · <code>th scope</code>)로 들어 있어 화면 낭독기가 표로
+                        숨김 표(<code>caption</code> · <code>th scope</code>)로 들어 있어 스크린리더가 표로
                         읽습니다[5.1.1].
                     </li>
                     <li>
-                        값이 말풍선에만 있지 않도록 <code>showValueLabels</code> 를 켭니다. 말풍선은 마우스 보조입니다.
+                        값이 툴팁에만 있지 않도록 <code>showValueLabels</code> 를 켭니다. 툴팁은 마우스 보조입니다.
                     </li>
                     <li>계열은 색과 함께 범례 이름으로 구분합니다[5.3.1]. 범례를 끄면 다른 곳에 이름을 둡니다.</li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

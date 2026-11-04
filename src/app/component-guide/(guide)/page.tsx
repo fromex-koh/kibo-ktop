@@ -173,15 +173,15 @@ const JUMP_LINK_CLASS =
     'border-border bg-card typo-body-l-bold text-foreground hover:bg-muted focus-visible:ring-ring rounded-md border px-4 py-2 outline-ring focus:outline-none focus-visible:ring-2'
 
 const GROUPS = [
-    {id: 'guide-start-group', title: '1. 시작하기', description: '필요한 가이드를 찾고, 화면에 적용하는 순서입니다.'},
+    {id: 'guide-start-group', title: '시작하기', description: '필요한 가이드를 찾고, 화면에 적용하는 순서입니다.'},
     {
         id: 'guide-structure-group',
-        title: '2. 구조',
+        title: '구조',
         description: '디자인 값과 컴포넌트가 어디에 있고 어떻게 이어지는지입니다.',
     },
     {
         id: 'guide-handoff-group',
-        title: '3. 전달 · 검증',
+        title: '전달 · 검증',
         description: '프론트엔드 저장소로 넘기는 방법과 바꾼 뒤 확인할 것입니다.',
     },
 ] as const
@@ -335,7 +335,7 @@ const ComponentGuidePage = () => (
                         </div>
                     ))}
                 </div>
-                {/* K-BIGx 인쇄 템플릿 표시 — 각 가이드 제목 옆 배지와 같은 배지 · 툴팁. 목록은 메뉴(isKbigxPrint)에서 만든다. */}
+                {/* K-BIGx PDF 템플릿 표시 — 각 가이드 제목 옆 배지와 같은 배지 · 툴팁. 목록은 메뉴(isKbigxPrint)에서 만든다. */}
                 <section
                     aria-labelledby="kbigx-print-guides-title"
                     className="border-subtle-2 bg-surface mt-4 flex flex-col gap-3 rounded-sm border p-5"
@@ -347,16 +347,16 @@ const ComponentGuidePage = () => (
                         </code>
                     </div>
                     <h4 id="kbigx-print-guides-title" className="typo-title-m-bold text-foreground">
-                        K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트
+                        K-BIGx 보고서 PDF 템플릿에서 쓰는 컴포넌트
                     </h4>
                     <p className="typo-body-l-regular text-label-foreground">
                         이 배지가 붙은 가이드의 컴포넌트를 고치면 PDF 템플릿도 함께 확인합니다. PDF 템플릿 전용 부품 ·
                         규칙은{' '}
                         <Link
-                            href="/component-guide/report-shell"
+                            href="/component-guide/kbigx-pdf-template"
                             className="text-primary-strong underline underline-offset-4"
                         >
-                            리포트 공통 (Report)
+                            K-BIGx PDF 템플릿
                         </Link>{' '}
                         가이드에 있습니다.
                     </p>

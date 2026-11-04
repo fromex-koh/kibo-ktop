@@ -51,7 +51,7 @@ const USAGE_CODE = `import {GradeScaleGauge, type GradeScaleItem} from '@/compon
 
 import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel} from '@/content/service/cash-flow-grades'
 
-// 낮은 등급부터 높은 등급 순서입니다(CF6 → CF1 — 현금흐름등급표 = 참고자료 등급 정의).
+// 낮은 등급부터 높은 등급 순서입니다(CF6 → CF1).
 // 칸 색 · 칸 글자 색은 데이터가 넘깁니다(토큰 — 다크에서 함께 바뀜).
 const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.map((item) => ({
   label: item.grade,
@@ -145,14 +145,14 @@ const PROPS_ITEMS = [
     [
         'GradeScaleGauge',
         'description',
-        "가운데 등급 아래 설명입니다. 빈 문자열('')이면 등급만 보이고 등급 글자는 설명이 있을 때와 같은 높이에 남습니다. 보고서 현금흐름등급은 '' 입니다.",
+        "가운데 등급 아래 설명입니다. 빈 문자열('')이면 등급만 보입니다. 보고서 현금흐름등급은 '' 입니다.",
         "'현재 등급'",
         'string',
     ],
     [
         'GradeScaleGauge',
         'details',
-        "원호 안 등급(· 설명) 아래 날짜 줄입니다. 이름(옅게) · 값 쌍이며 기업신용등급 게이지의 평가일자 줄과 같은 글자입니다. 보고서 현금흐름등급은 결산일자 한 줄, 값이 비면 사용처가 '-' 를 넘깁니다.",
+        "원호 안 등급(· 설명) 아래 이름 · 값 줄입니다(예: 결산일자). 값이 비면 사용처가 '-' 를 넘깁니다.",
         '[]',
         'readonly {label: string; value: string}[]',
     ],
@@ -205,7 +205,7 @@ const PROPS_ITEMS = [
     [
         'GradeScaleGaugeSkeleton',
         'label',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'등급을 불러오는 중입니다.'",
         'string',
     ],
@@ -308,7 +308,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
 const GradeScaleGaugeGuidePage = () => (
     <GuidePageShell
         title="등급 척도 게이지 (GradeScaleGauge)"
-        description="현재 등급을 원호로 보이고, 전체 등급을 낮은 것부터 높은 것까지 색 칸으로 늘어놓아 단계를 함께 보이는 게이지입니다."
+        description="현재 등급을 원호로 보이고, 전체 등급을 낮은 것부터 높은 것까지 색 칸으로 늘어놓아 단계를 함께 보이는 게이지입니다. 원호 뼈대는 ArcGauge 가이드를 참고하세요."
     >
         <BaseCard>
             <section aria-labelledby="gsg-basic" className="flex flex-col gap-6">
@@ -450,9 +450,11 @@ const GradeScaleGaugeGuidePage = () => (
                         색도 묻히지 않습니다.
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 단계
-                        칩이 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code>{' '}
-                        라 동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        단계 칩이 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). 움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

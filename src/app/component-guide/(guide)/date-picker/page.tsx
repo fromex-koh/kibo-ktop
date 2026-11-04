@@ -255,7 +255,7 @@ const DatePickerGuidePage = () => (
             <section aria-labelledby="date-picker-variants" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="date-picker-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         단위, 크기, 상태는 props 로 지정하고 오류와 필수는 <code>Field</code> 와 함께 처리합니다.

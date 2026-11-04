@@ -25,8 +25,6 @@ import carbonHeroLeadingSme from '@public/images/platform-carbon-neutrality/hero
 import carbonHeroSmeUse from '@public/images/platform-carbon-neutrality/hero-sme-use.webp'
 import carbonHeroTaxonomy from '@public/images/platform-carbon-neutrality/hero-taxonomy.webp'
 import carbonHeroPublicUse from '@public/images/platform-carbon-neutrality/hero-public-use.webp'
-import officeBuilding from '@public/images/login/office-building.webp'
-import bankBuilding from '@public/images/login/bank-building.webp'
 import searchWindowGradeBadge from '@public/images/service-intro/search-window-grade-badge.webp'
 import aiRobotDonutChart from '@public/images/service-intro/ai-robot-donut-chart.webp'
 import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
@@ -343,33 +341,10 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                 ],
             },
             {
-                key: 'login',
-                title: '로그인 회원 구분 탭',
-                description:
-                    '로그인 회원 구분 탭 그림이었습니다. 통합테스트 조치로 탭에서 그림을 빼 지금은 화면에서 쓰지 않습니다(파일만 남겨 둡니다).',
-                folder: 'public/images/login/',
-                usedIn: '사용처 없음 (예전 custom/login-screen.tsx 회원 구분 탭)',
-                size: 'size-24 object-contain',
-                grid: 'narrow',
-                items: [
-                    {
-                        file: 'office-building.webp',
-                        label: '기업회원',
-                        src: officeBuilding,
-                        className: 'size-24 object-contain',
-                    },
-                    {
-                        file: 'bank-building.webp',
-                        label: '기관회원',
-                        src: bankBuilding,
-                        className: 'size-24 object-contain',
-                    },
-                ],
-            },
-            {
                 key: 'service-intro',
                 title: '서비스 소개 띠',
-                description: '서비스 소개 띠(ServiceIntroBanner) 그림입니다.',
+                description:
+                    '서비스 소개 띠(ServiceIntroBanner) 그림입니다. 1024 미만에서는 숨기고 그림 뒤 원만 남깁니다.',
                 folder: 'public/images/service-intro/',
                 usedIn: 'custom/patent-grade-sections.tsx · custom/k-bigx-report-sections.tsx',
                 size: 'h-auto w-full (최대 440)',
@@ -617,7 +592,7 @@ const KIND_ROWS = [
     },
     {
         key: 'illustration',
-        cells: ['2-2. 일러스트', '선택 카드 · 로그인 · 서비스 소개 · 상태 화면 그림', 'alt="" (장식)'],
+        cells: ['2-2. 일러스트', '선택 카드 · 플랫폼 소개 · 서비스 소개 · 상태 화면 그림', 'alt="" (장식)'],
     },
     {key: 'screenshot', cells: ['2-3. 스크린샷', '사용 방법 화면 캡처', 'alt 에 캡처 내용']},
     {
@@ -628,7 +603,7 @@ const KIND_ROWS = [
         key: 'icon',
         cells: [
             '이미지 아이콘',
-            '원화 · 왕관 · 브라우저 로고 · 등급 메달 등 작은 상징 그림',
+            '원화 · 브라우저 로고 · 등급 메달 등 작은 상징 그림',
             <Link
                 key="alt"
                 href="/component-guide/icon#icon-image-group"
@@ -642,11 +617,14 @@ const KIND_ROWS = [
 
 // 쓰는 법 — 경우별 코드(실제 서비스와 같은 파일 · 크기).
 const USAGE_CODE = `import Image from 'next/image'
-import officeBuilding from '@public/images/login/office-building.webp'
+import {ThemeImage} from '@/components/custom/theme-image'
+import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
 import citationStep1 from '@public/images/citation-manual/step-1-kipris-search-menu.webp'
+import questionMark from '@public/images/faq/faq-question-mark.webp'
+import questionMarkDark from '@public/images/faq/faq-question-mark-dark.webp'
 
 {/* ① 정적 import — 크기는 자동 */}
-<Image src={officeBuilding} alt="" sizes="96px" className="size-24 object-contain" />
+<Image src={serviceStatusIllustration} alt="" sizes="320px" className="h-auto w-full max-w-80" />
 
 {/* ② 경로 문자열 — width · height 필수 */}
 <Image src="/images/service-intro/search-window-grade-badge.webp" alt="" width={1320} height={720} sizes="440px" className="h-auto w-full" />
@@ -654,6 +632,9 @@ import citationStep1 from '@public/images/citation-manual/step-1-kipris-search-m
 {/* ③ 라이트 · 다크 두 장 — 테마에 맞는 한 장만 보인다 */}
 <Image src="/images/logo-ktop.svg" alt="" width={140} height={32} className="[display:var(--logo-on-light)] h-8 w-35" />
 <Image src="/images/logo-ktop-white.svg" alt="" width={140} height={32} className="[display:var(--logo-on-dark)] h-8 w-35" />
+
+{/* ⑤ 라이트 · 다크 파일이 따로인 꾸밈 그림 — ThemeImage(alt="" 고정) */}
+<ThemeImage light={questionMark} dark={questionMarkDark} className="size-icon-lg" />
 
 {/* 그림이 내용을 전하면 alt 에 그 내용[5.1.1] */}
 <Image src={citationStep1} alt="KIPRIS 첫 화면의 지식재산정보 검색 영역. 특허·실용신안 메뉴가 첫 번째에 있다." sizes="508px" className="h-auto w-full" />`
@@ -672,7 +653,7 @@ const USAGE_ROWS = [
             <span key="how">
                 <code>@public/…</code> 로 import 해 <code>src</code> 에 넘깁니다. 크기는 자동입니다.
             </span>,
-            '로그인 · 스크린샷 · 메인페이지 · 플랫폼 소개 사진',
+            '서비스 상태 그림 · 스크린샷 · 메인페이지 · 플랫폼 소개 사진',
         ],
     },
     {
@@ -703,6 +684,18 @@ const USAGE_ROWS = [
                 <code>fill</code> 또는 <code>aspect-*</code> + <code>object-cover</code>
             </span>,
             '메인페이지 배경 · 사진 · 플랫폼 소개 대표 사진 · 확대 메뉴 캡처',
+        ],
+    },
+    {
+        key: 'theme-image',
+        cells: [
+            '⑤ 라이트 · 다크 파일이 따로인 꾸밈 그림',
+            <span key="how">
+                <code>ThemeImage</code>(custom/theme-image.tsx)에 <code>light</code> · <code>dark</code> ·{' '}
+                <code>className</code> 을 넘깁니다. 둘 다 정적 import 이고, <code>alt=&quot;&quot;</code> 로 고정이라
+                내용을 전하는 그림에는 쓰지 않습니다.
+            </span>,
+            '플랫폼 소개 · K-BIGx 흐름도의 이미지 아이콘',
         ],
     },
 ] as const
@@ -808,7 +801,7 @@ const ImageGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="image-rule-group" title="1. 공통 규칙">
+        <GroupHeading id="image-rule-group" title="공통 규칙">
             종류와 관계없이 같은 규칙입니다.
         </GroupHeading>
 
@@ -865,7 +858,7 @@ const ImageGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="image-list-group" title="2. 목록">
+        <GroupHeading id="image-list-group" title="목록">
             {IMAGE_COUNT}개 · 합계 {TOTAL_IMAGE_SIZE}. 미리보기는 줄인 크기이고, 숫자는 원본 픽셀 · 용량입니다.
         </GroupHeading>
 

@@ -19,7 +19,7 @@ export type GuideNavItem = {
     external?: boolean
     assistiveSuffix?: string
     layers?: readonly ComponentLayer[]
-    /** K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트 — 제목 옆에 'bigx print template' 배지가 붙는다. */
+    /** K-BIGx 보고서 PDF 템플릿에서 쓰는 컴포넌트 — 제목 옆에 'bigx pdf template' 배지가 붙는다. */
     isKbigxPrint?: boolean
 }
 export type GuideNavItemGroup = {
@@ -147,6 +147,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         layers: ['composite'],
                                     },
                                     {
+                                        label: 'SelectableListCard',
+                                        href: '/component-guide/selectable-list-card',
+                                        layers: ['composite'],
+                                    },
+                                    {
                                         label: 'SelectableInfoCard',
                                         href: '/component-guide/selectable-info-card',
                                         layers: ['composite'],
@@ -223,6 +228,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 layers: ['custom'],
                                 isKbigxPrint: true,
                             },
+                            {
+                                label: 'K-BIGx PDF 템플릿',
+                                href: '/component-guide/kbigx-pdf-template',
+                                layers: ['custom'],
+                                isKbigxPrint: true,
+                            },
                         ],
                     },
                     {
@@ -277,6 +288,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'StepHeader', href: '/component-guide/step-header', layers: ['composite']},
                     {label: 'StepProgress', href: '/component-guide/step-progress', layers: ['composite']},
                     {label: 'ActionBar', href: '/component-guide/action-bar', layers: ['composite']},
+                    {label: 'StickyActionBar', href: '/component-guide/sticky-action-bar', layers: ['composite']},
                     {label: 'StepNavigation', href: '/component-guide/step-navigation', layers: ['composite']},
                 ],
             },
@@ -340,6 +352,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'ChartReveal',
                                         href: '/component-guide/chart-reveal',
                                         layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
+                                        label: 'ChartTooltip',
+                                        href: '/component-guide/chart-tooltip',
+                                        layers: ['composite'],
                                     },
                                 ],
                             },
@@ -504,6 +522,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {
                                 title: '게이지 · 점수',
                                 items: [
+                                    {label: 'ArcGauge', href: '/component-guide/arc-gauge', layers: ['custom']},
                                     {
                                         label: 'GradeArcGauge',
                                         href: '/component-guide/grade-arc-gauge',
@@ -576,16 +595,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                     {label: 'RatingMatrix', href: '/component-guide/rating-matrix', layers: ['custom']},
                                 ],
                             },
-                            {
-                                title: '로딩',
-                                items: [
-                                    {
-                                        label: 'Skeleton / ChartSkeleton',
-                                        href: '/component-guide/skeleton',
-                                        layers: ['ui', 'composite'],
-                                    },
-                                ],
-                            },
                         ],
                     },
                     {
@@ -601,6 +610,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {
                                 label: 'TitleDetailTable',
                                 href: '/component-guide/title-detail-table',
+                                layers: ['composite'],
+                            },
+                            {
+                                label: 'SelectedItemSummary',
+                                href: '/component-guide/selected-item-summary',
                                 layers: ['composite'],
                             },
                             {
@@ -621,6 +635,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 label: 'LoadingState',
                                 href: '/component-guide/loading-state',
                                 layers: ['composite'],
+                                isKbigxPrint: true,
+                            },
+                            {
+                                label: 'Skeleton',
+                                href: '/component-guide/skeleton',
+                                layers: ['ui', 'composite'],
                                 isKbigxPrint: true,
                             },
                         ],
@@ -744,13 +764,13 @@ export const COMPONENT_LAYER_BADGE = {
     },
 } as const satisfies Record<ComponentLayer, {label: string; color: string; variant: string; description: string}>
 
-// K-BIGx 보고서 인쇄 템플릿 배지 — 그 가이드의 컴포넌트를 인쇄본(report-print)이 쓴다는 표시. 메뉴 항목의 isKbigxPrint 로 붙는다.
+// K-BIGx 보고서 PDF 템플릿 배지 — 그 가이드의 컴포넌트를 PDF 템플릿(report-print)이 쓴다는 표시. 메뉴 항목의 isKbigxPrint 로 붙는다.
 export const KBIGX_PRINT_BADGE = {
-    label: 'bigx print template',
+    label: 'bigx pdf template',
     color: 'navy',
     variant: 'solid',
     description:
-        'K-BIGx 기업혁신성장 보고서 인쇄 템플릿에서 쓰는 컴포넌트입니다. 고치면 인쇄본을 함께 확인합니다. PDF 템플릿 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
+        'K-BIGx 기업혁신성장 보고서 PDF 템플릿에서 쓰는 컴포넌트입니다. 고치면 PDF 템플릿을 함께 확인합니다. 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
 } as const
 
 const collectNavItems = (group: {items?: GuideNavItem[]; groups?: GuideNavItemGroup[]}): GuideNavItem[] => [
@@ -758,7 +778,7 @@ const collectNavItems = (group: {items?: GuideNavItem[]; groups?: GuideNavItemGr
     ...(group.groups ?? []).flatMap(collectNavItems),
 ]
 
-// K-BIGx 인쇄 템플릿에서 쓰는 컴포넌트의 가이드 — 메뉴 목록(isKbigxPrint)이 단일 소스다. 가이드 홈 목록 · 제목 옆 배지가 쓴다.
+// K-BIGx PDF 템플릿에서 쓰는 컴포넌트의 가이드 — 메뉴 목록(isKbigxPrint)이 단일 소스다. 가이드 홈 목록 · 제목 옆 배지가 쓴다.
 export const GUIDE_KBIGX_PRINT_ITEMS = GUIDE_NAV_SECTIONS.flatMap(collectNavItems).filter((item) => item.isKbigxPrint)
 export const GUIDE_KBIGX_PRINT_HREFS = new Set<string>(GUIDE_KBIGX_PRINT_ITEMS.map((item) => item.href))
 

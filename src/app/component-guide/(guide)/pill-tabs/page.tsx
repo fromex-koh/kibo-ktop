@@ -59,12 +59,9 @@ const PillTabsGuidePage = () => (
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <ul className={LIST_CLASS}>
                     <li>
-                        트랙 pill-tab-track(라이트 green.50 · 다크 green.900) · 여백 4 · 반경 끝까지. 항목 높이 64 ·
-                        좌우 48 · 글 18(평소 Medium · 고르면 Bold).
-                    </li>
-                    <li>
-                        고른 면은 pill-tab-active(mint.800) · 글자 pill-tab-active-foreground(흰색) — 다크에서도 같은
-                        진한 초록이라 흰 글자 대비가 유지됩니다.
+                        색은 <code>pill-tab-track</code>(트랙) · <code>pill-tab-active</code>(고른 면) ·{' '}
+                        <code>pill-tab-active-foreground</code>(고른 글자) 토큰입니다. 고른 면은 다크에서도 진한
+                        초록이라 흰 글자 대비가 유지됩니다.
                     </li>
                     <li>모바일은 트랙이 화면 폭을 넘지 않도록 항목이 반씩 나눠 서고 글이 줄바꿈됩니다(좌우 16).</li>
                     <li>

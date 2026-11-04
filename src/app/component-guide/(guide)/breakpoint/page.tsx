@@ -41,7 +41,7 @@ const HEIGHT_VARIANTS = [
     {
         prefix: 'landscape:',
         condition: `높이 < ${tokens.breakpointHeight.landscape}px`,
-        usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함한다',
+        usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함합니다',
     },
     {
         prefix: 'stack-fallback:',
@@ -102,7 +102,7 @@ const BreakpointGuidePage = () => (
                             <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
                                 {rule.code}
                             </code>
-                            <p className="text-label-foreground">{rule.description}</p>
+                            <p className="typo-body-l-regular text-label-foreground">{rule.description}</p>
                         </div>
                     ))}
                 </div>
@@ -167,6 +167,7 @@ const BreakpointGuidePage = () => (
                     </p>
                 </div>
                 <Table
+                    size="md"
                     caption="브레이크포인트 구간과 프리픽스, 포함 기기"
                     columns={BREAKPOINT_COLUMNS}
                     rows={(() => {
@@ -203,13 +204,13 @@ const BreakpointGuidePage = () => (
                                     {r.name}
                                     <ActiveBreakpointTag targetKey={r.key} />
                                 </span>,
-                                <span key="range" className="font-mono">
+                                <span key="range" className="text-foreground-subtle font-mono">
                                     {r.range}
                                 </span>,
                                 r.prefix ? (
                                     <CopyChip key="prefix" value={r.prefix} />
                                 ) : (
-                                    <span key="prefix" className="font-mono">
+                                    <span key="prefix" className="text-foreground-subtle font-mono">
                                         없음
                                     </span>
                                 ),
@@ -243,13 +244,14 @@ const BreakpointGuidePage = () => (
                 </div>
 
                 <Table
+                    size="md"
                     caption="높이 기준 반응형 변형과 적용 조건"
                     columns={HEIGHT_VARIANT_COLUMNS}
                     rows={HEIGHT_VARIANTS.map((variant) => ({
                         key: variant.prefix,
                         cells: [
                             <CopyChip key="prefix" value={variant.prefix} />,
-                            <span key="condition" className="font-mono">
+                            <span key="condition" className="text-foreground-subtle font-mono">
                                 {variant.condition}
                             </span>,
                             variant.usage,

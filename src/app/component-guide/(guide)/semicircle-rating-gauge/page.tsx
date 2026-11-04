@@ -171,7 +171,7 @@ const CHOICE_ROWS = [
 
 const PROPS_ITEMS = [
     ['SemicircleRatingGauge', 'data', '등급 · 설명 · 채움 비율 · 날짜 목록입니다.', '-', 'SemicircleRatingData'],
-    ['SemicircleRatingGauge', 'title', '화면 낭독기가 읽을 게이지 이름입니다(예: 기업신용등급).', '-', 'string'],
+    ['SemicircleRatingGauge', 'title', '스크린리더가 읽을 게이지 이름입니다(예: 기업신용등급).', '-', 'string'],
     [
         'SemicircleRatingGauge',
         'ariaLabel',
@@ -216,7 +216,7 @@ const PROPS_ITEMS = [
 const SemicircleRatingGaugeGuidePage = () => (
     <GuidePageShell
         title="등급 원호 게이지 (SemicircleRatingGauge)"
-        description="등급을 위가 열린 굵은 원호로 보여 주고, 가운데에 등급 · 설명, 아래에 기준 날짜 목록을 두는 게이지입니다."
+        description="등급을 위가 열린 굵은 원호로 보여 주고, 가운데에 등급 · 설명, 아래에 기준 날짜 목록을 두는 게이지입니다. 원호 뼈대는 ArcGauge 가이드를 참고하세요."
     >
         <BaseCard>
             <section aria-labelledby="srg-basic" className="flex flex-col gap-6">
@@ -417,15 +417,15 @@ const SemicircleRatingGaugeGuidePage = () => (
                     </li>
                     <li>등급이 글자로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].</li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 원호 이름과 숨김 문단이
+                        읽어 줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

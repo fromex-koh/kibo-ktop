@@ -67,9 +67,9 @@ const PROPS_ITEMS = [
     [
         'SubPageLayout',
         'user',
-        '로그인 사용자 정보입니다. 넘기면 Header 에 사용자명 · 유형 배지 · 로그인 유지 시간이 보입니다.',
+        '로그인 사용자 정보입니다. 넘기면 Header 에 사용자명 · 유형 배지 · 로그인 유지 시간이 보입니다. mypageHref 는 이름을 눌렀을 때 갈 경로(없으면 유형별 마이페이지), isSubAccount 는 기관 하위계정 여부(배지가 하위 기관, name 은 담당자명)입니다.',
         '-',
-        '{name: string; sessionRemaining: string}',
+        'HeaderUser {name; sessionRemaining; mypageHref?; isSubAccount?}',
     ],
     [
         'SubPageLayout',

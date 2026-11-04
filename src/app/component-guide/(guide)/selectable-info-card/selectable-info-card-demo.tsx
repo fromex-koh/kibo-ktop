@@ -6,7 +6,7 @@ import {SelectableInfoCard, SelectableInfoCardGroup} from '@/components/composit
 // 가이드 데모 — 기업혁신성장의 검색된 기업 목록과 같은 모양이다.
 const DEMO_COMPANIES = [
     {id: 'c-1', name: '프롬엑스테크', corporateNumber: '110111-1234567', patentCount: '2건'},
-    {id: 'c-2', name: '네오에너지솔루션', corporateNumber: '10-2024-0001234', patentCount: '2건'},
+    {id: 'c-2', name: '네오에너지솔루션', corporateNumber: '110111-0234561', patentCount: '2건'},
 ] as const
 
 const SelectableInfoCardDemo = () => {

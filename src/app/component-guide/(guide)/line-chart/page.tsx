@@ -305,27 +305,27 @@ const PROPS_ITEMS = [
     [
         'LineChart',
         'data',
-        "기간별 고유 id · 표시명과 series key 에 대응하는 값입니다. 숫자가 아닌 값(NaN)은 값 없음 — 선을 끊고, 값 글자를 적는 cells 는 그 자리 바닥 위에 '-'(숨김 표도 '-').",
+        "기간별 고유 id · 표시명과 series key 별 값입니다. 숫자가 아닌 값(NaN)은 값 없음으로 보고 선을 끊습니다. cells 는 그 자리에 '-' 를 적고 숨김 표도 '-' 로 읽습니다.",
         '-',
         'LineChartItem[]',
     ],
     [
         'LineChart',
         'series',
-        '선마다 key · 표시명 · 색입니다. 색은 토큰 변수를 씁니다 — K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '선마다 key · 표시명 · 색입니다. 색은 K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>)를 씁니다. 다크에서 밝은 단계로 바뀝니다.',
         '-',
         'LineChartSeries[]',
     ],
     [
-        'LineChartSeries',
-        'dash',
+        'LineChart',
+        'series[].dash',
         "이 선의 모양(SVG stroke-dasharray)입니다. 예: '2 4' 점선 · '8 4 2 4' 일점쇄선 · '6 4' 파선. 안 주면 실선.",
         'undefined',
         'string',
     ],
     [
-        'LineChartSeries',
-        'marker',
+        'LineChart',
+        'series[].marker',
         "이 선의 점 모양입니다. 'circle' 은 흰 속의 원, 나머지는 계열 색으로 채웁니다. cells · columns 에서 쓰입니다.",
         "'circle'",
         "'circle' | 'circle-filled' | 'square' | 'diamond' | 'triangle'",
@@ -348,12 +348,12 @@ const PROPS_ITEMS = [
         'false',
         'boolean',
     ],
-    ['LineChart', 'showTooltip', '값 위에 올렸을 때의 말풍선과 강조 점입니다.', 'true', 'boolean'],
+    ['LineChart', 'showTooltip', '값 위에 올렸을 때의 툴팁과 강조 점입니다.', 'true', 'boolean'],
     ['LineChart', 'showLegend', '범례 표시 여부입니다.', 'true', 'boolean'],
     [
         'LineChart',
         'animate',
-        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '그리는 움직임입니다. 안 주면 ChartReveal 설정을 따릅니다. 인쇄용 문서처럼 바로 그려야 하면 끕니다.',
         '문서 설정',
         'boolean',
     ],
@@ -416,7 +416,7 @@ const FRAME_CLASS = 'border-subtle-3 bg-card rounded-sm border p-6'
 const LineChartGuidePage = () => (
     <GuidePageShell
         title="선 그래프 (LineChart)"
-        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다. 세로축 없이 점마다 값을 바로 적는 PDF 템플릿용 한 계열 선 그래프는 ValueLineChart 입니다. 계열마다 선 · 점 모양을 바꾸는 PDF 템플릿용 여러 계열 선 그래프는 MarkerLineChart 입니다."
+        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다. PDF 템플릿용 선 그래프는 ValueLineChart(한 계열) · MarkerLineChart(여러 계열)를 씁니다."
     >
         <BaseCard>
             <section aria-labelledby="lc-usage" className="flex flex-col gap-6">
@@ -459,7 +459,7 @@ const LineChartGuidePage = () => (
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">default</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            y축과 가로 점선 눈금, 아래 범례가 있습니다. 값은 말풍선으로 읽습니다.
+                            y축과 가로 점선 눈금, 아래 범례가 있습니다. 값은 툴팁으로 읽습니다.
                         </p>
                         <div className={FRAME_CLASS}>
                             <LineChart
@@ -630,26 +630,27 @@ const LineChartGuidePage = () => (
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 붙입니다[5.1.1].
                     </li>
                     <li>
-                        같은 값을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어 화면
-                        낭독기가 값을 읽습니다[7.3.2]. 줄여 적은 값 글자도 숨김 표에는 원래 값이 들어갑니다.
+                        같은 값을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어
+                        스크린리더가 값을 읽습니다[7.3.2]. 줄여 적은 값 글자도 숨김 표에는 원래 값이 들어갑니다.
                     </li>
                     <li>
                         선 색만으로 계열을 구분하지 않도록 범례 텍스트를 함께 두고, columns 는 값을 별도 표로
                         제공합니다[5.3.1].
                     </li>
                     <li>
-                        <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link
+                            href="/component-guide/chart-reveal"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다. <code>animate</code> 로 끌 수도
+                        있습니다[6.3.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
-                    </li>
-                    <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>
@@ -675,7 +676,10 @@ const LineChartGuidePage = () => (
                             <code>{'{id: string; label: string; values: Record<string, number>}'}</code>
                         </li>
                         <li>
-                            <code>LineChartSeries</code>: <code>{'{key: string; label: string; color: string}'}</code>
+                            <code>LineChartSeries</code>:{' '}
+                            <code>
+                                {'{key: string; label: string; color: string; dash?: string; marker?: LineMarker}'}
+                            </code>
                         </li>
                     </ul>
                 </div>

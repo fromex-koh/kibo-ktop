@@ -52,10 +52,10 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
       value={value}
       onValueChange={setValue}
       aria-invalid={hasError || undefined}
-      aria-describedby={hasError ? 'organization-hasError' : undefined}
+      aria-describedby={hasError ? 'organization-error' : undefined}
     />
     {hasError ? (
-      <FieldError id="organization-hasError">
+      <FieldError id="organization-error">
         신청 기관을 선택해 주세요.
       </FieldError>
     ) : null}

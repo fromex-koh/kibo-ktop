@@ -108,7 +108,7 @@ const ScrollToTopButtonGuidePage = () => (
                         <code>aria-hidden</code> 입니다[5.1.1].
                     </li>
                     <li>보이지 않을 때는 렌더링되지 않아 화면 밖 버튼이 Tab 순서에 남지 않습니다[6.1.2].</li>
-                    <li>모션 감소 설정에서는 나타나는 효과가 꺼지고 맨 위로 즉시 이동합니다[6.3.1].</li>
+                    <li>동작 줄이기 설정에서는 나타나는 효과가 꺼지고 맨 위로 즉시 이동합니다[6.3.1].</li>
                 </ul>
             </section>
         </BaseCard>

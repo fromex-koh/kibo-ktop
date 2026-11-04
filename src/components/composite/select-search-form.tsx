@@ -7,6 +7,8 @@ import {SelectContent, SelectField, SelectItem} from '@/components/composite/sel
 import {Button} from '@/components/ui/button'
 import {SelectTrigger, SelectValue} from '@/components/ui/select'
 import {cn} from '@/lib/utils'
+// 테두리 글로우(hasGlow) — @property · 마스크가 필요해 유틸리티로 쓸 수 없어 CSS 로 둔다.
+import '@/styles/select-search-form.css'
 
 // 기준 선택 검색 — 검색 기준(셀렉트)을 고르고 번호 · 검색어를 한 줄에 크게 입력해 조회하는 검색 카드다.
 // 특허 등급조회의 '특허등록번호 / 특허출원번호' 검색이 이 형태다.
@@ -14,11 +16,12 @@ import {cn} from '@/lib/utils'
 // 규격: 카드 면(bg-card) · 반경 24 · 그림자(shadow-1) · 여백 40(모바일 24) ·
 // 입력 줄 높이 40 — 기준 셀렉트(20 Medium foreground, 안쪽 여백 4, 글자와 아래 화살표(20) 사이 4)와
 // 입력(24 Regular label-foreground)이 24 떨어져 한 줄 · 입력 줄 아래 24 에 구분선(subtle-3) ·
-// 구분선 아래 24 에 오른쪽 정렬 [초기화](16 Regular 밑줄 + 새로고침 16) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
+// 구분선 아래 24 에 오른쪽 정렬 [초기화](새로고침 16 + 16 Regular 밑줄) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
 // 16 Medium · 아이콘과 글자 사이 4).
 // 오류 상태: 입력 줄 아래 4 에 빨간 안내(16 Regular · field-error-foreground)가 입력과 같은 왼쪽 선에 선다.
 // 구분선 색은 상태와 관계없이 바꾸지 않는다 — 포커스는 입력 칸의 포커스 링, 오류는 안내 문구로만 알린다.
 // 좁은 화면(768 미만)은 기준 · 입력이 위아래로 쌓이고, 오류 안내는 왼쪽 끝에서 시작한다.
+// 테두리 글로우(hasGlow): 테두리를 따라 도는 그라데이션 선 + 바깥 번짐(styles/select-search-form.css).
 
 type SelectSearchOption = {
     value: string
@@ -50,6 +53,8 @@ type SelectSearchFormProps = {
      * 고른 기준에 따라 폼 밖의 안내를 바꿀 때 쓴다.
      */
     onTypeChange?: (type: string) => void
+    /** 기준을 바꾸면 직접 입력한 값도 비운다 — 기준마다 찾는 대상이 달라 이전 검색어를 다시 쓸 일이 없을 때 켠다. */
+    isKeywordClearedOnTypeChange?: boolean
     /**
      * 조회 중. [검색하기]가 도는 표시와 searchingLabel 로 바뀌고 [초기화]와 함께 눌리지 않는다 — 결과가 오기 전에
      * 다시 누르거나 입력을 비워 결과와 입력이 어긋나지 않게 한다.
@@ -73,6 +78,12 @@ type SelectSearchFormProps = {
     searchLabel?: string
     searchingLabel?: string
     resetLabel?: string
+    /**
+     * 테두리 글로우 — 테두리를 따라 도는 그라데이션 선과 바깥으로 번지는 빛(포커스 때 진해짐).
+     * 카드 뒤 층에 깔리므로 감싼 화면 틀에 isolate 가 있어야 보인다(K-BIGx 는 KbigxReportFrame 이 준다).
+     * 언제 켤지는 사용처가 정한다.
+     */
+    hasGlow?: boolean
     className?: string
 }
 
@@ -84,6 +95,7 @@ const SelectSearchForm = ({
     onSearch,
     onReset,
     onTypeChange,
+    isKeywordClearedOnTypeChange = false,
     isSearching = false,
     defaultValues,
     defaultType,
@@ -94,6 +106,7 @@ const SelectSearchForm = ({
     searchLabel = '검색하기',
     searchingLabel = '검색 중',
     resetLabel = '초기화',
+    hasGlow = false,
     className,
 }: SelectSearchFormProps) => {
     const inputId = useId()
@@ -119,9 +132,11 @@ const SelectSearchForm = ({
         onReset?.()
     }
 
-    // 기준을 바꾸면, 입력이 이전 기준의 기본값 그대로일 때만 새 기준의 기본값으로 바꾼다 — 직접 입력한 값은 덮어쓰지 않는다.
+    // 기준을 바꾸면, 입력이 이전 기준의 기본값 그대로일 때만 새 기준의 기본값으로 바꾼다 — 직접 입력한 값은 덮어쓰지 않는다
+    // (isKeywordClearedOnTypeChange 면 입력한 값도 비우고 새 기준의 기본값으로 시작한다).
     const handleTypeChange = (nextType: string) => {
-        if (keyword === (defaultValues?.[searchType] ?? '')) setKeyword(defaultValues?.[nextType] ?? '')
+        if (isKeywordClearedOnTypeChange || keyword === (defaultValues?.[searchType] ?? ''))
+            setKeyword(defaultValues?.[nextType] ?? '')
         setSearchType(nextType)
         setError('')
         onTypeChange?.(nextType)
@@ -154,7 +169,11 @@ const SelectSearchForm = ({
             noValidate
             onSubmit={handleSubmit}
             onReset={handleReset}
-            className={cn('bg-card shadow-1 flex flex-col gap-6 rounded-2xl p-6 md:p-10', className)}
+            className={cn(
+                'bg-card shadow-1 flex flex-col gap-6 rounded-2xl p-6 md:p-10',
+                hasGlow && 'select-search-form-glow',
+                className,
+            )}
         >
             <div className="flex flex-col">
                 <div className="flex flex-col gap-3 md:h-10 md:flex-row md:items-center md:gap-6">
@@ -237,8 +256,8 @@ const SelectSearchForm = ({
                     {/* [초기화]는 글자 버튼이다 — 누르면 기준과 입력이 처음 상태로 돌아간다.
                     조회 중에는 disabled 로 막는다 — 포커스는 [검색하기]에 있으므로 [초기화]가 꺼져도 포커스를 잃지 않는다. */}
                     <Button type="reset" variant="text-underline" size="md" disabled={isSearching}>
-                        {resetLabel}
                         <RotateCcw aria-hidden="true" />
+                        {resetLabel}
                     </Button>
                     {/* [검색하기] — md 크기에 기본(primary) md 의 굵게 대신 Medium, 간격 8 대신 4 를 둔다.
                     조회 중에는 돋보기 자리에 도는 표시를 두고 글자를 searchingLabel 로 바꾼다 — 최소 폭 128 을 잡아 두어

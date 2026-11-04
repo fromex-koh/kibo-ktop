@@ -13,7 +13,8 @@ import TextareaFormDemo from './textarea-form-demo'
 
 export const metadata: Metadata = {title: '텍스트에어리어 (Textarea)'}
 
-const BASIC_CODE = `import {Textarea} from '@/components/ui/textarea'
+const BASIC_CODE = `import {Field, FieldLabel} from '@/components/ui/field'
+import {Textarea} from '@/components/ui/textarea'
 import {TextareaCounter} from '@/components/composite/textarea-counter'
 
 {/* 글자 수 제한이 없는 기본 여러 줄 입력 */}
@@ -359,7 +360,7 @@ const TextareaGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        <code>FieldLabel</code> 의 <code>htmlFor</code> 와 <code>id</code> 를 연결합니다. 안내 문구는
+                        <code>FieldLabel</code> 의 <code>htmlFor</code> 와 <code>id</code> 를 연결합니다. 안내 문구는{' '}
                         <code>placeholder</code> 가 아니라 <code>FieldDescription</code> 으로 둡니다[7.4.1].
                     </li>
                     <li>

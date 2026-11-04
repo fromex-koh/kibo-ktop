@@ -29,6 +29,7 @@ const USAGE_CODE = `import {
   BreadcrumbPage,
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
+import {PageTitleBar} from '@/components/composite/page-title-bar'
 
 <PageTitleBar
   title="신속표준모형"

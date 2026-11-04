@@ -138,7 +138,7 @@ const LOADING_CODE = `import {DonutListChartSkeleton} from '@/components/composi
   <DonutListChart data={middleCategory} ariaLabel="중분류 기준 보유기술 비중" />
 )}`
 
-const PRINT_CODE = `// K-BIGx PDF 템플릿 — 도넛 300 · 목록 폭 684 · 간격 64 · 줄 여백 10(마지막 5) · 구분선 1(kbigx-print-innovation.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 기술보유 현황 — kbx 클래스로 크기 · 글자 · 선을 바꿉니다(kbigx-print-innovation.tsx).
 <DonutListChart
   className="gap-16"
   donutClassName="w-75"
@@ -146,12 +146,13 @@ const PRINT_CODE = `// K-BIGx PDF 템플릿 — 도넛 300 · 목록 폭 684 · 
   rowClassName="border-kbx-border-subtle kbx-border-b-thin py-2.5"
   lastRowClassName="py-kbx-5"
   highlightClassName="font-kbx-bold"
+  labelClassName="truncate"   // 분류 이름은 한 줄 — 넘치면 말줄임
   gapColor="var(--kbx-color-paper)"
   ariaLabel="중분류 기준 보유기술 비중"
   data={items.map((item, index) => ({...item, color: kbxCategoryColor(item.label, index)}))}
 />`
 
-const SHARE_PRINT_CODE = `// K-BIGx PDF 템플릿 기업 · 특허 현황 비중 — 도넛 172(가는 고리) · 줄 사이 15 · 색 칸 16(옅은 테두리) · 비중 굵게 + 건수 옅게.
+const SHARE_PRINT_CODE = `// K-BIGx PDF 템플릿 매출 규모별 비중 — 가는 고리 · 구분선 없는 목록 · 비중 굵게 + 건수 옅게.
 <DonutListChart
   className="gap-7"
   donutClassName="w-43"
@@ -164,7 +165,7 @@ const SHARE_PRINT_CODE = `// K-BIGx PDF 템플릿 기업 · 특허 현황 비중
   countClassName="font-kbx-medium text-kbx-foreground-subtle"
   swatchClassName="size-4"
   swatchStroke="color-mix(in srgb, var(--kbx-color-foreground) 25%, transparent)"
-  ring={{outer: 146.5, inner: 76.2, gap: 4.36}}   // 172px 도넛에서 바깥 84 · 안쪽 43.68 · 선 2.5
+  ring={{outer: 146.5, inner: 76.2, gap: 4.36}}   // 작은 도넛이라 조각 사이 선을 키움
   gapColor="var(--kbx-color-paper)"
   countUnit="개"
   ariaLabel="매출 규모별 기업수 비중"
@@ -177,6 +178,13 @@ const PROPS_ITEMS = [
     ['DonutListChart', 'countUnit', '건수 단위입니다.', "'개'", 'string'],
     ['DonutListChart', 'gapColor', '조각 사이 선 색(바탕색과 같게)입니다.', "'var(--ds-card)'", 'string'],
     ['DonutListChart', 'emptyText', '항목이 없을 때 문구입니다.', "'표시할 데이터가 없습니다.'", 'string'],
+    [
+        'DonutListChart',
+        'emptyClassName',
+        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
+        "'text-foreground-subtle py-10 text-center'",
+        'string',
+    ],
     ['DonutListChart', 'donutClassName', '도넛 크기(w-*)입니다.', "'w-60'", 'string'],
     [
         'DonutListChart',
@@ -223,7 +231,7 @@ const PROPS_ITEMS = [
     [
         'DonutListChart',
         'listHeader',
-        '목록 바로 위 글(예: 단위)입니다. 목록과 한 묶음이라 className 의 items-* 로 묶음째 세로 정렬합니다(PDF 템플릿 담보 현황 — 도넛 칸의 세로 가운데).',
+        '목록 바로 위 글(예: 단위)입니다. 목록과 한 묶음이라 className 의 items-* 로 묶음째 세로 정렬합니다.',
         '없음',
         'ReactNode',
     ],
@@ -249,13 +257,6 @@ const PROPS_ITEMS = [
         'label · donutClassName · listClassName · rowClassName · lastRowClassName',
         '불러오는 중 문구와 도넛 크기 · 목록 글자(줄 높이) · 줄 여백 · 구분선 두께입니다 — 실제 차트에 넘긴 것과 같게 넘기면 높이가 같습니다.',
         "'그래프를 불러오는 중입니다.'",
-        'string',
-    ],
-    [
-        'DonutListChart',
-        'emptyClassName',
-        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
-        "'text-foreground-subtle py-10 text-center'",
         'string',
     ],
 ] as const
@@ -284,7 +285,7 @@ const DonutListChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dlc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-basic" title="1. 기본 사용">
+                <SectionHeading id="dlc-basic" title="기본 사용">
                     서버에서 바로 그리는 SVG 도넛과 줄 목록입니다. 화면 폭에 따라 범례가 아래로 내려가는 웹 화면용
                     도넛은{' '}
                     <Link href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
@@ -308,7 +309,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="dlc-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>도넛은 바깥 반지름 150 · 안쪽 83.3(viewBox 300), 12시에서 시계 방향, 조각 사이 선 3 입니다.</li>
                     <li>
@@ -328,7 +329,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="dlc-edge" title="엣지 케이스">
                     항목 수 · 0% · 비중 합 · 이름 길이 · 값 크기에 따라 모양을 맞춥니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
@@ -346,7 +347,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-loading" title="4. 불러오는 중 (DonutListChartSkeleton)">
+                <SectionHeading id="dlc-loading" title="불러오는 중 (DonutListChartSkeleton)">
                     도넛 고리와 목록 줄 자리를 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려
                     스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -380,9 +381,8 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-print" title="5. K-BIGx PDF 템플릿에서">
-                    기술혁신정보 1쪽 — 분류 기준 제목(아래 짙은 선) → 도넛 + 목록, 중분류 · 세부분야 기준을 위아래로 56
-                    간격에 둡니다. 확인 화면:{' '}
+                <SectionHeading id="dlc-print" title="K-BIGx PDF 템플릿에서">
+                    기술혁신정보 1쪽 기술보유 현황(중분류 · 세부분야 기준)에 씁니다. 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=innovation"
                         target="_blank"
@@ -432,7 +432,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-a11y" title="6. 접근성" />
+                <SectionHeading id="dlc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         도넛은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 값은 옆
@@ -452,7 +452,7 @@ const DonutListChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-props" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-props" title="7. Props API">
+                <SectionHeading id="dlc-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="DonutListChart · DonutListChartSkeleton Props 목록" />

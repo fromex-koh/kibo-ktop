@@ -36,7 +36,7 @@ const DIALOG_ROWS = [
         cells: [
             '아이디 · 비밀번호 찾기',
             '기관회원은 계정을 담당자가 발급하므로 찾기 절차 대신 서비스별 담당자 연락처(기술평가 · K-BIGx 보고서)를 알립니다. 좁은 화면에서는 연락처가 서비스 단위로 줄바꿈됩니다.',
-            'content/service/login.ts — FIND_ACCOUNT_MESSAGE · FIND_ACCOUNT_CONTACTS',
+            'content/service/login.ts — FIND_ACCOUNT_MESSAGE · LOGIN_CONTACTS(서비스별 담당자 연락처)',
         ],
     },
     {
@@ -44,7 +44,7 @@ const DIALOG_ROWS = [
         cells: [
             '기관회원 가입 안내',
             '안내 상자 → 가입 대상 표 → 1~5 절차 → 강조 안내. 가입 대상 표는 최소 폭 500 을 지키고, 모달이 그보다 좁으면(모바일) 표만 좌우로 스크롤됩니다.',
-            'content/service/login.ts — AGENCY_SIGN_UP_* · LOGIN_CONTACT_NUMBER(임시 번호)',
+            'content/service/login.ts — AGENCY_SIGN_UP_* · LOGIN_CONTACTS',
         ],
     },
 ] as const

@@ -51,7 +51,7 @@ const CHOICE_ROWS = [
             <Link key="component" href="/component-guide/empty-state" className={LINK_CLASS}>
                 EmptyState
             </Link>,
-            '같은 자리·모양이라 로딩이 끝난 뒤 바꿔 끼워도 레이아웃이 흔들리지 않습니다.',
+            '같은 자리 · 모양이라 로딩이 끝난 뒤 바꿔 끼워도 레이아웃이 흔들리지 않습니다.',
         ],
     },
     {
@@ -75,7 +75,7 @@ const PROPS_ITEMS = [
         'undefined',
         'ReactNode',
     ],
-    ['LoadingState', 'className', '카드 면·모서리·높이처럼 자리에서 정할 클래스입니다.', 'undefined', 'string'],
+    ['LoadingState', 'className', '카드 면 · 모서리 · 높이처럼 자리에서 정할 클래스입니다.', 'undefined', 'string'],
     [
         'LoadingState',
         '...props',
@@ -97,7 +97,7 @@ const LoadingStateGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        최소 높이는 <code>min-h-90</code> 이고 카드 면·모서리는 사용처가 <code>className</code> 으로
+                        최소 높이는 <code>min-h-90</code> 이고 카드 면 · 모서리는 사용처가 <code>className</code> 으로
                         줍니다. 로딩이 끝나면 이 영역을 결과나 <code>EmptyState</code> 로 바꿉니다.
                     </p>
                 </div>
@@ -110,7 +110,7 @@ const LoadingStateGuidePage = () => (
             <section aria-labelledby="loading-state-variants" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="loading-state-variants" className="typo-h4-bold">
-                        변형 예시
+                        변형
                     </h2>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
