@@ -113,10 +113,12 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 ### [컴포넌트] 소개 띠 — 이미지 뒤 원형 그라데이션 · 모바일 이미지 숨김
 
 - 대상: src/components/composite/service-intro-banner.tsx
-- 변경: hasIllustrationGlow prop — 1024 이상은 그림 폭 140% 원을 그림 뒤에, 1024 미만은 그림을 숨기고 원만 띠 오른쪽 위에 둠
+- 변경:
+    - hasIllustrationGlow prop: 1024 이상은 그림 폭 140% 원을 그림 뒤에, 1024 미만은 그림을 숨기고 원만 띠 오른쪽 위에 둠
+    - 주석: 원을 켜는 곳에 특허 등급조회 소개 띠 추가
 - 결과: 넘기지 않으면 기존과 같음
 - 영향 화면: [서비스 소개 띠 (ServiceIntroBanner)](/component-guide/service-intro-banner)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/1e9b6c1f6a2273a52058e1a5b9e11fd166fdbdbb)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/1e9b6c1f6a2273a52058e1a5b9e11fd166fdbdbb) · [특허 등급조회 사용처 주석](https://github.com/fromex-koh/kibo-ktop/commit/9e7a0b245f92372396f018fcfaf0e7bb4faed2e6)
 
 ### [컴포넌트] 페이지네이션 — 번호 칸 폭 자동(1000쪽 이상 대응)
 
@@ -240,6 +242,30 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기업혁신성장 보고서 (기관)](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 함께 작업: 맨 아래 '왕관 이미지 삭제' 카드보다 먼저 적용
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8176a7104164f83b9cf2e7c0b2cb9f03abc66f7f)
+
+# 작업: 특허 등급조회 — 소개 띠 그림 뒤 원형 그라데이션
+
+## [Diff 확인]
+
+### [화면] 특허 등급조회 — 소개 띠 그림 뒤 원형 그라데이션 · 1024 미만 그림 숨김
+
+- 대상: src/components/custom/patent-grade-sections.tsx
+    - src/components/custom/patent-grade-lookup.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/patent-evaluation/patent-grade-list/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/patent-evaluation/patent-grade-list/patent-grade-result/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/patent-evaluation/patent-grade-list/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/patent-evaluation/patent-grade-list/patent-grade-result/page.tsx
+- 변경:
+    - 소개 띠(PatentGradeIntro): hasIllustrationGlow — K-BIGx 보고서 조회와 같은 그림 뒤 파란 원, 1024 미만은 그림을 숨기고 원만 띠 오른쪽 위에 남김
+    - 화면 틀(PatentGradeLookup): isolate — 원이 화면 바탕 아래로 숨지 않고 제목 · 검색 카드 뒤에 깔림
+    - 화면 main: overflow-x-clip — 원이 화면 밖으로 퍼져도 가로 스크롤이 생기지 않음
+- 결과: 기업 · 기관의 조회 · 결과 화면 4곳이 K-BIGx 보고서 조회와 같은 소개 띠 모양
+- 영향 화면: [특허 등급조회 (기업)](/corp/patent-evaluation/patent-grade-list)
+    - [특허 등급조회 결과 (기업)](/corp/patent-evaluation/patent-grade-list/patent-grade-result)
+    - [특허 등급조회 (기관)](/org/patent-evaluation/patent-grade-list)
+    - [특허 등급조회 결과 (기관)](/org/patent-evaluation/patent-grade-list/patent-grade-result)
+- 함께 작업: K-BIGx 작업의 토큰 · 소개 띠(ServiceIntroBanner) 카드 다음에 적용
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/07bf0ca94f9c4571bf2f7d9a9aecf2e4727b6ea6)
 
 # 작업: 컴포넌트 개선 — 등급 반원 게이지 다크모드 · 본인 확인 오류 문구
 
@@ -455,7 +481,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 메뉴(publishing-guide.ts): ArcGauge · ChartTooltip · K-BIGx PDF 템플릿 · SelectableListCard · SelectedItemSummary · StickyActionBar 추가, 배지 이름 'bigx print template' → 'bigx pdf template', ChartReveal · Skeleton 에 bigx pdf template 배지 추가(PDF 템플릿이 씀), 'Skeleton / ChartSkeleton' 메뉴를 차트 › 로딩에서 빼 'Skeleton' 으로 LoadingState 옆에 둠
     - [리포트 공통 (Report)](/component-guide/report-shell): K-BIGx 내용을 K-BIGx PDF 템플릿 가이드로 옮기고 리포트 공통 부품만 남김
     - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 테두리 글로우(hasGlow) · 기준 바꾸면 검색어 비우기
-    - [서비스 소개 띠 (ServiceIntroBanner)](/component-guide/service-intro-banner): 그림 뒤 원(hasIllustrationGlow) · KbigxReportFrame(예시는 isolate 가 제목 · 설명까지 감싸 원이 글 아래에 깔림)
+    - [서비스 소개 띠 (ServiceIntroBanner)](/component-guide/service-intro-banner): 그림 뒤 원(hasIllustrationGlow) · KbigxReportFrame(예시는 isolate 가 제목 · 설명까지 감싸 원이 글 아래에 깔림), 쓰는 곳에 특허 등급조회(PatentGradeLookup 틀) 추가, 기본 사용 예시(특허 등급조회 띠)도 원을 켜 서비스와 같게
     - [색상 (Semantic)](/component-guide/semantic-color): service-intro-glow · search-glow 토큰 설명
     - [배지 (Badge)](/component-guide/badge): 고른 항목 칩(outline · primary) 예시 · 사용 코드
     - [페이지네이션 (Pagination)](/component-guide/pagination): 아이콘만 남기는 법 · 페이지가 아주 많을 때(모바일) 예시
@@ -471,13 +497,13 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [모서리 반경 (Radius)](/component-guide/radius): 미리보기를 브레이크포인트 예시 색 · 높이 96 상자로 바꿈(큰 반경끼리도 둥근 정도가 구분됨), 표 크기 · 글자를 그리드 가이드 구간별 설정 표와 맞춤(size md)
     - [스켈레톤 (Skeleton)](/component-guide/skeleton): 차트 유형 목록 · 네트워크 예시 삭제(각 차트 문서 로딩 섹션과 중복), 사용 기준(Skeleton · 차트 로딩 · ChartSkeleton 직접 사용)과 차트 로딩 섹션으로 정리
     - [본인 확인 (IdentityVerificationDialog)](/component-guide/identity-verification-dialog): errorMessage prop(다음 제출 때 비움)
-    - [아이콘 (Icon)](/component-guide/icon) · [이미지 (Image)](/component-guide/image): 왕관 · 로그인 탭 그림 삭제, ThemeImage 사용법 · 쓰는 아이콘 목록 갱신
+    - [아이콘 (Icon)](/component-guide/icon) · [이미지 (Image)](/component-guide/image): 왕관 · 로그인 탭 그림 삭제, ThemeImage 사용법 · 쓰는 아이콘 목록 갱신, 서비스 소개 띠 그림은 1024 미만에서 숨김 안내
     - [선택 카드 (SelectableCard)](/component-guide/selectable-card) · [선택 정보 카드 (SelectableInfoCard)](/component-guide/selectable-info-card): 검색된 기업 · 특허는 SelectableListCard 로 안내
     - [비공개 정보 (PrivateContent)](/component-guide/private-content): 예시를 일반 표로 바꿈
     - [인풋 (Input)](/component-guide/input): 수량 · 금액 칸 예시를 세 자리 쉼표 방식으로
     - [말줄임 툴팁 (TruncatedText)](/component-guide/truncated-text) · [이메일 입력 (EmailField)](/component-guide/email-field): isFocusable · onValueChange props 설명
 - 함께 작업: 위 새 가이드 카드와 한 번에 적용, 맨 아래 그림 삭제 카드보다 먼저 적용(아이콘 · 이미지 가이드가 삭제할 그림을 더 이상 import 하지 않음)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5d4552487bad619ecac322948bba383ab2055b9a) · [표 · 스켈레톤 · 예시 정리](https://github.com/fromex-koh/kibo-ktop/commit/ebd0969b342026873f1d632bf0d49de4315e4f34)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5d4552487bad619ecac322948bba383ab2055b9a) · [표 · 스켈레톤 · 예시 정리](https://github.com/fromex-koh/kibo-ktop/commit/ebd0969b342026873f1d632bf0d49de4315e4f34) · [소개 띠 · 이미지 가이드](https://github.com/fromex-koh/kibo-ktop/commit/c808b5280de7712765e7611a7cefaa23bce480ec)
 
 ### [문서] 퍼블리싱 인덱스 — 조회 케이스 화면 4종 등록
 
