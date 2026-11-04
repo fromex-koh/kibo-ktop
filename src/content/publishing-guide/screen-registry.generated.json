@@ -807,20 +807,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -839,6 +825,48 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.1",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.1",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -2053,20 +2081,6 @@
             "isCurrent": false
         },
         {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
-            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.4.2",
-            "isCurrent": false
-        },
-        {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -2085,6 +2099,48 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.4.2",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.2",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-patent-no-finance",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.4.2",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-individual",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-blocked",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-self",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
