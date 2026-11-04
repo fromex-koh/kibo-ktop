@@ -16,7 +16,7 @@ import '@/styles/select-search-form.css'
 // 규격: 카드 면(bg-card) · 반경 24 · 그림자(shadow-1) · 여백 40(모바일 24) ·
 // 입력 줄 높이 40 — 기준 셀렉트(20 Medium foreground, 안쪽 여백 4, 글자와 아래 화살표(20) 사이 4)와
 // 입력(24 Regular label-foreground)이 24 떨어져 한 줄 · 입력 줄 아래 24 에 구분선(subtle-3) ·
-// 구분선 아래 24 에 오른쪽 정렬 [초기화](16 Regular 밑줄 + 새로고침 16) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
+// 구분선 아래 24 에 오른쪽 정렬 [초기화](새로고침 16 + 16 Regular 밑줄) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
 // 16 Medium · 아이콘과 글자 사이 4).
 // 오류 상태: 입력 줄 아래 4 에 빨간 안내(16 Regular · field-error-foreground)가 입력과 같은 왼쪽 선에 선다.
 // 구분선 색은 상태와 관계없이 바꾸지 않는다 — 포커스는 입력 칸의 포커스 링, 오류는 안내 문구로만 알린다.
@@ -256,8 +256,8 @@ const SelectSearchForm = ({
                     {/* [초기화]는 글자 버튼이다 — 누르면 기준과 입력이 처음 상태로 돌아간다.
                     조회 중에는 disabled 로 막는다 — 포커스는 [검색하기]에 있으므로 [초기화]가 꺼져도 포커스를 잃지 않는다. */}
                     <Button type="reset" variant="text-underline" size="md" disabled={isSearching}>
-                        {resetLabel}
                         <RotateCcw aria-hidden="true" />
+                        {resetLabel}
                     </Button>
                     {/* [검색하기] — md 크기에 기본(primary) md 의 굵게 대신 Medium, 간격 8 대신 4 를 둔다.
                     조회 중에는 돋보기 자리에 도는 표시를 두고 글자를 searchingLabel 로 바꾼다 — 최소 폭 128 을 잡아 두어
