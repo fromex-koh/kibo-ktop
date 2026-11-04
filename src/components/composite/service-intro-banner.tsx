@@ -21,7 +21,7 @@ type ServiceIntroBannerProps = {
     /**
      * 그림 뒤 원형 그라데이션(연한 파랑 → 투명). 그림 폭의 140% 원이 그림 가운데 뒤에 놓인다.
      * 1024 미만에서는 그림을 숨기고 원만 띠 오른쪽 위(제목 뒤)에 남긴다.
-     * 색은 service-intro-glow · service-intro-glow-soft 토큰이 라이트 · 다크를 나눈다. K-BIGx 보고서 소개 띠가 켠다.
+     * 색은 service-intro-glow · service-intro-glow-soft 토큰이 라이트 · 다크를 나눈다. K-BIGx 보고서 · 특허 등급조회 소개 띠가 켠다.
      * 맨 뒤 층(-z-10)에 깔리므로 감싼 화면 틀에 isolate 가 있어야 보인다(K-BIGx 는 KbigxReportFrame 이 준다).
      */
     hasIllustrationGlow?: boolean
