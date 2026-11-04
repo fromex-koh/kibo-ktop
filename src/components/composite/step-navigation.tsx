@@ -5,10 +5,10 @@ import {cn} from '@/lib/utils'
 
 // 스텝 내비게이션(StepNavigation) — 단계형 화면 하단에서 이전·다음 CTA를 가운데 한 묶음으로 배치한다.
 // bar는 전체폭 반투명 배경과 상단 구분선을, plain은 부모 화면의 배경을 그대로 사용한다.
-// 정렬은 기존 ActionBar의 가운데 영역을, 버튼은 기존 Button(size 2xl — 이전 tertiary · 다음 primary)을 재사용한다.
+// 정렬은 기존 ActionBar의 가운데 영역을, 버튼은 기존 Button(size xl — 이전 tertiary · 다음 primary)을 재사용한다.
 //
 // 버튼은 prev·next 에 Button props 를 넘겨 만든다 — children(라벨)·onClick·disabled·asChild 등 Button 의 모든
-// 속성을 그대로 쓸 수 있고, variant·size 기본값(tertiary/default · 2xl)은 넘긴 값으로 덮을 수 있다.
+// 속성을 그대로 쓸 수 있고, variant·size 기본값(tertiary/default · xl)은 넘긴 값으로 덮을 수 있다.
 // 위치는 문서 흐름 그대로다 — 본문 끝에 붙는 일반 블록이라 sticky/fixed 로 띄우지 않는다(시안 CTA 배치).
 // 본문을 가리지 않고, 짧은 화면에서도 스크롤 없이 버튼이 보인다.
 // 배경은 bg-cta-surface(반투명 토큰) — 테마별로 알맞은 값을 담는다: light=흰색 75%(시안), dark·mainpage=화이트
@@ -20,9 +20,9 @@ type StepNavigationAppearance = 'bar' | 'plain'
 type StepNavigationProps = {
     // bar는 배경·상단 구분선이 있는 기본 CTA 바, plain은 페이지 배경 위에 버튼만 배치한다.
     appearance?: StepNavigationAppearance
-    // 이전 버튼(기본 tertiary · size 2xl). 생략하면 다음 버튼만 가운데 표시한다.
+    // 이전 버튼(기본 tertiary · size xl). 생략하면 다음 버튼만 가운데 표시한다.
     prev?: StepButtonProps
-    // 다음 버튼(기본 primary · size 2xl).
+    // 다음 버튼(기본 primary · size xl).
     next?: StepButtonProps
 } & ComponentPropsWithoutRef<'div'>
 

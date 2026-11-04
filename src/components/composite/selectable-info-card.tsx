@@ -4,7 +4,7 @@ import type {ComponentProps} from 'react'
 import {RadioGroup as RadioGroupPrimitive} from 'radix-ui'
 import {cn} from '@/lib/utils'
 
-// 선택 정보 카드 — 항목 이름 · 값 몇 줄로 된 카드 여러 장 중 하나를 고르는 목록이다(K-BIGx 기업혁신성장의 검색된 기업 · 특허).
+// 선택 정보 카드 — 항목 이름 · 값 몇 줄로 된 카드 여러 장 중 하나를 고르는 목록이다.
 // 카드는 라디오 한 개다: 흰 면 · 테두리 1 · 반경 12 · 여백 24, 고르면 테두리만 primary 로 바뀐다. 동그라미 표시는 없다.
 // 선택 · 방향키 이동 · 이름 전달은 Radix RadioGroup 이 맡는다[8.2.1]. 카드 안 글이 곧 그 라디오의 이름이다.
 //
