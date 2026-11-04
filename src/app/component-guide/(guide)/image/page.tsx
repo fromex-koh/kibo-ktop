@@ -343,7 +343,8 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
             {
                 key: 'service-intro',
                 title: '서비스 소개 띠',
-                description: '서비스 소개 띠(ServiceIntroBanner) 그림입니다.',
+                description:
+                    '서비스 소개 띠(ServiceIntroBanner) 그림입니다. 1024 미만에서는 숨기고 그림 뒤 원만 남깁니다.',
                 folder: 'public/images/service-intro/',
                 usedIn: 'custom/patent-grade-sections.tsx · custom/k-bigx-report-sections.tsx',
                 size: 'h-auto w-full (최대 440)',

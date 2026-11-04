@@ -23,6 +23,7 @@ const USAGE_CODE = `import {ServiceIntroBanner} from '@/components/composite/ser
   illustration={
     <Image src="/images/service-intro/search-window-grade-badge.webp" alt="" width={1320} height={720} sizes="440px" className="h-auto w-full" />
   }
+  hasIllustrationGlow // 그림 뒤 원 — 감싼 화면 틀에 isolate 필요(특허 등급조회는 PatentGradeLookup 이 준다)
 />`
 
 const GLOW_CODE = `// K-BIGx 화면은 KbigxReportFrame 이 isolate 틀 · 제목 · 이 띠(원 켬)를 함께 그린다 — 화면에서는 이것만 쓴다.
@@ -30,7 +31,8 @@ const GLOW_CODE = `// K-BIGx 화면은 KbigxReportFrame 이 isolate 틀 · 제�
   <InnovationGrowthReportLookup … />
 </KbigxReportFrame>
 
-// 다른 화면에서 직접 켤 때 — 화면 틀에 isolate 를 준다. 원이 틀 맨 뒤(-z-10)에 깔려 제목 줄 · 입력 카드를 덮지 않는다.
+// 다른 화면에서 직접 켤 때 — 화면 틀에 isolate 를 준다(예: 특허 등급조회 PatentGradeLookup). 원이 틀 맨 뒤(-z-10)에 깔려 제목 줄 · 입력 카드를 덮지 않는다.
+// 원이 화면 밖으로 퍼지므로 main 에 overflow-x-clip 을 둔다.
 <div className="grid-layout isolate pt-10 pb-15 *:col-span-full">
   <ServiceIntroBanner
     title="어떤 기술분야가 궁금하세요?"
@@ -68,7 +70,13 @@ const GLOW_ROWS = [
             '감싼 화면 틀(isolate)의 맨 뒤입니다. 제목 줄 · 탭 · 입력 카드가 원 위에 오고, 원은 클릭을 막지 않습니다.',
         ],
     },
-    {key: 'where', cells: ['쓰는 곳', 'K-BIGx 보고서 소개 띠(기업혁신성장 기업 · 기관, 기관 대량정보조회 탭)']},
+    {
+        key: 'where',
+        cells: [
+            '쓰는 곳',
+            'K-BIGx 보고서 소개 띠(기업혁신성장 기업 · 기관, 기관 대량정보조회 탭) · 특허 등급조회 소개 띠(기업 · 기관 조회 · 결과)',
+        ],
+    },
 ]
 
 const LAYOUT_COLUMNS = [
@@ -122,14 +130,16 @@ const ServiceIntroBannerGuidePage = () => (
         description="화면 제목 아래에서 서비스를 소개하는 영역입니다. 분류어·제목·설명과 일러스트로 구성됩니다."
     >
         <BaseCard>
-            <section aria-labelledby="sib-usage" className="flex flex-col gap-6">
+            {/* isolate — 예시 띠의 그림 뒤 원이 제목 · 설명 글 아래에 깔리게 한다(서비스 화면의 화면 틀과 같은 구조). */}
+            <section aria-labelledby="sib-usage" className="isolate flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="sib-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>title</code>은 필수이고 나머지는 넘긴 것만 표시됩니다. 배경색이 없으므로 화면 배경 위에
-                        그대로 둡니다.
+                        그대로 둡니다. 서비스 화면(특허 등급조회 · K-BIGx 보고서)은 모두 그림 뒤 원(
+                        <code>hasIllustrationGlow</code>)을 켭니다.
                     </p>
                 </div>
                 <ServiceIntroBanner
@@ -150,6 +160,7 @@ const ServiceIntroBannerGuidePage = () => (
                             className="h-auto w-full"
                         />
                     }
+                    hasIllustrationGlow
                 />
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
@@ -176,7 +187,8 @@ const ServiceIntroBannerGuidePage = () => (
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>hasIllustrationGlow</code> 를 주면 그림 뒤에 연한 파랑 원이 깔립니다. 감싼 화면 틀에{' '}
                         <code>isolate</code> 를 줘야 원이 바탕 위 · 다른 내용 아래에 놓입니다. K-BIGx 화면은{' '}
-                        <code>KbigxReportFrame</code> 이 이 틀까지 함께 그리므로 따로 챙길 것이 없습니다.
+                        <code>KbigxReportFrame</code> 이, 특허 등급조회는 <code>PatentGradeLookup</code> 이 이 틀까지
+                        함께 그리므로 따로 챙길 것이 없습니다.
                     </p>
                 </div>
                 <div>
