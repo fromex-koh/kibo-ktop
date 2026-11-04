@@ -126,13 +126,14 @@ const ZIndexGuidePage = () => (
                     </p>
                 </div>
                 <Table
+                    size="md"
                     caption="z-* 레이어 토큰의 값과 용도"
                     columns={Z_COLUMNS}
                     rows={Object.entries(tokens.z).map(([name, value]) => ({
                         key: name,
                         cells: [
                             <CopyChip key="class" value={`z-${name}`} />,
-                            <span key="value" className="font-mono">
+                            <span key="value" className="text-foreground-subtle font-mono">
                                 {value}
                             </span>,
                             Z_USAGE_BY_NAME.get(name) ?? '—',

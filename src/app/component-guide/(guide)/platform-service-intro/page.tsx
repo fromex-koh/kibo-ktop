@@ -24,11 +24,12 @@ const LIST_CLASS = 'typo-body-l-regular text-label-foreground flex list-disc fle
 const ImageSlot = () => <span aria-hidden="true" className="size-22 rounded-lg bg-white/50" />
 const IconSlot = () => <span aria-hidden="true" className="bg-primary size-10 rounded-sm" />
 
-const DEMO_FEATURES = [
-    {icon: <IconSlot />, title: '기능 이름', description: '기능을 한두 줄로 설명합니다. 길면 줄바꿈됩니다.'},
-    {icon: <IconSlot />, title: '기능 이름', description: '기능을 한두 줄로 설명합니다. 길면 줄바꿈됩니다.'},
-    {icon: <IconSlot />, title: '기능 이름', description: '기능을 한두 줄로 설명합니다. 길면 줄바꿈됩니다.'},
-]
+// 기능 이름은 목록의 key 로 쓰이므로 서로 달라야 한다.
+const DEMO_FEATURES = [1, 2, 3].map((order) => ({
+    icon: <IconSlot />,
+    title: `기능 이름 ${order}`,
+    description: '기능을 한두 줄로 설명합니다. 길면 줄바꿈됩니다.',
+}))
 
 const USAGE_CODE = `import {
   PlatformServiceHero,

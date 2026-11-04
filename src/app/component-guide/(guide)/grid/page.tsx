@@ -104,7 +104,12 @@ const GridPreviewPage = () => (
                         </p>
                     </div>
                     <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
-                    <Table caption="레이아웃 유틸리티의 역할과 폭" columns={UTILITY_COLUMNS} rows={UTILITY_ROWS} />
+                    <Table
+                        size="md"
+                        caption="레이아웃 유틸리티의 역할과 폭"
+                        columns={UTILITY_COLUMNS}
+                        rows={UTILITY_ROWS}
+                    />
                 </section>
             </BaseCard>
         </div>

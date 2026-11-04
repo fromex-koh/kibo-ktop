@@ -167,7 +167,8 @@ const ServiceIntroBannerGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sib-glow" className="flex flex-col gap-6">
+            {/* isolate 는 제목 · 설명까지 감싼다 — 원이 띠 위로 퍼져도 글 아래에 깔린다(실제 화면의 KbigxReportFrame 과 같은 구조). */}
+            <section aria-labelledby="sib-glow" className="isolate flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="sib-glow" className="typo-h4-bold">
                         그림 뒤 원형 그라데이션
@@ -178,7 +179,7 @@ const ServiceIntroBannerGuidePage = () => (
                         <code>KbigxReportFrame</code> 이 이 틀까지 함께 그리므로 따로 챙길 것이 없습니다.
                     </p>
                 </div>
-                <div className="isolate">
+                <div>
                     <ServiceIntroBanner
                         eyebrow="KIBO-Business Innovation Growth with AI"
                         title="어떤 기술분야가 궁금하세요?"

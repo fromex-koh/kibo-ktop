@@ -352,6 +352,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'ChartReveal',
                                         href: '/component-guide/chart-reveal',
                                         layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                     {
                                         label: 'ChartTooltip',
@@ -594,16 +595,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                     {label: 'RatingMatrix', href: '/component-guide/rating-matrix', layers: ['custom']},
                                 ],
                             },
-                            {
-                                title: '로딩',
-                                items: [
-                                    {
-                                        label: 'Skeleton / ChartSkeleton',
-                                        href: '/component-guide/skeleton',
-                                        layers: ['ui', 'composite'],
-                                    },
-                                ],
-                            },
                         ],
                     },
                     {
@@ -644,6 +635,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 label: 'LoadingState',
                                 href: '/component-guide/loading-state',
                                 layers: ['composite'],
+                                isKbigxPrint: true,
+                            },
+                            {
+                                label: 'Skeleton',
+                                href: '/component-guide/skeleton',
+                                layers: ['ui', 'composite'],
                                 isKbigxPrint: true,
                             },
                         ],

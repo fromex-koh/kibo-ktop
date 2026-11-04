@@ -167,6 +167,7 @@ const BreakpointGuidePage = () => (
                     </p>
                 </div>
                 <Table
+                    size="md"
                     caption="브레이크포인트 구간과 프리픽스, 포함 기기"
                     columns={BREAKPOINT_COLUMNS}
                     rows={(() => {
@@ -203,13 +204,13 @@ const BreakpointGuidePage = () => (
                                     {r.name}
                                     <ActiveBreakpointTag targetKey={r.key} />
                                 </span>,
-                                <span key="range" className="font-mono">
+                                <span key="range" className="text-foreground-subtle font-mono">
                                     {r.range}
                                 </span>,
                                 r.prefix ? (
                                     <CopyChip key="prefix" value={r.prefix} />
                                 ) : (
-                                    <span key="prefix" className="font-mono">
+                                    <span key="prefix" className="text-foreground-subtle font-mono">
                                         없음
                                     </span>
                                 ),
@@ -243,13 +244,14 @@ const BreakpointGuidePage = () => (
                 </div>
 
                 <Table
+                    size="md"
                     caption="높이 기준 반응형 변형과 적용 조건"
                     columns={HEIGHT_VARIANT_COLUMNS}
                     rows={HEIGHT_VARIANTS.map((variant) => ({
                         key: variant.prefix,
                         cells: [
                             <CopyChip key="prefix" value={variant.prefix} />,
-                            <span key="condition" className="font-mono">
+                            <span key="condition" className="text-foreground-subtle font-mono">
                                 {variant.condition}
                             </span>,
                             variant.usage,

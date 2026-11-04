@@ -54,8 +54,6 @@ const LARGE = toItems([
     ['평균', 2.5, 'average'],
 ])
 const SHARED_MAX = rankBarScaleMax(SMALL, LARGE)
-const SMALL_COLORS = {bar: 'var(--ds-navy-500)'}
-const LARGE_COLORS = {bar: 'var(--ds-blue-500)'}
 // PDF 템플릿 색 — kbigx-print-innovation.tsx 의 rankColors 와 같다(.kbigx-print 안에서만 kbx 값이 있다).
 const printColors = (bar: string) => ({
     bar,
@@ -63,6 +61,18 @@ const printColors = (bar: string) => ({
     averageLine: 'var(--kbx-color-chart-average-line)',
     subjectBar: 'var(--kbx-color-chart-subject)',
 })
+// 예시 목록은 서비스 화면(K-BIGx 보고서 PDF 템플릿)과 같은 색으로 그린다 — 제목 줄 연보라 면 · 남색 글자 · 남색 위 선,
+// 100억원 이하 보라 · 초과 파랑 막대. 글자 크기만 가이드 폭에 맞춰 웹 크기로 둔다. Example 이 .kbigx-print 로 감싼다.
+const SMALL_COLORS = printColors('var(--kbx-color-purple)')
+const LARGE_COLORS = printColors('var(--kbx-color-blue)')
+const SERVICE_LIST_STYLE = {
+    listClassName: 'typo-body-l-regular text-kbx-foreground border-kbx-primary border-t-2',
+    titleClassName: 'bg-kbx-surface text-kbx-primary typo-body-xl-bold px-3.5 py-2.5',
+    rowClassName: 'border-kbx-border-subtle border-b py-2',
+    averageRowClassName: 'border-t-kbx-foreground text-kbx-foreground-subtle border-t-2 font-bold',
+    subjectRowClassName: 'bg-kbx-surface text-kbx-primary font-extrabold',
+    highlightIconClassName: 'text-kbx-star size-5 fill-current',
+} as const
 
 // 3. 엣지 케이스.
 const EDGE_CASES = [
@@ -80,7 +90,8 @@ const EDGE_CASES = [
     {
         key: 'long',
         title: '이름이 길 때',
-        description: '이름 칸 안에서 줄을 바꾸고 그만큼 행이 높아집니다. 강조 별은 이름 뒤에 붙습니다.',
+        description:
+            '이름 칸 안에서 줄을 바꾸고 그만큼 행이 높아집니다. 강조 별은 이름 뒤에 붙습니다. PDF 템플릿은 renderName 으로 한 줄 말줄임(…)만 하고 툴팁은 없습니다(웹은 DivergingRankChart 가 툴팁을 보입니다).',
         items: toItems([
             ['(주)글로벌테크놀로지솔루션즈코리아', 19.2, 'default', true],
             ['스마트 모빌리티 시스템즈', 12.1],
@@ -240,7 +251,7 @@ const Example = ({title, description, children}: {title: string; description: st
     <div className="flex flex-col gap-2">
         <p className="typo-body-xl-bold text-foreground">{title}</p>
         <p className="typo-body-m-regular text-foreground-subtle break-keep">{description}</p>
-        <div className="border-subtle-3 bg-card rounded-sm border p-6">{children}</div>
+        <div className="kbigx-print bg-kbx-paper border-subtle-3 rounded-sm border p-6">{children}</div>
     </div>
 )
 
@@ -278,6 +289,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={SMALL_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                         <RankBarList
@@ -286,6 +298,7 @@ const RankBarListGuidePage = () => (
                             items={LARGE}
                             max={SHARED_MAX}
                             colors={LARGE_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </div>
@@ -324,12 +337,14 @@ const RankBarListGuidePage = () => (
                                 titleAs="h3"
                                 title="매출 100억원 이하"
                                 items={item.items}
+                                colors={SMALL_COLORS}
+                                {...SERVICE_LIST_STYLE}
                                 highlightLabel="고성장"
                             />
                         </Example>
                     ))}
                     <Example title="항목 없음" description="제목 아래 emptyText 한 줄만 보입니다.">
-                        <RankBarList titleAs="h3" title="매출 100억원 초과" items={[]} />
+                        <RankBarList titleAs="h3" title="매출 100억원 초과" items={[]} {...SERVICE_LIST_STYLE} />
                     </Example>
                 </div>
             </section>
@@ -352,6 +367,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={SMALL_COLORS}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </Example>
@@ -396,6 +412,7 @@ const RankBarListGuidePage = () => (
                             items={SMALL}
                             max={SHARED_MAX}
                             colors={printColors('var(--kbx-color-purple)')}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                         <RankBarList
@@ -404,6 +421,7 @@ const RankBarListGuidePage = () => (
                             items={LARGE}
                             max={SHARED_MAX}
                             colors={printColors('var(--kbx-color-blue)')}
+                            {...SERVICE_LIST_STYLE}
                             highlightLabel="고성장"
                         />
                     </div>

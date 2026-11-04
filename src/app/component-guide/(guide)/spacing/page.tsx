@@ -126,30 +126,30 @@ const SpacingGuidePage = () => (
                     </p>
                 </div>
                 <Table
+                    size="md"
                     caption="Spacing 1~20의 미리보기, 유틸리티와 px 값"
                     columns={SPACING_COLUMNS}
                     rows={multiples.map((n) => ({
                         key: String(n),
                         cells: [
+                            // 간격 값 크기의 정사각형(N × N) — 디자인 시스템 간격 토큰 표의 일반적인 표기다.
                             <span
                                 key="preview"
                                 aria-hidden="true"
-                                className="bg-primary block h-3 rounded-sm"
-                                style={{width: `calc(var(--spacing) * ${n})`}}
+                                className="bg-destructive/15 border-destructive/40 block border"
+                                style={{width: `calc(var(--spacing) * ${n})`, height: `calc(var(--spacing) * ${n})`}}
                             />,
                             <div key="class" className="flex flex-col gap-2">
                                 {SPACING_GROUPS.map((group) => (
                                     <div key={group.label} className="flex flex-wrap items-center gap-2">
-                                        <span className="typo-body-l-regular text-muted-foreground w-14 shrink-0">
-                                            {group.label}
-                                        </span>
+                                        <span className="text-muted-foreground w-14 shrink-0">{group.label}</span>
                                         {group.prefixes.map((prefix) => (
                                             <CopyChip key={prefix} value={`${prefix}-${n}`} />
                                         ))}
                                     </div>
                                 ))}
                             </div>,
-                            <span key="value" className="font-mono">
+                            <span key="value" className="text-foreground-subtle font-mono">
                                 {n * tokens.spacingBase}px
                             </span>,
                         ],
@@ -203,6 +203,7 @@ const SpacingGuidePage = () => (
                 </div>
 
                 <Table
+                    size="md"
                     caption="명명 크기 토큰의 미리보기와 값"
                     columns={SIZE_COLUMNS}
                     rows={Object.entries(tokens.size).map(([name, value]) => {
@@ -221,12 +222,12 @@ const SpacingGuidePage = () => (
                                     <span
                                         key="preview"
                                         aria-hidden="true"
-                                        className="bg-primary block h-3 max-w-full rounded-sm"
+                                        className="bg-destructive/15 border-destructive/40 block h-3 max-w-full rounded-xs border"
                                         style={{width: `var(--ds-spacing-${name})`}}
                                     />
                                 ),
                                 <CopyChip key="token" value={name} />,
-                                <span key="value" className="font-mono">
+                                <span key="value" className="text-foreground-subtle font-mono">
                                     {px === undefined ? '' : `${px}px`}
                                     {typeof value === 'string' ? (
                                         <span className={px === undefined ? undefined : 'text-muted-foreground'}>

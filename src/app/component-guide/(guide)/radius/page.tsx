@@ -34,6 +34,8 @@ const resolveRadius = (value: number | string): string =>
 const formatOffset = (value: number | string): string =>
     typeof value === 'number' ? `${tokens.radiusBase} ${value < 0 ? '−' : '+'} ${Math.abs(value)}` : '절대 값'
 
+// 미리보기 — 높이 96 상자라 반경 48(높이의 절반)까지 서로 다르게 보인다. full 은 48 로 막혀 알약이 된다.
+
 const BASIC_CODE = `<div className="rounded-lg border">카드</div>
 <button className="rounded-md">버튼</button>
 <span className="rounded-full">알약</span>`
@@ -69,10 +71,12 @@ const RadiusGuidePage = () => (
                         반경 목록
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>tokens.json</code> 에서 읽은 값입니다. 클래스 칩을 누르면 이름이 복사됩니다.
+                        <code>tokens.json</code> 에서 읽은 값입니다. 클래스 칩을 누르면 이름이 복사됩니다. 반경은 요소
+                        높이의 절반을 넘지 못해 <code>rounded-full</code> 은 알약 모양이 됩니다.
                     </p>
                 </div>
                 <Table
+                    size="md"
                     caption="rounded-* 유틸리티, 실제 반경, 계산과 미리보기"
                     columns={RADIUS_COLUMNS}
                     rows={Object.entries(tokens.radius).map(([name, value]) => ({
@@ -81,10 +85,10 @@ const RadiusGuidePage = () => (
                             <span
                                 key="preview"
                                 aria-hidden="true"
-                                className={`bg-card border-border block size-16 border ${ROUNDED_CLASS_BY_NAME.get(name) ?? ''}`}
+                                className={`bg-destructive/15 border-destructive/40 block h-24 w-32 border ${ROUNDED_CLASS_BY_NAME.get(name) ?? ''}`}
                             />,
                             <CopyChip key="class" value={`rounded-${name}`} />,
-                            <span key="value" className="font-mono">
+                            <span key="value" className="text-foreground-subtle font-mono">
                                 {resolveRadius(value)}
                             </span>,
                             <span key="formula" className="text-foreground-subtle font-mono">
