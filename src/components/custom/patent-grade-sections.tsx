@@ -42,8 +42,10 @@ const PatentGradeIntro = ({homeHref}: PatentGradeIntroProps) => (
             }
         />
 
-        {/* 그림(검색 창 + 돋보기 + 등급 배지)은 시안의 440×240 자리에 놓이고 좁은 화면에서는 폭에 맞춰 줄어든다. 제목·설명이 뜻을 전하므로 꾸밈이다[5.1.1]. */}
+        {/* 그림(검색 창 + 돋보기 + 등급 배지) — 꾸밈이라 alt=""[5.1.1]. 1024 이상은 오른쪽 440 자리, 미만은 숨긴다.
+            hasIllustrationGlow: 그림 뒤 파란 원(K-BIGx 보고서 조회와 같다). 감싼 PatentGradeLookup 틀의 isolate 가 있어야 보인다. */}
         <ServiceIntroBanner
+            hasIllustrationGlow
             eyebrow={PATENT_GRADE_INTRO.eyebrow}
             title={PATENT_GRADE_INTRO.title}
             descriptions={PATENT_GRADE_INTRO.descriptions}

@@ -132,7 +132,8 @@ const PatentGradeLookup = ({
 
     return (
         <>
-            <div className={cn('grid-layout gap-y-10 pt-10 *:col-span-full', status !== 'found' && 'pb-15')}>
+            {/* isolate — intro(PatentGradeIntro)의 그림 뒤 원이 화면 바탕 아래로 숨지 않게 한다. 빼면 원이 사라진다. */}
+            <div className={cn('grid-layout isolate gap-y-10 pt-10 *:col-span-full', status !== 'found' && 'pb-15')}>
                 {intro}
 
                 <SelectSearchForm

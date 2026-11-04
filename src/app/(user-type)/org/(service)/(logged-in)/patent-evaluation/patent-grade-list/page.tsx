@@ -26,11 +26,12 @@ type OrgPatentGradeListPageProps = {
     searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
+// main 의 overflow-x-clip — 소개 띠의 그림 뒤 원이 화면 밖으로 퍼져도 가로 스크롤이 생기지 않게 한다.
 const OrgPatentGradeListPage = async ({searchParams}: OrgPatentGradeListPageProps) => {
     const isLoadingPreview = (await searchParams)[LOADING_PREVIEW_QUERY] === '1'
 
     return (
-        <main id="main" tabIndex={-1} className="bg-background flex-1">
+        <main id="main" tabIndex={-1} className="bg-background flex-1 overflow-x-clip">
             <PatentGradeLookup
                 reportHref="/org/patent-evaluation/patent-grade-list/patent-grade-result/report"
                 isLoadingPreview={isLoadingPreview}
