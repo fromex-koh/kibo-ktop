@@ -135,12 +135,15 @@ const INNOVATION_REPORT_PRINT_LABEL = '보고서 다운로드'
 const INNOVATION_REPORT_MORE_LABEL = '더보기'
 
 // 쿼리
-//   ?from=use — [이용권 사용]을 거쳐 열렸다는 표시. 그때만 차감 알림을 띄운다.
+//   ?from=use — 이용횟수가 차감되어 열렸다는 표시. 그때만 차감 알림을 띄운다.
+//   ?from=free — 차감 없이 열렸다는 표시(자사조회 · 기관회원). 차감 알림을 띄우지 않는다.
 //   ?view=pc  — PC 화면으로 보기. 모바일 [더보기]가 여는 새 창이다. 휴대폰 브라우저는 새 창 크기(window.open)를 무시하고
 //               기기 폭 그대로 여므로, 창 크기가 아니라 뷰포트 폭(<meta name="viewport" content="width=1280">)을 PC 폭으로
 //               선언한다 — 브라우저가 1280 폭으로 그린 뒤 화면에 맞게 축소해 보여 주고, 사용자는 두 손가락으로 확대 · 축소한다.
 const INNOVATION_REPORT_CREATED_QUERY = 'from'
 const INNOVATION_REPORT_CREATED_QUERY_VALUE = 'use'
+// 차감 없이 열린 보고서(자사조회 · 기관회원) — 차감 알림을 띄우지 않는다.
+const INNOVATION_REPORT_FREE_QUERY_VALUE = 'free'
 const INNOVATION_REPORT_VIEW_QUERY = 'view'
 const INNOVATION_REPORT_PC_VIEW = 'pc'
 // PC 화면 폭 — xl(1280) 레이아웃이 그대로 적용되는 폭(콘텐츠 1200 + 양 여백 40).
@@ -3503,6 +3506,7 @@ export {
     INNOVATION_REPORT_TAB_QUERY,
     INNOVATION_REPORT_CREATED_QUERY,
     INNOVATION_REPORT_CREATED_QUERY_VALUE,
+    INNOVATION_REPORT_FREE_QUERY_VALUE,
     INNOVATION_REPORT_MORE_LABEL,
     INNOVATION_REPORT_PC_VIEW,
     INNOVATION_REPORT_VIEW_QUERY,

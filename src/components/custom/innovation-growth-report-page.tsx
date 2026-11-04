@@ -4,6 +4,7 @@ import {
     getInnovationGrowthReport,
     INNOVATION_REPORT_CREATED_QUERY,
     INNOVATION_REPORT_CREATED_QUERY_VALUE,
+    INNOVATION_REPORT_FREE_QUERY_VALUE,
     INNOVATION_REPORT_ID_QUERY,
     INNOVATION_REPORT_CASE_QUERY,
     withPreviewCase,
@@ -52,6 +53,7 @@ const InnovationGrowthReportPage = async ({searchParams, printPath}: InnovationG
         <InnovationGrowthReportDocument
             report={report}
             isJustCreated={params[INNOVATION_REPORT_CREATED_QUERY] === INNOVATION_REPORT_CREATED_QUERY_VALUE}
+            isFreeReport={params[INNOVATION_REPORT_CREATED_QUERY] === INNOVATION_REPORT_FREE_QUERY_VALUE}
             printPath={printPath}
         />
     )
