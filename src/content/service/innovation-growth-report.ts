@@ -526,14 +526,16 @@ const findMockInnovationGrowthPatents = (companyId: string): readonly Innovation
 
 // 기업 목록 쪽 이동(목업) — 지금은 받은 목록을 화면에서 나누므로 기다리기만 한다.
 // [프론트엔드 연동] 쪽 단위 API 면 page(· 검색어)를 받아 그 쪽 목록과 전체 건수를 돌려주고,
-// 화면의 slice · Math.ceil(length / LIST_PAGE_SIZE) 를 그 값으로 바꾼다.
-const getInnovationGrowthCompanyPage = async (_page: number) => {
+// 화면의 slice · Math.ceil(length / LIST_PAGE_SIZE) 를 그 값으로 바꾼다. 목업은 받은 쪽 번호만 돌려준다.
+const getInnovationGrowthCompanyPage = async (page: number) => {
     await wait()
+    return page
 }
 
 // 특허 목록 쪽 이동(목업) — 기업 목록 쪽 이동과 같다. 쪽 단위 API 면 목록 안 검색어 · 정렬도 함께 넘긴다.
-const getInnovationGrowthPatentPage = async (_page: number) => {
+const getInnovationGrowthPatentPage = async (page: number) => {
     await wait()
+    return page
 }
 
 // 특허 목록(목업) — 고른 기업의 특허.
