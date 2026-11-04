@@ -113,11 +113,11 @@ const rewriteHandoffFile = (path, replacements) => {
 rewriteHandoffFile('src/app/downloads/kbigx-report-template.html/route.ts', [
     ['(yarn kbigx-template 로 생성)', `(${KBIGX_TEMPLATE_ORIGIN})`, '다운로드 주소 주석'],
 ])
-rewriteHandoffFile('src/app/component-guide/(guide)/report-shell/page.tsx', [
+rewriteHandoffFile('src/app/component-guide/(guide)/kbigx-pdf-template/page.tsx', [
     [/\n\/\/ \[원본 전용\][^\n]*/, '', '원본 전용 표식 주석'],
     [
         /('다시 만들기',\s*)"[^"]*"/,
-        `$1"${KBIGX_TEMPLATE_ORIGIN}입니다. 'bigx print template' 배지가 붙은 컴포넌트 · kbigx-print-* 파일 · K-BIGx 목업을 바꿔도 이 HTML 은 저절로 바뀌지 않으므로, 인쇄 템플릿을 바꿀 때는 원본 저장소에 새 HTML 을 요청합니다."`,
+        `$1"${KBIGX_TEMPLATE_ORIGIN}입니다. 'bigx pdf template' 배지가 붙은 컴포넌트 · kbigx-print-* 파일 · K-BIGx 목업을 바꿔도 이 HTML 은 저절로 바뀌지 않으므로, 인쇄 템플릿을 바꿀 때는 원본 저장소에 새 HTML 을 요청합니다."`,
         '다시 만들기 칸',
     ],
     [
@@ -133,9 +133,9 @@ rewriteHandoffFile('src/app/component-guide/(guide)/report-shell/page.tsx', [
 ])
 rewriteHandoffFile('src/constants/publishing-guide.ts', [
     [
-        '고치면 인쇄본을 함께 확인하고 yarn kbigx-template 로 단독 HTML 도 다시 만듭니다.',
-        '고치면 인쇄본을 함께 확인합니다. PDF 템플릿 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
-        '인쇄 템플릿 배지 설명',
+        '고치면 PDF 템플릿을 함께 확인하고 yarn kbigx-template 로 단독 HTML 도 다시 만듭니다.',
+        '고치면 PDF 템플릿을 함께 확인합니다. 단독 HTML 은 원본 저장소에서 다시 만들어 전달합니다.',
+        'PDF 템플릿 배지 설명',
     ],
 ])
 
