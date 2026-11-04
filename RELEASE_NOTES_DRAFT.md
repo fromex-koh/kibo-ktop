@@ -102,10 +102,13 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 변경:
     - hasGlow prop: 테두리 글로우(감싼 틀에 isolate 필요 — K-BIGx 화면은 KbigxReportFrame 이 처리)
     - isKeywordClearedOnTypeChange prop: 검색 기준을 바꾸면 직접 입력한 값도 비움
-- 결과: 넘기지 않으면 기존과 같음
+    - [초기화] 버튼: 텍스트 + 아이콘 → 아이콘 + 텍스트 순서([검색하기]와 같은 순서)
+- 결과: 새 prop 은 넘기지 않으면 기존과 같음, [초기화] 순서는 모든 사용처에 적용
 - 영향 화면: [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form)
+    - [기업혁신성장 (기업)](/corp/k-bigx-report/innovation-growth-report)
+    - [특허등급 조회 (기업)](/corp/patent-evaluation/patent-grade-list)
 - 함께 작업: 위 CSS 카드와 한 번에 적용
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e3968751797f76330d16db06a2ac9fef1bb7765d)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e3968751797f76330d16db06a2ac9fef1bb7765d) · [초기화 버튼 순서](https://github.com/fromex-koh/kibo-ktop/commit/e368d3d5dd5c58511c1f8f31092a05814c9e3872)
 
 ### [컴포넌트] 소개 띠 — 이미지 뒤 원형 그라데이션 · 모바일 이미지 숨김
 
@@ -263,17 +266,22 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
-### [주석] 날짜 선택 · 단계 이동 · 선택 정보 카드 · 분포 곡선 차트
+### [주석] 날짜 선택 · 단계 이동 · 선택 정보 카드 · 분포 곡선 차트 · 서비스 소개 틀 · 순위 막대
 
 - 대상: src/components/composite/date-picker.tsx
     - src/components/composite/step-navigation.tsx
     - src/components/composite/selectable-info-card.tsx
     - src/components/custom/distribution-curve-chart.tsx
+    - src/components/custom/diverging-rank-chart.tsx
+    - src/components/custom/platform-service-intro.tsx
+    - src/components/custom/rank-bar-list.tsx
 - 변경:
     - 주석 용어 정리, StepNavigation 버튼 크기 설명 2xl → xl(실제 값과 맞춤)
     - DistributionCurveChart peakValue 설명 '한 칸' → '반 칸'(실제 동작과 맞춤)
+    - DivergingRankChart · RankBarList 긴 이름 설명을 실제 동작에 맞춤(웹은 잘린 이름만 툴팁, PDF 는 한 줄 말줄임 · 툴팁 없음)
+    - ServiceFeatureList 기능 이름(title): 목록 key 로 쓰여 한 목록 안에서 달라야 한다는 설명 추가
 - 결과: 화면 · 동작 변화 없음
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e7a630a2b16d9da3cd83da6b650bd9078ec152f9)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e7a630a2b16d9da3cd83da6b650bd9078ec152f9) · [순위 막대 · 서비스 소개 주석](https://github.com/fromex-koh/kibo-ktop/commit/fd8226f9d6f2dc5fe38fc7c020fa77291bb9ff40)
 
 ## [덮어쓰기]
 
@@ -355,6 +363,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/app/component-guide/(guide)/grade-radar-chart/page.tsx
     - src/app/component-guide/(guide)/grade-scale-gauge/page.tsx
     - src/app/component-guide/(guide)/grade-trend-chart/page.tsx
+    - src/app/component-guide/(guide)/grid/page.tsx
     - src/app/component-guide/(guide)/grouped-column-chart/page.tsx
     - src/app/component-guide/(guide)/history-list/page.tsx
     - src/app/component-guide/(guide)/home-notice-popup/home-notice-popup-cases.tsx
@@ -443,14 +452,24 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 지정한 파일만 교체
 - 내용:
     - 전체 가이드: 용어 통일(말풍선 → 툴팁 · 화면 낭독기 → 스크린리더 · 모션 감소 → 동작 줄이기), 제목 앞 번호 삭제, 사용 예시 코드 import 보강 · 화살표 함수 · --ds 색 변수로 정리, 차트 움직임 설명은 ChartReveal 링크로 정리, 차트 가이드 일부에 Recharts 라이선스 안내
-    - 메뉴(publishing-guide.ts): ArcGauge · ChartTooltip · K-BIGx PDF 템플릿 · SelectableListCard · SelectedItemSummary · StickyActionBar 추가, 배지 이름 'bigx print template' → 'bigx pdf template'
+    - 메뉴(publishing-guide.ts): ArcGauge · ChartTooltip · K-BIGx PDF 템플릿 · SelectableListCard · SelectedItemSummary · StickyActionBar 추가, 배지 이름 'bigx print template' → 'bigx pdf template', ChartReveal · Skeleton 에 bigx pdf template 배지 추가(PDF 템플릿이 씀), 'Skeleton / ChartSkeleton' 메뉴를 차트 › 로딩에서 빼 'Skeleton' 으로 LoadingState 옆에 둠
     - [리포트 공통 (Report)](/component-guide/report-shell): K-BIGx 내용을 K-BIGx PDF 템플릿 가이드로 옮기고 리포트 공통 부품만 남김
     - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 테두리 글로우(hasGlow) · 기준 바꾸면 검색어 비우기
-    - [서비스 소개 띠 (ServiceIntroBanner)](/component-guide/service-intro-banner): 그림 뒤 원(hasIllustrationGlow) · KbigxReportFrame
+    - [서비스 소개 띠 (ServiceIntroBanner)](/component-guide/service-intro-banner): 그림 뒤 원(hasIllustrationGlow) · KbigxReportFrame(예시는 isolate 가 제목 · 설명까지 감싸 원이 글 아래에 깔림)
     - [색상 (Semantic)](/component-guide/semantic-color): service-intro-glow · search-glow 토큰 설명
     - [배지 (Badge)](/component-guide/badge): 고른 항목 칩(outline · primary) 예시 · 사용 코드
     - [페이지네이션 (Pagination)](/component-guide/pagination): 아이콘만 남기는 법 · 페이지가 아주 많을 때(모바일) 예시
     - [순위 피라미드 (RankPyramidChart)](/component-guide/rank-pyramid-chart): 왕관 대신 0~25% 표시
+    - [브레이크포인트 (Breakpoint)](/component-guide/breakpoint): 표 두 개의 크기 · 글자를 그리드 가이드 구간별 설정 표와 맞춤(size md)
+    - [레이아웃 그리드 (Grid)](/component-guide/grid): 레이아웃 유틸리티 표도 구간별 설정 표와 같은 크기로(size md)
+    - [간격 (Spacing)](/component-guide/spacing): 간격 미리보기를 값 크기의 빨간 정사각형(N × N)으로, 크기 막대도 그리드 예시와 같은 빨강으로 · 표 두 개의 크기 · 글자를 그리드 가이드 구간별 설정 표와 맞춤(size md)
+    - [쌓임 순서 (Z-index)](/component-guide/z-index): 표 크기 · 글자를 그리드 가이드 구간별 설정 표와 맞춤(size md)
+    - [서비스 소개 틀 (PlatformServiceIntro)](/component-guide/platform-service-intro): 예시 기능 이름을 서로 다르게(같은 key 콘솔 오류 해결)
+    - [두 값 막대 표 (DualBarTable)](/component-guide/dual-bar-table): 예시 표의 머리 줄 · 위 선 · 막대 색을 서비스(PDF 템플릿)와 같게(연보라 면 · 남색 글자 · 남색 위 선)
+    - [순위 막대 목록 (RankBarList)](/component-guide/rank-bar-list): 예시 목록의 제목 줄 · 위 선 · 막대 · 평균 · 조회기업 색을 서비스(PDF 템플릿)와 같게, 긴 이름은 PDF 에서 한 줄 말줄임만(툴팁 없음) 안내
+    - [양쪽 순위 막대 (DivergingRankChart)](/component-guide/diverging-rank-chart): '이름이 막대보다 길 때' 예시를 실제로 잘리는 긴 이름으로 바꿔 말줄임 · 툴팁이 보이게
+    - [모서리 반경 (Radius)](/component-guide/radius): 미리보기를 브레이크포인트 예시 색 · 높이 96 상자로 바꿈(큰 반경끼리도 둥근 정도가 구분됨), 표 크기 · 글자를 그리드 가이드 구간별 설정 표와 맞춤(size md)
+    - [스켈레톤 (Skeleton)](/component-guide/skeleton): 차트 유형 목록 · 네트워크 예시 삭제(각 차트 문서 로딩 섹션과 중복), 사용 기준(Skeleton · 차트 로딩 · ChartSkeleton 직접 사용)과 차트 로딩 섹션으로 정리
     - [본인 확인 (IdentityVerificationDialog)](/component-guide/identity-verification-dialog): errorMessage prop(다음 제출 때 비움)
     - [아이콘 (Icon)](/component-guide/icon) · [이미지 (Image)](/component-guide/image): 왕관 · 로그인 탭 그림 삭제, ThemeImage 사용법 · 쓰는 아이콘 목록 갱신
     - [선택 카드 (SelectableCard)](/component-guide/selectable-card) · [선택 정보 카드 (SelectableInfoCard)](/component-guide/selectable-info-card): 검색된 기업 · 특허는 SelectableListCard 로 안내
@@ -458,7 +477,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [인풋 (Input)](/component-guide/input): 수량 · 금액 칸 예시를 세 자리 쉼표 방식으로
     - [말줄임 툴팁 (TruncatedText)](/component-guide/truncated-text) · [이메일 입력 (EmailField)](/component-guide/email-field): isFocusable · onValueChange props 설명
 - 함께 작업: 위 새 가이드 카드와 한 번에 적용, 맨 아래 그림 삭제 카드보다 먼저 적용(아이콘 · 이미지 가이드가 삭제할 그림을 더 이상 import 하지 않음)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5d4552487bad619ecac322948bba383ab2055b9a)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5d4552487bad619ecac322948bba383ab2055b9a) · [표 · 스켈레톤 · 예시 정리](https://github.com/fromex-koh/kibo-ktop/commit/ebd0969b342026873f1d632bf0d49de4315e4f34)
 
 ### [문서] 퍼블리싱 인덱스 — 조회 케이스 화면 4종 등록
 
