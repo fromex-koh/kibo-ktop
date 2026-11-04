@@ -22,7 +22,8 @@ import {cn} from '@/lib/utils'
 //   · K-BIGx 기업혁신성장보고서 조회: 가입 정보 없이 비밀번호 한 칸만(items 생략).
 //
 // [프론트엔드 연동] 아래 검사(비밀번호 입력 여부)는 그대로 두고 onSubmit 에 인증 API 를 붙이면 된다.
-// 서버가 "비밀번호가 일치하지 않습니다" 같은 답을 주면 error 상태에 넣어 같은 자리에 띄우면 된다.
+// 서버가 "비밀번호가 일치하지 않습니다" 같은 답을 주면 errorMessage 로 넘겨 같은 자리에 띄운다.
+// 입력이 바뀌는 것을 바깥에 알리지 않으므로, 다음 제출(onSubmit) 때 바깥에서 errorMessage 를 비운다.
 
 const PASSWORD_FIELD = 'identity-verification-password'
 const PASSWORD_ERROR_ID = `${PASSWORD_FIELD}-error`
@@ -48,6 +49,8 @@ type IdentityVerificationDialogProps = {
     onOpenChange?: (open: boolean) => void
     /** 검사를 통과했을 때. 넘기지 않으면 아무 일도 하지 않는다(인증 연동 전). */
     onSubmit?: (password: string) => void
+    /** 서버가 돌려준 오류 문구(예: 비밀번호 불일치). 비밀번호를 비운 채 누른 경우의 안내가 먼저 보인다. */
+    errorMessage?: string
 }
 
 const IdentityVerificationDialog = ({
@@ -57,21 +60,23 @@ const IdentityVerificationDialog = ({
     open,
     onOpenChange,
     onSubmit,
+    errorMessage,
 }: IdentityVerificationDialogProps) => {
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const [emptyError, setEmptyError] = useState('')
+    const error = emptyError || errorMessage
     const inputRef = useRef<HTMLInputElement>(null)
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
         if (!password.trim()) {
             // 못 누르는 버튼 대신 눌러 보고 알려 준다 — 왜 안 되는지 메시지로 남고 그 칸으로 옮겨 준다[7.4.2].
-            setError(EMPTY_PASSWORD_MESSAGE)
+            setEmptyError(EMPTY_PASSWORD_MESSAGE)
             inputRef.current?.focus()
 
             return
         }
-        setError('')
+        setEmptyError('')
         onSubmit?.(password)
     }
 
@@ -115,7 +120,7 @@ const IdentityVerificationDialog = ({
                             value={password}
                             onChange={(event) => {
                                 setPassword(event.target.value)
-                                setError('')
+                                setEmptyError('')
                             }}
                             aria-invalid={error ? true : undefined}
                             aria-describedby={error ? PASSWORD_ERROR_ID : undefined}
