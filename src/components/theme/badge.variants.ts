@@ -68,6 +68,8 @@ export const badgeVariants = cva(
             {variant: 'outline', color: 'secondary-green', class: 'border-green-800 text-green-800'},
             {variant: 'outline', color: 'secondary-orange', class: 'border-orange-700 text-orange-700'},
             {variant: 'outline', color: 'secondary-purple', class: 'border-purple-600 text-purple-600'},
+            // 고른 상태 표시 — 선택 목록 카드의 고른 상태와 같은 primary 테두리 · 연한 면. 예: 하단 고정 바의 고른 항목 칩.
+            {variant: 'outline', color: 'primary', class: 'border-primary bg-primary-subtle text-primary-strong'},
             {variant: 'solid', color: 'info', class: 'bg-badge-solid-info'},
             {variant: 'solid', color: 'success', class: 'bg-badge-solid-success'},
             {variant: 'solid', color: 'warning', class: 'bg-badge-solid-warning'},
