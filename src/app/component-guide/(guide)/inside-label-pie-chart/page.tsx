@@ -78,7 +78,7 @@ const LOADING_CODE = `import {InsideLabelPieChartSkeleton} from '@/components/co
   <InsideLabelPieChart data={shares} ariaLabel="최근 신용/담보 비중" className="max-w-82.5" />
 )}`
 
-const PRINT_CODE = `// K-BIGx PDF 템플릿 — 조각 · 글자 · 사이 선을 kbx 색으로 넘깁니다(kbigx-print-credit.tsx).
+const PRINT_CODE = `// K-BIGx PDF 템플릿 — 조각 · 글자 · 사이 선을 kbx 색으로 넘깁니다.
 <InsideLabelPieChart
   ariaLabel="최근 신용/담보 비중"
   data={[
@@ -109,6 +109,13 @@ const PROPS_ITEMS = [
         '(value: number) => string',
     ],
     ['InsideLabelPieChart', 'emptyText', '그릴 조각이 없을 때 문구입니다.', "'표시할 데이터가 없습니다.'", 'string'],
+    [
+        'InsideLabelPieChart',
+        'emptyClassName',
+        '빈 상태 모양(여백 · 바탕 · 글자)입니다.',
+        "'text-foreground-subtle py-10 text-center'",
+        'string',
+    ],
     ['InsideLabelPieItem', 'id · label', '조각 식별자와 이름(조각 안 윗줄)입니다.', '-', 'string'],
     ['InsideLabelPieItem', 'percentage', '비중(%)입니다. 적힌 그대로 보입니다.', '-', 'number'],
     [
@@ -121,15 +128,8 @@ const PROPS_ITEMS = [
     [
         'InsideLabelPieChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
-        'string',
-    ],
-    [
-        'InsideLabelPieChart',
-        'emptyClassName',
-        '빈 상태 모양(여백 · 바탕 · 글자)입니다. K-BIGx PDF 템플릿은 차트 빈 상태(KbxChartEmpty)와 같은 모양으로 넘깁니다.',
-        "'text-foreground-subtle py-10 text-center'",
         'string',
     ],
 ] as const
@@ -154,11 +154,11 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const InsideLabelPieChartGuidePage = () => (
     <GuidePageShell
         title="조각 안 라벨 원형 (InsideLabelPieChart)"
-        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. K-BIGx 보고서 PDF 템플릿 신용/담보 비중 원형으로 썼으나, 현업 요청(원형 그래프 라벨은 원 밖)으로 PDF 템플릿은 CalloutPieChart 로 바꿨습니다 — 지금은 쓰는 화면이 없습니다."
+        description="몇 안 되는 분류(2 ~ 4개)의 비중을 꽉 찬 원으로 그리고, 조각마다 안쪽에 이름 · 비중을 흰 글자로 바로 적는 차트입니다. 범례 · 지시선이 없습니다. 지금은 쓰는 화면이 없습니다."
     >
         <BaseCard>
             <section aria-labelledby="ilp-basic" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-basic" title="1. 기본 사용">
+                <SectionHeading id="ilp-basic" title="기본 사용">
                     그림 230 × 230 기준으로 그리고, 크기는 사용처 className(w-* · max-w-*)으로 정합니다. 분류가 많아
                     지시선 라벨이 필요하면{' '}
                     <Link href="/component-guide/callout-pie-chart" className={LINK_CLASS}>
@@ -182,9 +182,12 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-rule" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="ilp-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>원 = 반지름 100 · 조각 사이 흰 선 2.5. 12시에서 시계 방향으로 받은 순서대로 이어집니다.</li>
+                    <li>
+                        원 = 반지름 100 · 조각 사이 선 2.5(<code>gapColor</code>). 12시에서 시계 방향으로 받은 순서대로
+                        이어집니다.
+                    </li>
                     <li>라벨 = 조각 가운데 각도의 반지름 55 지점 — 이름 위 · 비중 아래, 두 줄 사이 26.</li>
                     <li>비중 합이 100 이 아니어도 합 기준으로 원을 채우고, 글자는 받은 비중을 그대로 적습니다.</li>
                 </ul>
@@ -193,7 +196,7 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-edge" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-edge" title="3. 엣지 케이스" />
+                <SectionHeading id="ilp-edge" title="엣지 케이스" />
                 <div className="grid gap-6 xl:grid-cols-2">
                     {EDGE_CASES.map((item) => (
                         <Example key={item.key} title={item.title} description={item.description}>
@@ -210,7 +213,7 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-loading" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-loading" title="4. 불러오는 중 (InsideLabelPieChartSkeleton)">
+                <SectionHeading id="ilp-loading" title="불러오는 중 (InsideLabelPieChartSkeleton)">
                     같은 그림 범위(230 × 230)에 원 자리를 그립니다. PDF 템플릿은 서버에서 바로 그려 스켈레톤 없이
                     나옵니다.
                 </SectionHeading>
@@ -231,19 +234,9 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-print" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-print" title="5. K-BIGx PDF 템플릿에서 (지금은 쓰지 않음)">
-                    예전에는 신용/담보 비중 소블록의 오른쪽 반에 330 크기로 가운데 두었습니다. 현업 요청(원형 그래프
-                    라벨은 무조건 원 밖 지시선 끝)으로 지금은 CalloutPieChart 를 씁니다 — 아래 코드는 예전 사용
-                    예입니다. 확인 화면:{' '}
-                    <Link
-                        href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={LINK_CLASS}
-                    >
-                        K-BIGx 보고서 PDF 템플릿 신용/재무정보
-                        <span className="sr-only"> (새 창)</span>
-                    </Link>
+                <SectionHeading id="ilp-print" title="K-BIGx PDF 템플릿에서 (지금은 쓰지 않음)">
+                    PDF 템플릿의 원형 그래프는 CalloutPieChart 를 씁니다. 아래는 오른쪽 반 칸에 330 크기로 가운데 둘
+                    때의 코드입니다.
                 </SectionHeading>
                 <CodeBlock code={PRINT_CODE} language="tsx" copyLabel="복사" />
             </section>
@@ -251,7 +244,7 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-a11y" title="6. 접근성" />
+                <SectionHeading id="ilp-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 분류마다
@@ -265,7 +258,7 @@ const InsideLabelPieChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ilp-props" className="flex flex-col gap-6">
-                <SectionHeading id="ilp-props" title="7. Props API">
+                <SectionHeading id="ilp-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable

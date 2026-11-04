@@ -68,7 +68,7 @@ const QuickMenu = ({title, groups}: QuickMenuProps) => {
                                         <a
                                             href={link.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="typo-body-s-medium hover:bg-muted/50 focus-visible:ring-ring block rounded-xs px-2 py-1.5 focus-visible:ring-2 focus-visible:outline-none"
+                                            className="typo-body-m-medium hover:bg-muted/50 focus-visible:ring-ring block rounded-xs px-2 py-1.5 focus-visible:ring-2 focus-visible:outline-none"
                                         >
                                             {link.label}
                                         </a>

@@ -37,7 +37,7 @@ const withQuarters = (values: readonly (number | undefined)[]) =>
 
 // 템플릿 데이터(단위: 명).
 const STANDARD_DATA = withQuarters([39, 37, 37, 35, 34, 34, 31, 33, 27, 28, 25])
-// 3. 엣지 케이스.
+// 엣지 케이스.
 const RISING_DATA = withQuarters([12, 14, 15, 18, 21, 24, 26, 31, 35, 41, 48])
 const FLAT_DATA = withQuarters([30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30])
 const LARGE_DATA = withQuarters([1250, 1320, 1410, 1380, 1520, 1610, 1580, 1720, 1810, 1790, 1930])
@@ -175,7 +175,7 @@ const PROPS_ITEMS = [
     [
         'ValueLineChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -213,7 +213,7 @@ const ValueLineChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="vlc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-basic" title="1. 기본 사용">
+                <SectionHeading id="vlc-basic" title="기본 사용">
                     그림 폭 1168 기준으로 그리고, 칸 폭에 맞춰 같은 비율로 줄어듭니다. 세로축 · 툴팁 · 여러 계열이 있는
                     웹 화면용 선 그래프는{' '}
                     <Link href="/component-guide/line-chart" className={LINK_CLASS}>
@@ -233,7 +233,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-rule" title="2. 짜임 · 크기 규칙" />
+                <SectionHeading id="vlc-rule" title="짜임 · 크기 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>점은 x 60 ~ 1144 사이에 같은 간격으로 놓고, 점마다 세로 점선(y 20 ~ 370)을 긋습니다.</li>
                     <li>
@@ -296,7 +296,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-edge" title="3. 엣지 케이스">
+                <SectionHeading id="vlc-edge" title="엣지 케이스">
                     데이터에 따라 선 · 글자가 그림 밖으로 나가거나 서로 겹치지 않도록 자동으로 맞춥니다.
                 </SectionHeading>
                 <div className="flex flex-col gap-8">
@@ -311,7 +311,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-loading" title="4. 불러오는 중 (ValueLineChartSkeleton)">
+                <SectionHeading id="vlc-loading" title="불러오는 중 (ValueLineChartSkeleton)">
                     차트와 같은 그림 범위(1168 × 440)에 바닥선 · 선 · 점 · 값 글자 · 기간 이름 자리를 그립니다. 불러온
                     뒤 자리 · 높이가 흔들리지 않습니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려 스켈레톤 없이
                     나옵니다.
@@ -335,7 +335,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="vlc-print" title="K-BIGx PDF 템플릿에서">
                     진단브리핑은 소제목 아래 16 에 두고, 다음 소블록(인당 매출액)과는 168 띄웁니다. 신용/재무정보 차입금
                     분석은 compact 로 두고 선 색은 kbx 보라, 세로 점선은 chart-grid, 바닥선은 chart-line-subtle 입니다.
                     확인 화면:{' '}
@@ -355,7 +355,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-a11y" title="6. 접근성" />
+                <SectionHeading id="vlc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 기간마다 값을
@@ -372,7 +372,7 @@ const ValueLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="vlc-props" className="flex flex-col gap-6">
-                <SectionHeading id="vlc-props" title="7. Props API">
+                <SectionHeading id="vlc-props" title="Props API">
                     <code>data</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="ValueLineChart · ValueLineChartSkeleton Props 목록" />

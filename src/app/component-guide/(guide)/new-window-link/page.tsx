@@ -20,7 +20,7 @@ const USAGE_CODE = `import {NewWindowLink} from '@/components/composite/new-wind
 
 <Button asChild variant="tertiary" size="sm">
   <NewWindowLink
-    href="/org/mypage/evaluation-history/deep-analysis"
+    href="/org/mypage/evaluation-history/deep-analysis/ktrs-fm"
     width={EVALUATION_REPORT_WINDOW_WIDTH}
     height={EVALUATION_REPORT_WINDOW_HEIGHT}
     windowName="evaluation-report"
@@ -55,7 +55,7 @@ const PROPS_ITEMS = [
     [
         'NewWindowLink',
         'fitToScreen',
-        '창 크기를 화면 크기까지 줄일지 정합니다. false 면 width · height 그대로 엽니다.',
+        '창 크기를 화면 크기까지 줄일지 정합니다. false 면 width · height 그대로 엽니다(모바일 화면에서 PC 폭 문서를 열 때 등).',
         'true',
         'boolean',
     ],
@@ -94,7 +94,7 @@ const NewWindowLinkGuidePage = () => (
                 <div className="flex flex-wrap items-center gap-3">
                     <Button asChild variant="tertiary" size="sm">
                         <NewWindowLink
-                            href="/org/mypage/evaluation-history/deep-analysis"
+                            href="/org/mypage/evaluation-history/deep-analysis/ktrs-fm"
                             width={EVALUATION_REPORT_WINDOW_WIDTH}
                             height={EVALUATION_REPORT_WINDOW_HEIGHT}
                             windowName="evaluation-report"

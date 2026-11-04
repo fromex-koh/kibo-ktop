@@ -152,7 +152,7 @@ const InfoBoxGuidePage = () => (
                         <p className="typo-body-l-regular text-label-foreground">
                             흰 배경에 옅은 테두리를 둘러 본문 카드 위에서도 구분됩니다.
                         </p>
-                        <InfoBox variant="outline" title="꼭 확인해 주세요">
+                        <InfoBox variant="outline" title="꼭 확인해 주세요" headingLevel={4}>
                             <InfoBoxItem>
                                 제출 이후에는 수정할 수 없습니다. 입력하신 내용을 다시 한번 확인해 주시고, 이상이 없을
                                 경우 [제출하기]를 클릭해 주세요.
@@ -167,7 +167,7 @@ const InfoBoxGuidePage = () => (
                         <p className="typo-body-l-regular text-label-foreground">
                             아이콘 래퍼가 <code>aria-hidden</code> 을 처리하므로 아이콘에 따로 주지 않아도 됩니다.
                         </p>
-                        <InfoBox title="알려드려요" icon={<Info className="text-foreground" />}>
+                        <InfoBox title="알려드려요" icon={<Info className="text-foreground" />} headingLevel={4}>
                             <InfoBoxItem>
                                 제목 앞에 <code>icon</code> 슬롯으로 24px 아이콘을 붙일 수 있습니다.
                             </InfoBoxItem>

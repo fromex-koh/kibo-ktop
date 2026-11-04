@@ -15,8 +15,8 @@ export const metadata: Metadata = {title: '알림 (Alert)'}
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
-const USAGE_CODE = `import {Info} from 'lucide-react'
-import {Alert, AlertDescription} from '@/components/ui/alert'
+const USAGE_CODE = `import {Info, TriangleAlert} from 'lucide-react'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 <Alert color="info">
   <Info aria-hidden="true" />

@@ -7,9 +7,15 @@ import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
 import {GradeTrendChart} from '@/components/custom/grade-trend-chart'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {LicenseNotice, type LicenseLink} from '@/components/custom/license-notice'
 import {Table} from '@/components/custom/table'
 
 export const metadata: Metadata = {title: '등급 추이 차트 (GradeTrendChart)'}
+
+const RECHARTS_LICENSE: LicenseLink = {
+    name: 'Recharts',
+    href: 'https://github.com/recharts/recharts/blob/main/LICENSE',
+}
 
 const GRADE_SCALE = ['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C'] as const
 
@@ -205,7 +211,7 @@ const PROPS_ROWS = toRows([
     ['target', '기준과 견주는 주인공(평가대상)입니다. 없으면 꺾은선만 그립니다.', 'undefined', 'GradeTrendTarget'],
     ['animate', '처음 그릴 때의 움직임입니다. 한 번 그린 뒤에는 다시 그리지 않습니다.', 'true', 'boolean'],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
-    ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'등급 추이를 불러오는 중입니다.'", 'string'],
+    ['loadingLabel', '불러오는 중에 스크린리더가 읽을 문구입니다.', "'등급 추이를 불러오는 중입니다.'", 'string'],
 ])
 
 const FIELD_COLUMNS = [
@@ -427,16 +433,15 @@ const GradeTrendChartGuidePage = () => (
                     </li>
                     <li>
                         시점별 평균 등급과 평가대상 등급을 담은 숨김 표(<code>caption</code> · <code>th scope</code>
-                        )가 함께 렌더링되어 화면 낭독기가 값을 읽습니다[7.3.2].
+                        )가 함께 렌더링되어 스크린리더가 값을 읽습니다[7.3.2].
                     </li>
                     <li>등급은 점 위치뿐 아니라 점 옆 글자로도 전달됩니다[5.3.1].</li>
                     <li>
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>
@@ -482,6 +487,7 @@ const GradeTrendChartGuidePage = () => (
                         />
                     </div>
                 </div>
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>
     </GuidePageShell>

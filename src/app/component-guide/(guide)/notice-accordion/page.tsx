@@ -138,7 +138,7 @@ const NoticeAccordionGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">접힌 채로 시작</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>defaultOpen={false}</code> 는 화면 폭과 무관하게 접습니다.
+                            <code>defaultOpen={'{false}'}</code> 는 화면 폭과 무관하게 접습니다.
                         </p>
                         <NoticeAccordion title="접힌 채로 시작" defaultOpen={false}>
                             <NoticeAccordionItem>제목 줄을 누르면 펼쳐집니다.</NoticeAccordionItem>

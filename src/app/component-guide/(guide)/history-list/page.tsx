@@ -53,8 +53,7 @@ const ACTION_CODE = `{/* action — 제목 오른쪽 버튼 묶음. 좁아지면
   <HistoryAction>은행전송</HistoryAction>
 </HistoryItem>`
 
-const DISABLED_CODE = `{/* 아직 볼 것이 없는 건 — 분석 버튼과 동작 버튼을 모두 disabled 로 잠근다.
-    눌리지 않는 이유가 화면에 그대로 보인다 */}
+const DISABLED_CODE = `{/* 아직 실행할 수 없는 건 — 분석 버튼과 동작 버튼을 모두 disabled 로 잠근다 */}
 <HistoryItem
   meta={[
     <span key="date" className="typo-body-l-regular text-foreground-subtle">2026-05-08 10:15:58</span>,
@@ -71,9 +70,7 @@ const DISABLED_CODE = `{/* 아직 볼 것이 없는 건 — 분석 버튼과 동
   <HistoryAction disabled>전송내역</HistoryAction>
 </HistoryItem>`
 
-const BADGE_CODE = `{/* badge — 메타 줄 맨 앞의 표(평가 모형 등). 뒤 값들과 달리 구분선 없이 간격만 두고 놓인다.
-    모형을 배지가 알려 주므로 제목은 종류만 남는다("자가진단"). 배지를 두지 않는 건은 제목에 모형까지
-    함께 적는다("KTRS-FM 기술평가") */}
+const BADGE_CODE = `{/* badge — 메타 줄 맨 앞(구분선 없음). 모형을 배지가 알려 주므로 제목은 종류만 적는다("자가진단") */}
 <HistoryItem
   badge={<Badge variant="outline" color="info" shape="pill">KTRS-FM</Badge>}
   meta={[
@@ -93,9 +90,7 @@ const MINIMAL_CODE = `{/* meta·action·동작 버튼은 모두 선택이다. �
   <HistoryItem title={<h3 className="typo-title-m-bold text-foreground">2025년 4분기 기술평가 보고서</h3>} />
 </HistoryList>`
 
-const CARD_CODE = `{/* 카드에 담아야 하는 목록은 사용처에서 BaseCard 로 감싼다 — 목록 자체는 줄 구성만 갖는다.
-    안쪽 여백은 BaseCard 가 가진 값(24)을 그대로 쓰고, 카드 맨 위에는 시작을 긋는 선이 필요 없으므로
-    border-t-0 으로 끈다 */}
+const CARD_CODE = `{/* 카드가 필요하면 BaseCard 로 감싸고, 맨 위 선은 border-t-0 으로 끈다 */}
 <BaseCard>
   <HistoryList className="border-t-0">…</HistoryList>
 </BaseCard>`

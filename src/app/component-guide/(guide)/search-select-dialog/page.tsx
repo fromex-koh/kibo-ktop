@@ -98,6 +98,7 @@ const PROPS_ITEMS = [
         '(value: SearchSelectItem & {label: string}) => void',
     ],
     ['SearchSelectDialog', 'children', '모달을 여는 버튼입니다.', '-', 'ReactNode'],
+    ['SearchSelectDialog', 'defaultOpen', '트리거 없이 처음부터 열어 둡니다(모달 단독 화면).', '-', 'boolean'],
     ['DialogNotice', 'notices', '모달 맨 위 회색 안내 패널의 문장 목록입니다.', '-', 'readonly string[]'],
 ] as const
 

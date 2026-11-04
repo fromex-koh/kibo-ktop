@@ -1,5 +1,7 @@
 import {redirect} from 'next/navigation'
 
-export default function ValidationExceptionsPage() {
+const ValidationExceptionsPage = () => {
     redirect('/component-guide/accessibility-exceptions')
 }
+
+export default ValidationExceptionsPage

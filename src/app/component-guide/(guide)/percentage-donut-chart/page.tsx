@@ -47,6 +47,7 @@ const LONG_LABEL_DATA: PercentageDonutItem[] = REPORT_DATA.map((item, index) =>
 )
 
 const USAGE_CODE = `import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
+import {donutColorsFor} from '@/components/custom/percentage-donut-colors'
 
 // 비중이 큰 분류부터 넘기면 12시에서 시계 방향으로 이어집니다.
 <PercentageDonutChart
@@ -120,7 +121,7 @@ const PROPS_ITEMS = [
     [
         'PercentageDonutChart',
         'showTooltip',
-        '조각 위에 올렸을 때 그 조각의 분류명(범례 이름)만 보이는 툴팁입니다. 상자 폭은 이름 글자만큼입니다. 비중 · 값은 범례로 읽습니다.',
+        '조각에 올렸을 때 분류명만 보이는 툴팁입니다. 비중 · 값은 범례로 읽습니다.',
         'true',
         'boolean',
     ],
@@ -153,7 +154,7 @@ const PROPS_ITEMS = [
         'HTMLAttributes',
     ],
     ['PercentageDonutItem', 'id', '분류의 고유 값입니다. 조각 색 변수 이름에도 쓰입니다.', '-', 'string'],
-    ['PercentageDonutItem', 'label', '범례와 툴팁에 보이는 분류명입니다. 툴팁에는 이 이름만 보입니다.', '-', 'string'],
+    ['PercentageDonutItem', 'label', '범례와 툴팁에 보이는 분류명입니다.', '-', 'string'],
     ['PercentageDonutItem', 'percentage', '비중(%)입니다. 조각 크기를 정합니다.', '-', 'number'],
     ['PercentageDonutItem', 'color', '조각과 범례 칩의 색(토큰 변수)입니다.', '-', 'string'],
     ['PercentageDonutItem', 'count', '건수입니다. 범례에 \u2018비중%·건수개\u2019로 보입니다.', 'undefined', 'number'],
@@ -178,9 +179,8 @@ const PercentageDonutChartGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        도넛은 12시에서 시계 방향으로 <code>data</code> 순서대로 이어지며, 도넛 위에는 라벨이 없고
-                        비중은 범례로 읽고, 조각에 올리면 툴팁이 분류명만 보입니다. 색은 항목마다 <code>color</code> 로
-                        넘깁니다.
+                        도넛은 12시에서 시계 방향으로 <code>data</code> 순서대로 이어집니다. 도넛 위에는 라벨이 없고
+                        비중은 범례로 읽습니다. 색은 항목마다 <code>color</code> 로 넘깁니다.
                     </p>
                     <p className="typo-body-l-regular text-label-foreground">
                         범례 없이 꽉 찬 원형에 지시선 라벨을 다는 모양(K-BIGx 보고서 PDF 템플릿)은{' '}
@@ -212,9 +212,8 @@ const PercentageDonutChartGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">범례 값 · 툴팁</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>valueLabel</code> 로 금액 같은 값을 적습니다. 비중은 도넛 위에 적지 않고, 조각에
-                            마우스를 올리면 툴팁(기본 켬)이 그 조각의 분류명(범례 이름)만 보입니다 — 비중 · 값은 범례에
-                            있어 툴팁에 다시 적지 않습니다.
+                            <code>valueLabel</code> 로 범례에 금액 같은 값을 적습니다. 조각에 마우스를 올리면 툴팁(기본
+                            켬)이 분류명만 보입니다. 비중 · 값은 범례에 있어 툴팁에 다시 적지 않습니다.
                         </p>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="flex flex-col gap-2">
@@ -390,15 +389,18 @@ const PercentageDonutChartGuidePage = () => (
                         빈 상태는 <code>role=&quot;status&quot;</code> 로 안내 글자를 읽어 줍니다(EmptyState)[8.2.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link
+                            href="/component-guide/chart-reveal"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

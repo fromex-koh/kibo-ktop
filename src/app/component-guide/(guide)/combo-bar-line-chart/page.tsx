@@ -369,7 +369,7 @@ const ComboBarLineChartGuidePage = () => (
             <section aria-labelledby="cblc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="cblc-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                 </div>
                 <div className={BLOCKS}>
@@ -476,17 +476,17 @@ const ComboBarLineChartGuidePage = () => (
                         막대와 선 값은 모두 글자로 적혀 있어 색이나 높이만으로 전하지 않습니다. 조회기업 · 평균은 색과
                         함께 항목 이름으로 구분합니다[5.3.1].
                     </li>
-                    <li>말풍선은 없습니다.</li>
+                    <li>값 툴팁은 없습니다. 잘린 항목 이름만 말줄임 툴팁으로 전체 이름을 보입니다.</li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

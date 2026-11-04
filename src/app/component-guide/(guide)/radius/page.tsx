@@ -110,7 +110,7 @@ const RadiusGuidePage = () => (
                     </li>
                     <li>
                         <code>rounded-glass</code>(32)는 히어로 띠 위 반투명 유리 카드 전용입니다(K-BIGx 보고서 소개) —
-                        24 와 40 사이 시안 값이라 이름을 쓰임새로 붙였습니다.
+                        24 와 40 사이 값이라 쓰임새로 이름을 붙였습니다.
                     </li>
                     <li>
                         값은 <code>tokens.json</code> 의 <code>radius</code>(기준값은 <code>radiusBase</code>)를

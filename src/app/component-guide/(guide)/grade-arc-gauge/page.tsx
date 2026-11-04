@@ -107,7 +107,7 @@ const PROPS_ITEMS = [
     [
         'GradeArcGauge',
         'loadingLabel',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'등급을 불러오는 중입니다.'",
         'string',
     ],
@@ -201,8 +201,8 @@ const GradeArcGaugeGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">불러오는 중 (isLoading)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            같은 크기의 스켈레톤이 대신 서고 <code>loadingLabel</code> 이 낭독됩니다. 화면이 붙기 전에도
-                            같은 스켈레톤을 보입니다.
+                            같은 크기의 스켈레톤이 대신 서고 스크린리더가 <code>loadingLabel</code> 을 읽습니다.
+                            하이드레이션 전에도 같은 스켈레톤을 보입니다.
                         </p>
                         <div className="flex flex-wrap items-end gap-8">
                             <GradeArcGauge grade="" label="성장등급" stepIndex={0} totalSteps={14} isLoading />
@@ -246,17 +246,7 @@ const GradeArcGaugeGuidePage = () => (
                         &apos;최종등급 TI3&apos; 처럼 전달됩니다[5.1.1].
                     </li>
                     <li>등급이 글자로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].</li>
-                    <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
-                    </li>
-                    <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
-                    </li>
+                    <li>원호는 움직임 없이 그려집니다[6.3.1].</li>
                 </ul>
             </section>
         </BaseCard>

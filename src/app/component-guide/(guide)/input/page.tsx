@@ -105,27 +105,26 @@ const COMPOSITE_CODE = `{/* 일반 입력: end action 없음 */}
   placeholder="검색어를 입력하세요"
 />`
 
-const ADDON_CODE = `{/* 읽기전용 상태 아이콘 */}
+const ADDON_CODE = `import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
+import {InputGroupInput as FormInputGroupInput} from '@/components/composite/form-values'
+import {NUMBER_FORMAT_THOUSANDS, formatThousands} from '@/lib/number-format'
+
+{/* 읽기전용 상태 아이콘 */}
 <InputGroup>
-  <InputGroupInput
-    name="corporateNumber"
-    value="110111-1234567"
-    readOnly
-    aria-label="법인번호"
-  />
+  <InputGroupInput name="corporateNumber" value="110111-1234567" readOnly aria-label="법인번호" />
   <InputGroupAddon align="inline-end">
     <Lock aria-hidden="true" />
   </InputGroupAddon>
 </InputGroup>
 
-{/* 단위는 상자 안 오른쪽, 값은 오른쪽 정렬
-    수량 · 금액 칸은 type="number" 대신 form-values 의 InputGroupInput + inputMode="numeric"
-    + format={formatThousands} 로 세 자리 쉼표를 넣고, data-number-format 표시로 제출 값을 숫자로 바꾼다(폼 탭 가이드 참고) */}
+{/* 수량 · 금액 — 단위는 상자 안 오른쪽, 값은 오른쪽 정렬, 세 자리 쉼표(FormValuesProvider 안) */}
 <InputGroup>
-  <InputGroupInput
+  <FormInputGroupInput
     name="applicantCount"
-    type="number"
+    inputMode="numeric"
     placeholder="0"
+    format={formatThousands}
+    data-number-format={NUMBER_FORMAT_THOUSANDS}
     aria-label="신청 인원"
     className="text-right"
   />
@@ -491,18 +490,30 @@ const InputGuidePage = () => (
                         정렬합니다.
                     </p>
                     <p className="typo-body-l-regular text-label-foreground">
-                        수량 · 금액 칸(명 · 건 · 개 · 백만원 · 원 · 일)은 세 자리마다 쉼표를 넣습니다(1,234,567 — 감리
-                        조치). 쉼표가 들어가야 하므로 <code>type=&quot;number&quot;</code> 대신 form-values 의{' '}
-                        <code>InputGroupInput</code> 에 <code>inputMode=&quot;numeric&quot;</code> 과{' '}
-                        <code>format={'{formatThousands}'}</code>(lib/number-format), 제출할 때 숫자로 바꾸기 위한{' '}
-                        <code>data-number-format={'{NUMBER_FORMAT_THOUSANDS}'}</code> 표시를 줍니다. 연도 · 월 · 날짜 ·
-                        번호(사업자 · 법인 · 특허 등록) · 전화번호는 쉼표를 넣지 않습니다. 자세한 규칙(음수 · 보낼 값 ·
-                        setValue 로 넣는 값 · 자릿수 상한)은{' '}
-                        <Link href="/component-guide/form-tabs" className="text-primary-strong underline">
-                            폼 탭 가이드
-                        </Link>
-                        를 봅니다.
+                        수량 · 금액 칸(명 · 건 · 개 · 백만원 · 원 · 일)은 세 자리마다 쉼표를 넣습니다(1,234,567).
                     </p>
+                    <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
+                        <li>
+                            <code>type=&quot;number&quot;</code> 대신 form-values 의 <code>InputGroupInput</code> 을
+                            씁니다.
+                        </li>
+                        <li>
+                            <code>inputMode=&quot;numeric&quot;</code> 과 <code>format={'{formatThousands}'}</code>
+                            (lib/number-format)로 쉼표를 넣습니다.
+                        </li>
+                        <li>
+                            제출할 때 숫자로 바꾸도록 <code>data-number-format={'{NUMBER_FORMAT_THOUSANDS}'}</code> 를
+                            줍니다.
+                        </li>
+                        <li>연도 · 월 · 날짜 · 번호(사업자 · 법인 · 특허 등록) · 전화번호는 쉼표를 넣지 않습니다.</li>
+                        <li>
+                            음수 · 보낼 값 · setValue 로 넣는 값 · 자릿수 상한은{' '}
+                            <Link href="/component-guide/form-tabs" className="text-primary-strong underline">
+                                폼 탭 가이드
+                            </Link>
+                            를 봅니다.
+                        </li>
+                    </ul>
                 </div>
                 <div className="grid gap-6 lg:grid-cols-2">
                     <Field className="max-w-90">
@@ -530,7 +541,7 @@ const InputGuidePage = () => (
                             <InputGroupInput
                                 id="input-count"
                                 name="applicantCount"
-                                type="number"
+                                inputMode="numeric"
                                 placeholder="0"
                                 className="text-right"
                             />

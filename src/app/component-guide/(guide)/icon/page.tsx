@@ -13,6 +13,7 @@ import {
 import type {LucideIcon} from 'lucide-react'
 import {
     ArrowDown,
+    ArrowLeft,
     ArrowRight,
     ArrowUp,
     ArrowUpDown,
@@ -60,7 +61,9 @@ import {
     LoaderCircle,
     Menu,
     MessageCircleMore,
+    Minus,
     Moon,
+    MoveRight,
     NotepadText,
     Palette,
     Paperclip,
@@ -72,6 +75,7 @@ import {
     RotateCcw,
     ScrollText,
     Search,
+    ShieldCheck,
     Sparkles,
     SquareArrowOutUpRight,
     Star,
@@ -79,6 +83,7 @@ import {
     ThumbsUp,
     TimerReset,
     TrendingUp,
+    Triangle,
     Trophy,
     Upload,
     User,
@@ -111,8 +116,6 @@ import ticketGradeMinimum from '@public/images/ticket-grade/ticket-grade-minimum
 import ticketGradeBasic from '@public/images/ticket-grade/ticket-grade-basic.webp'
 import ticketGradeStandard from '@public/images/ticket-grade/ticket-grade-standard.webp'
 import ticketGradePremium from '@public/images/ticket-grade/ticket-grade-premium.webp'
-import crownImage from '@public/images/rank-pyramid/crown.webp'
-import crownPurpleImage from '@public/images/rank-pyramid/crown-purple.webp'
 import emblemGovernment from '@public/images/emblem-government.webp'
 import chromeLogo from '@public/images/browser/chrome.webp'
 import microsoftEdgeLogo from '@public/images/browser/microsoft-edge.webp'
@@ -170,14 +173,13 @@ export const metadata: Metadata = {title: '아이콘 (Icon)'}
 
 // 미리보기 바탕 — 라이트 · 다크 짝은 GuideAssetGroup 이 각 테마로 고정해 그린다. 아래는 짝이 없는 그림과 쓰는 법 표에 쓴다.
 //   light · dark : 그 테마의 카드 면으로 고정(원시 색 bg-gray-* 는 다크에서 반전되어 쓰지 않는다).
-//   blue · purple : 흰 그림이 놓이는 칸 색.
-type ImageIconSurface = 'card' | 'light' | 'dark' | 'blue' | 'purple'
+//   blue : 흰 그림이 놓이는 칸 색.
+type ImageIconSurface = 'card' | 'light' | 'dark' | 'blue'
 const IMAGE_ICON_SURFACE_CLASS: Record<ImageIconSurface, string> = {
     card: '',
     light: 'light border-subtle-3 bg-card flex size-14 items-center justify-center rounded-sm border',
     dark: 'dark border-subtle-3 bg-card flex size-14 items-center justify-center rounded-sm border',
     blue: 'flex size-10 items-center justify-center rounded-sm bg-blue-500',
-    purple: 'flex size-10 items-center justify-center rounded-sm bg-purple-500',
 }
 
 type ImageIconItem = Omit<GuideAssetItem, 'surfaceClassName' | 'surfaceNote'> & {surface?: ImageIconSurface}
@@ -305,19 +307,6 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
             {file: 'ticket-grade-basic.webp', label: '베이직', src: ticketGradeBasic, className: 'size-13'},
             {file: 'ticket-grade-standard.webp', label: '스탠다드', src: ticketGradeStandard, className: 'size-13'},
             {file: 'ticket-grade-premium.webp', label: '프리미엄', src: ticketGradePremium, className: 'size-13'},
-        ],
-    },
-    {
-        key: 'crown',
-        category: '보고서',
-        title: '왕관 (순위 피라미드 최상위)',
-        description: '순위 피라미드 맨 위 표시입니다. 현재 구간이면 흰 왕관, 아니면 보라 왕관입니다.',
-        folder: 'public/images/rank-pyramid/',
-        usedIn: 'custom/rank-pyramid-chart.tsx',
-        size: '20×18 (보라 왕관 24×24)',
-        items: [
-            {file: 'crown.webp', label: '흰 왕관', src: crownImage, className: 'h-4.5 w-5', surface: 'purple'},
-            {file: 'crown-purple.webp', label: '보라 왕관', src: crownPurpleImage, className: 'size-6'},
         ],
     },
     {
@@ -563,7 +552,6 @@ import emblemGovernment from '@public/images/emblem-government.webp'
 import buildingIcon from '@public/images/icons/building.webp'
 import questionMark from '@public/images/faq/faq-question-mark.webp'
 import questionMarkDark from '@public/images/faq/faq-question-mark-dark.webp'
-import crownImage from '@public/images/rank-pyramid/crown.webp'
 import medalAaa from '@public/images/grade-medal/aaa.webp'
 
 {/* ① 정사각 그림 — size-icon-* 토큰. 옆에 같은 뜻의 글자가 있으면 장식이라 alt="" */}
@@ -578,12 +566,7 @@ import medalAaa from '@public/images/grade-medal/aaa.webp'
 <ThemeImage light={questionMark} dark={questionMarkDark} className="size-icon-lg" />
 
 {/* ④ 그림만으로 뜻을 전할 때 — alt 에 그 뜻을 적는다[5.1.1] */}
-<Image src={medalAaa} alt="AAA 등급" className="h-24 w-auto" />
-
-{/* ⑤ SVG 안 — next/image 대신 <image>, 경로는 정적 import 의 .src */}
-<svg viewBox="0 0 40 40" aria-hidden="true">
-  <image href={crownImage.src} x={10} y={11} width={20} height={18} />
-</svg>`
+<Image src={medalAaa} alt="AAA 등급" className="h-24 w-auto" />`
 
 // 경우별 미리보기 표 — lucide 1-1 의 형태 표와 같은 짜임.
 const IMAGE_USAGE_COLUMNS = [
@@ -639,18 +622,6 @@ const IMAGE_USAGE_ROWS = [
             '④ 그림만으로 뜻을 전함',
             <span key="how">
                 <code>alt</code> 에 뜻을 적음(예: AAA 등급)
-            </span>,
-        ],
-    },
-    {
-        key: 'svg',
-        cells: [
-            <span key="preview" className={IMAGE_ICON_SURFACE_CLASS.purple}>
-                <Image src={crownImage} alt="" className="h-4.5 w-5" />
-            </span>,
-            '⑤ SVG 안',
-            <span key="how">
-                <code>&lt;image href=&#123;src.src&#125;&gt;</code> 사용(왕관)
             </span>,
         ],
     },
@@ -721,9 +692,10 @@ const ICON_SIZES = [
 
 // 아이콘 목록 — 서비스 화면(component-guide 제외)이 lucide-react 에서 import 하는 아이콘과 정확히 같게 둔다([NA-008]).
 // 별칭(CalendarIcon · CheckIcon)은 원래 이름(Calendar · Check)으로 적는다. 새 아이콘을 쓰거나 안 쓰게 되면 함께 고친다.
-// 가이드 화면에서만 쓰는 아이콘(GitBranch 등)은 넣지 않는다.
+// ui/ 셸 내부 아이콘과 가이드 · 시작 페이지에서만 쓰는 아이콘(GitBranch 등)은 넣지 않는다.
 const CURATED_ICONS = [
     {name: 'ArrowDown', Icon: ArrowDown},
+    {name: 'ArrowLeft', Icon: ArrowLeft},
     {name: 'ArrowRight', Icon: ArrowRight},
     {name: 'ArrowUp', Icon: ArrowUp},
     {name: 'ArrowUpDown', Icon: ArrowUpDown},
@@ -760,7 +732,6 @@ const CURATED_ICONS = [
     {name: 'Folder', Icon: Folder},
     {name: 'FolderKanban', Icon: FolderKanban},
     {name: 'FolderSearch', Icon: FolderSearch},
-    {name: 'GitBranch', Icon: GitBranch},
     {name: 'Globe', Icon: Globe},
     {name: 'History', Icon: History},
     {name: 'Home', Icon: Home},
@@ -771,7 +742,9 @@ const CURATED_ICONS = [
     {name: 'LoaderCircle', Icon: LoaderCircle},
     {name: 'Menu', Icon: Menu},
     {name: 'MessageCircleMore', Icon: MessageCircleMore},
+    {name: 'Minus', Icon: Minus},
     {name: 'Moon', Icon: Moon},
+    {name: 'MoveRight', Icon: MoveRight},
     {name: 'NotepadText', Icon: NotepadText},
     {name: 'Palette', Icon: Palette},
     {name: 'Paperclip', Icon: Paperclip},
@@ -783,6 +756,7 @@ const CURATED_ICONS = [
     {name: 'RotateCcw', Icon: RotateCcw},
     {name: 'ScrollText', Icon: ScrollText},
     {name: 'Search', Icon: Search},
+    {name: 'ShieldCheck', Icon: ShieldCheck},
     {name: 'Sparkles', Icon: Sparkles},
     {name: 'SquareArrowOutUpRight', Icon: SquareArrowOutUpRight},
     {name: 'Star', Icon: Star},
@@ -790,6 +764,7 @@ const CURATED_ICONS = [
     {name: 'ThumbsUp', Icon: ThumbsUp},
     {name: 'TimerReset', Icon: TimerReset},
     {name: 'TrendingUp', Icon: TrendingUp},
+    {name: 'Triangle', Icon: Triangle},
     {name: 'Trophy', Icon: Trophy},
     {name: 'Upload', Icon: Upload},
     {name: 'User', Icon: User},
@@ -855,7 +830,7 @@ const CHOICE_ROWS = [
         key: 'image',
         cells: [
             '2. 이미지 아이콘',
-            'lucide 에 없는 상징 그림(원화 · 왕관 · 브라우저 로고 · 등급 메달 등)만.',
+            'lucide 에 없는 상징 그림(원화 · 브라우저 로고 · 등급 메달 등)만.',
             <span key="how">
                 <code>next/image</code> + <code>public/images/…webp</code> 정적 import
             </span>,
@@ -935,7 +910,7 @@ const IconGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="icon-lucide-group" title="1. lucide 아이콘">
+        <GroupHeading id="icon-lucide-group" title="lucide 아이콘">
             lucide-react v{LUCIDE_VERSION}(ISC). 글리프는 그대로, 배지 · 문자형은 <code>Icon</code> 래퍼로 씁니다.
         </GroupHeading>
 
@@ -1087,7 +1062,7 @@ const IconGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="icon-image-group" title="2. 이미지 아이콘">
+        <GroupHeading id="icon-image-group" title="이미지 아이콘">
             lucide 에 없는 그림 {IMAGE_ICON_COUNT}개 · 합계 {IMAGE_ICON_TOTAL_SIZE}입니다.
         </GroupHeading>
 
@@ -1135,7 +1110,7 @@ const IconGuidePage = () => (
                 <div className="flex flex-col gap-12">
                     {IMAGE_ICON_CATEGORIES.map((category) => (
                         <div key={category} className="border-subtle-3 flex flex-col gap-8 border-t pt-6">
-                            <h4 className="typo-h5-bold text-foreground">{category}</h4>
+                            <h4 className="typo-title-l-bold text-foreground">{category}</h4>
                             {IMAGE_ICON_GROUPS.filter((group) => group.category === category).map((group) => (
                                 <GuideAssetGroup
                                     key={group.key}

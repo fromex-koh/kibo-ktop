@@ -87,7 +87,7 @@ const PROPS_ITEMS = [
         'user',
         '로그인 사용자 정보입니다. 넘기면 Header 에 사용자명 · 유형 배지 · 로그인 유지 시간이 보입니다.',
         '-',
-        '{name: string; sessionRemaining: string}',
+        '{name: string; sessionRemaining: string; mypageHref?: string}',
     ],
     [
         'MainPageLayout',
@@ -133,7 +133,8 @@ const MainPageLayoutGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         메인페이지 <code>page.tsx</code>에서 <code>StackPager</code> 안에 한 번 감싸고 사용자 정보와
-                        메뉴를 넘깁니다. Footer 는 레이아웃이 그리지 않으므로 마지막 섹션에 직접 넣습니다.
+                        메뉴를 넘깁니다. Footer 는 레이아웃이 그리지 않으므로 마지막 섹션에 직접 넣습니다. 실제 화면
+                        구성은 <code>components/custom/main-page-screen.tsx</code>(기업 홈 · 기관 홈)를 참고합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">

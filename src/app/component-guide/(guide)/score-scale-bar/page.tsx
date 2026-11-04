@@ -110,7 +110,7 @@ const PROPS_ITEMS = [
         "'bottom'",
         "'top' | 'bottom'",
     ],
-    ['ScoreScaleBar', 'ariaLabel', '화면 낭독기가 읽을 이름입니다.', '-', 'string'],
+    ['ScoreScaleBar', 'ariaLabel', '스크린리더가 읽을 이름입니다.', '-', 'string'],
     ['ScoreScaleBar', 'valueText', "낭독기가 읽을 값 문구입니다(예: '73.8점, 양호').", 'undefined', 'string'],
     [
         'ScoreScaleBar',
@@ -145,7 +145,7 @@ const PROPS_ITEMS = [
     [
         'ScoreScaleBarSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'점수를 불러오는 중입니다.'",
         'string',
     ],
@@ -197,7 +197,7 @@ const ScoreScaleBarGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ssb-basic" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-basic" title="1. 기본 사용">
+                <SectionHeading id="ssb-basic" title="기본 사용">
                     채움 색은 점수 구간(등급)에 맞춰 사용처가 넘깁니다. 웹 화면은{' '}
                     <code>SCORE_SCALE_BAR_TONE_CLASS</code> 로 점수 원호 게이지(ScoreGauge)와 같은 등급 색을 씁니다.
                     백분율 글자가 위에 붙는 일반 진행률은{' '}
@@ -215,7 +215,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-grade" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-grade" title="2. 등급별 색">
+                <SectionHeading id="ssb-grade" title="등급별 색">
                     Tech-Index 점수 구간(<code>TECH_INDEX_GRADES</code>)마다 막대 채움과 등급 뱃지 색이 바뀝니다. 구간
                     끝값 이하이면 그 구간입니다. PDF 템플릿 뱃지는 등급 색 바탕에 흰 글자라, 흰 글자가 읽히지 않는
                     보통(주황)만 한 단계 진한 색을 씁니다(괄호는 흰 글자 대비, 22px 굵은 글씨 기준 3:1 이상).
@@ -265,7 +265,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-edge" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-edge" title="3. 엣지 케이스">
+                <SectionHeading id="ssb-edge" title="엣지 케이스">
                     끝값 · 구간 경계 · 범위 밖 값에서도 채움과 표시선이 띠 밖으로 나가지 않습니다.
                 </SectionHeading>
                 <div className={DEMO_FRAME}>
@@ -294,7 +294,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-loading" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-loading" title="4. 불러오는 중 (ScoreScaleBarSkeleton)">
+                <SectionHeading id="ssb-loading" title="불러오는 중 (ScoreScaleBarSkeleton)">
                     띠 자리와 눈금 숫자 자리를 같은 배치로 그립니다. PDF 템플릿은 데이터를 받은 뒤 서버에서 바로 그려
                     스켈레톤 없이 나옵니다.
                 </SectionHeading>
@@ -319,7 +319,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-print" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-print" title="5. K-BIGx PDF 템플릿에서">
+                <SectionHeading id="ssb-print" title="K-BIGx PDF 템플릿에서">
                     PDF 템플릿은 kbx 클래스로 템플릿 치수(띠 높이 26 · 표시선 폭 3 · 위아래 10 · 눈금 20px)를 넘깁니다.
                 </SectionHeading>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
@@ -354,7 +354,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-a11y" title="6. 접근성" />
+                <SectionHeading id="ssb-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         띠는 <code>role=&quot;meter&quot;</code> 이고 <code>ariaLabel</code> 이 이름,{' '}
@@ -372,7 +372,7 @@ const ScoreScaleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssb-props" className="flex flex-col gap-6">
-                <SectionHeading id="ssb-props" title="7. Props API">
+                <SectionHeading id="ssb-props" title="Props API">
                     <code>score</code> 와 <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="ScoreScaleBar · ScoreScaleBarSkeleton Props 목록" />

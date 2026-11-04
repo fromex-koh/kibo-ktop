@@ -73,7 +73,7 @@ const CHOICE_ROWS = [
             <Link key="component" href="/component-guide/summary-list" className={LINK_CLASS}>
                 SummaryList
             </Link>,
-            '읽기 전용 <dl> 입니다. 이 컴포넌트의 카드 박스 스타일이 여기서 왔습니다.',
+            '읽기 전용 <dl> 목록입니다. 카드 모양은 같고 라디오가 없습니다.',
         ],
     },
     {

@@ -25,14 +25,14 @@ const EASINGS = [
         value: 'cubic-bezier(0.5, 0, 0, 1)',
         points: [0.5, 0, 0, 1],
         usage: '메인 섹션 전환(빠르게 밀고 길게 감속)',
-        source: 'theme/stack-pager.variants.ts',
+        source: 'theme/stack-pager.variants.ts · custom/main-second-section.tsx',
     },
     {
         name: 'ease-roll',
         value: 'cubic-bezier(0.22, 1, 0.36, 1)',
         points: [0.22, 1, 0.36, 1],
-        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환, 카드 캐러셀의 카드 줄 밀기 · 카드 면 색 · 흐림 전환(0.5초)',
-        source: 'theme/hero-stats-roller.variants.ts · custom/card-carousel.tsx',
+        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환, 카드 캐러셀의 카드 줄 밀기 · 면 색 · 흐림 전환(0.5초), ScrollReveal 떠오름',
+        source: 'theme/hero-stats-roller.variants.ts · custom/card-carousel.tsx · custom/scroll-reveal.tsx 등',
     },
 ] as const
 
@@ -75,14 +75,14 @@ const ANIMATIONS = [
     {
         name: 'animate-tech-progress',
         value: 'tech-service-progress 5s linear forwards',
-        usage: '메인 2섹션 서비스 목차 진행 바',
+        usage: '메인 기술평가 섹션 서비스 목차 진행 바',
         source: 'custom/tech-eval-section.tsx',
         preview: 'progress',
     },
     {
         name: 'animate-tech-enter',
         value: 'tech-service-content-enter 600ms ease both',
-        usage: '메인 2섹션 본문이 아래에서 떠오름',
+        usage: '메인 기술평가 섹션 본문이 아래에서 떠오름',
         source: 'custom/tech-eval-section.tsx',
         preview: 'enter',
     },
@@ -90,14 +90,14 @@ const ANIMATIONS = [
         name: 'animate-ambient-drift-a',
         value: 'ambient-drift-a 14s ease-in-out infinite alternate',
         usage: '배경 번짐 원이 천천히 떠다님(왼쪽 위 원) — 동작 줄이기면 멈춤',
-        source: 'custom/platform-k-bigx-report.tsx',
+        source: 'custom/platform-service-intro.tsx',
         preview: 'drift',
     },
     {
         name: 'animate-ambient-drift-b',
         value: 'ambient-drift-b 18s ease-in-out infinite alternate',
         usage: '배경 번짐 원이 천천히 떠다님(오른쪽 아래 원 · a 와 다른 경로 · 주기)',
-        source: 'custom/platform-k-bigx-report.tsx',
+        source: 'custom/platform-service-intro.tsx',
         preview: 'drift',
     },
     {
@@ -111,7 +111,7 @@ const ANIMATIONS = [
         name: 'animate-chart-wipe-right',
         value: 'chart-wipe-right 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
         usage: '가로 막대가 왼쪽 → 오른쪽으로 자람',
-        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx · custom/ktrs-fm-structure-diagram.tsx',
+        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx · custom/ratio-stack-bar.tsx · custom/ktrs-fm-structure-diagram.tsx',
         preview: 'wipe-right',
     },
     {
@@ -124,22 +124,22 @@ const ANIMATIONS = [
     {
         name: 'animate-chart-draw',
         value: 'chart-draw 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '원 그래프 호 · 선이 처음부터 끝까지 그려짐(pathLength={1} · strokeDasharray="1 2" 와 함께)',
-        source: 'custom/ktrs-fm-structure-diagram.tsx',
+        usage: '원 그래프 호 · 연결선이 처음부터 끝까지 그려짐(pathLength={1} · strokeDasharray="1 2" 와 함께)',
+        source: 'custom/*-structure-diagram.tsx · custom/k-bigx-report-flow-diagram.tsx · custom/platform-patent-evaluation.tsx',
         preview: 'draw',
     },
     {
         name: 'animate-chart-label',
         value: 'chart-label 300ms ease-out 600ms both',
-        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남 · 원 그래프 호가 다 그려진 뒤 끝 점이 나타남',
-        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx · custom/ktrs-fm-structure-diagram.tsx',
+        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남 · 호 · 연결선이 다 그려진 뒤 끝 점 · 화살촉이 나타남',
+        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx · custom/*-structure-diagram.tsx 등',
         preview: 'label',
     },
     {
         name: 'animate-chart-pop',
         value: 'chart-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
         usage: '칸 · 점 표시가 작게 시작해 커짐(조각마다 지연)',
-        source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx',
+        source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx · custom/investment-model-structure-diagram.tsx',
         preview: 'pop',
     },
     {
@@ -321,7 +321,7 @@ const COMPONENT_ROWS = [
                 href="/corp/platform/technology-evaluation"
                 className="text-primary-strong underline underline-offset-4"
             >
-                플랫폼 소개 &gt; 기술평가 · 특허평가(custom/scroll-reveal.tsx)
+                플랫폼 소개 &gt; 기술평가 · 특허평가 · K-BIGx 보고서 · 탄소중립(custom/scroll-reveal.tsx)
             </Link>,
         ],
     },
@@ -357,7 +357,7 @@ const MotionGuidePage = () => (
             </nav>
         </BaseCard>
 
-        <GroupHeading id="motion-rule-group" title="1. 쓰는 법 · 규칙">
+        <GroupHeading id="motion-rule-group" title="쓰는 법 · 규칙">
             새 값을 만들기 전에 목록에 있는 클래스를 먼저 찾습니다.
         </GroupHeading>
 
@@ -388,7 +388,7 @@ const MotionGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="motion-token-group" title="2. 목록">
+        <GroupHeading id="motion-token-group" title="목록">
             미리보기는 실제 클래스를 그대로 붙인 것이라 원본과 같은 속도로 움직입니다.
         </GroupHeading>
 
@@ -447,7 +447,7 @@ const MotionGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="motion-component-group" title="3. 컴포넌트 모션">
+        <GroupHeading id="motion-component-group" title="컴포넌트 모션">
             화면에 들어올 때 움직이는 래퍼 컴포넌트입니다. 감싸기만 하면 됩니다.
         </GroupHeading>
 

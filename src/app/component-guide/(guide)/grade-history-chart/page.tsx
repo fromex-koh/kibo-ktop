@@ -189,7 +189,7 @@ const PROPS_ITEMS = [
     ['color', '원과 선 색입니다. 토큰 변수를 씁니다.', "'var(--raw-blue-500)'", 'string'],
     [
         'animate',
-        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '그리는 움직임입니다. 안 주면 ChartReveal 설정을 따릅니다. 인쇄용 문서처럼 바로 그려야 하면 끕니다.',
         '문서 설정',
         'boolean',
     ],
@@ -337,23 +337,21 @@ const GradeHistoryChartGuidePage = () => (
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 붙입니다[5.1.1].
                     </li>
                     <li>
-                        시점과 등급을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어 화면
-                        낭독기가 값을 읽습니다[7.3.2].
+                        시점과 등급을 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어
+                        스크린리더가 값을 읽습니다[7.3.2].
                     </li>
                     <li>등급은 원 높이뿐 아니라 원 안의 글자로도 전달되어 색에만 의존하지 않습니다[5.3.1].</li>
                     <li>
-                        <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다. <code>animate</code> 로 끌 수도
+                        있습니다[6.3.1].
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
-                    </li>
-                    <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>
@@ -387,7 +385,7 @@ const GradeHistoryChartGuidePage = () => (
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">GradeHistoryChartSkeleton</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>label</code>(<code>string</code>, 기본 “그래프를 불러오는 중입니다.”)은 화면 낭독기가
+                            <code>label</code>(<code>string</code>, 기본 “그래프를 불러오는 중입니다.”)은 스크린리더가
                             읽을 문구입니다.
                         </p>
                     </div>

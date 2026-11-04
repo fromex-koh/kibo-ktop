@@ -274,7 +274,7 @@ const PROPS_ITEMS = [
     [
         'DivergingRankChartSkeleton',
         'label',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'차트 데이터를 불러오는 중입니다.'",
         'string',
     ],
@@ -291,14 +291,14 @@ const SPECIAL_CASES = [
     {
         title: '막대가 이름보다 짧을 때',
         description:
-            '막대 안 이름은 흰 글자라 막대보다 길면 보이지 않습니다. 이름이 들어가지 않는 줄은 이름을 막대 밖으로 옮깁니다 — 밖 남은 폭에 다 들어갈 때만 옮기고, 밖에도 안 들어가면(줄을 거의 다 차지하는 1위 막대 등) 막대 안에서 한 줄 말줄임합니다. 막대 길이는 이름 때문에 줄지 않습니다.',
+            '이름이 막대 안에 들어가지 않으면 막대 밖으로 옮깁니다. 밖에도 자리가 없으면 막대 안에서 한 줄 말줄임합니다. 막대 길이는 이름 때문에 줄지 않습니다.',
         left: SHORT_BAR_LEFT,
         right: SHORT_BAR_RIGHT,
     },
     {
         title: '이름이 막대보다 길 때',
         description:
-            '막대 밖에서도 자리가 모자라면 말줄임(…)합니다. 잘린 이름은 마우스를 올리거나 탭하면 말줄임 툴팁(TruncatedText)으로 전체 이름을 보이고, 스크린리더는 숨김 표로 읽습니다. 폭은 그릴 때 · 크기가 바뀔 때마다 다시 잽니다.',
+            '막대 밖에서도 자리가 모자라면 말줄임(…)합니다. 잘린 이름은 마우스를 올리거나 탭하면 툴팁(TruncatedText)으로 전체 이름을 보이고, 스크린리더는 숨김 표로 읽습니다.',
         left: LONG_NAME_LEFT,
         right: LONG_NAME_RIGHT,
     },
@@ -367,7 +367,7 @@ const DivergingRankChartGuidePage = () => (
             <section aria-labelledby="drc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="drc-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         이름이 가려지거나 값 글자가 칸을 넘을 수 있는 경우는 컴포넌트가 처리합니다.
@@ -423,7 +423,7 @@ const DivergingRankChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 목록마다 숨김
-                        표(<code>caption</code> · <code>th scope</code>)가 있어 화면 낭독기가 표로 읽습니다[5.1.1].
+                        표(<code>caption</code> · <code>th scope</code>)가 있어 스크린리더가 표로 읽습니다[5.1.1].
                     </li>
                     <li>
                         평균 · 조회 기업은 색과 함께 숨김 표 이름 뒤에 “(평균)” · “(조회 기업)”이 붙고, 별은{' '}
@@ -435,10 +435,12 @@ const DivergingRankChartGuidePage = () => (
                         않아 대비가 유지됩니다.
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때
                         막대가 가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가
-                        옅게 나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작
-                        줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        옅게 나타납니다(<code>--animate-chart-label</code> · 0.3초). 움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

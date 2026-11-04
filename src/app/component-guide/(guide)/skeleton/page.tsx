@@ -11,37 +11,27 @@ import {Skeleton} from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {title: '스켈레톤 (Skeleton · ChartSkeleton)'}
 
-const BASIC_CODE = `import {Skeleton} from '@/components/ui/skeleton';
+const BASIC_CODE = `import {Skeleton} from '@/components/ui/skeleton'
 
-export default function TextLoading() {
-  return <Skeleton className="h-6 w-48" />;
-}`
+<Skeleton className="h-6 w-48" />`
 
-const COMPANY_NETWORK_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton';
+const COMPANY_NETWORK_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
-export default function CompanyRelationshipLoading() {
-  return (
-    <ChartSkeleton
-      type="network"
-      legend="company-relationship"
-      label="연계기업 네트워크를 불러오는 중입니다."
-    />
-  );
-}`
+<ChartSkeleton
+  type="network"
+  legend="company-relationship"
+  label="연계기업 네트워크를 불러오는 중입니다."
+/>`
 
-const SUPPLY_NETWORK_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton';
+const SUPPLY_NETWORK_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
-export default function SupplyNetworkLoading() {
-  return (
-    <ChartSkeleton
-      type="network"
-      legend="supply-network"
-      label="공급망 네트워크를 불러오는 중입니다."
-    />
-  );
-}`
+<ChartSkeleton
+  type="network"
+  legend="supply-network"
+  label="공급망 네트워크를 불러오는 중입니다."
+/>`
 
-const CHART_TYPES_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton';
+const CHART_TYPES_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
 <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
 <ChartSkeleton type="score-gauge" label="혁신성장역량지수를 불러오는 중입니다." />

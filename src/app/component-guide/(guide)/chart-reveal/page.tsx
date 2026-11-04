@@ -66,7 +66,7 @@ const MODE_ROWS = [
     },
     {
         key: 'none',
-        cells: ['Provider 없음', '차트가 처음 그려질 때 바로 움직입니다(기존 동작).', '가이드 · 그 밖의 화면'],
+        cells: ['Provider 없음', '차트가 처음 그려질 때 바로 움직입니다.', '가이드 · 그 밖의 화면'],
     },
 ] as const
 
@@ -180,6 +180,10 @@ const ChartRevealGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>동작 줄이기 설정(prefers-reduced-motion)이면 움직임 없이 그대로 보입니다[6.3.1].</li>
+                    <li>
+                        차트 움직임은 0.6초(<code>CHART_ANIMATION_MS</code>)입니다. <code>animate</code> 를 안 주면 위
+                        표의 문서 설정을 따르고, Provider 가 없으면 그려질 때 바로 움직입니다.
+                    </li>
                     <li>
                         보이기 전에는 차트 요소만 숨기고 표 · 글은 그대로 보입니다 — 내용을 읽는 데 기다릴 필요가
                         없습니다.

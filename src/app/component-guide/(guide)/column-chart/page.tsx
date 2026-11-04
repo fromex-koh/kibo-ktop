@@ -70,7 +70,6 @@ const MISSING_DATA = toItems([
 ])
 
 const MISSING_CODE = `// 값이 빠질 수 있는 화면만 missingValueText 를 넘긴다 — 빠진 해도 자리를 남기고 막대 대신 '-' 를 적는다.
-// 넘기지 않으면 지금처럼 모든 value 를 숫자로 본다(다른 화면은 바뀌지 않는다).
 <ColumnChart
   variant="cells"
   data={salesPerEmployee.map((item) => ({id: item.label, label: item.label, value: item.value}))} // 빈 값은 NaN
@@ -209,7 +208,7 @@ const PROPS_ITEMS = [
     [
         'ColumnChart',
         'showTooltip',
-        '막대에 올렸을 때 뜨는 말풍선입니다. 값이 모두 적혀 있으면 끕니다.',
+        '막대에 올렸을 때 뜨는 툴팁입니다. 값이 모두 적혀 있으면 끕니다.',
         'true',
         'boolean',
     ],
@@ -223,14 +222,14 @@ const PROPS_ITEMS = [
     [
         'ColumnChart',
         'valueFractionDigits',
-        '값 · 말풍선 · 숨김 표의 소수 자릿수입니다. 0~6 으로 맞춥니다.',
+        '값 · 툴팁 · 숨김 표의 소수 자릿수입니다. 0~6 으로 맞춥니다.',
         '0',
         'number',
     ],
     [
         'ColumnChart',
         'unit',
-        '단위입니다. \'default\' 는 그림 위 "단위: …" 글자, 말풍선 · 숨김 표 머리에도 붙습니다.',
+        '단위입니다. \'default\' 는 그림 위 "단위: …" 글자, 툴팁 · 숨김 표 머리에도 붙습니다.',
         '-',
         'string',
     ],
@@ -259,7 +258,7 @@ const PROPS_ITEMS = [
     [
         'ColumnChart',
         'loadingLabel',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -347,7 +346,7 @@ const ColumnChartGuidePage = () => (
             <section aria-labelledby="cc-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="cc-variants" className="typo-h4-bold">
-                        변형과 상태
+                        변형 · 상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         모양은 <code>variant</code> 로 고르고, 값이 달라 흔들릴 수 있는 경우는 컴포넌트가 처리합니다.
@@ -469,27 +468,27 @@ const ColumnChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 같은 값이
-                        숨김 표(<code>caption</code> · <code>th scope</code>)로 함께 들어 있어 화면 낭독기가 표로
+                        숨김 표(<code>caption</code> · <code>th scope</code>)로 함께 들어 있어 스크린리더가 표로
                         읽습니다[5.1.1].
                     </li>
                     <li>
-                        값이 말풍선에만 있지 않도록 막대 위 값(<code>showValueLabels</code>)을 유지합니다. 말풍선은
-                        마우스 보조입니다.
+                        값이 툴팁에만 있지 않도록 막대 위 값(<code>showValueLabels</code>)을 유지합니다. 툴팁은 마우스
+                        보조입니다.
                     </li>
                     <li>막대 색만으로 항목을 구분하지 않고 항목 이름을 함께 둡니다[5.3.1].</li>
                     <li>
                         불러오는 중에는 <code>loadingLabel</code> 이 읽힙니다.
                     </li>
                     <li>
-                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
-                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
-                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 숨김 표가 읽어
+                        줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

@@ -41,7 +41,7 @@ const HEIGHT_VARIANTS = [
     {
         prefix: 'landscape:',
         condition: `높이 < ${tokens.breakpointHeight.landscape}px`,
-        usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함한다',
+        usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함합니다',
     },
     {
         prefix: 'stack-fallback:',
@@ -102,7 +102,7 @@ const BreakpointGuidePage = () => (
                             <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
                                 {rule.code}
                             </code>
-                            <p className="text-label-foreground">{rule.description}</p>
+                            <p className="typo-body-l-regular text-label-foreground">{rule.description}</p>
                         </div>
                     ))}
                 </div>

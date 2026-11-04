@@ -76,19 +76,23 @@ const BlurGuidePage = () => (
                         사용 규칙
                     </h2>
                 </div>
-                <ul className="text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         <code>blur-[10px]</code> 같은 임의 값은 쓰지 않습니다. 필요한 단계가 없으면{' '}
                         <code>tokens.json</code> 의 <code>effect.blur</code> 를 수정하고 <code>yarn tokens</code> 를
                         실행합니다.
                     </li>
                     <li>
+                        손으로 쓰는 CSS 에서는 <code>var(--blur-md)</code> 처럼 변수로 씁니다(예: 검색 카드 테두리
+                        글로우의 번짐 — SelectSearchForm <code>hasGlow</code>).
+                    </li>
+                    <li>
                         <code>src/app/tokens.css</code> 는 생성 파일이라 직접 고치지 않습니다.
                     </li>
-                    <li>글자나 정보를 담은 요소에는 쓰지 않습니다. 흐리게 만들면 읽을 수 없게 됩니다. [KWCAG 5.3.3]</li>
+                    <li>글자나 정보를 담은 요소에는 쓰지 않습니다. 흐리게 만들면 읽을 수 없게 됩니다[5.3.3].</li>
                     <li>
-                        흐림 처리한 장식 이미지는 <code>alt=&quot;&quot;</code> 로 두어 스크린리더가 건너뛰게 합니다.
-                        [KWCAG 5.1.1]
+                        흐림 처리한 장식 이미지는 <code>alt=&quot;&quot;</code> 로 두어 스크린리더가 건너뛰게
+                        합니다[5.1.1].
                     </li>
                 </ul>
             </section>

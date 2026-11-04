@@ -271,7 +271,7 @@ const ColorGuidePage = () => (
         <div className="flex flex-col gap-12">
             <BaseCard>
                 <section aria-labelledby="color-overview" className="flex flex-col gap-6">
-                    <SectionHeading id="color-overview" title="1. 한눈에 보기">
+                    <SectionHeading id="color-overview" title="한눈에 보기">
                         색은 Primitive(재료)와 시맨틱(용도) 두 층으로 관리합니다.{' '}
                         <Link href="/component-guide/semantic-color" className={LINK_CLASS}>
                             시맨틱 색상
@@ -325,7 +325,7 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="color-rules" className="flex flex-col gap-6">
-                    <SectionHeading id="color-rules" title="2. 사용 규칙" />
+                    <SectionHeading id="color-rules" title="사용 규칙" />
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="border-subtle-3 flex flex-col gap-3 rounded-sm border p-5">
                             <h3 className="typo-title-m-bold text-foreground">이렇게 씁니다</h3>
@@ -349,15 +349,15 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="color-add" className="flex flex-col gap-6">
-                    <SectionHeading id="color-add" title="3. 색을 더하거나 바꿀 때">
+                    <SectionHeading id="color-add" title="색을 더하거나 바꿀 때">
                         먼저 어디에 넣을지 고르고, 세 단계로 반영합니다.
                     </SectionHeading>
                     <div className="flex flex-col gap-3">
-                        <h3 className="typo-title-m-bold text-foreground">3-1. 넣는 곳 고르기</h3>
+                        <h3 className="typo-title-m-bold text-foreground">넣는 곳 고르기</h3>
                         <Table caption="새 색을 넣는 곳" columns={PLACE_COLUMNS} rows={PLACE_ROWS} size="md" />
                     </div>
                     <div className="flex flex-col gap-3">
-                        <h3 className="typo-title-m-bold text-foreground">3-2. 반영하기</h3>
+                        <h3 className="typo-title-m-bold text-foreground">반영하기</h3>
                         <ol className="grid gap-4 md:grid-cols-3">
                             {CHANGE_STEPS.map((step, index) => (
                                 <li
@@ -380,12 +380,12 @@ const ColorGuidePage = () => (
                 </section>
             </BaseCard>
 
-            {Object.entries(primitiveGroups).map(([group, hues], groupIndex) => (
+            {Object.entries(primitiveGroups).map(([group, hues]) => (
                 <BaseCard key={group}>
                     <section aria-labelledby={`primitive-${group}`} className="flex flex-col gap-6">
                         <SectionHeading
                             id={`primitive-${group}`}
-                            title={`${groupIndex + 4}. ${group === 'brand' ? 'Brand 팔레트' : 'System 팔레트'}`}
+                            title={group === 'brand' ? 'Brand 팔레트' : 'System 팔레트'}
                         >
                             {group === 'brand'
                                 ? '브랜드와 중립 UI 의 바탕 팔레트입니다. 용도 칸이 있는 단계가 시맨틱이 주로 쓰는 값입니다.'
@@ -417,13 +417,13 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="primitive-extra" className="flex flex-col gap-6">
-                    <SectionHeading id="primitive-extra" title="6. Extra (단계 없는 단일 색)">
+                    <SectionHeading id="primitive-extra" title="Extra (단계 없는 단일 색)">
                         단계 팔레트에 없는 색을 숫자 없이 둡니다. 용도 칸이 이 색을 참조하는 토큰입니다.
                     </SectionHeading>
                     <div className="grid gap-8 xl:grid-cols-2">
                         <div className="flex flex-col gap-3">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="typo-title-m-bold text-foreground">6-1. 웹 화면</h3>
+                                <h3 className="typo-title-m-bold text-foreground">웹 화면</h3>
                                 <Badge variant="outline" color="info" size="sm">
                                     semantic 이 참조
                                 </Badge>
@@ -442,7 +442,7 @@ const ColorGuidePage = () => (
                         </div>
                         <div className="flex flex-col gap-3">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="typo-title-m-bold text-foreground">6-2. K-BIGx PDF 템플릿 전용</h3>
+                                <h3 className="typo-title-m-bold text-foreground">K-BIGx PDF 템플릿 전용</h3>
                                 <Badge variant="outline" color="neutral" size="sm">
                                     kbigxPrint.color 만 참조
                                 </Badge>
@@ -451,8 +451,8 @@ const ColorGuidePage = () => (
                                 headingLevel={4}
                                 caption="extra K-BIGx PDF 템플릿 전용"
                                 title={
-                                    <Link href="/component-guide/report-shell" className={LINK_CLASS}>
-                                        리포트 공통 · kbx 토큰
+                                    <Link href="/component-guide/kbigx-pdf-template" className={LINK_CLASS}>
+                                        K-BIGx PDF 템플릿 · kbx 토큰
                                     </Link>
                                 }
                                 rows={reportExtra.map(([name, value]) => ({
@@ -469,7 +469,7 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
-                    <SectionHeading id="primitive-common" title="7. Common · Alpha">
+                    <SectionHeading id="primitive-common" title="Common · Alpha">
                         Common 은 불투명 · 완전 투명 값, Alpha 는 오버레이 · 그림자용 1~99% 반투명 값입니다.
                     </SectionHeading>
                     <div className="grid gap-8 xl:grid-cols-2">

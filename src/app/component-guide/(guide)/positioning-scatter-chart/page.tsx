@@ -162,7 +162,7 @@ const toRows = (items: readonly PropRow[]) =>
 
 const PROPS_ROWS = toRows([
     ['points', '점 목록입니다. 당사 점은 하나만 둡니다.', '-', 'readonly PositioningScatterPoint[]'],
-    ['ariaLabel', '그림 이름입니다. 화면 낭독기가 읽습니다.', '-', 'string'],
+    ['ariaLabel', '그림 이름입니다. 스크린리더가 읽습니다.', '-', 'string'],
     ['yAxisLabel', '세로축 이름입니다. 상자 왼쪽 위에 글자로 놓입니다.', '-', 'string'],
     ['xAxisLabel', '가로축 이름입니다. 상자 오른쪽 아래에 글자로 놓입니다.', '-', 'string'],
     ['primaryLabel', '당사 점 아래 이름표입니다.', "'당사'", 'string'],
@@ -175,12 +175,7 @@ const PROPS_ROWS = toRows([
     ['threshold', '기준선 자리입니다. 두 축에 같은 값이 적용됩니다.', '각 범위의 가운데', 'number'],
     ['heightClassName', '칸 높이 클래스입니다.', "'h-70'", 'string'],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
-    [
-        'loadingLabel',
-        '불러오는 중에 화면 낭독기가 읽을 문구입니다.',
-        "'포지셔닝 그래프를 불러오는 중입니다.'",
-        'string',
-    ],
+    ['loadingLabel', '불러오는 중에 스크린리더가 읽을 문구입니다.', "'포지셔닝 그래프를 불러오는 중입니다.'", 'string'],
 ])
 
 const FIELD_COLUMNS = [
@@ -220,7 +215,7 @@ const PositioningScatterChartGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         점은 <code>{'{id, x, y}'}</code> 이고 당사 점에만 <code>isPrimary</code> 를 줍니다. 눈금 · 축선
-                        · 말풍선은 없고 점의 자리만 보여 줍니다. 상자는 좌 · 우 · 아래 테두리만 있습니다.
+                        · 툴팁은 없고 점의 자리만 보여 줍니다. 상자는 좌 · 우 · 아래 테두리만 있습니다.
                     </p>
                 </div>
                 <div className={chartBoxClassName}>
@@ -347,9 +342,8 @@ const PositioningScatterChartGuidePage = () => (
                         축 이름은 SVG 밖 글자(<code>figure</code> · <code>figcaption</code>)로 놓입니다.
                     </li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 사용처가 둔 표나 글이
+                        읽어 줍니다[8.1.1].
                     </li>
                 </ul>
             </section>

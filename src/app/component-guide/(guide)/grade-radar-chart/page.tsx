@@ -6,9 +6,15 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import {GradeRadarChart, type GradeRadarItem} from '@/components/custom/grade-radar-chart'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {LicenseNotice, type LicenseLink} from '@/components/custom/license-notice'
 import {Table} from '@/components/custom/table'
 
 export const metadata: Metadata = {title: '등급 레이더 차트 (GradeRadarChart)'}
+
+const RECHARTS_LICENSE: LicenseLink = {
+    name: 'Recharts',
+    href: 'https://github.com/recharts/recharts/blob/main/LICENSE',
+}
 
 const TARGET_LABEL = '평가대상특허'
 const PEER_LABEL = '동일 특허분야 평균'
@@ -135,9 +141,9 @@ const PROPS_ITEMS = [
     ['targetLabel', '평가대상 계열의 이름입니다. 범례와 숨김 표에 쓰입니다.', "'평가대상'", 'string'],
     ['peerLabel', '비교 기준 계열의 이름입니다.', "'비교 기준'", 'string'],
     ['animate', '처음 펼쳐질 때의 움직임입니다. 한 번 그린 뒤에는 다시 펼치지 않습니다.', 'true', 'boolean'],
-    ['showTooltip', '값 위에 올렸을 때의 말풍선과 꼭짓점 강조입니다.', 'true', 'boolean'],
+    ['showTooltip', '값 위에 올렸을 때의 툴팁과 꼭짓점 강조입니다.', 'true', 'boolean'],
     ['isLoading', '스켈레톤을 대신 보입니다.', 'false', 'boolean'],
-    ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'등급 레이더를 불러오는 중입니다.'", 'string'],
+    ['loadingLabel', '불러오는 중에 스크린리더가 읽을 문구입니다.', "'등급 레이더를 불러오는 중입니다.'", 'string'],
 ] as const
 
 const PROPS_ROWS = PROPS_ITEMS.map(([name, note, defaultValue, type]) => ({
@@ -320,8 +326,8 @@ const GradeRadarChartGuidePage = () => (
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 붙입니다[5.1.1].
                     </li>
                     <li>
-                        축별 점수를 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어 화면
-                        낭독기가 값을 읽습니다[7.3.2].
+                        축별 점수를 담은 숨김 표(<code>caption</code> · <code>th scope</code>)가 함께 렌더링되어
+                        스크린리더가 값을 읽습니다[7.3.2].
                     </li>
                     <li>
                         두 계열은 색뿐 아니라 실선과 점선 · 속 빈 점으로도 구분하고 범례 텍스트를 함께 둡니다[5.3.1].
@@ -359,6 +365,7 @@ const GradeRadarChartGuidePage = () => (
                         <Table caption="GradeRadarItem 필드 목록" columns={ITEM_COLUMNS} rows={ITEM_ROWS} size="md" />
                     </div>
                 </div>
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>
     </GuidePageShell>

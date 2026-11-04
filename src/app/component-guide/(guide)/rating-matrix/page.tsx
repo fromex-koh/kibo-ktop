@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
@@ -122,7 +123,7 @@ const RatingMatrixGuidePage = () => (
             <section aria-labelledby="rm-variants" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="rm-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         등급, 항목명 길이, 폭이 달라도 컴포넌트가 배치를 맞춥니다.
@@ -226,10 +227,14 @@ const RatingMatrixGuidePage = () => (
                         색만으로 등급을 전하지 않습니다[5.3.1].
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때
-                        표시가 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초).{' '}
-                        <code>motion-safe</code> 라 동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때
-                        바로 움직입니다.
+                        표시가 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). 움직이는 시점은{' '}
+                        <Link
+                            href="/component-guide/chart-reveal"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

@@ -209,7 +209,7 @@ const CHOICE_ROWS = [
         cells: [
             '열 머리 · 행 머리 · 칸 합치기가 필요하다',
             <code key="component">ui/table + info-table.variants</code>,
-            '위 표 유형 네 가지입니다. 줄 수가 폭과 상관없이 같은 표입니다.',
+            '위 표 유형 네 가지입니다. 화면 폭이 바뀌어도 칸 배치가 그대로입니다.',
         ],
     },
     {
@@ -317,7 +317,7 @@ const InfoTableGuidePage = () => (
             <section aria-labelledby="info-table-horizontal" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="info-table-horizontal" className="typo-h4-bold">
-                        1. 가로형 (horizontal)
+                        가로형 (horizontal)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         맨 윗줄 열 머리 아래로 여러 건을 쌓습니다. 결제 내역처럼 같은 항목을 가진 건이 여럿일 때 씁니다.
@@ -332,7 +332,7 @@ const InfoTableGuidePage = () => (
             <section aria-labelledby="info-table-vertical" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="info-table-vertical" className="typo-h4-bold">
-                        2. 세로형 (vertical)
+                        세로형 (vertical)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         줄마다 머리 한 칸과 값 한 칸을 둡니다. 쌍이 많아 촘촘히 두려면 위의 InfoTable 을 씁니다.
@@ -347,7 +347,7 @@ const InfoTableGuidePage = () => (
             <section aria-labelledby="info-table-both-head" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="info-table-both-head" className="typo-h4-bold">
-                        3. 행·열 머리 (th_multi)
+                        행·열 머리 (th_multi)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         윗줄은 열 머리, 왼쪽 칸은 행 머리입니다. 행 머리는 Medium 으로 굵기를 낮춰 열 머리와 구분합니다.
@@ -362,7 +362,7 @@ const InfoTableGuidePage = () => (
             <section aria-labelledby="info-table-split" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="info-table-split" className="typo-h4-bold">
-                        4. 값 칸 나눔 (td_multi)
+                        값 칸 나눔 (td_multi)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         한 머리 아래 값이 여러 칸 · 여러 줄이면 머리 칸을 rowSpan 으로 합치고, 나머지 줄의 값 칸은

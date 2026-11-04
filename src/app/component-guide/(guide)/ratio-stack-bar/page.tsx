@@ -53,7 +53,7 @@ const CHOICE_ROWS = [
     {
         key: 'donut',
         cells: [
-            '한 값의 비율을 원형으로',
+            '분류별 비중을 도넛과 범례로',
             <Link key="c" href="/component-guide/percentage-donut-chart" className={LINK_CLASS}>
                 PercentageDonutChart
             </Link>,
@@ -77,7 +77,7 @@ const PROPS_ITEMS = [
     [
         'RatioStackItem',
         'color',
-        '막대 · 칩 색(토큰 변수)입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '막대 · 칩 색(토큰 변수)입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀝니다.',
         '-',
         'string',
     ],
@@ -116,7 +116,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; data: RatioSt
         data: [
             {id: 'a', label: '은행업권', value: 50.5, color: 'var(--ds-report-series-1)'},
             {id: 'b', label: '상호금융업권', value: 9.3, color: 'var(--ds-report-series-2)'},
-            {id: 'c', label: '저축은행업권', value: 10, color: 'var(--raw-blue-300)'},
+            {id: 'c', label: '저축은행업권', value: 10, color: 'var(--ds-blue-300)'},
             {id: 'd', label: '카드/캐피탈업권', value: 20, color: 'var(--ds-report-series-3)'},
             {id: 'e', label: '대부업권', value: 10.2, color: 'var(--ds-report-series-4)'},
         ],
@@ -151,7 +151,7 @@ const RatioStackBarGuidePage = () => (
             <section aria-labelledby="rsb-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="rsb-variants" className="typo-h4-bold">
-                        상태 예시
+                        상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         막대가 끝까지 차지 않거나 항목이 사라질 수 있는 경우는 컴포넌트가 처리합니다.
@@ -211,10 +211,11 @@ const RatioStackBarGuidePage = () => (
                     </li>
                     <li>항목은 색 칩과 함께 이름과 비율 글자로 구분합니다. 색만으로 전하지 않습니다[5.3.1].</li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때
-                        막대가 왼쪽에서 오른쪽으로 차오릅니다(<code>--animate-chart-*</code> · 0.6초).{' '}
-                        <code>motion-safe</code> 라 동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때
-                        바로 움직입니다.
+                        막대가 왼쪽에서 오른쪽으로 차오릅니다(<code>--animate-chart-*</code> · 0.6초). 움직이는 시점은{' '}
+                        <Link href="/component-guide/chart-reveal" className={LINK_CLASS}>
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

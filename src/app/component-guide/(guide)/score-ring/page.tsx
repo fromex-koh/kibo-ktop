@@ -119,7 +119,7 @@ const PROPS_ITEMS = [
     [
         'ScoreRing',
         'loadingLabel',
-        '불러오는 중에 화면 낭독기가 읽을 말입니다.',
+        '불러오는 중에 스크린리더가 읽을 말입니다.',
         "'지수 점수를 불러오는 중입니다.'",
         'string',
     ],

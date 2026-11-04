@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
@@ -93,8 +94,8 @@ const RankPyramidChartGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         왼쪽에 제목 · 상위 % · 집단 이름이 놓이고 오른쪽에 피라미드가 놓입니다. 폭이 좁으면 피라미드가
-                        아래로 내려가며 폭에 맞춰 줄어듭니다. 맨 위 단에는 구간 글자 대신 왕관이 있어, 구간
-                        이름(0~25%)은 지시선으로 밖에 적습니다.
+                        아래로 내려가며 폭에 맞춰 줄어듭니다. 단마다 가운데에 구간 글자(0~25% · 25~50% · …)가 놓이며, 맨
+                        위 단도 같습니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card max-w-147 rounded-sm border p-6">
@@ -116,7 +117,7 @@ const RankPyramidChartGuidePage = () => (
                         구간과 로딩
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>percentile</code> 에 따라 보라 면 단만 바뀌고, 왕관과 지시선은 늘 맨 위 단에 있습니다.
+                        <code>percentile</code> 에 따라 보라 면 단만 바뀌고, 구간 글자는 늘 같은 자리에 있습니다.
                     </p>
                 </div>
                 <div className={BLOCKS_CLASS}>
@@ -124,7 +125,7 @@ const RankPyramidChartGuidePage = () => (
                         <h3 className="typo-title-m-bold text-foreground">구간별 강조</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             경계값은 위 구간에 속합니다. 상위 25% 는 0~25%, 50% 는 25~50%, 75% 는 50~75% 입니다. 현재
-                            구간이 맨 위 단이면 흰 왕관, 아니면 보라 왕관을 씁니다.
+                            구간의 글자는 흰색입니다.
                         </p>
                         <ul className="grid list-none gap-6 md:grid-cols-2">
                             {CASES.map((item) => (
@@ -143,8 +144,8 @@ const RankPyramidChartGuidePage = () => (
                         <h3 className="typo-title-m-bold text-foreground">순위가 없을 때</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             <code>percentile</code> 이 숫자가 아니면(NaN) &apos;상위 %&apos; 자리에 &apos;-&apos; 를
-                            적고 어느 단도 강조하지 않습니다(왕관은 보라). <code>groupLabel</code> 이 비면 그 줄을 두지
-                            않습니다. ariaLabel 도 &apos;순위 정보가 없습니다&apos; 로 바꿔 넘깁니다.
+                            적고 어느 단도 강조하지 않습니다. <code>groupLabel</code> 이 비면 그 줄을 두지 않습니다.
+                            ariaLabel 도 &apos;순위 정보가 없습니다&apos; 로 바꿔 넘깁니다.
                         </p>
                         <div className="grid gap-6 md:grid-cols-2">
                             <RankPyramidChart
@@ -206,9 +207,14 @@ const RankPyramidChartGuidePage = () => (
                     </li>
                     <li>현재 구간은 보라 면뿐 아니라 왼쪽 “상위 N%” 글자로도 전달됩니다[5.3.1].</li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 단이
-                        아래부터 차례로 떠오릅니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
-                        동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        단이 아래부터 차례로 떠오릅니다(<code>--animate-chart-*</code> · 0.6초). 움직이는 시점은{' '}
+                        <Link
+                            href="/component-guide/chart-reveal"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            ChartReveal
+                        </Link>{' '}
+                        규칙을 따르고, 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].
                     </li>
                 </ul>
             </section>

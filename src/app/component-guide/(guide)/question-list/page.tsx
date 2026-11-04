@@ -51,8 +51,9 @@ const BADGE_CODE = `{/* 문장과 칩을 ChipCheckboxGroup 하나로 감싼다 *
   </QuestionItem>
 </QuestionList>`
 
-const BASIC_CODE = `import {QuestionItem, QuestionList, QuestionOption, QuestionOptionList} from '@/components/composite/question-list'
-import {QuestionSelect} from '@/components/composite/question-select'
+const BASIC_CODE = `import {QuestionItem, QuestionList} from '@/components/composite/question-list'
+import {Select, SelectContent, SelectTrigger, SelectValue} from '@/components/composite/select-field'
+import {Checkbox} from '@/components/ui/checkbox'
 
 <QuestionList>
   <QuestionItem align="control">
@@ -71,7 +72,9 @@ import {QuestionSelect} from '@/components/composite/question-select'
   </QuestionItem>
 </QuestionList>`
 
-const SELECT_ANSWER_CODE = `{/* 문장 안 [ ] 에 현재 선택값이 primary 색으로 표시되고, 값이 바뀌면 함께 바뀐다 */}
+const SELECT_ANSWER_CODE = `import {QuestionSelect} from '@/components/composite/question-select'
+
+{/* 문장 안 [ ] 에 현재 선택값이 primary 색으로 표시되고, 값이 바뀌면 함께 바뀐다 */}
 <QuestionList>
   <QuestionItem helper={<Button variant="text-underline" size="md">TRL 확인 <ChevronRight /></Button>}>
     <QuestionSelect
@@ -259,7 +262,7 @@ const QuestionListGuidePage = () => (
             <section aria-labelledby="question-basic" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-basic" className="typo-h4-bold">
-                        1. 기본 사용
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>QuestionList</code> 안에 <code>QuestionItem</code> 을 나열합니다. 본문은 children, 앞쪽
@@ -302,7 +305,7 @@ const QuestionListGuidePage = () => (
             <section aria-labelledby="question-patterns" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-patterns" className="typo-h4-bold">
-                        2. 문항 구성
+                        문항 구성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         본문 첫 줄에 Select · Chip 처럼 컨트롤 높이의 요소가 오면 <code>align=&quot;control&quot;</code>{' '}
@@ -312,7 +315,7 @@ const QuestionListGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">2-1. 분류 배지와 문장 속 칩</h3>
+                        <h3 className="typo-title-m-bold text-foreground">분류 배지와 문장 속 칩</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             분류는 <code>badge</code> 로 넘깁니다. 문장 속 선택은 문장 전체를{' '}
                             <code>ChipCheckboxGroup</code> 하나로 감싸야 줄이 바뀌어도 둘째 줄이 배지 뒤에서 시작합니다.
@@ -365,7 +368,7 @@ const QuestionListGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">2-2. 문장 속 선택값</h3>
+                        <h3 className="typo-title-m-bold text-foreground">문장 속 선택값</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             <code>QuestionSelect</code> 는 문장 안 <code>[ ]</code> 에 현재 선택값을 보여주고 그 아래
                             줄에 선택 컨트롤을 둡니다. 목록 문구와 문장 속 표기가 다르면 옵션에 <code>token</code> 을
@@ -407,7 +410,7 @@ const QuestionListGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">2-3. 도움말과 하위 항목</h3>
+                        <h3 className="typo-title-m-bold text-foreground">도움말과 하위 항목</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             안내 링크는 <code>helper</code> 로 넘깁니다. 한 문항이 여러 문장으로 갈라지면{' '}
                             <code>QuestionOptionList</code> · <code>QuestionOption</code> 으로 묶습니다.
@@ -460,7 +463,7 @@ const QuestionListGuidePage = () => (
             <section aria-labelledby="question-group" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-group" className="typo-h4-bold">
-                        3. 그룹 헤더와 조합
+                        그룹 헤더와 조합
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         문항 묶음의 안내 제목은 목록 위에 <code>QuestionGroupHeader</code> 로 둡니다.
@@ -469,7 +472,7 @@ const QuestionListGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">3-1. 선택 안내와 분기 문항</h3>
+                        <h3 className="typo-title-m-bold text-foreground">선택 안내와 분기 문항</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             안내 제목과 ChipRadio 선택을 목록 위에 두고, 선택에 따라 보여줄 문항을 QuestionList 로
                             잇습니다.
@@ -520,7 +523,7 @@ const QuestionListGuidePage = () => (
             <section id="question-form" aria-labelledby="question-form-title" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-form-title" className="typo-h4-bold">
-                        4. 폼 제출
+                        폼 제출
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         QuestionList 는 값을 갖지 않습니다. 안에 넣은 각 입력에 <code>name</code> 과 <code>value</code>{' '}
@@ -538,7 +541,7 @@ const QuestionListGuidePage = () => (
             <section aria-labelledby="question-accessibility" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-accessibility" className="typo-h4-bold">
-                        5. 접근성
+                        접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         목록 마크업(<code>ol</code> · <code>li</code>)은 컴포넌트가 처리합니다. 입력의 이름은 사용처에서
@@ -568,7 +571,7 @@ const QuestionListGuidePage = () => (
             <section id="question-props" aria-labelledby="question-props-title" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="question-props-title" className="typo-h4-bold">
-                        6. Props API
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         QuestionSelect 는 <code>@/components/composite/question-select</code> 에서 가져옵니다.

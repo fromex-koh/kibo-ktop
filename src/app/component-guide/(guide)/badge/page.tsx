@@ -20,6 +20,8 @@ const USAGE_CODE = `<Badge color="success">활성</Badge>
 const NUMBER_USAGE_CODE = `<Badge type="number" color="primary">2</Badge>
 <Badge type="number" color="new">5</Badge>`
 
+const SELECTED_CHIP_CODE = `<Badge variant="outline" color="primary">프롬엑스테크</Badge>`
+
 const VARIANTS = [
     {key: 'solid-pastel', label: 'solid-pastel', desc: '연한 배경 + 진한 텍스트. 상태 칩 기본형.'},
     {key: 'outline', label: 'outline', desc: '흰 배경 + 색 테두리·텍스트.'},
@@ -103,7 +105,7 @@ const PROPS_ITEMS = [
     [
         'Badge',
         'color',
-        'label 은 info · success · warning · error · neutral · navy · secondary-green · secondary-orange · secondary-purple, number 는 primary · new 를 씁니다.',
+        'label 은 info · success · warning · error · neutral · navy · secondary-green · secondary-orange · secondary-purple, number 는 primary · new 를 씁니다. outline · primary 는 고른 항목 칩(하단 고정 바)에만 씁니다.',
         "'neutral'",
         'BadgeColor',
     ],
@@ -251,6 +253,25 @@ const BadgeGuidePage = () => (
                             </Badge>
                         </div>
                         <CodeBlock code={NUMBER_USAGE_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">고른 항목 칩</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            <code>variant=&quot;outline&quot;</code> · <code>color=&quot;primary&quot;</code> 는 고른
+                            것을 다시 보여 주는 칩입니다. 선택 목록 카드의 고른 상태와 같은 primary 테두리 · 연한
+                            면이고, 하단 고정 바 (StickyActionBar)의 기업 · 특허 이름에 씁니다. 긴 이름은 칩 안에서
+                            말줄임합니다.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <Badge variant="outline" color="primary">
+                                프롬엑스테크
+                            </Badge>
+                            <Badge variant="outline" color="primary">
+                                전력 수요 반응 자동 제어 시스템
+                            </Badge>
+                        </div>
+                        <CodeBlock code={SELECTED_CHIP_CODE} language="tsx" copyLabel="복사" />
                     </div>
                 </div>
             </section>

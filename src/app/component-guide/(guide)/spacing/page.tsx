@@ -7,8 +7,7 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '간격 (Spacing)'}
 
-// 간격 — base(4px) × N 무한 스케일. Figma '04 Spacing' 이 보여준 최소(4px)~최대(80px) 구간을
-// base 배수(N=1~20)로 빠짐없이 큐레이션한다(Figma 표본값 4·8·12·16·20·24·32·40·48·64·80 포함).
+// 간격 — base(4px) × N 무한 스케일. 자주 쓰는 4px~80px 구간을 base 배수(N=1~20)로 빠짐없이 보여 준다.
 // padding·margin·gap 어디에나 같은 N 이 적용되므로, 축약형(p-*/m-*/gap-*)뿐 아니라 방향별
 // 클래스(px-*·py-*·pt-*·pr-*·pb-*·pl-* 등)도 개발자가 바로 찾아 복사할 수 있게 그룹으로 나눠 노출한다.
 const MAX_MULTIPLE = 20

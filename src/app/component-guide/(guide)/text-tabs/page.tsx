@@ -79,7 +79,7 @@ const PROPS_ITEMS = [
 const TextTabsGuidePage = () => (
     <GuidePageShell
         title="텍스트 탭 (TextTabs)"
-        description='면이나 밑줄 없이 글자만으로 고르는 탭입니다. 지금 서비스 화면에서는 쓰지 않습니다 — 평가결과 조회 · 이용약관 · 개인정보 처리방침의 1뎁스 탭은 Tabs variant="underline"(선택한 탭에 밑줄)을 씁니다.'
+        description='면이나 밑줄 없이 글자만으로 고르는 탭입니다. 서비스 화면의 1뎁스 탭은 Tabs variant="underline"(선택한 탭에 밑줄)을 씁니다.'
     >
         <BaseCard>
             <section aria-labelledby="text-tabs-basic" className="flex flex-col gap-6">

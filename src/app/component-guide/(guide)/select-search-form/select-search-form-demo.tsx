@@ -34,9 +34,11 @@ const DEMO_DELAY_MS = 800
 type SelectSearchFormDemoProps = {
     /** 기준별 기본값을 넣은 데모인지. */
     withDefaults?: boolean
+    /** 테두리 글로우 데모 — 검색 전에만 켜고, 검색하면 끈다([초기화]로 다시 켜짐). */
+    withGlow?: boolean
 }
 
-const SelectSearchFormDemo = ({withDefaults = false}: SelectSearchFormDemoProps) => {
+const SelectSearchFormDemo = ({withDefaults = false, withGlow = false}: SelectSearchFormDemoProps) => {
     const [isSearching, setIsSearching] = useState(false)
     const [lastSearch, setLastSearch] = useState<SelectSearchSubmit | null>(null)
 
@@ -62,7 +64,12 @@ const SelectSearchFormDemo = ({withDefaults = false}: SelectSearchFormDemoProps)
                     </div>
                 ))}
             </dl>
-            <div className="bg-background rounded-xl p-4 md:p-6">
+            {/* 글로우는 카드 뒤 층에 깔린다 — 감싼 틀에 isolate 를 주고, 카드 밖 16px 번짐이 잘리지 않게 여백을 둔다. */}
+            <div
+                className={
+                    withGlow ? 'bg-background isolate rounded-xl p-6 md:p-10' : 'bg-background rounded-xl p-4 md:p-6'
+                }
+            >
                 <SelectSearchForm
                     options={DEMO_OPTIONS}
                     defaultValues={
@@ -72,6 +79,7 @@ const SelectSearchFormDemo = ({withDefaults = false}: SelectSearchFormDemoProps)
                     onSearch={handleSearch}
                     onReset={() => setLastSearch(null)}
                     isSearching={isSearching}
+                    hasGlow={withGlow && !isSearching && !lastSearch}
                 />
             </div>
             <FormSubmitResult

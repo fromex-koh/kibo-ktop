@@ -35,7 +35,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; steps: Proces
         steps: REPORT_STEPS.slice(0, 3),
     },
     {
-        title: '단계가 여섯을 넘을 때',
+        title: '단계가 다섯을 넘을 때',
         description: '다섯 가지 색이 모자라면 마지막 색(blue.500)을 이어 씁니다.',
         steps: [...REPORT_STEPS, {id: 'extra-1', label: '추가 단계\n여섯'}, {id: 'extra-2', label: '추가 단계\n일곱'}],
     },
@@ -76,7 +76,7 @@ const ProcessFlowGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>steps</code> 배열 순서대로 원과 화살표가 이어집니다. 단계를 더하거나 빼도 코드는
-                        그대로입니다. 인쇄용 보고서 참고자료 쪽에서 씁니다.
+                        그대로입니다. 특허평가 결과 보고서(인쇄용)의 참고자료 쪽에서 씁니다.
                     </p>
                 </div>
                 <div className="min-w-0 overflow-x-auto">

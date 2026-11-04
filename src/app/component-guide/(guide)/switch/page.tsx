@@ -119,8 +119,8 @@ const SwitchGuidePage = () => (
                         <code>FieldLabel</code> 의 <code>htmlFor</code> 와 Switch 의 <code>id</code> 를 연결하고, Field
                         에 <code>FIELD_FOCUS_RING</code> 을 주면 포커스 표시가 라벨까지 감쌉니다. Switch 는{' '}
                         <code>composite/control-switch</code> 에서 가져오며(<code>ControlSwitch</code> 는 같은
-                        컴포넌트의 다른 이름), <code>ui/switch</code> 는 스타일이 없는 원본이라 화면에서 직접 쓰지
-                        않습니다.
+                        컴포넌트의 다른 이름), <code>ui/switch</code> 는 프로젝트 스타일이 없는 원본이라 화면에서 직접
+                        쓰지 않습니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-4">

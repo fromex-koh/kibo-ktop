@@ -155,7 +155,7 @@ const PROPS_ITEMS = [
     [
         'WordCloud',
         'words',
-        '단어와 중요도(양수)입니다. 중요도순으로 정렬해 전부 넘깁니다. 같은 text 는 미리 합칩니다. 빈 목록은 넘기지 않습니다(3-5).',
+        '단어와 중요도(양수)입니다. 중요도순으로 정렬해 전부 넘깁니다. 같은 text 는 미리 합칩니다. 빈 목록은 넘기지 않습니다(키워드가 없을 때 참고).',
         '-',
         'WordCloudItem[]',
     ],
@@ -198,7 +198,7 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-usage" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-usage" className="typo-h4-bold">
-                        1. 기본 사용
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>words</code>(중요도순) · <code>ariaLabel</code> · 높이(<code>h-*</code>)만 주면 됩니다.
@@ -221,7 +221,7 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-rules" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-rules" className="typo-h4-bold">
-                        2. 크기 · 배치 규칙
+                        크기 · 배치 규칙
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         글자 크기와 배치는 컴포넌트가 정합니다. 사용처가 조정할 것은 높이뿐입니다.
@@ -235,12 +235,12 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-examples" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-examples" className="typo-h4-bold">
-                        3. 예시
+                        예시
                     </h2>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">3-1. 색</h3>
+                        <h3 className="typo-title-m-bold text-foreground">색</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             목록 순서대로 <code>colors</code> 를 돌아가며 칠합니다. 주지 않으면 차트 팔레트입니다.
                         </p>
@@ -267,7 +267,7 @@ const WordCloudGuidePage = () => (
                     </div>
 
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">3-2. 단어 수</h3>
+                        <h3 className="typo-title-m-bold text-foreground">단어 수</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             같은 틀(높이 216)에 단어 수만 다르게 했습니다. 적으면 크게, 많으면 작게 그려 늘 틀을
                             채웁니다.
@@ -278,7 +278,7 @@ const WordCloudGuidePage = () => (
                     </div>
 
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">3-3. 엣지 케이스</h3>
+                        <h3 className="typo-title-m-bold text-foreground">엣지 케이스</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             긴 키워드 · 좁은 폭 · 아주 많은 키워드 · 키워드 1~3개. 어떤 경우도 키워드를 빼지 않습니다.
                         </p>
@@ -288,7 +288,7 @@ const WordCloudGuidePage = () => (
                     </div>
 
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">3-4. 로딩</h3>
+                        <h3 className="typo-title-m-bold text-foreground">로딩</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             그리는 동안은 컨테이너 높이만큼 <code>ChartSkeleton type=&quot;word-cloud&quot;</code> 를
                             스스로 보여 자리가 흔들리지 않습니다.
@@ -316,7 +316,7 @@ const WordCloudGuidePage = () => (
                     </div>
 
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">3-5. 키워드가 없을 때</h3>
+                        <h3 className="typo-title-m-bold text-foreground">키워드가 없을 때</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             빈 목록을 넘기면 그릴 단어가 없어 스켈레톤이 계속 남습니다. 사용처에서 키워드가 없으면{' '}
                             <code>WordCloud</code> 대신 같은 높이의 <code>EmptyState</code> 를 둡니다 — 웹 보고서
@@ -338,7 +338,7 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-data" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-data" className="typo-h4-bold">
-                        4. 데이터 연결
+                        데이터 연결
                     </h2>
                     <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>
@@ -346,7 +346,7 @@ const WordCloudGuidePage = () => (
                         </li>
                         <li>같은 키워드는 먼저 합쳐 색 · 숨김 목록이 중복되지 않게 합니다.</li>
                         <li>키워드는 자르지 말고 전부 넘깁니다. 컴포넌트가 모두 그립니다.</li>
-                        <li>키워드가 0개면 WordCloud 를 그리지 않고 빈 상태를 둡니다(3-5).</li>
+                        <li>키워드가 0개면 WordCloud 를 그리지 않고 빈 상태를 둡니다.</li>
                     </ul>
                 </div>
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="복사" />
@@ -365,7 +365,7 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-a11y" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-a11y" className="typo-h4-bold">
-                        5. 접근성
+                        접근성
                     </h2>
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
@@ -387,7 +387,7 @@ const WordCloudGuidePage = () => (
             <section aria-labelledby="wc-props" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="wc-props" className="typo-h4-bold">
-                        6. Props API
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>words</code> · <code>ariaLabel</code> 이 필수입니다.

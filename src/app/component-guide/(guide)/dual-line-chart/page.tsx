@@ -57,7 +57,7 @@ const EDGE_CASES = [
     {
         key: 'same',
         title: '값이 모두 같을 때',
-        description: '두 선을 가운데(y 145)에 겹쳐 두고, 첫 계열 글자는 아래 · 둘째 계열 글자는 위에 둡니다.',
+        description: '두 선을 가운데 높이에 겹쳐 두고, 첫 계열 글자는 아래 · 둘째 계열 글자는 위에 둡니다.',
         data: SAME_DATA,
     },
     {
@@ -142,6 +142,7 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['DualLineSeries', 'key · label · color', '계열 key(values 의 key) · 범례 이름 · 선 색입니다.', '-', 'string'],
+    ['DualLineItem', 'id · label', '시점 식별자 · 가로축 이름입니다.', '-', 'string'],
     [
         'DualLineItem',
         'values',
@@ -152,7 +153,7 @@ const PROPS_ITEMS = [
     [
         'DualLineChartSkeleton',
         'label',
-        '불러오는 중 문구(화면 낭독기용)입니다.',
+        '불러오는 중 문구(스크린리더용)입니다.',
         "'그래프를 불러오는 중입니다.'",
         'string',
     ],
@@ -183,7 +184,7 @@ const DualLineChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dlc-basic" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-basic" title="1. 기본 사용">
+                <SectionHeading id="dlc-basic" title="기본 사용">
                     그림 560 × 290 기준으로 그리고 범례는 그래프 아래 가운데에 함께 둡니다. 계열이 셋 이상이고 값 글자가
                     없는 추이는{' '}
                     <Link href="/component-guide/marker-line-chart" className={LINK_CLASS}>
@@ -209,25 +210,24 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-rule" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-rule" title="2. 짜임 규칙" />
+                <SectionHeading id="dlc-rule" title="짜임 규칙" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>점은 항목 칸 가운데, 칸 사이 세로 점선(y 20 ~ 250), 바닥선 y 250, 항목 이름 y 280(19px).</li>
+                    <li>점은 항목 칸 가운데에 놓고, 칸 사이에 세로 점선 · 아래에 바닥선과 항목 이름을 둡니다.</li>
                     <li>
-                        두 계열을 합친 값 가운데 가장 큰 값이 y 83, 가장 작은 값이 y 207 — 그 사이는 값에
-                        비례합니다(세로축 없음).
+                        세로축은 없습니다. 두 계열을 합친 값의 최댓값 · 최솟값을 위아래 일정 높이에 두고 그 사이는 값에
+                        비례합니다.
                     </li>
                     <li>
-                        첫 계열 = 실선 · 빈 원(반지름 8) · 값 글자 계열 색 굵게. 둘째 계열 = 파선(9 7) · 마름모(반지름
-                        10) · 값 글자 옅은 글자 색.
+                        첫 계열은 실선 · 빈 원 · 계열 색 굵은 값 글자, 둘째 계열은 파선 · 마름모 · 옅은 값 글자입니다.
                     </li>
-                    <li>값 글자는 항목마다 큰 값이 점 18 위, 작은 값이 점 32 아래입니다.</li>
+                    <li>값 글자는 항목마다 큰 값이 점 위, 작은 값이 점 아래에 놓입니다.</li>
                 </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
             <section aria-labelledby="dlc-edge" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-edge" title="3. 엣지 케이스" />
+                <SectionHeading id="dlc-edge" title="엣지 케이스" />
                 <div className="grid gap-6 xl:grid-cols-2">
                     {EDGE_CASES.map((item) => (
                         <Example key={item.key} title={item.title} description={item.description}>
@@ -240,9 +240,9 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-loading" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-loading" title="4. 불러오는 중 (DualLineChartSkeleton)">
-                    차트와 같은 그림 범위(560 × 290)에 바닥선 · 두 선 · 점 · 값 글자 · 항목 이름 자리를, 아래에 범례
-                    자리를 그립니다. PDF 템플릿은 서버에서 바로 그려 스켈레톤 없이 나옵니다.
+                <SectionHeading id="dlc-loading" title="불러오는 중 (DualLineChartSkeleton)">
+                    차트와 같은 그림 범위에 선 · 점 · 글자 · 범례 자리를 그립니다. PDF 템플릿은 서버에서 바로 그려
+                    스켈레톤 없이 나옵니다.
                 </SectionHeading>
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example title="불러오는 중" description="회색 자리 · 깜빡임으로 불러오는 중임을 보입니다.">
@@ -258,9 +258,8 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-print" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-print" title="5. K-BIGx PDF 템플릿에서">
-                    차입금 현황 신용/담보 비중 소블록의 왼쪽 반(폭 556)에 두고, 오른쪽 반에는 최근 비중을
-                    CalloutPieChart 원형(라벨은 원 밖 지시선 끝)으로 둡니다. 확인 화면:{' '}
+                <SectionHeading id="dlc-print" title="K-BIGx PDF 템플릿에서">
+                    차입금 현황 신용/담보 비중의 왼쪽 반에 씁니다(오른쪽 반은 CalloutPieChart 원형). 확인 화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance"
                         target="_blank"
@@ -277,7 +276,7 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-a11y" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-a11y" title="6. 접근성" />
+                <SectionHeading id="dlc-a11y" title="접근성" />
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         그림은 <code>role=&quot;img&quot;</code> 와 <code>ariaLabel</code> 로 이름을 갖고, 계열마다 값을
@@ -294,7 +293,7 @@ const DualLineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dlc-props" className="flex flex-col gap-6">
-                <SectionHeading id="dlc-props" title="7. Props API">
+                <SectionHeading id="dlc-props" title="Props API">
                     <code>data</code> · <code>series</code> · <code>ariaLabel</code> 이 필수입니다.
                 </SectionHeading>
                 <PropsTable items={PROPS_ITEMS} caption="DualLineChart · DualLineChartSkeleton Props 목록" />

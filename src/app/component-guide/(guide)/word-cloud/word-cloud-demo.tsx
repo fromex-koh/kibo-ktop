@@ -88,7 +88,7 @@ const EDGE_CASES = [
     {
         key: 'narrow',
         title: '좁은 폭 + 긴 키워드',
-        note: '최소 크기(12px)로도 폭을 넘으면 화면에는 말줄임(…)으로 그리고, 올리면 툴팁에 전체 단어가 보인다. 화면 낭독기도 전체 단어를 읽는다.',
+        note: '최소 크기(12px)로도 폭을 넘으면 화면에는 말줄임(…)으로 그리고, 올리면 툴팁에 전체 단어가 보인다. 스크린리더도 전체 단어를 읽는다.',
         words: LONG_KEYWORD_WORDS,
         className: 'h-54 w-full max-w-60',
     },

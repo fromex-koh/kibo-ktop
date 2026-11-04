@@ -133,7 +133,7 @@ const VARIANT_ROWS = [
         cells: [
             <code key="v">text</code>,
             '1뎁스. underline 과 같은 크기 · 간격이지만 밑줄 없이 글자색만으로 활성 탭을 구분합니다.',
-            '지금 화면에서는 쓰지 않습니다(이전 사양 · TextTabs 와 같은 모양).',
+            '서비스 화면에서는 쓰지 않습니다. 값만 고르는 글자 탭은 TextTabs 를 씁니다.',
         ],
     },
     {
@@ -157,7 +157,7 @@ const VARIANT_ROWS = [
         cells: [
             <code key="v">default</code>,
             'shadcn 기본 세그먼트. 회색 면 안에서 활성 탭만 흰 면으로 떠 보입니다.',
-            '프로젝트 시안에 없는 모양이라 서비스 화면에서는 쓰지 않습니다.',
+            '서비스 화면에서는 쓰지 않습니다.',
         ],
     },
     {
@@ -276,7 +276,7 @@ const TabsGuidePage = () => (
             <section aria-labelledby="tabs-examples" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tabs-examples" className="typo-h4-bold">
-                        변형 예시
+                        변형
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         기본 사용의 line 을 제외한 나머지 모양입니다.

@@ -61,7 +61,7 @@ const BUTTON_VARIANTS = [
 const INLINE_BUTTON_VARIANTS: readonly string[] = ['text', 'text-underline']
 
 const BUTTON_SIZES = ['xl', 'lg', 'md', 'sm', 'xs'] as const
-// 인라인 버튼은 Figma button_text 의 4단(large~xsmall)에 대응한다 — xl 은 lg 와 같은 값이라 뺀다.
+// 인라인 버튼은 lg~xs 4단만 본다 — xl 은 lg 와 같은 값이라 뺀다.
 const INLINE_BUTTON_SIZES = ['lg', 'md', 'sm', 'xs'] as const
 const ICON_BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'ghost'] as const
 const ICON_BUTTON_SIZES = ['icon-xl', 'icon-lg', 'icon-md', 'icon-sm', 'icon-xs'] as const

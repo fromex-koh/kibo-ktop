@@ -15,7 +15,10 @@ import RadioFormDemo from './radio-form-demo'
 
 export const metadata: Metadata = {title: '라디오 (Radio)'}
 
-const USAGE_CODE = `import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+const USAGE_CODE = `import {Field, FieldLabel} from '@/components/ui/field'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {FIELD_FOCUS_RING} from '@/constants/form'
+import {cn} from '@/lib/utils'
 
 <RadioGroup name="payment" defaultValue="card" aria-label="결제 수단">
   <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>

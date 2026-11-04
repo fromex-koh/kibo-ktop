@@ -11,7 +11,10 @@ import {AttachFieldDemo} from './attach-field-demo'
 
 export const metadata: Metadata = {title: '첨부 필드 (AttachField)'}
 
-const USAGE_CODE = `<FormCard title="첨부파일" subtitle="평가 신청에 필요한 서류를 첨부해 주세요.">
+const USAGE_CODE = `import {AttachField} from '@/components/composite/attach-field'
+import {FormCard} from '@/components/composite/form-card'
+
+<FormCard title="첨부파일" subtitle="평가 신청에 필요한 서류를 첨부해 주세요.">
   <div className="flex flex-col gap-10">
     <AttachField
       label="대표자 건강보험 자격 득실 확인서"

@@ -76,7 +76,7 @@ const WHERE_ROWS = [
         key: 'handoff',
         cells: [
             <code key="file">handoff/site.ts · handoff/og-image.png</code>,
-            '프론트엔드 전달본에 들어갈 값과 이미지입니다. 전달본을 만들 때 위 두 파일을 이것으로 바꿉니다.',
+            '프론트엔드 전달본에 들어갈 값과 이미지입니다. 전달본을 만들 때 site.ts 를 이것으로 바꾸고, og-image.png 는 파일이 있을 때만 public/og-image.png 로 넣습니다.',
         ],
     },
 ] as const
@@ -183,7 +183,7 @@ const OpenGraphGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="og-spec-group" title="1. 규격 · 적용">
+        <GroupHeading id="og-spec-group" title="규격 · 적용">
             대표 이미지와 글자를 만들 때, 값을 고칠 때 확인합니다.
         </GroupHeading>
 
@@ -228,7 +228,7 @@ const OpenGraphGuidePage = () => (
             </section>
         </BaseCard>
 
-        <GroupHeading id="og-channel-group" title="2. 채널별 카드 형태">
+        <GroupHeading id="og-channel-group" title="채널별 카드 형태">
             같은 값이 채널마다 다른 모양으로 보입니다. 실제 모양은 채널의 정책과 캐시에 따라 달라질 수 있습니다.
         </GroupHeading>
 

@@ -15,15 +15,6 @@ import {Table} from '@/components/custom/table'
 export const metadata: Metadata = {title: '비공개 정보 (PrivateContent)'}
 
 // 자리 표시 값 — 모양만 남기는 임의 값이다(실제 값이 아니다).
-const PLACEHOLDER_REGISTRY_COLUMNS = [
-    {key: 'number', label: '법인등록번호'},
-    {key: 'status', label: '법인등기상태'},
-    {key: 'audit', label: '외부감사여부'},
-    {key: 'month', label: '결산월'},
-]
-const PLACEHOLDER_REGISTRY_ROWS = [
-    {id: 'placeholder', cells: {number: '000000-0000000', status: '정상', audit: '여', month: '12월'}},
-]
 const PLACEHOLDER_INSTITUTION_ROWS = ['은행업권', '상호금융업권', '저축은행업권', '카드/캐피탈업권', '대부업권'].map(
     (label, index) => ({id: label, cells: {label, y1: '00.0', y2: '00.0', y3: index % 2 ? '-' : '00.0'}}),
 )
@@ -49,10 +40,10 @@ const COLUMN_CODE = `import {PRIVATE_SHORT_LABEL, PrivateCell} from '@/component
 
 // 가릴 열의 머리 · 값 칸마다 PrivateCell 로 감싸고, 안내(label)는 값 칸 한 곳에만 둔다
 <ReportTable
-  caption="단기연체정보"
+  caption="예시 표"
   columns={[
-    {key: 'date', label: '발생일자'},
-    {key: 'amount', label: <PrivateCell>연체금액</PrivateCell>},
+    {key: 'date', label: '일자'},
+    {key: 'amount', label: <PrivateCell>금액</PrivateCell>},
   ]}
   rows={[
     {id: 'row', cells: {date: '2023-11-06', amount: <PrivateCell label={PRIVATE_SHORT_LABEL}>000,000</PrivateCell>}},
@@ -131,7 +122,7 @@ const PROPS_ITEMS = [
     [
         'PrivateCell',
         'label',
-        '칸 가운데에 보일 안내입니다. 열에서 한 칸에만 넘기고, 없으면 “비공개”가 화면 낭독기에만 읽힙니다.',
+        '칸 가운데에 보일 안내입니다. 열에서 한 칸에만 넘기고, 없으면 “비공개”가 스크린리더에만 읽힙니다.',
         'undefined',
         'string',
     ],
@@ -158,10 +149,12 @@ const PrivateContentGuidePage = () => (
                         처리된 정보입니다.”입니다.
                     </p>
                     <p className="typo-body-l-regular text-label-foreground">
-                        K-BIGx PDF 템플릿은 같은 모양 · 같은 안내 문구를 kbx 값으로 그린 <code>KbxPrivateContent</code>
-                        (kbigx-print-parts.tsx)를 씁니다. 열람 케이스별 가림 범위도 웹 보고서와 같습니다. 기업신용정보
-                        표는 흐리지 않고(법인열람 · 개인열람 공통) 값 줄을 “비공개” 한 줄로 바꾸고 제목 옆 상태를
-                        뺍니다(웹 · PDF 템플릿 공통). 상태가 ‘해당없음’ 인 표는 그대로 ‘해당사항 없음’ 입니다.
+                        서비스에서는 K-BIGx 보고서 신용/재무정보 › 차입금 현황의 카드 3장(기관별 비중 · 신용/담보 비중 ·
+                        담보 현황)을 열람 케이스에 따라 카드째 가립니다. K-BIGx PDF 템플릿은 같은 모양 · 같은 안내
+                        문구의 <code>KbxPrivateContent</code>
+                        (kbigx-print-parts.tsx)를 씁니다. 열람 케이스별 가림 범위는 웹 보고서와 같습니다. 단,
+                        기업신용정보 표는 이 컴포넌트로 흐리지 않습니다. 가린 표는 값 줄을 “열람불가(제공 대상 외 정보)”
+                        한 줄로 바꾸고 제목 옆 상태를 뺍니다(웹 · PDF 템플릿 공통).
                     </p>
                 </div>
                 <PrivateContent>
@@ -207,7 +200,8 @@ const PrivateContentGuidePage = () => (
                     <div className={SUB_BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">반쪽 카드</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            카드가 좁아 긴 안내가 접히면 어절 단위로 두 줄이 됩니다.
+                            두 열로 놓인 카드도 카드마다 감쌉니다. 카드가 좁아 긴 안내가 접히면 어절 단위로 두 줄이
+                            됩니다.
                         </p>
                         <PrivateContent className="max-w-147">
                             <Card title="신용/담보 비중" className="gap-0">
@@ -217,8 +211,8 @@ const PrivateContentGuidePage = () => (
                                     </WithUnit>
                                     <RatioStackBar
                                         data={[
-                                            {id: 'a', label: '신용', value: 50, color: 'var(--raw-blue-500)'},
-                                            {id: 'b', label: '담보', value: 50, color: 'var(--raw-mint-700)'},
+                                            {id: 'a', label: '신용', value: 50, color: 'var(--ds-blue-500)'},
+                                            {id: 'b', label: '담보', value: 50, color: 'var(--ds-mint-700)'},
                                         ]}
                                     />
                                 </div>
@@ -226,56 +220,27 @@ const PrivateContentGuidePage = () => (
                         </PrivateContent>
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">표 전체 — 짧은 안내</h3>
-                        <p className="typo-body-l-regular text-label-foreground">
-                            좁은 자리는 <code>label</code> 에 <code>PRIVATE_SHORT_LABEL</code>(“비공개”)을 넘기고, 표
-                            제목은 바깥에 두어 가리지 않습니다. 감쌀 내용이 낮으면 <code>min-h-0</code> 로 최소 높이를
-                            없앱니다.
-                        </p>
-                        <div className="flex flex-col gap-2">
-                            <p className="typo-body-l-medium">
-                                법인등기정보 <span className="typo-body-l-regular text-foreground-subtle">정상</span>
-                            </p>
-                            <PrivateContent label={PRIVATE_SHORT_LABEL} className="min-h-0">
-                                <ReportTable
-                                    caption="자리 표시"
-                                    minWidthClassName="min-w-0"
-                                    columns={PLACEHOLDER_REGISTRY_COLUMNS}
-                                    rows={PLACEHOLDER_REGISTRY_ROWS}
-                                />
-                            </PrivateContent>
-                        </div>
-                    </div>
-                    <div className={SUB_BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">표의 열 하나 (PrivateCell)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             가릴 열의 머리 · 값 칸마다 <code>PrivateCell</code> 을 쓰고 안내는 값 칸 한 곳에만 둡니다.
-                            다른 열은 그대로 보입니다.
+                            다른 열은 그대로 보입니다. 지금 서비스 화면에서는 쓰지 않는 방식입니다(아래 표는 예시).
                         </p>
                         <div className="flex flex-col gap-2">
-                            <p className="typo-body-l-medium">
-                                단기연체정보{' '}
-                                <span className="typo-body-l-regular text-foreground-subtle">해당없음</span>
-                            </p>
                             <ReportTable
-                                caption="단기연체정보 — 연체금액 비공개"
+                                caption="예시 표 — 금액 열 비공개"
                                 minWidthClassName="min-w-0"
                                 columns={[
-                                    {key: 'date', label: '발생일자'},
-                                    {key: 'release', label: '해제일자'},
-                                    {key: 'amount', label: <PrivateCell>연체금액</PrivateCell>},
-                                    {key: 'org', label: '등록기관'},
-                                    {key: 'base', label: '조회기준일자'},
+                                    {key: 'date', label: '일자'},
+                                    {key: 'amount', label: <PrivateCell>금액</PrivateCell>},
+                                    {key: 'org', label: '기관'},
                                 ]}
                                 rows={[
                                     {
                                         id: 'row',
                                         cells: {
                                             date: '2023-11-06',
-                                            release: '2024-11-06',
                                             amount: <PrivateCell label={PRIVATE_SHORT_LABEL}>000,000</PrivateCell>,
                                             org: '부산은행',
-                                            base: '2023-12-06',
                                         },
                                     },
                                 ]}
@@ -345,8 +310,8 @@ const PrivateContentGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        자리 표시는 <code>aria-hidden</code> · <code>inert</code> 로 화면 낭독기와 키보드에서 빠지고
-                        안내 글만 읽힙니다[8.2.1].
+                        자리 표시는 <code>aria-hidden</code> · <code>inert</code> 로 스크린리더와 키보드에서 빠지고 안내
+                        글만 읽힙니다[8.2.1].
                     </li>
                     <li>
                         <code>label</code> 이 없는 <code>PrivateCell</code> 은 “비공개”를 <code>sr-only</code> 로 읽게

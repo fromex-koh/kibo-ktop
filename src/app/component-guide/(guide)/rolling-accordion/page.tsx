@@ -138,12 +138,11 @@ const LAYOUT_ROWS = [
         key: 'xl',
         cells: [
             '1280px 이상',
-            '상자 | 그림 — 12칸 그리드의 5 : 7(시안 486 · 690). 그림 높이(428)에 상자 높이를 맞춤',
-            '여백 48 · 판 rolling-accordion-surface(라이트 gray.10 · 다크는 페이지 바탕과 같은 gray.900) · 목록 점 rolling-accordion-marker(라이트 gray.500 · 다크 gray.100). 본문이 길면 본문 안에서 스크롤(최대 152)',
+            '상자 | 그림 — 12칸 그리드의 5 : 7. 그림 높이에 상자 높이를 맞춤',
+            '본문이 길면 본문 안에서 스크롤',
         ],
     },
-    {key: 'md', cells: ['768px 이상', '그림 위 · 상자 아래(사이 24)', '여백 48. 본문은 다 펼침']},
-    {key: 'mobile', cells: ['768px 미만', '그림 위 · 상자 아래(사이 24)', '여백 32. 본문은 다 펼침']},
+    {key: 'md', cells: ['1280px 미만', '그림 위 · 상자 아래', '본문은 다 펼침']},
 ]
 
 const PROPS_ITEMS = [
@@ -157,14 +156,8 @@ const PROPS_ITEMS = [
     ['RollingAccordion', 'interval', '다음 항목으로 넘어가는 간격(ms)입니다.', '3000', 'number'],
     ['RollingAccordion', 'className', '바깥 그리드에 더할 클래스입니다(위 여백 등).', '-', 'string'],
     ['RollingAccordionItem', 'value', '항목 식별 값입니다.', '-', 'string'],
-    ['RollingAccordionItem', 'title', '제목입니다(20 Bold — 열리면 파랑).', '-', 'string'],
-    [
-        'RollingAccordionItem',
-        'content',
-        '펼친 본문입니다. 글자는 16 Regular(label-foreground)를 물려받습니다.',
-        '-',
-        'ReactNode',
-    ],
+    ['RollingAccordionItem', 'title', '제목입니다. 열리면 파랑입니다.', '-', 'string'],
+    ['RollingAccordionItem', 'content', '펼친 본문입니다. 보통 RollingAccordionBody 를 넘깁니다.', '-', 'ReactNode'],
     [
         'RollingAccordionItem',
         'image',
@@ -215,25 +208,19 @@ const RollingAccordionGuidePage = () => (
                     </div>
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">화면 폭별 배치</h3>
-                        <Table
-                            caption="화면 폭별 배치와 상자 규격"
-                            columns={LAYOUT_COLUMNS}
-                            rows={LAYOUT_ROWS}
-                            size="md"
-                        />
+                        <Table caption="화면 폭별 배치" columns={LAYOUT_COLUMNS} rows={LAYOUT_ROWS} size="md" />
                     </div>
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">상자 규격</h3>
                         <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                             <li>
-                                회색 면(panel-subtle — 다크에서도 본문 바탕보다 한 단계 밝아 묻히지 않음) · 반경 16.
-                                그림 칸도 같은 반경 · 같은 면입니다.
+                                상자 면은 <code>rolling-accordion-surface</code>, 목록 점은{' '}
+                                <code>rolling-accordion-marker</code>, 그림 칸 바탕은 <code>panel-subtle</code>{' '}
+                                토큰입니다.
                             </li>
-                            <li>제목 20 Bold(title-l-bold) — 열린 항목은 primary-strong(파랑). 여닫는 화살표 20.</li>
-                            <li>제목과 본문 사이 8 · 항목 사이 구분선(Separator · subtle-3) 위아래 16.</li>
+                            <li>열린 항목의 제목은 primary-strong(파랑)이고, 항목 사이는 Separator 로 나눕니다.</li>
                             <li>
-                                본문(<code>RollingAccordionBody</code>) — 소제목 16 Medium(h4) · 점 목록 16
-                                Regular(label-foreground). 소제목과 목록 · 목록 줄 · 묶음 사이 모두 8.
+                                본문은 <code>RollingAccordionBody</code> 로 소제목(h4) · 점 목록 · 문단을 그립니다.
                             </li>
                         </ul>
                     </div>
@@ -259,7 +246,7 @@ const RollingAccordionGuidePage = () => (
                         PC 에서 본문이 상자보다 길면 본문 상자가 포커스를 받아 키보드로 스크롤할 수 있습니다[6.1.1].
                     </li>
                     <li>
-                        그림은 꾸밈이라 화면 낭독기가 읽지 않습니다(alt=&quot;&quot; · 그림 칸 aria-hidden)[5.1.1]. 그림
+                        그림은 꾸밈이라 스크린리더가 읽지 않습니다(alt=&quot;&quot; · 그림 칸 aria-hidden)[5.1.1]. 그림
                         칸을 먼저 두고 PC 에서 칸 위치로 상자를 왼쪽에 놓으므로 읽는 순서는 아코디언 하나입니다[7.3.1].
                     </li>
                 </ul>

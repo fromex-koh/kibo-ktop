@@ -63,21 +63,11 @@ const TONE_COLUMNS = [
 const TONE_ROWS = [
     {
         key: 'navy',
-        cells: [
-            'navy',
-            'service-hero-navy-* — 라이트 navy.100 · 오른쪽 아래 purple.200 · 왼쪽 위 blue.200, 다크 navy.800 띠 · purple.900 · blue.900 원',
-            'primary-strong #3568d6',
-            'K-BIGx 보고서',
-        ],
+        cells: ['navy', 'service-hero-navy-* 토큰', 'primary-strong', 'K-BIGx 보고서'],
     },
     {
         key: 'green',
-        cells: [
-            'green',
-            'service-hero-green-* — 라이트 green.100 · warning.50 · mint.100(시안), 다크 success.900 띠 · mint.900 · success.800 원',
-            'service-accent-green — 라이트 mint.800 · 다크 mint.200',
-            '탄소중립',
-        ],
+        cells: ['green', 'service-hero-green-* 토큰', 'service-accent-green', '탄소중립'],
     },
 ]
 
@@ -88,14 +78,15 @@ const PROPS_ITEMS = [
     [
         'PlatformServiceHero',
         'lead · descriptionLines',
-        '보조(24 Bold) · 설명(20, 태블릿부터 줄마다 끊김).',
+        '보조 문장 · 설명 줄입니다. 설명은 태블릿부터 줄마다 끊고 모바일은 이어서 흐릅니다.',
         '-',
         'string · string[]',
     ],
     ['PlatformServiceHero', 'tone', '띠 · 번진 원 · 강조색 한 벌.', '-', "'navy' | 'green'"],
-    ['PlatformServiceHero', 'children', '설명 아래 칸(카드 목록 · 전환 탭 등) — 설명과 48.', '-', 'ReactNode'],
+    ['PlatformServiceHero', 'children', '설명 아래 칸(카드 목록 · 전환 탭 등).', '-', 'ReactNode'],
     ['ServiceGlassCard', 'index', '카드 순서(0~2) — 열 때 차례로 떠오르는 지연.', '-', 'number'],
-    ['ServiceGlassCard', 'image', '그림(88 칸) — next/image(alt="") 또는 자리.', '-', 'ReactNode'],
+    ['ServiceGlassCard', 'image', '그림입니다. 장식이므로 next/image(alt="")를 넘깁니다.', '-', 'ReactNode'],
+    ['ServiceGlassCard', 'title', '카드 제목(필수).', '-', 'string'],
     ['ServiceGlassCard', 'description · bullets', '설명 한 단락 또는 점 목록.', '-', 'string · string[]'],
     ['ServiceFeatureList', 'items', '아이콘 · 제목 · 설명 목록.', '-', '{icon; title; description}[]'],
     ['ServiceFeatureList', 'columns', '태블릿부터 열 수 — 2열은 아이콘이 글 가운데, 3열은 글 위에 맞춤.', '-', '2 | 3'],
@@ -137,8 +128,8 @@ const PlatformServiceIntroGuidePage = () => (
                         headingId="guide-service-hero"
                         titleBar={null}
                         titleLines={['서비스를 한 줄로 말하는 제목', '둘째 줄은 강조색']}
-                        lead="보조 문장(24 Bold)이 서비스의 가치를 한 문장으로 전합니다."
-                        descriptionLines={['설명(20)은 태블릿부터 줄마다 끊기고,', '모바일은 이어서 흐릅니다.']}
+                        lead="보조 문장이 서비스의 가치를 한 문장으로 전합니다."
+                        descriptionLines={['설명은 태블릿부터 줄마다 끊기고,', '모바일은 이어서 흐릅니다.']}
                         tone="green"
                     >
                         <ServiceGlassCardList>
@@ -146,19 +137,19 @@ const PlatformServiceIntroGuidePage = () => (
                                 index={0}
                                 image={<ImageSlot />}
                                 title="카드 제목"
-                                description="설명 한 단락(16 Medium)입니다."
+                                description="설명 한 단락입니다."
                             />
                             <ServiceGlassCard
                                 index={1}
                                 image={<ImageSlot />}
                                 title="카드 제목"
-                                description="설명 한 단락(16 Medium)입니다."
+                                description="설명 한 단락입니다."
                             />
                             <ServiceGlassCard
                                 index={2}
                                 image={<ImageSlot />}
                                 title="점 목록 카드"
-                                bullets={['설명 대신 점 목록도 됩니다.', '줄 사이 8.']}
+                                bullets={['설명 대신 점 목록도 됩니다.', '항목마다 한 줄씩 섭니다.']}
                             />
                         </ServiceGlassCardList>
                     </PlatformServiceHero>
@@ -167,18 +158,17 @@ const PlatformServiceIntroGuidePage = () => (
                 <Table caption="히어로 tone" columns={TONE_COLUMNS} rows={TONE_ROWS} size="md" />
                 <ul className={LIST_CLASS}>
                     <li>
-                        큰 제목 모바일 32 · 태블릿 48 · PC 60 Black(typo-display-hero-black). 화면 제목과 큰 제목
-                        100(모바일 60) · 큰 제목과 보조 32 · 보조와 설명 16 · 설명과 아래 칸 48.
+                        큰 제목은 <code>typo-display-hero-black</code> 으로 화면 폭에 따라 커집니다. 간격은 컴포넌트가
+                        정하므로 사용처에서 덧붙이지 않습니다.
                     </li>
                     <li>
-                        유리 카드 — 흰 20% 면 · 테두리 1(service-glass-border: 라이트 흰 90% · 다크 흰색 25%) · 반경
-                        32(rounded-glass) · 여백 32 · 그림 88 · 제목 24 Bold · 설명 16 Medium. 뒤 흐림은 두지
-                        않습니다(시안) — 번진 원의 움직임이 비쳐 보입니다.
+                        유리 카드는 <code>rounded-glass</code> · 흰 반투명 면 · <code>service-glass-border</code>{' '}
+                        테두리입니다. 뒤 흐림이 없어 번진 원의 움직임이 비쳐 보입니다.
                     </li>
-                    <li>모바일은 카드를 세로로 쌓습니다(사이 16). 동작 줄이기면 모든 움직임이 없습니다[6.3.1].</li>
+                    <li>모바일은 카드를 세로로 쌓습니다. 동작 줄이기 설정이면 모든 움직임이 없습니다[6.3.1].</li>
                     <li>
-                        카드는 transition-none 입니다 — 탭으로 카드 묶음을 바꿀 때 감춤(invisible)이 등장 시간만큼 늦게
-                        적용돼 이전 카드가 남아 보이지 않도록 합니다(탄소중립 플랫폼 전환).
+                        카드는 <code>transition-none</code> 입니다. 탭으로 카드 묶음을 바꿀 때(탄소중립) 이전 카드가
+                        남아 보이지 않게 합니다.
                     </li>
                 </ul>
             </section>
@@ -190,8 +180,8 @@ const PlatformServiceIntroGuidePage = () => (
                         기능 목록 (ServiceFeatureList)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        아이콘 칸(80 · model-icon-surface · 반경 24) + 제목(24 Bold) · 설명(16 Medium · gray.500).
-                        K-BIGx 는 2열, 탄소중립은 3열입니다. 화면에 들어오면 떠오릅니다(ScrollReveal).
+                        아이콘 칸 · 제목 · 설명을 늘어놓는 목록입니다. K-BIGx 는 2열, 탄소중립은 3열이며 화면에 들어오면
+                        떠오릅니다(ScrollReveal).
                     </p>
                 </div>
                 <ServiceFeatureList columns={3} items={DEMO_FEATURES} />

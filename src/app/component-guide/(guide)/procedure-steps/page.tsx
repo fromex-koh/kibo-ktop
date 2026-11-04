@@ -87,17 +87,12 @@ const ProcedureStepsGuidePage = () => (
                 </div>
                 <ul className={LIST_CLASS}>
                     <li>
-                        단계 사이 24 · 둥근 번호 60(반경 20 · procedure-step-number 면 — 라이트 gray.500 · 다크 gray.200
-                        · 32 Bold) · 이름 24 Bold · 설명 16 Medium(gray.500).
+                        둥근 번호 면은 <code>procedure-step-number</code>, 번호 사이 화살표는{' '}
+                        <code>platform-connector</code> 토큰입니다.
                     </li>
+                    <li>모바일은 단계를 세로로 쌓고 화살표를 감춥니다.</li>
                     <li>
-                        번호와 이름 16 · 이름과 설명 8. 번호 사이 화살표(96 · platform-connector, 선은 50%)는 단계 사이
-                        간격 가운데에 놓입니다.
-                    </li>
-                    <li>모바일은 단계를 세로로 쌓고(사이 40) 화살표를 감춥니다.</li>
-                    <li>
-                        화면에 들어오면 단계가 왼쪽에서 밀려오며 0.12초 간격으로 나타납니다(0.45초 · 화살표는 단계에
-                        붙어 함께 옴). 나타나는 시점은{' '}
+                        화면에 들어오면 단계가 왼쪽에서 차례로 밀려옵니다(화살표는 단계와 함께). 나타나는 시점은{' '}
                         <Link href="/component-guide/motion" className={LINK_CLASS}>
                             ScrollReveal(hasRise=false)
                         </Link>
@@ -114,7 +109,7 @@ const ProcedureStepsGuidePage = () => (
                     </h2>
                 </div>
                 <ul className={LIST_CLASS}>
-                    <li>순서 목록(ol)이라 단계 수와 순서가 화면 낭독기에 그대로 전해집니다[7.3.1].</li>
+                    <li>순서 목록(ol)이라 단계 수와 순서가 스크린리더에 그대로 전해집니다[7.3.1].</li>
                     <li>화면의 숫자 · 화살표는 꾸밈이라 읽지 않습니다(aria-hidden) — 목록이 순서를 이미 알립니다.</li>
                     <li>단계 이름은 제목(h3 · h4)이라 제목 목록으로 단계를 건너다닐 수 있습니다[6.4.2].</li>
                 </ul>

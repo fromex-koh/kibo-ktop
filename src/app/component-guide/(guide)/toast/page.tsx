@@ -241,7 +241,7 @@ const ToastGuidePage = () => (
             <section aria-labelledby="toast-variants" className="flex flex-col gap-6">
                 <SectionHead
                     id="toast-variants"
-                    title="변형 예시"
+                    title="변형"
                     description="내용 구성, 액션, 위치, 비동기 상태를 호출 옵션으로 바꿉니다."
                 />
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">

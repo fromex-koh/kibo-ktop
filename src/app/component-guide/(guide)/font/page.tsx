@@ -309,7 +309,7 @@ const FontPrimitiveGuidePage = () => (
                             역할 기반 자간 (tracking)
                         </h2>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>typo-*</code> 와 별개로 특정 역할에만 붙이는 <code>tracking-*</code> 유틸리티입니다.
+                            <code>typo-*</code> 와 별개로 특정 역할에만 붙이는 <code>tracking-*</code> 유틸리티입니다.{' '}
                             <code>tokens.json</code> 의 <code>tracking</code> 값을 px 로 입력하고 rem 으로 생성합니다.
                         </p>
                     </div>

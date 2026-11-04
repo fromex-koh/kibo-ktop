@@ -220,9 +220,9 @@ const GradeDistributionChartGuidePage = () => (
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">로딩</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>isLoading</code> prop 은 없습니다. 곡선은 브라우저가 크기를 잰 뒤에 그려지므로 그
-                            전에는 <code>ChartSkeleton type=&quot;grade-distribution&quot;</code> 이 곡선 자리를 채우고,
-                            표는 글자라 그대로 보입니다.
+                            <code>isLoading</code> prop 은 없습니다. 곡선은 하이드레이션 뒤에 그려지므로 그 전에는{' '}
+                            <code>ChartSkeleton type=&quot;grade-distribution&quot;</code> 이 곡선 자리를 채우고, 표는
+                            글자라 그대로 보입니다.
                         </p>
                         <ChartSkeleton type="grade-distribution" label="등급 분포를 불러오는 중입니다." />
                     </div>
@@ -301,9 +301,8 @@ const GradeDistributionChartGuidePage = () => (
                     <li>강조 칸은 색과 함께 글자 굵기를 바꿔 색에만 의존하지 않습니다[5.3.1].</li>
                     <li>곡선은 움직임 없이 그려집니다.</li>
                     <li>
-                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
-                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
-                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                        recharts 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다. 값은 아래 표 글자가
+                        전합니다[8.1.1].
                     </li>
                 </ul>
             </section>

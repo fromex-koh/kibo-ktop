@@ -88,6 +88,13 @@ const PROPS_ITEMS = [
         '-',
         'string',
     ],
+    [
+        'TruncatedText',
+        'isFocusable',
+        '잘렸을 때 Tab 초점을 받을지입니다. 그림(role="img") · aria-hidden 영역 안의 글처럼 초점을 두면 안 되는 곳은 false 로 두고, 전체 글은 그림의 이름(aria-label)이 읽어 줍니다.',
+        'true',
+        'boolean',
+    ],
     ['TruncatedText', 'className', '글 상자에 덧붙일 클래스입니다(예: break-keep).', '-', 'string'],
     ['TruncationTooltip', 'content', '툴팁에 보일 전체 글입니다.', '-', 'string'],
     [
@@ -139,8 +146,8 @@ const TruncatedTextGuidePage = () => (
                         여닫는 방법
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        Radix Tooltip 은 터치를 무시하므로, 터치일 때만 컴포넌트가 열림 상태를 직접 바꿉니다(라이브러리
-                        · ui 셸은 그대로).
+                        마우스 · 키보드는 Radix Tooltip 기본 동작을 따르고, 터치는 컴포넌트가 탭으로 열고 닫게
+                        처리합니다.
                     </p>
                 </div>
                 <Table caption="말줄임 툴팁 여닫는 방법" columns={INPUT_COLUMNS} rows={INPUT_ROWS} size="md" />

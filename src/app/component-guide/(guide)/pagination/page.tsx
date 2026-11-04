@@ -6,7 +6,7 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
-import {PaginationBasicDemo, PaginationEllipsisDemo} from './pagination-demo'
+import {PaginationBasicDemo, PaginationCompactEdgeDemo, PaginationEllipsisDemo} from './pagination-demo'
 
 export const metadata: Metadata = {title: '페이지네이션 (Pagination)'}
 
@@ -23,7 +23,20 @@ const [page, setPage] = useState(1)
 
 const USAGE_ELLIPSIS = `<Pagination page={page} total={24} onPageChange={setPage} siblingCount={1} boundaryCount={1} maxVisibleItems={10} />`
 
-const USAGE_COMPACT = `<Pagination page={page} total={9} onPageChange={setPage} compact />`
+const USAGE_COMPACT = `{/* 아이콘만 남기려면 prevLabel · nextLabel 을 빈 글자로 넘긴다 */}
+<Pagination page={page} total={9} onPageChange={setPage} compact prevLabel="" nextLabel="" />
+
+{/* 모바일 조회 목록 — 번호 · … 를 합쳐 5개까지 */}
+<Pagination
+  page={page}
+  total={total}
+  onPageChange={setPage}
+  compact
+  siblingCount={0}
+  maxVisibleItems={5}
+  prevLabel=""
+  nextLabel=""
+/>`
 
 const COMPOSITION_COLUMNS = [
     {key: 'name', header: '요소', align: 'start', rowHeader: true},
@@ -72,7 +85,7 @@ const PROPS_ITEMS = [
     [
         'Pagination',
         'compact',
-        '페이지 번호와 이전 · 다음 버튼을 32×32 로, 간격을 8 에서 4 로 줄입니다.',
+        '페이지 번호와 이전 · 다음 버튼을 32×32 로, 간격을 8 에서 4 로 줄입니다. 번호가 길면(1000쪽 이상) 번호 칸이 늘어납니다.',
         'false',
         'boolean',
     ],
@@ -129,10 +142,31 @@ const PaginationGuidePage = () => (
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">compact</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            좁은 영역에서 번호와 이전 · 다음 버튼을 32×32 로, 간격을 8 에서 4 로 줄입니다. 이전 · 다음은
-                            글자 없이 아이콘만 남으며 <code>aria-label</code> 은 유지됩니다.
+                            좁은 영역에서 번호와 이전 · 다음 버튼을 32×32 로, 간격을 8 에서 4 로 줄입니다. 번호가
+                            길면(1000쪽 이상) 번호 칸이 늘어납니다. 이전 · 다음 글자는 그대로이므로 아이콘만 남기려면{' '}
+                            <code>prevLabel</code> · <code>nextLabel</code> 을 빈 글자로 넘깁니다. 버튼의{' '}
+                            <code>aria-label</code> 은 유지됩니다.
                         </p>
                         <CodeBlock code={USAGE_COMPACT} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className={BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">
+                            엣지 케이스 — 페이지가 아주 많을 때(모바일)
+                        </h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            <code>compact</code> 에 <code>siblingCount={'{0}'}</code> ·{' '}
+                            <code>maxVisibleItems={'{5}'}</code> 를 주면 번호 · … 가 합쳐서 최대 5개라 페이지가 늘어도
+                            한 줄을 지킵니다. 번호 칸은 최소 32 이고, 1000쪽이 넘으면 칸이 함께 늘어납니다. 아래는
+                            모바일 칸 폭(288)입니다. K-BIGx 기업혁신성장 기업 검색에서 페이징100 · 페이징1000 으로
+                            검색하면 실제 목록으로 볼 수 있습니다.
+                        </p>
+                        <div className="flex flex-wrap gap-4">
+                            <PaginationCompactEdgeDemo total={3} initialPage={1} />
+                            <PaginationCompactEdgeDemo total={129} initialPage={1} />
+                            <PaginationCompactEdgeDemo total={129} initialPage={65} />
+                            <PaginationCompactEdgeDemo total={1281} initialPage={1277} />
+                            <PaginationCompactEdgeDemo total={1281} initialPage={1281} />
+                        </div>
                     </div>
                 </div>
             </section>
