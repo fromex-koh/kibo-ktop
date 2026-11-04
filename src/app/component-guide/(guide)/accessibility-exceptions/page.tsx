@@ -912,6 +912,26 @@ const WAVE_PATENT_GRADE_SELECT_ISSUES = [
     {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
 ] as const
 
+// WAVE — 고객사 요청으로 둔 양쪽 정렬(text-justify) 알림. K-BIGx 웹 보고서 기술혁신정보 탭 맨 위 안내문과
+// Tech-Index 탭 맨 위 지수설명이 인쇄본(PDF 템플릿) 장 첫머리 안내처럼 좌우로 꽉 차게(줄바꿈 없이) 해 달라는
+// 고객사 요청에 따라 양쪽 정렬이다. 두 단락은 각 탭을 연 뒤에만 그려져 탭마다 1건씩, 한 화면에서 모두 2건이다.
+// 기업 · 기관이 같은 보고서 문서를 쓴다.
+const WAVE_CLIENT_REQUEST_SCREEN_ROUTES = [
+    '/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing',
+    '/org/k-bigx-report/innovation-growth-report/diagnostic-briefing',
+] as const
+const WAVE_JUSTIFIED_ISSUES = [
+    {
+        level: 'warning',
+        message: 'Justified text (2)',
+        count: 2,
+        screens: 1,
+        owner: '고객사 요청 · 기술혁신정보 안내문 · Tech-Index 지수설명(text-justify)',
+        verdict:
+            '좌우를 꽉 채워 달라는 고객사 요청으로 양쪽 정렬을 유지한다. KWCAG 2.1 검사항목이 아닌 WCAG 1.4.8(AAA) 권고다',
+    },
+] as const
+
 const WAVE_SCREEN_RESULTS = [
     {
         name: '보증추천',
@@ -1567,6 +1587,18 @@ const WAVE_SCREEN_RESULTS = [
         issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
         kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
+    {
+        name: 'K-BIGx 웹 보고서 · 기술혁신정보 탭',
+        path: WAVE_CLIENT_REQUEST_SCREEN_ROUTES[0],
+        issues: WAVE_JUSTIFIED_ISSUES,
+        kinds: [{label: 'Justified text 2건', level: 'warning', target: 'wave-justified'}],
+    },
+    {
+        name: '기관 K-BIGx 웹 보고서 · 기술혁신정보 탭',
+        path: WAVE_CLIENT_REQUEST_SCREEN_ROUTES[1],
+        issues: WAVE_JUSTIFIED_ISSUES,
+        kinds: [{label: 'Justified text 2건', level: 'warning', target: 'wave-justified'}],
+    },
 ] as const
 
 const countWaveIssues = (issues: readonly {level: 'error' | 'warning'; count: number}[], level: 'error' | 'warning') =>
@@ -1664,6 +1696,19 @@ const WAVE_SUMMARY_GROUPS = [
         screens: group.screens.filter((screen) =>
             screen.issues.some((issue) => issue.owner.startsWith('Radix Select') && issue.level === 'error'),
         ).length,
+    },
+    justified: {
+        count: group.screens.reduce(
+            (sum, screen) =>
+                sum +
+                screen.issues.reduce(
+                    (issueSum, issue) => issueSum + (issue.owner.startsWith('고객사 요청') ? issue.count : 0),
+                    0,
+                ),
+            0,
+        ),
+        screens: group.screens.filter((screen) => screen.issues.some((issue) => issue.owner.startsWith('고객사 요청')))
+            .length,
     },
     selectWarning: {
         count: group.screens.reduce(
@@ -2120,6 +2165,10 @@ const WAVE_NAV_GROUPS: readonly SectionNavGroup[] = [
             {href: '#wave-select-error', label: '[Radix Select] Missing form label'},
             {href: '#wave-select-warning', label: '[Radix Select] Select missing label'},
         ],
+    },
+    {
+        label: '고객사 요청',
+        links: [{href: '#wave-justified', label: '[양쪽 정렬] Justified text'}],
     },
 ]
 
@@ -3962,7 +4011,8 @@ const AccessibilityExceptionsPage = () => (
                                                 label: '외부 라이브러리 원인',
                                                 badge: '예외 검토',
                                                 color: 'success',
-                                                total: group.totals.errors + group.totals.warnings,
+                                                total:
+                                                    group.totals.errors + group.totals.warnings - group.justified.count,
                                                 reasons: [
                                                     {
                                                         name: 'Radix RadioGroup',
@@ -3991,6 +4041,21 @@ const AccessibilityExceptionsPage = () => (
                                                         screens: group.selectWarning.screens,
                                                         note: '숨은 select',
                                                         href: '#wave-select-warning',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                label: '고객사 요청',
+                                                badge: '예외 검토',
+                                                color: 'success',
+                                                total: group.justified.count,
+                                                reasons: [
+                                                    {
+                                                        name: '양쪽 정렬 · Justified text',
+                                                        count: group.justified.count,
+                                                        screens: group.justified.screens,
+                                                        note: '기술혁신정보 안내문 · Tech-Index 지수설명',
+                                                        href: '#wave-justified',
                                                     },
                                                 ],
                                             },
@@ -4553,6 +4618,106 @@ const AccessibilityExceptionsPage = () => (
                                 />
                             </section>
                         </div>
+                    </BaseCard>
+                </div>
+                <div id="wave-client-request" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('고객사 요청')}
+                        subtitle={
+                            <span className="typo-body-xl-regular">
+                                고객사가 요청한 표현이라 그대로 두는 검사 사례입니다. 요청 범위와 접근성 영향을 함께
+                                기록합니다.
+                            </span>
+                        }
+                        action={<Badge color="success">예외 검토</Badge>}
+                    >
+                        <section aria-labelledby="wave-justified" className="flex flex-col gap-3">
+                            <SectionHeader>
+                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-justified">
+                                    {sectionHeading('양쪽 정렬', 'Justified text')}
+                                </SectionHeaderTitle>
+                                <SectionHeaderDescription>
+                                    K-BIGx 웹 보고서 기술혁신정보 탭 안내문 · Tech-Index 탭 지수설명에서 탭마다 1건씩
+                                    나옵니다
+                                </SectionHeaderDescription>
+                            </SectionHeader>
+                            <IssueTable
+                                caption="WAVE 가 보고한 Justified text 알림과 건수"
+                                issues={WAVE_JUSTIFIED_ISSUES}
+                            />
+                            <LibraryDetailAccordion
+                                rows={[
+                                    {
+                                        term: '한눈에 보기',
+                                        body: (
+                                            <Alert variant="outline" color="info">
+                                                <Info aria-hidden="true" />
+                                                <AlertDescription>
+                                                    고객사 요청으로 안내문을 양쪽 정렬한 화면에서 WAVE가 표시한
+                                                    알림(Alert)입니다.{' '}
+                                                    <strong>
+                                                        오류가 아니며, 본 프로젝트 기준인 KWCAG 2.1 검사항목에도
+                                                        해당하지 않습니다.
+                                                    </strong>
+                                                </AlertDescription>
+                                            </Alert>
+                                        ),
+                                    },
+                                    {
+                                        term: '알림의 뜻',
+                                        body: (
+                                            <p>
+                                                양쪽 정렬은 단어 사이 간격이 고르지 않아 일부 사용자가 읽기 어려울 수
+                                                있으니 확인하라는 의미입니다. WCAG 2.1 성공기준 1.4.8 시각적
+                                                표현(AAA)에서 온 권고입니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '고객사 요청',
+                                        body: (
+                                            <p>
+                                                고객사 피드백으로 두 단락을 출력물(PDF 템플릿)과 같게 해 달라는 요청을
+                                                받았습니다. 기술혁신정보 안내문은 왼쪽 정렬이나 임의 줄 나눔 없이 좌우로
+                                                꽉 차게, Tech-Index 지수설명은 제목을 지우고 문장을 줄바꿈 없이 한
+                                                문단으로 이어 적게 했습니다. PDF 템플릿의 장 첫머리 안내문이 이미 양쪽
+                                                정렬이라 웹 보고서도 같게 맞췄습니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '영향과 조치',
+                                        body: (
+                                            <p>
+                                                <code className="font-mono">break-keep</code>으로 어절 중간에서 줄이
+                                                끊기지 않고, 마지막 줄은 왼쪽에 붙습니다. 이 두 단락에만 쓰고 표 · 목록
+                                                · 입력 안내에는 쓰지 않습니다.{' '}
+                                                <strong>
+                                                    고객사 요청이 유지되는 동안 예외 검토 항목으로 관리합니다.
+                                                </strong>
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '발생 화면',
+                                        body: <OccurrenceScreensAccordion routes={WAVE_CLIENT_REQUEST_SCREEN_ROUTES} />,
+                                    },
+                                    {
+                                        term: '근거',
+                                        body: (
+                                            <div className="flex flex-col items-start gap-1">
+                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#text_justified">
+                                                    WAVE Justified text 설명
+                                                </ReferenceLink>
+                                                <ReferenceLink href="https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html">
+                                                    WCAG 2.1 1.4.8 Visual Presentation(AAA)
+                                                </ReferenceLink>
+                                            </div>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </section>
                     </BaseCard>
                 </div>
             </TabsContent>

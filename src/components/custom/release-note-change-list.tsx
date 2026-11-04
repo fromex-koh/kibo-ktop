@@ -6,6 +6,7 @@ import type {
 } from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
 import {ListMarker} from '@/components/custom/list-marker'
+import {ReleaseNoteAiGuide} from '@/components/custom/release-note-ai-guide'
 
 // 릴리즈 한 건의 변경사항 목록 — 퍼블리싱 인덱스의 "버전 업데이트" 표와 가이드의 버전 업데이트 아카이브가 함께 쓴다.
 
@@ -41,6 +42,11 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
     if (cursor < change.length) parts.push(change.slice(cursor))
     return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
 }
+
+// 초안에서 '- AI 적용 내용:' 아래 줄들은 카드에 펼치지 않고 버튼 → 모달로 보인다(ReleaseNoteAiGuide).
+// '- AI 첨부:' 는 카드에 그리지 않고 모달 제목 아래 안내로만 보인다(복사되는 지시문에는 들어가지 않는다).
+const AI_GUIDE_LABEL = 'AI 적용 내용'
+const AI_ATTACHMENT_LABEL = 'AI 첨부'
 
 const RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN = /\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+)\)/g
 
@@ -133,6 +139,26 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoffValue}) => {
                     // 대상은 파일 경로라 고정폭 글꼴로 둔다 — 글 사이에서 경로가 바로 구분된다. 고정폭 글꼴은
                     // 같은 크기에서도 글자가 커 보여, 옆 설명글과 눈높이가 맞도록 한 단 줄인다.
                     const valueClassName = detail.label === '대상' ? 'min-w-0 font-mono text-xs break-all' : 'min-w-0'
+
+                    if (detail.label === AI_ATTACHMENT_LABEL) return null
+
+                    // AI 적용 내용 — 긴 지시문은 카드에 펼치지 않고 버튼 → 모달(텍스트 복사)로 둔다.
+                    if (detail.label === AI_GUIDE_LABEL) {
+                        return (
+                            <div key={detail.label} className="grid min-w-0 gap-1 sm:contents">
+                                <dt className="text-foreground-subtle font-medium break-keep">{detail.label}</dt>
+                                <dd className="min-w-0">
+                                    <ReleaseNoteAiGuide
+                                        title={titleText}
+                                        text={detail.value}
+                                        attachment={
+                                            change.details.find((item) => item.label === AI_ATTACHMENT_LABEL)?.value
+                                        }
+                                    />
+                                </dd>
+                            </div>
+                        )
+                    }
 
                     return (
                         <div key={`${detail.label}-${detail.value}`} className="grid min-w-0 gap-1 sm:contents">

@@ -7,7 +7,6 @@ import {ColumnChart} from '@/components/custom/column-chart'
 import {ComparisonRadarChart, ComparisonRadarLegend} from '@/components/custom/comparison-radar-chart'
 import {DistributionCurveChart} from '@/components/custom/distribution-curve-chart'
 import {Card, NoticeBox, SectionTitle, SubSectionTitle} from '@/components/custom/innovation-growth-report-parts'
-import {ListMarker} from '@/components/custom/list-marker'
 import {ScoreGauge} from '@/components/custom/score-gauge'
 import {TECH_INDEX_RADAR_STYLE} from '@/components/custom/tech-index-radar-style'
 import {
@@ -31,8 +30,8 @@ import {
 // [프론트엔드 연동] 값은 detail(report.techIndexDetail)과 점수(score, report.techIndex.score) · 평가일자(evaluationDate) ·
 // 기업명(companyName)으로 받는다 — 형태는 content/service/k-bigx-innovation-report.ts 의 InnovationTechIndexDetail.
 
-// 점수가 없을 때 요약 문장.
-const NO_SCORE_TEXT = '평가 점수가 없습니다.'
+// 점수가 없을 때 요약 문장 — 점수는 기술신용평가(TCB)를 바탕으로 내므로 그 이력이 없으면 산출할 수 없다.
+const NO_SCORE_TEXT = '기술신용평가(TCB) 이력이 없어 산출 불가합니다.'
 // Tech-Index 표준정보 비교 — 점수 · 비교 문장이 없을 때 요약 상자 문구.
 const NO_STANDARD_TEXT = '표준정보 비교 결과가 없습니다.'
 const EMPTY_VALUE = '-'
@@ -192,23 +191,11 @@ const InnovationGrowthReportTechIndex = ({
 
     return (
         <>
-            {/* 지수설명 — 탭 제목 띠에 붙여 둔다(-mt-4 로 문서 간격을 줄인다). 설명은 줄마다 목록 한 항목. */}
-            <section
-                aria-labelledby="ig-tech-index-description"
-                className="border-subtle-3 bg-card -mt-4 flex flex-col gap-4 rounded-lg border px-10 py-8"
-            >
-                <h3 id="ig-tech-index-description" className="typo-h4-bold text-foreground">
-                    지수설명
-                </h3>
-                <ul className="typo-body-xl-regular text-foreground-subtle flex flex-col gap-2">
-                    {detail.descriptions.map((description) => (
-                        <li key={description} className="flex">
-                            <ListMarker type="unordered" />
-                            <span className="min-w-0 break-keep">{description}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+            {/* 지수설명 — 제목 없이 탭 제목 띠에 붙여 둔다(-mt-4 로 문서 간격을 줄인다). 인쇄본 장 안내문처럼 받은 문장들을
+                줄을 바꾸지 않고 한 문단으로 이어 적고, 양쪽 정렬한다(마지막 줄은 왼쪽). */}
+            <p className="border-subtle-3 bg-card typo-body-xl-regular text-foreground-subtle -mt-4 rounded-lg border px-10 py-8 text-justify break-keep">
+                {detail.descriptions.join(' ')}
+            </p>
 
             {/* 혁신성장역량지수 — 구획 제목 없이 카드만 둔다(제목은 낭독기용). */}
             <section aria-labelledby="ig-tech-index-score" className="flex flex-col gap-6">
@@ -235,7 +222,7 @@ const InnovationGrowthReportTechIndex = ({
                                 </dd>
                             </dl>
                         </div>
-                        {/* 점수가 없으면(숫자가 아니면) 문장 대신 '평가 점수가 없습니다.' */}
+                        {/* 점수가 없으면(숫자가 아니면) 문장 대신 NO_SCORE_TEXT */}
                         <NoticeBox className="text-center">
                             {hasScore ? (
                                 <>

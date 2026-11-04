@@ -42,7 +42,7 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 // [프론트엔드 연동 · 표 노출 건수 규칙] 기획: 목록은 최대 10개 노출(표에 따라 넘치면 '기타' 1줄로 묶음). API 는 목록을 자르지 말고
 // 그대로 보낸다(이머징 기술만 예외 — API 가 기타 줄까지 만든다).
 //   표                    | 최대 줄 수        | 넘치면                         | 처리
-//   특허 보유현황          | 10               | 11번째부터 안 보임              | 화면(출원일 최근순으로 받는다)
+//   특허보유 현황          | 10               | 11번째부터 안 보임              | 화면(출원일 최근순으로 받는다)
 //   우수특허               | 11 (10 + 기타 1) | 11번째 줄 '기타'                | 화면(피인용 지수순 정렬 → 자름 → 합침)
 //   이머징 기술            | 11 (10 + 기타 1) | 11번째 줄 '기타'                | API 가 기타 줄까지 만들어 보낸다
 //   R&D 전문기관 현황      | 11 (10 + 기타 1) | 11번째 줄 '기타 …'(쪽마다)       | 화면(groupInstitutes)
@@ -237,8 +237,8 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
 
     return (
         <>
-            {/* 안내 — 탭 제목 띠에 붙여 둔다(-mt-4 로 문서 간격을 줄인다). */}
-            <p className="border-subtle-3 bg-card typo-body-xl-regular text-foreground-subtle -mt-4 rounded-lg border px-10 py-8 break-keep">
+            {/* 안내 — 탭 제목 띠에 붙여 둔다(-mt-4 로 문서 간격을 줄인다). 인쇄본 장 첫머리 안내처럼 양쪽 정렬(마지막 줄은 왼쪽). */}
+            <p className="border-subtle-3 bg-card typo-body-xl-regular text-foreground-subtle -mt-4 rounded-lg border px-10 py-8 text-justify break-keep">
                 {detail.notice}
             </p>
 
@@ -247,7 +247,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                 <SectionTitle id="ig-tech-holdings" title="보유기술" />
                 <div className="flex flex-col gap-6">
                     {/* 도넛은 조각에 올리면 말풍선으로 비중 · 건수를 보인다. */}
-                    <Card title="기술 보유현황" description={holdings.description} className="gap-4">
+                    <Card title="기술보유 현황" description={holdings.description} className="gap-4">
                         <div className="grid grid-cols-2 gap-12">
                             <PercentageDonutChart
                                 data={[...holdings.middleCategory]}
@@ -262,11 +262,11 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         </div>
                     </Card>
                     {/* [프론트엔드 연동 · 정렬] 출원일 최근순으로 받아 그 순서대로 그린다. 최대 10건 — 규칙은 파일 위 [표 노출 건수 규칙]. */}
-                    <Card title="특허 보유현황" className="gap-0">
+                    <Card title="특허보유 현황" className="gap-0">
                         <WithUnit unit="최대 10개 · 출원일 최근순">
                             <div className="flex flex-col">
                                 <ReportTable
-                                    caption="특허 보유현황(최대 10개, 출원일 최근순)"
+                                    caption="특허보유 현황(최대 10개, 출원일 최근순)"
                                     minWidthClassName="min-w-265"
                                     columns={[
                                         ...patentColumns('w-82.5'),

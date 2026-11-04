@@ -72,7 +72,10 @@ const EvaluationResultCard = ({
                     {/* 평가일은 라벨과 값이 한 줄이다(시안) — 좁은 화면에서 값이 길어지면 다음 줄로 넘어간다. */}
                     <p className="typo-body-l-regular flex flex-wrap gap-x-1">
                         <span className="text-foreground-subtle">평가일</span>
-                        <span className="text-foreground">{item.evaluatedAt}</span>
+                        {/* 평가일시 — 날짜 + 시각(HH:mm). 한 묶음이라 사이에서 줄이 바뀌지 않는다. */}
+                        <span className="text-foreground whitespace-nowrap">
+                            {item.evaluatedTime ? `${item.evaluatedAt} ${item.evaluatedTime}` : item.evaluatedAt}
+                        </span>
                     </p>
                 </div>
 

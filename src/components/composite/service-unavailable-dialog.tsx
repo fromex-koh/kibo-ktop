@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {
-    SERVICE_UNAVAILABLE_CONTACT,
+    getServiceUnavailableContact,
     getServiceUnavailableMessages,
     getServiceUnavailableTitle,
     type UnavailableService,
@@ -67,7 +67,9 @@ const ServiceUnavailableDialog = ({
                             <br className="max-sm:hidden" /> {guide}
                         </span>
                     </DialogDescription>
-                    <p className="typo-body-xl-medium text-foreground text-center">{SERVICE_UNAVAILABLE_CONTACT}</p>
+                    <p className="typo-body-xl-medium text-foreground text-center">
+                        {getServiceUnavailableContact(service)}
+                    </p>
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>

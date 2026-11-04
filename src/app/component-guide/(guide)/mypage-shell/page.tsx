@@ -109,7 +109,7 @@ const MENU_ROWS = [
         key: 'corp',
         cells: [
             <code key="userType">corp</code>,
-            '내 정보 · 대표자 이력 · 평가결과 조회 · K-BIGx 보고서 이력 · 유료 서비스 관리 · 1:1 문의',
+            '내 정보 · 대표자 이력 · 평가결과 조회 · K-BIGx 보고서 이력 · 이용권 관리 · 1:1 문의',
         ],
     },
     {

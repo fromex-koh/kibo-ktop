@@ -301,7 +301,7 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         usedIn: 'custom/pricing-policy.tsx · custom/paid-service-history.tsx',
         size: 'size-8 · size-13',
         items: [
-            {file: 'ticket-grade-minimum.webp', label: '미니멈', src: ticketGradeMinimum, className: 'size-13'},
+            {file: 'ticket-grade-minimum.webp', label: '1회권', src: ticketGradeMinimum, className: 'size-13'},
             {file: 'ticket-grade-basic.webp', label: '베이직', src: ticketGradeBasic, className: 'size-13'},
             {file: 'ticket-grade-standard.webp', label: '스탠다드', src: ticketGradeStandard, className: 'size-13'},
             {file: 'ticket-grade-premium.webp', label: '프리미엄', src: ticketGradePremium, className: 'size-13'},

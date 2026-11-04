@@ -71,7 +71,7 @@ const CRI_GRADES: readonly CriGrade[] = [
 const RATED_GRADES = CRI_GRADES.filter((item) => item.isRated)
 const MAX_PERCENTAGE = 100
 
-// 게이지 채움 비율 — 평가 등급은 순서대로 100 → 5(100 ÷ 22 반올림), 유보 · 평가 제외는 0. 이전평가이력 원 높이도 이 값을 쓴다.
+// 게이지 채움 비율 — 평가 등급은 순서대로 100 → 5(100 ÷ 22 반올림), 유보 · 평가 제외는 0. 기업신용등급 평가이력 원 높이도 이 값을 쓴다.
 const criGradePercentage = (item: CriGrade) => {
     if (!item.isRated) return 0
     const index = RATED_GRADES.indexOf(item)

@@ -36,7 +36,7 @@ const PAID_PLANS: readonly PricingPlan[] = [
         id: 'minimum',
         name: '1회권',
         image: '/images/ticket-grade/ticket-grade-minimum.webp',
-        price: 11000,
+        price: 22000,
         period: '1개월',
         quota: 1,
     },
@@ -44,17 +44,17 @@ const PAID_PLANS: readonly PricingPlan[] = [
         id: 'basic',
         name: '베이직',
         image: '/images/ticket-grade/ticket-grade-basic.webp',
-        price: 110000,
+        price: 330000,
         period: '1개월',
-        quota: 30,
+        quota: 20,
     },
     {
         id: 'standard',
         name: '스탠다드',
         image: '/images/ticket-grade/ticket-grade-standard.webp',
-        price: 330000,
+        price: 550000,
         period: '1개월',
-        quota: 100,
+        quota: 50,
     },
     {
         id: 'premium',
@@ -62,15 +62,9 @@ const PAID_PLANS: readonly PricingPlan[] = [
         image: '/images/ticket-grade/ticket-grade-premium.webp',
         price: 1100000,
         period: '1개월',
-        quota: 500,
+        quota: 200,
     },
 ]
-
-// 이용권 카드 아래 안내.
-const NO_DEDUCTION_NOTICE = {
-    title: '다음의 경우에는 이용 횟수가 차감되지 않습니다.',
-    items: ['자사 조회(본인 기업 조회)하는 경우', '기술혁신성장정보가 제공되지 않는 경우'],
-} as const
 
 const USAGE_GUIDE = {
     title: '이용 안내',
@@ -79,6 +73,7 @@ const USAGE_GUIDE = {
         '만료 시 잔여 횟수는 소멸되며 이월되지 않습니다.',
         '이용권을 여러 개 보유하실 수 있으며, 먼저 구매한 이용권부터 순서대로 사용됩니다.',
         '결제일로부터 7일 이내이며 미사용인 경우에 한하여 환불이 가능합니다.',
+        '타사 조회 시 일부 정보(단기연체·공공체납 등)는 제공 대상이 아닙니다.',
     ],
 } as const
 
@@ -87,7 +82,7 @@ const PARTNER_GUIDE = {
     items: [
         '기관은 기술보증기금과 계약 체결 후 이용하실 수 있습니다.',
         '자세한 사항은 아래 담당자에게 문의하여 주시기 바랍니다.',
-        '담당자 연락처 : 051-606-7596 / 메일주소 추후 확정',
+        '담당자 연락처 : 051-606-7596 / kbigx@kibo.or.kr',
     ],
 } as const
 
@@ -174,7 +169,6 @@ export {
     TECH_ORG_GUIDE,
     findPlan,
     FREE_SERVICE,
-    NO_DEDUCTION_NOTICE,
     PAID_PLANS,
     PAID_SERVICE,
     PARTNER_GUIDE,

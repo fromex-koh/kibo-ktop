@@ -97,8 +97,13 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
                         >
                             {inquiryType.label}
                         </ReportDetail>
-                        <ReportDetail label="조회일시" className="sm:shrink-0">
-                            {item.inquiredAt}
+                        {/* 조회일시 — 날짜 + 시각(HH:mm). 한 묶음이라 줄이 바뀌지 않는다. */}
+                        <ReportDetail
+                            label="조회일시"
+                            className="sm:shrink-0"
+                            valueClassName="typo-body-l-regular text-foreground whitespace-nowrap"
+                        >
+                            {item.inquiredTime ? `${item.inquiredAt} ${item.inquiredTime}` : item.inquiredAt}
                         </ReportDetail>
                         <ReportDetail label={isBulkReport ? '데이터 건수' : '특허명'} className="sm:min-w-0">
                             {item.patentName}

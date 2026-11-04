@@ -18,7 +18,7 @@ const MYPAGE_TABS = [
     ['info', '내 정보 확인'],
     ['status', '진행현황 결과조회'],
     ['report', 'K-BIGx 보고서 이력'],
-    ['paid', '유료 서비스 관리'],
+    ['paid', '이용권 관리'],
     ['qna', '1:1 문의'],
     ['alarm', '알림 설정'],
     ['payment', '결제 내역'],

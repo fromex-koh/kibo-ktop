@@ -53,7 +53,7 @@ import {
 // 데이터는 화면 보고서와 같은 InnovationGrowthReport.techInnovation 을 그대로 읽는다(R&D 이슈만 report.innovation.issues).
 // 쪽마다 '늘 한 쪽'에 들어가야 해서 긴 글자는 말줄임 · 글자 줄임으로 높이를 묶는다 — 규칙은 각 쪽 주석 참고.
 
-// 기술 보유현황 도넛 + 목록 — 도넛 300 · 목록 폭 684 · 간격 64, 목록 줄 여백 10(마지막 5) · 구분선 1.
+// 기술보유 현황 도넛 + 목록 — 도넛 300 · 목록 폭 684 · 간격 64, 목록 줄 여백 10(마지막 5) · 구분선 1.
 const DONUT_LIST_CLASSES = {
     className: 'gap-16',
     donutClassName: 'w-75',
@@ -104,7 +104,7 @@ const HoldingGroup = ({
     </div>
 )
 
-// 기술혁신정보 1 — 안내문 · 보유기술(기술 보유현황: 중분류 · 세부분야 기준 도넛을 위아래로).
+// 기술혁신정보 1 — 안내문 · 보유기술(기술보유 현황: 중분류 · 세부분야 기준 도넛을 위아래로).
 // 분류 색은 받은 순서대로 매긴다(kbxCategoryColor, '기타'만 회색) — 두 도넛 모두 비중 큰 순으로 받아야 색 순서가 맞다.
 const KbigxPrintInnovationHoldings = ({report}: {report: InnovationGrowthReport}) => {
     const {notice, holdings} = report.techInnovation
@@ -114,7 +114,7 @@ const KbigxPrintInnovationHoldings = ({report}: {report: InnovationGrowthReport}
             <KbxChapterNotice>{notice}</KbxChapterNotice>
             {/* 안내문 → 보유기술 80(쪽 기본 간격) · 설명 → 중분류 기준 40(소블록 간격 16 + mt-6 24). */}
             <KbxBlock title="보유기술">
-                <KbxSubBlock title="기술 보유현황">
+                <KbxSubBlock title="기술보유 현황">
                     <p className="kbx-text-21 leading-kbx-160 text-kbx-foreground-subtle break-keep">
                         {holdings.description}
                     </p>
@@ -128,7 +128,7 @@ const KbigxPrintInnovationHoldings = ({report}: {report: InnovationGrowthReport}
     )
 }
 
-// 특허 보유현황 2행 열 — 들여쓰기 96 · 출원번호 250 · 출원일 220 · 출원인 나머지 · 기술분야 260(본문 폭 1168 기준 비율).
+// 특허보유 현황 2행 열 — 들여쓰기 96 · 출원번호 250 · 출원일 220 · 출원인 나머지 · 기술분야 260(본문 폭 1168 기준 비율).
 // [주의] 열 폭을 바꾸면 k-bigx-print-report.ts 의 PATENT_PAGE(holderWidth · fieldWidth)도 같이 고친다 —
 // 행 높이 어림이 어긋나 10행이 쪽을 넘칠 수 있다.
 const PATENT_COLUMNS: readonly KbxStairTableColumn[] = [
@@ -149,7 +149,7 @@ const TwoLines = ({first, second}: {first: string; second: string}) => (
     </>
 )
 
-// 특허 보유현황 · 우수특허의 줄 수 상한 — 특허명 · 출원인 · 권리자 1줄, 기술분야 2줄에서 말줄임.
+// 특허보유 현황 · 우수특허의 줄 수 상한 — 특허명 · 출원인 · 권리자 1줄, 기술분야 2줄에서 말줄임.
 // k-bigx-print-report.ts 의 HOLDING_PATENT_LINE_CAPS 와 같은 값이다 — 한쪽을 바꾸면 다른 쪽도 같이 고친다.
 
 // 출원인 · 권리자 칸 — 각각 한 줄, 넘치면 말줄임(권리자는 이름만 줄이고 괄호는 남긴다).
@@ -164,7 +164,7 @@ const TruncatedHolder = ({applicant, rightHolder}: {applicant: string; rightHold
     </>
 )
 
-// 기술혁신정보 2 — 특허 보유현황(보유기술 이어짐). 특허명 1행 · 세부 2행의 계단식 표.
+// 기술혁신정보 2 — 특허보유 현황(보유기술 이어짐). 특허명 1행 · 세부 2행의 계단식 표.
 // [프론트엔드 연동] 출원일 최근순으로 받는다(화면이 정렬하지 않는다). 늘 한 쪽 · 10행 — 앞 10건을 그리고 모자라면 '-' 줄.
 // 값이 길어 10행이 쪽 높이를 넘으면 들어가는 행까지만 그린다(getKbigxPatentRows). 못 그린 특허는 웹 화면에서 본다.
 const KbigxPrintInnovationPatents = ({report}: {report: InnovationGrowthReport}) => {
@@ -172,9 +172,9 @@ const KbigxPrintInnovationPatents = ({report}: {report: InnovationGrowthReport})
     const {patentRows, emptyRows} = getKbigxPatentRows(patents)
 
     return (
-        <KbxSubBlock title="특허 보유현황" unit="최대 10개 · 출원일 최근순">
+        <KbxSubBlock title="특허보유 현황" unit="최대 10개 · 출원일 최근순">
             <KbxStairTable
-                caption="특허 보유현황(최대 10개, 출원일 최근순)"
+                caption="특허보유 현황(최대 10개, 출원일 최근순)"
                 titleHeader="특허명"
                 columns={PATENT_COLUMNS}
                 rows={[
@@ -636,7 +636,7 @@ const EXCELLENT_PATENT_NOTE =
 
 // 기술혁신정보 5 — 우수특허. 피인용 지수 높은 순 10건 + 11건 이상이면 '기타' 줄(나머지 피인용 횟수 합).
 // 정렬 · 기타 합은 getKbigxExcellentPatentRows(k-bigx-print-report.ts)가 한다 — 화면 보고서와 같은 규칙.
-// 늘 한 쪽 · 10행 — 모자라면 '-' 줄, 값이 길어 쪽을 넘으면 들어가는 행까지만. 줄 수 상한은 특허 보유현황과 같다.
+// 늘 한 쪽 · 10행 — 모자라면 '-' 줄, 값이 길어 쪽을 넘으면 들어가는 행까지만. 줄 수 상한은 특허보유 현황과 같다.
 const KbigxPrintInnovationExcellent = ({report}: {report: InnovationGrowthReport}) => {
     const {patents, otherCitations, emptyRows} = getKbigxExcellentPatentRows(report)
     const rows = [
@@ -868,7 +868,7 @@ const KbigxPrintInnovationInstitutes = ({report}: {report: InnovationGrowthRepor
         const hasRows = rndInstitutes[side].rows.length > 0
         const group = `${RND_INSTITUTE_LABELS[side]} (${hasRows ? formatKbxNumber(rndInstitutes[side].share, kbxFixed1Format) : KBX_EMPTY_VALUE}%)*`
         return [
-            {key: `${side}-name`, header: '기관명', group, isRowHeader: !index, hasHeaderDivider: index > 0},
+            {key: `${side}-name`, header: '기관명', group, isRowHeader: !index, hasDivider: index > 0},
             {key: `${side}-count`, header: '특허보유수', group, className: 'w-37.5'},
             {key: `${side}-ratio`, header: '비중(%)', group, className: 'w-32.5'},
         ]

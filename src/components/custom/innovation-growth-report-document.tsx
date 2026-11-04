@@ -88,7 +88,7 @@ import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 // 조회 화면의 [K-BIGx 보고서 출력] → 보고서 생성 모달 [보고서 생성] → 조회횟수 차감안내 모달 [이용권 사용]을 거쳐 열린다.
 //
 // 짜임(위에서 아래로): 남색 머리(배지 · 제목 · 기업명 | 발급일 · [보고서 다운로드]) → 구성 항목 탭 → 진단브리핑
-//   기업 정보(표) → 기술혁신정보(보유기술 도넛 · 관련 기업/특허 현황 · R&D 이슈 워드클라우드 · 정부 R&D 접수현황)
+//   기업 정보(표) → 기술혁신정보(보유기술 도넛 · 관련 기업/특허 현황 · R&D 이슈 워드클라우드 · 정부 R&D 사업 현황)
 //   → 혁신성장역량지수(점수 게이지 · 동일업종 상위 %) → 신용/재무 현황(신용등급 게이지 · 재무비율진단 · 부문별 비교 레이더 ·
 //   최근 3개년 재무 표 + 묶음 막대) → 활동성 정보(분기별 종업원수 선 · 인당 매출액 막대).
 // 다른 탭(기업현황 · 기술혁신정보 · Tech-Index · 신용/재무정보 · 활동성정보)은 탭마다 파일(innovation-growth-report-*.tsx)이 본문을 그린다.
@@ -109,7 +109,7 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 // 정보가 없는 값의 표시.
 const EMPTY_VALUE = '-'
 // 혁신성장역량지수 점수가 없을 때 요약 문장 · 게이지 이름(Tech-Index 탭 · 인쇄본과 같은 문구).
-const TECH_INDEX_NO_SCORE_TEXT = '평가 점수가 없습니다.'
+const TECH_INDEX_NO_SCORE_TEXT = '기술신용평가(TCB) 이력이 없어 산출 불가합니다.'
 // 차감 알림 식별자 — 같은 알림이 겹쳐 뜨지 않게 한다(새로고침 · 다시 그리기).
 const INNOVATION_REPORT_CREATED_TOAST_ID = 'k-bigx-innovation-report-created'
 // [퍼블리싱 확인용] 토스트를 보려고 ?from=use 없이도 화면을 열면 차감 알림을 띄운다.
@@ -150,7 +150,7 @@ const TAB_BANNER_ICONS: Record<InnovationReportSectionId, {src: StaticImageData;
     reference: {src: documentChartIcon, className: 'h-6 w-auto'},
 }
 
-// 관련 기업 및 특허현황 수치별 아이콘 — 데이터의 stat.id 로 고른다.
+// 관련 기업 및 특허 현황 수치별 아이콘 — 데이터의 stat.id 로 고른다.
 const INNOVATION_STAT_ICONS: Record<InnovationStatId, LucideIcon> = {
     companies: Building2,
     patents: Award,
@@ -311,7 +311,7 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
     )
     // 혁신성장역량지수 게이지 색 · 상태 이름 · 요약 문장은 점수 하나로 정한다(Tech-Index 탭과 같은 점수 구간).
     const techIndexGrade = getTechIndexGrade(report.techIndex.score)
-    // 점수 · 순위가 숫자가 아니면 값 없음 — 게이지 · 피라미드는 '-' 로 그리고, 요약 문장은 '평가 점수가 없습니다.'.
+    // 점수 · 순위가 숫자가 아니면 값 없음 — 게이지 · 피라미드는 '-' 로 그리고, 요약 문장은 TECH_INDEX_NO_SCORE_TEXT.
     const hasTechIndexScore = Number.isFinite(report.techIndex.score)
     const hasTechIndexPercentile = Number.isFinite(report.techIndex.industryPercentile)
     const techIndexScoreText = hasTechIndexScore
@@ -391,9 +391,10 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                         {INNOVATION_REPORT_BADGE}
                                     </p>
                                     <div className="flex flex-col">
-                                        {/* 머리 값(제목 · 기업명 · 발급일)이 비면 '-' — 자리와 구분선은 그대로 둔다. */}
-                                        <h1 className="typo-h1-bold wrap-break-word break-keep">
-                                            {report.title.trim() || EMPTY_VALUE}
+                                        {/* 제목(특허명)이 비면 빈칸 — 한 줄 높이는 남겨 아래 줄 위치가 그대로다.
+                                            기업명 · 발급일이 비면 '-' — 자리와 구분선은 그대로 둔다. */}
+                                        <h1 className="typo-h1-bold min-h-lh wrap-break-word break-keep">
+                                            {report.title.trim()}
                                         </h1>
                                         <p className="typo-body-l-regular flex flex-wrap items-center gap-x-4">
                                             <span>{report.companyName.trim() || EMPTY_VALUE}</span>
@@ -565,11 +566,11 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                     // [프론트엔드 연동 · 정렬] 비중 큰 순으로 받아 12시부터 시계 방향(첫 조각이 가장 진한 색).
                                                     // 조각에 올리면 분류명 툴팁이 뜬다(비중 · 건수는 범례).
                                                     ariaLabel="기업 보유기술 세부분야별 비중과 건수"
-                                                    // 그래프 자리 최소 높이를 두고 세로 가운데 정렬 — 옆 카드(관련 기업 및 특허현황)와 높이를 맞춘다.
+                                                    // 그래프 자리 최소 높이를 두고 세로 가운데 정렬 — 옆 카드(관련 기업 및 특허 현황)와 높이를 맞춘다.
                                                     className="flex min-h-77.5 flex-col justify-center"
                                                 />
                                             </Card>
-                                            <Card title="관련 기업 및 특허현황" className="gap-4">
+                                            <Card title="관련 기업 및 특허 현황" className="gap-4">
                                                 <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
                                                     {report.innovation.stats.map((stat) => {
                                                         const StatIcon = INNOVATION_STAT_ICONS[stat.id]
@@ -602,8 +603,9 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                             <dt className="typo-body-l-regular text-label-foreground">
                                                                 {row.label}
                                                             </dt>
+                                                            {/* 숫자 · 단위 크기는 위 수치 상자(StatBox)와 같다 — 숫자 typo-title-l, 단위는 그보다 작은 typo-body-xl. */}
                                                             <dd className="m-0">
-                                                                <span className="typo-body-xl-bold text-foreground">
+                                                                <span className="typo-title-l-bold text-foreground">
                                                                     {row.value || '-'}
                                                                 </span>
                                                                 {/* 값이 없으면 단위 없이 '-' 만 — 실제 0건과 구분한다. */}
@@ -640,14 +642,14 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                                 </div>
                                             </Card>
                                             <Card
-                                                title="정부 R&D사업 접수현황"
+                                                title="정부 R&D 사업 현황"
                                                 // 기준일자가 비면 '-'(인쇄본과 같다).
                                                 aside={`기준일자 · ${report.createdAt || EMPTY_VALUE}`}
                                                 className="gap-4"
                                             >
                                                 {/* 부처 목록과 안내문은 한 묶음으로 붙인다(카드 간격보다 좁게). 건수가 null 이면 '-' 만 적고 단위는 뺀다.
                                                     부처는 늘 4칸 이상 — 받은 부처가 없거나 적으면 빠진 부처명을 채운다(toRndSlots · 인쇄본과 같은 규칙).
-                                                    관련 기업 및 특허현황처럼 데이터가 없어도 칸은 두고 값만 '-'. */}
+                                                    관련 기업 및 특허 현황처럼 데이터가 없어도 칸은 두고 값만 '-'. */}
                                                 <div className="flex flex-col gap-2">
                                                     <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
                                                         {toRndSlots(report.innovation.rnd).map((item) => (
@@ -686,12 +688,9 @@ const ReportDocumentBody = ({report, isJustCreated = false, printPath}: Innovati
                                         <SectionTitle id="ig-report-tech-index" title="혁신성장역량지수" />
                                         <Card>
                                             {/* 두 칸은 lg(1024) 이상에서만 나란히 둔다 — 태블릿에서 나란히 두면 피라미드 칸이 글자 · 피라미드를
-                                                위아래로 쌓아 높아진다. 안내 문구는 게이지 칸의 오른쪽 위. */}
+                                                위아래로 쌓아 높아진다. */}
                                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                                                 <div className="flex flex-col gap-6">
-                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
-                                                        {report.techIndex.scoreNote}
-                                                    </p>
                                                     {/* 평가일자는 게이지 안이 아니라 원호 아래 8 간격에 가운데 정렬로 둔다(기업신용등급 카드와 같은 모양). */}
                                                     <div className="flex flex-col gap-2">
                                                         <ScoreGauge
@@ -1091,7 +1090,7 @@ const CompanyTabSkeleton = () => (
             />
         </section>
         <section aria-labelledby="ig-company-skeleton-management" className="flex flex-col gap-4">
-            <SectionTitle id="ig-company-skeleton-management" title="경영진 및 주주현황" />
+            <SectionTitle id="ig-company-skeleton-management" title="경영진 및 주주 현황" />
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <Card title="경영진 현황" className="gap-4">
                     <ReportTableSkeleton columns={3} rows={4} />
@@ -1108,7 +1107,7 @@ const CompanyTabSkeleton = () => (
             <ReportTableSkeleton columns={6} rows={3} />
         </section>
         <section aria-labelledby="ig-company-skeleton-ip" className="flex flex-col gap-4">
-            <SectionTitle id="ig-company-skeleton-ip" title="특허 및 인증현황" />
+            <SectionTitle id="ig-company-skeleton-ip" title="특허 및 인증 현황" />
             <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
                 {Array.from({length: COMPANY_SKELETON_IP_COUNT}, (_, index) => (
                     <div key={index} className="bg-card flex flex-col gap-3 rounded-sm px-5 py-4">
@@ -1119,7 +1118,7 @@ const CompanyTabSkeleton = () => (
             </div>
         </section>
         <section aria-labelledby="ig-company-skeleton-finance" className="flex flex-col gap-4">
-            <SectionTitle id="ig-company-skeleton-finance" title="재무현황" />
+            <SectionTitle id="ig-company-skeleton-finance" title="재무 현황" />
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <Card title="재무상태" className="gap-0">
                     <div className="flex min-w-0 flex-col gap-6">
@@ -1129,12 +1128,12 @@ const CompanyTabSkeleton = () => (
                         <ChartSkeleton type="overlay-column" label="재무상태를 불러오는 중입니다." />
                     </div>
                 </Card>
-                <Card title="손익현황" className="gap-0">
+                <Card title="손익 현황" className="gap-0">
                     <div className="flex min-w-0 flex-col gap-6">
                         <SkeletonWithUnit>
                             <ReportTableSkeleton columns={4} rows={3} />
                         </SkeletonWithUnit>
-                        <ChartSkeleton type="overlay-column" label="손익현황을 불러오는 중입니다." />
+                        <ChartSkeleton type="overlay-column" label="손익 현황을 불러오는 중입니다." />
                     </div>
                 </Card>
                 <Card title="주요재무비율" className="gap-0">
@@ -1156,7 +1155,7 @@ const CompanyTabSkeleton = () => (
             </div>
         </section>
         <section aria-labelledby="ig-company-skeleton-trade" className="flex flex-col gap-4">
-            <SectionTitle id="ig-company-skeleton-trade" title="거래처현황" />
+            <SectionTitle id="ig-company-skeleton-trade" title="거래처 현황" />
             <div className="flex flex-col gap-6">
                 {['매출처', '매입처'].map((title) => (
                     <Card key={title} title={title} className="gap-0">
@@ -1184,13 +1183,13 @@ const TechTabSkeleton = () => (
         <section aria-labelledby="ig-tech-skeleton-holdings" className="flex flex-col gap-4">
             <SectionTitle id="ig-tech-skeleton-holdings" title="보유기술" />
             <div className="flex flex-col gap-6">
-                <Card title="기술 보유현황" description={<SkeletonBar className="w-160" />}>
+                <Card title="기술보유 현황" description={<SkeletonBar className="w-160" />}>
                     <div className="grid grid-cols-2 gap-12">
                         <ChartSkeleton type="donut" label="중분류 기준 보유기술을 불러오는 중입니다." />
                         <ChartSkeleton type="donut" label="세부분야 기준 보유기술을 불러오는 중입니다." />
                     </div>
                 </Card>
-                <Card title="특허 보유현황" className="gap-0">
+                <Card title="특허보유 현황" className="gap-0">
                     <SkeletonWithUnit>
                         <ReportTableSkeleton columns={6} rows={10} isBadgeRow />
                     </SkeletonWithUnit>
@@ -1342,22 +1341,16 @@ const SkeletonNoticeBox = ({lines}: {lines: number}) => (
 
 const TechIndexTabSkeleton = () => (
     <>
-        {/* 지수설명 — 실제 탭과 같은 상자에 설명 줄 자리. */}
-        <section
-            aria-labelledby="ig-tech-index-skeleton-description"
-            className="border-subtle-3 bg-card -mt-4 flex flex-col gap-4 rounded-lg border px-10 py-8"
-        >
-            <h3 id="ig-tech-index-skeleton-description" className="typo-h4-bold text-foreground">
-                지수설명
-            </h3>
-            <div className="typo-body-xl-regular flex flex-col gap-2" aria-hidden="true">
+        {/* 지수설명 — 실제 탭과 같은 상자(제목 없음)에 설명 줄 자리. */}
+        <div className="border-subtle-3 bg-card -mt-4 rounded-lg border px-10 py-8">
+            <div className="typo-body-xl-regular flex flex-col" aria-hidden="true">
                 {Array.from({length: SKELETON_DESCRIPTION_COUNT}, (_, index) => (
                     <div key={index} className="flex h-lh items-center">
                         <SkeletonBar className={index === SKELETON_DESCRIPTION_COUNT - 1 ? 'w-2/3' : 'w-full'} />
                     </div>
                 ))}
             </div>
-        </section>
+        </div>
         <section aria-labelledby="ig-tech-index-skeleton-score" className="flex flex-col gap-6">
             <h3 id="ig-tech-index-skeleton-score" className="sr-only">
                 혁신성장역량지수
@@ -1452,8 +1445,8 @@ const CreditTabSkeleton = () => (
                     />
                     <SkeletonNoticeBox lines={2} />
                 </Card>
-                <Card title="이전평가이력">
-                    <GradeHistoryChartSkeleton label="이전평가이력을 불러오는 중입니다." />
+                <Card title="평가이력">
+                    <GradeHistoryChartSkeleton label="평가이력을 불러오는 중입니다." />
                     <ReportTableSkeleton columns={2} rows={2} />
                 </Card>
             </div>
@@ -1512,7 +1505,7 @@ const CreditTabSkeleton = () => (
                         <ReportTableSkeleton columns={8} rows={SKELETON_BORROWING_ROWS} headRows={2} />
                     </SkeletonWithUnit>
                 </Card>
-                <Card title="차입금 변동현황" className="gap-4">
+                <Card title="차입금 변동 현황" className="gap-4">
                     <ReportTableSkeleton columns={4} rows={4} />
                 </Card>
             </div>
@@ -1682,7 +1675,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                 <Card title="기업 보유기술" aside="세부분야 기준" className="xl:min-h-100">
                                     <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
                                 </Card>
-                                <Card title="관련 기업 및 특허현황" className="xl:min-h-100">
+                                <Card title="관련 기업 및 특허 현황" className="xl:min-h-100">
                                     <SkeletonStatGrid />
                                     <div className="flex flex-col gap-2">
                                         {Array.from({length: SKELETON_AVERAGE_COUNT}, (_, index) => (
@@ -1700,7 +1693,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                         className="h-54 sm:h-54"
                                     />
                                 </Card>
-                                <Card title="정부 R&D사업 접수현황" aside={<SkeletonBar className="w-32" />}>
+                                <Card title="정부 R&D 사업 현황" aside={<SkeletonBar className="w-32" />}>
                                     <SkeletonStatGrid />
                                     <SkeletonBar className="h-3 w-full" />
                                 </Card>

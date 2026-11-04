@@ -1,16 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {Check, CircleAlert} from 'lucide-react'
+import {Check} from 'lucide-react'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
 import {PaymentUnavailableDialog} from '@/components/composite/payment-unavailable-dialog'
-import {ListMarker} from '@/components/custom/list-marker'
 import PricingTabs from '@/components/custom/pricing-tabs'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Separator} from '@/components/ui/separator'
 import {
     FREE_SERVICE,
-    NO_DEDUCTION_NOTICE,
     PAID_PLANS,
     PAID_SERVICE,
     PARTNER_GUIDE,
@@ -30,7 +28,7 @@ import {cn} from '@/lib/utils'
 // 문구·이용권은 content/service/pricing.ts 에 있고, 이 파일은 짜임(카드·안내 상자)만 갖는다.
 //
 // 간격(시안): 탭과 본문 40 · 구획 사이 40 · 구획 제목과 설명 4 · 설명과 카드 24 · 카드 사이 24 ·
-// 카드와 아래 안내 16 · 안내 상자 사이 24.
+// 안내 상자 사이 24.
 
 const PRICE_FORMATTER = new Intl.NumberFormat('ko-KR')
 // 원화 표시 그림 — 라이트는 검정, 다크는 흰색 한 장만 보인다(헤더·푸터 로고와 같은 --logo-on-* 전환).
@@ -272,38 +270,17 @@ const KbigxPricing = ({paymentHref, isPurchaseUnavailable}: Omit<PricingPolicyPr
 
         <section aria-labelledby="pricing-paid-title" className="flex flex-col gap-6">
             <SectionHeading id="pricing-paid-title" title={PAID_SERVICE.title} description={PAID_SERVICE.description} />
-            <div className="flex flex-col gap-4">
-                {/* 이용권 카드 — PC 4열 · 태블릿 2열 · 모바일 1열. */}
-                <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-4">
-                    {PAID_PLANS.map((plan) => (
-                        <PlanCard
-                            key={plan.id}
-                            plan={plan}
-                            paymentHref={paymentHref}
-                            isPurchaseUnavailable={isPurchaseUnavailable}
-                        />
-                    ))}
-                </ul>
-                {/* 차감 예외 안내 — 채운 알림 아이콘(16) + 14 Bold 제목, 작은 점 목록(14). 아이콘은 EmptyState 와 같은
-                    방법으로 lucide 원을 채운다. */}
-                <div className="flex flex-col gap-2">
-                    <p className="typo-body-l-bold text-foreground flex items-center gap-2">
-                        <CircleAlert
-                            aria-hidden="true"
-                            className="text-foreground [&>line]:stroke-card size-4 shrink-0 [&>circle]:fill-current"
-                        />
-                        {NO_DEDUCTION_NOTICE.title}
-                    </p>
-                    <ul className="typo-body-l-regular text-foreground flex list-none flex-col gap-1">
-                        {NO_DEDUCTION_NOTICE.items.map((item) => (
-                            <li key={item} className="flex">
-                                <ListMarker type="unordered-small" />
-                                <span className="min-w-0 break-keep">{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
+            {/* 이용권 카드 — PC 4열 · 태블릿 2열 · 모바일 1열. */}
+            <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-4">
+                {PAID_PLANS.map((plan) => (
+                    <PlanCard
+                        key={plan.id}
+                        plan={plan}
+                        paymentHref={paymentHref}
+                        isPurchaseUnavailable={isPurchaseUnavailable}
+                    />
+                ))}
+            </ul>
         </section>
 
         {/* 이용 안내 상자 — InfoBox outline(흰 면 · 테두리 · 반경 16 · 여백 40·32)과 같은 규격이다. */}

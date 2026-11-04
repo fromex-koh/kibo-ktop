@@ -1,4 +1,4 @@
-// 현재 사용중인 이용권의 케이스별 목업 — 기획 와이어프레임의 "케이스 보기"와 같은 정의다.
+// 사용중 이용권(구매한 이용권 목록의 [사용중] 카드)의 케이스별 목업 — 기획 와이어프레임의 "케이스 보기"와 같은 정의다.
 // 날짜는 오늘 기준 상대값이라 언제 열어도 같은 케이스로 보인다. 카드 모양은 날짜가 아니라
 // suspension · suspensionRecord · isFree 같은 상태 값으로 정해진다.
 //
@@ -52,18 +52,18 @@ type PassSpec = {
     pause?: {start: number; end: number}
 }
 
-// 기본 = 스탠다드(사용중, 사용량 89/150).
+// 기본 = 스탠다드(사용중, 사용량 29/50) — 가격정책(content/service/pricing.ts)의 스탠다드 50건 · 550,000원 · 1개월.
 const BASE_SPEC: PassSpec = {
     plan: '스탠다드',
     isFree: false,
-    quota: 150,
-    used: 89,
-    remain: 61,
+    quota: 50,
+    used: 29,
+    remain: 21,
     daysTotal: 30,
     start: -22,
     endOrig: 7,
     purchased: -25,
-    price: 1000000,
+    price: 550000,
     gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
 }
 
@@ -72,7 +72,7 @@ const CASE_SPECS: Record<CurrentPassCase, Partial<PassSpec>> = {
     // pause.start = 신청한 날(= 시작일), pause.end = 이용중지 종료일.
     '2': {pause: {start: -2, end: 4}},
     '3': {pause: {start: -12, end: -6}},
-    '4': {start: -29, endOrig: 0, purchased: -32, used: 142, remain: 8},
+    '4': {start: -29, endOrig: 0, purchased: -32, used: 47, remain: 3},
     '5': {
         plan: 'K-BIGx 오픈 기념 이벤트',
         isFree: true,
@@ -87,8 +87,11 @@ const CASE_SPECS: Record<CurrentPassCase, Partial<PassSpec>> = {
         gradeImage: undefined,
     },
     // 구매 3일 전 · 사용 0건 — 환불 가능(구매 7일 이내 + 사용 이력 없음).
-    '6': {isRefundable: true, start: -3, endOrig: 26, purchased: -3, used: 0, remain: 150},
+    '6': {isRefundable: true, start: -3, endOrig: 26, purchased: -3, used: 0, remain: 50},
 }
+
+// 유료 이용권 이용기간 — 가격정책 이용권 카드의 기간(PAID_PLANS[].period)과 같다.
+const PAID_PASS_PERIOD = '1개월'
 
 const toPriceLabel = (price: number) => (price === 0 ? '무료 지급' : `${price.toLocaleString('ko-KR')}원`)
 
@@ -129,7 +132,8 @@ const createCurrentPassCase = (caseId: CurrentPassCase, today: Date): CurrentPai
         remainingDays,
         purchasedAt: at(spec.purchased),
         purchasedLabel: spec.isFree ? '지급일' : '구매일',
-        composition: `${spec.quota}건 / ${spec.daysTotal}일`,
+        // 유료 이용권은 가격정책의 이용기간(1개월)으로, 무료 지급 이용권은 지급 일수로 적는다.
+        composition: `${spec.quota}건 / ${spec.isFree ? `${spec.daysTotal}일` : PAID_PASS_PERIOD}`,
         price: toPriceLabel(spec.price),
         gradeImage: spec.gradeImage,
         isFree: spec.isFree,

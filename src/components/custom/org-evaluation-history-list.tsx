@@ -64,7 +64,11 @@ const IndividualEvaluationCard = ({
                     <CountBadge value={item.grade} unit={unit} />
                 </div>
                 <EvaluationDetailList>
-                    <EvaluationDetail label="평가일" value={item.evaluatedAt} />
+                    {/* 평가일 — 날짜 + 시각(HH:mm). */}
+                    <EvaluationDetail
+                        label="평가일"
+                        value={item.evaluatedTime ? `${item.evaluatedAt} ${item.evaluatedTime}` : item.evaluatedAt}
+                    />
                     <EvaluationDetail label="기업명" value={item.companyName} />
                     <EvaluationDetail label="기업 사업자번호" value={item.businessNumber} />
                     <EvaluationDetail label="조회 기관" value={item.requestedBy} />

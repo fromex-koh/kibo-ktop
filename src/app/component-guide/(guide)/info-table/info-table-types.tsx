@@ -15,7 +15,7 @@ const PAYMENT_COLUMNS = ['결제일', '상품명', '결제금액'] as const
 const PAYMENT_ROWS = [
     {key: 'p1', cells: ['2026-09-17', '프리미엄', '1,100,000원']},
     {key: 'p2', cells: ['2026-06-02', '스탠다드', '550,000원']},
-    {key: 'p3', cells: ['2026-03-11', '베이직', '220,000원']},
+    {key: 'p3', cells: ['2026-03-11', '베이직', '330,000원']},
 ] as const
 
 const HorizontalTypeDemo = () => (

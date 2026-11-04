@@ -93,7 +93,11 @@ const VerificationApplicationCard = ({
                         좁아지면 아래로 내려간다. */}
                     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
                         <EvaluationDetailList>
-                            <EvaluationDetail label="접수일" value={item.receivedAt} />
+                            {/* 접수일 — 날짜 + 시각(HH:mm). */}
+                            <EvaluationDetail
+                                label="접수일"
+                                value={item.receivedTime ? `${item.receivedAt} ${item.receivedTime}` : item.receivedAt}
+                            />
                             <EvaluationDetail label="기업명" value={item.companyName} />
                             <EvaluationDetail label="기업 사업자번호" value={item.businessNumber} />
                         </EvaluationDetailList>

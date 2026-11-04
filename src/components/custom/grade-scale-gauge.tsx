@@ -9,7 +9,8 @@ import {cn} from '@/lib/utils'
 // 늘어놓아 어느 단계인지 함께 보인다. K-BIGx 기업혁신성장 보고서 신용/재무정보 탭 "현금흐름등급" 카드에서 쓴다.
 //
 // 짜임: 원호는 ArcGauge(size md) — 지름 260 · 굵기 37 · 위 172 만 보임. 채움 길이 = (현재 등급 순번 ÷ 등급 수), 채움 색 =
-//   현재 등급 칸의 색. 가운데 글자: 등급 40 Bold → 설명 16 Bold(예: 현재 등급).
+//   현재 등급 칸의 색. 가운데 글자: 등급 40 Bold → 설명 16 Bold(예: 현재 등급) → 날짜 줄(details — 이름 옅게 + 값,
+//   보고서 현금흐름등급의 결산일자. 기업신용등급 게이지의 평가일자 줄과 같은 글자).
 //   → 16 → 등급 칸 줄: 높이 32 · 모서리 8 · 간격 8 · 14 Bold, 칸 폭은 똑같이 나눈다.
 //   → 8 → 척도 줄(높이 26 · 12 Regular): 첫 칸 아래 낮은 쪽 이름 · 가운데 칸들 아래 옅은 띠(accent-subtle)에 척도 이름 · 끝 칸 아래 높은 쪽 이름.
 // 칸 색 · 칸 글자 색은 데이터가 넘긴다(color · foreground). 다크에서 칸 색이 바뀌면 글자 색도 함께 바뀌어야 하므로
@@ -46,6 +47,8 @@ type GradeScaleGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
     current: string
     /** 가운데 등급 아래 설명(기본 '현재 등급'). 빈 문자열이면 등급만 보인다(보고서 신용/재무정보 현금흐름등급). */
     description?: string
+    /** 등급(· 설명) 아래 날짜 줄 — 이름 · 값 쌍(예: 결산일자 2024-08-04). 값이 비면 사용처가 '-' 를 넘긴다. */
+    details?: readonly {label: string; value: string}[]
     /** 척도 줄 — 낮은 쪽 · 높은 쪽 이름과 가운데 척도 이름. */
     lowLabel?: string
     highLabel?: string
@@ -63,6 +66,7 @@ const GradeScaleGauge = ({
     grades,
     current,
     description = '현재 등급',
+    details = [],
     lowLabel,
     highLabel,
     scaleLabel,
@@ -86,12 +90,24 @@ const GradeScaleGauge = ({
                 size="md"
                 trackColor="var(--ds-grade-scale-track)"
                 ariaLabel={ariaLabel}
-                // 설명이 없으면 아래 여백을 12 → 32(pb-8)로 늘려, 등급 글자가 설명이 있을 때와 비슷한 높이에 오게 한다.
-                overlayClassName={cn('px-10', !description && 'pb-8')}
+                // 설명 · 날짜 줄이 없으면 아래 여백을 12 → 32(pb-8)로 늘려, 등급 글자가 설명이 있을 때와 비슷한 높이에 오게 한다.
+                overlayClassName={cn('px-10', !description && !details.length && 'pb-8')}
             >
                 {/* 그림 속 글자라 p 대신 div — 값은 role="img" 이름으로 읽힌다. */}
                 <div className="typo-display-m-bold text-foreground whitespace-nowrap">{current}</div>
                 {description ? <div className="typo-body-xl-bold text-foreground break-keep">{description}</div> : null}
+                {details.length ? (
+                    <dl className="flex flex-col items-center">
+                        {details.map((detail) => (
+                            <div key={detail.label} className="flex flex-wrap items-center justify-center gap-x-2">
+                                <dt className="typo-body-xl-regular text-foreground-subtle">{detail.label}</dt>
+                                <dd className="typo-body-xl-medium text-label-foreground m-0 tabular-nums">
+                                    {detail.value}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                ) : null}
             </ArcGauge>
 
             {grades.length ? (

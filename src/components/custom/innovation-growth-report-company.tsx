@@ -38,7 +38,7 @@ import {
     INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 
-// K-BIGx 기업혁신성장 보고서 · 기업현황 탭 본문 — 개요 → 경영진 및 주주현황 → 관계기업 현황 → 특허 및 인증현황 → 재무현황 → 거래처현황.
+// K-BIGx 기업혁신성장 보고서 · 기업 현황 탭 본문 — 개요 → 경영진 및 주주 현황 → 관계기업 현황 → 특허 및 인증 현황 → 재무 현황 → 거래처 현황.
 // 보고서 머리 · 탭 줄 · 탭 제목 줄은 innovation-growth-report-document.tsx 가 그린다.
 // 반응형 없음 — PC 화면만 그린다(문서 최소 폭 1200, 그보다 좁은 창에서만 가로 스크롤).
 //
@@ -54,7 +54,7 @@ const EMPTY_VALUE = '-'
 const formatAmount = (value: number) => (Number.isFinite(value) ? numberFormatter.format(value) : EMPTY_VALUE)
 // 비율 칸 — 값이 없으면 '-'(소수 둘째 자리).
 const formatRatio = (value: number) => (Number.isFinite(value) ? ratioFormatter.format(value) : EMPTY_VALUE)
-// [프론트엔드 연동] 관계기업 현황 · 거래처현황(매출처 · 매입처) 표의 최대 줄 수(기획: 최대 10개 노출).
+// [프론트엔드 연동] 관계기업 현황 · 거래처 현황(매출처 · 매입처) 표의 최대 줄 수(기획: 최대 10개 노출).
 // 받은 순서대로 앞에서부터 10건만 그리고 11번째부터는 그리지 않는다 — API 는 목록을 자르지 않고 그대로 보낸다.
 const COMPANY_LIST_LIMIT = 10
 // [프론트엔드 연동] 경영진 현황 · 주주 현황 표의 줄 수 — 늘 5줄. 앞에서부터 5건만 그리고(6번째부터 안 보임),
@@ -106,7 +106,7 @@ const IP_ICONS: Record<InnovationIpId, LucideIcon> = {
     design: Palette,
     trademark: FilePenLine,
 }
-// 특허 및 인증현황 칸 — 4칸씩 고정(인쇄본 kbigx-print-company.tsx 와 같은 순서 · 이름).
+// 특허 및 인증 현황 칸 — 4칸씩 고정(인쇄본 kbigx-print-company.tsx 와 같은 순서 · 이름).
 const IP_ITEMS: readonly {id: InnovationIpId; label: string}[] = [
     {id: 'patent', label: '특허'},
     {id: 'utility-model', label: '실용신안'},
@@ -243,7 +243,7 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
     )
     const customerTable = tradeTable(finance.years, status.customers, '매출비중')
     const supplierTable = tradeTable(finance.years, status.suppliers, '매입비중')
-    // 재무현황 — 카드마다 값이 하나도 없으면(연도 없음 · 행 없음 · 모두 숫자 아님) 표는 줄을 두고 칸만 '-', 그래프 자리는 빈 상태.
+    // 재무 현황 — 카드마다 값이 하나도 없으면(연도 없음 · 행 없음 · 모두 숫자 아님) 표는 줄을 두고 칸만 '-', 그래프 자리는 빈 상태.
     const hasFinanceRows = (rows: readonly InnovationFinanceRow[]) =>
         finance.years.length > 0 && rows.some((row) => row.values.some((value) => Number.isFinite(value)))
     const hasFinance = {
@@ -281,9 +281,9 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                 </Card>
             </section>
 
-            {/* 경영진 및 주주현황 */}
+            {/* 경영진 및 주주 현황 */}
             <section aria-labelledby="ig-company-management" className="flex flex-col gap-4">
-                <SectionTitle id="ig-company-management" title="경영진 및 주주현황" />
+                <SectionTitle id="ig-company-management" title="경영진 및 주주 현황" />
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <Card title="경영진 현황" className="gap-4">
                         <FixedRowsTable
@@ -379,9 +379,9 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                 </Card>
             </section>
 
-            {/* 특허 및 인증현황 — 지식재산 건수 상자(intellectualProperty) 뒤에 인증 여부 상자(certifications)를 4열로 잇는다. */}
+            {/* 특허 및 인증 현황 — 지식재산 건수 상자(intellectualProperty) 뒤에 인증 여부 상자(certifications)를 4열로 잇는다. */}
             <section aria-labelledby="ig-company-ip" className="flex flex-col gap-4">
-                <SectionTitle id="ig-company-ip" title="특허 및 인증현황" />
+                <SectionTitle id="ig-company-ip" title="특허 및 인증 현황" />
                 <Card>
                     <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
                         {/* 건수 4칸 · 인증 4칸 고정(인쇄본과 같다) — 받은 목록에서 같은 id 로 찾고, 없거나 값이 없으면
@@ -426,11 +426,11 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                 </Card>
             </section>
 
-            {/* 재무현황 — 카드마다 표(위) + 그래프(아래). 재무상태 · 손익은 겹친 막대, 비율 · 현금흐름은 여러 선.
+            {/* 재무 현황 — 카드마다 표(위) + 그래프(아래). 재무상태 · 손익은 겹친 막대, 비율 · 현금흐름은 여러 선.
                 단위는 WithUnit 규칙, 표 → 그래프 간격 24. 값이 하나도 없으면 표는 줄을 그대로 두고 칸만 '-'(연도도 없으면
                 연도 머리 3칸 '-'), 그래프 자리는 같은 높이(min-h-64 = 256)의 빈 상태. */}
             <section aria-labelledby="ig-company-finance" className="flex flex-col gap-4">
-                <SectionTitle id="ig-company-finance" title="재무현황" />
+                <SectionTitle id="ig-company-finance" title="재무 현황" />
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <Card title="재무상태" className="gap-0">
                         <div className="flex min-w-0 flex-col gap-6">
@@ -466,11 +466,11 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                             )}
                         </div>
                     </Card>
-                    <Card title="손익현황" className="gap-0">
+                    <Card title="손익 현황" className="gap-0">
                         <div className="flex min-w-0 flex-col gap-6">
                             <WithUnit unit="단위: 백만원">
                                 <ReportTable
-                                    caption="손익현황(단위: 백만원)"
+                                    caption="손익 현황(단위: 백만원)"
                                     minWidthClassName="min-w-90"
                                     {...incomeTable}
                                 />
@@ -479,7 +479,7 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                                 <>
                                     {incomeBase ? (
                                         <OverlayColumnChart
-                                            ariaLabel="연도별 손익현황 — 매출액 대비 영업이익 · 당기순이익"
+                                            ariaLabel="연도별 손익 현황 — 매출액 대비 영업이익 · 당기순이익"
                                             unit="백만원"
                                             data={financeChartData(finance.years, fixedFinance.income)}
                                             base={{
@@ -562,9 +562,9 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                 </div>
             </section>
 
-            {/* 거래처현황 — 매출처 · 매입처 카드. 비중 열은 finance.years 를 쓴다(shares 도 같은 순서). */}
+            {/* 거래처 현황 — 매출처 · 매입처 카드. 비중 열은 finance.years 를 쓴다(shares 도 같은 순서). */}
             <section aria-labelledby="ig-company-trade" className="flex flex-col gap-4">
-                <SectionTitle id="ig-company-trade" title="거래처현황" />
+                <SectionTitle id="ig-company-trade" title="거래처 현황" />
                 <div className="flex flex-col gap-6">
                     <Card title="매출처" className="gap-0">
                         <WithUnit unit="단위: %">

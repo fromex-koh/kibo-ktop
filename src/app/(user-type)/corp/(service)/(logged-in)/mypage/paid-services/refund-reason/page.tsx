@@ -7,7 +7,7 @@ export const metadata: Metadata = {title: '환불하기'}
 const CorpPaidServiceRefundReasonPage = () => (
     <>
         <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
-            <PopupPreviewNote title="환불하기">유료 서비스 관리의 [환불하기] 버튼이 호출하는 팝업</PopupPreviewNote>
+            <PopupPreviewNote title="환불하기">이용권 관리의 [환불하기] 버튼이 호출하는 팝업</PopupPreviewNote>
         </main>
         <PaidServiceRefundPreview />
     </>

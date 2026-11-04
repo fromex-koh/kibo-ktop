@@ -10,7 +10,7 @@ const CorpPaidServiceSuspendUnavailableFreePassPage = () => (
     <>
         <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
             <PopupPreviewNote title="이용중지불가(무료이용권)">
-                현재 사용중인 이용권의 [이용중지] 버튼을 눌렀을 때 호출되는 팝업 — 무료로 지급된 이용권일 때
+                사용중 이용권 카드의 [이용중지] 버튼을 눌렀을 때 호출되는 팝업 — 무료로 지급된 이용권일 때
             </PopupPreviewNote>
         </main>
         <NoticeDialog defaultOpen title="이용중지 불가 안내" message={SUSPEND_UNAVAILABLE_MESSAGE.freePass} />

@@ -17,7 +17,7 @@ import {LineChart} from '@/components/custom/line-chart'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
 import {EmptyState} from '@/components/composite/empty-state'
-import {PRIVATE_PLACEHOLDER, PRIVATE_SHORT_LABEL, PrivateContent} from '@/components/composite/private-content'
+import {PRIVATE_PLACEHOLDER, PrivateContent} from '@/components/composite/private-content'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {cn} from '@/lib/utils'
 import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
@@ -26,6 +26,8 @@ import {
     BORROWING_CHANGE_LABELS,
     getRecentYears,
     INNOVATION_CREDIT_VISIBILITY,
+    applyCreditInfoVisibility,
+    CREDIT_INFO_HIDDEN_TEXT,
     INSTITUTION_LABELS,
     COLLATERAL_LABELS,
     pickYearValue,
@@ -38,8 +40,8 @@ import {
     INNOVATION_REPORT_GRADE_HISTORY_COUNT,
 } from '@/content/service/k-bigx-innovation-report'
 
-// K-BIGx 기업혁신성장 보고서 · 신용/재무정보 탭 본문 — 기업신용등급(게이지 · 이전평가이력) → 현금흐름등급(등급 척도 · 평가이력 · 기업신용정보 표)
-// → 재무비율진단(성장성 · 수익성 · 안정성 · 활동성) → 차입금 분석(변동률 · 현황 표 · 변동현황 표) → 차입금 현황(기관별 비중 · 신용/담보 비중 · 담보 현황).
+// K-BIGx 기업혁신성장 보고서 · 신용/재무정보 탭 본문 — 기업신용등급(게이지 · 평가이력) → 현금흐름등급(등급 척도 · 평가이력 · 기업신용정보 표)
+// → 재무비율진단(성장성 · 수익성 · 안정성 · 활동성) → 차입금 분석(변동률 · 현황 표 · 변동 현황 표) → 차입금 현황(기관별 비중 · 신용/담보 비중 · 담보 현황).
 // 보고서 머리 · 탭 줄 · 탭 제목 줄은 innovation-growth-report-document.tsx 가 그린다.
 // 반응형 없음 — PC 화면만 그린다(문서 최소 폭 1200, 그보다 좁은 창에서만 가로 스크롤).
 //
@@ -68,17 +70,19 @@ const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.ma
 }))
 const CASH_FLOW_LOW_LABEL = CASH_FLOW_GRADES_LOW_FIRST[0].name
 const CASH_FLOW_HIGH_LABEL = CASH_FLOW_GRADES_LOW_FIRST[CASH_FLOW_GRADES_LOW_FIRST.length - 1].name
+// 현금흐름등급 원호 안 날짜 줄 — cashFlow.details 에서 이 label 로 찾아 적는다(PDF 템플릿과 같다). 없으면 '-'.
+const CASH_FLOW_DETAIL_LABELS = ['결산일자'] as const
 
 const BORROWING_TREND_COLOR = 'var(--ds-report-series-3)'
 // 신용/담보 비중 — 선 모양은 보고서 공통(REPORT_LINE_STYLES)의 1번 · 4번을 쓰고, 아래 비율 막대(RatioStackBar)도 같은 색을 쓴다.
 const CREDIT_LINE_STYLE = REPORT_LINE_STYLES[0]
 const COLLATERAL_LINE_STYLE = REPORT_LINE_STYLES[3]
 
-// [프론트엔드 연동 · 정렬] 기획 메모 '최신순으로 정렬' — 이전평가이력(평가일자) · 현금흐름등급(결산일자) 표는 날짜 최근 것부터 그린다.
+// [프론트엔드 연동 · 정렬] 기획 메모 '최신순으로 정렬' — 기업신용등급 평가이력(평가일자) · 현금흐름등급(결산일자) 표는 날짜 최근 것부터 그린다.
 // 받은 순서와 무관하게 화면이 날짜(YYYY-MM-DD 문자열)로 정렬한다.
 const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
 
-// 이전평가이력 원 높이 — CRI 등급표의 채움 비율(등급이 높을수록 큼). 표에 없는 등급은 0(맨 아래).
+// 기업신용등급 평가이력 원 높이 — CRI 등급표의 채움 비율(등급이 높을수록 큼). 표에 없는 등급은 0(맨 아래).
 const toGradeValue = (grade: string) => {
     const item = findCriGrade(grade)
     return item ? criGradePercentage(item) : 0
@@ -99,7 +103,7 @@ const GradeHistory = ({
     gradeHeader,
     dateHeader,
 }: {
-    /** 그래프 · 표 이름(낭독기용) — 예: 기업신용등급 이전평가이력. */
+    /** 그래프 · 표 이름(낭독기용) — 예: 기업신용등급 평가이력. */
     title: string
     history: readonly GradeHistoryRecord[]
     /** 등급 → 원 높이(0~100, 높을수록 위). */
@@ -266,8 +270,9 @@ const BorrowingTable = ({
 }
 
 // 기업신용정보 표 하나 — 인쇄본(kbigx-print-credit.tsx CreditInfoBlock)과 같은 규칙.
-//   · 비공개 표(케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '비공개' 한 줄, 제목 옆 상태 글은 뺀다.
-//   · 상태가 '해당없음' 인 표: 비공개 케이스여도 상태 글 + '해당사항 없음' 줄을 그대로 보인다.
+//   · 가린 표(케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '열람불가(제공 대상 외 정보)' 한 줄, 제목 옆 상태 글은 뺀다.
+//     받은 상태가 '해당없음' 이어도 가린다.
+//   · 상태가 '해당없음' 인 표(가리지 않은 표 · 개인 열람의 법인등기정보): 상태 글 + '해당사항 없음' 줄.
 const CREDIT_STATUS_NONE = '해당없음'
 // 숫자 값(금액 1,200,000 · 일자 2023-11-06 · 번호 123-45-67890) — 말줄임하지 않고 다 보인다.
 const CREDIT_NUMBER_VALUE = /^[-+]?\d[\d,.-]*$/
@@ -287,7 +292,7 @@ const CreditNumberValue = ({value}: {value: string}) => (
     </span>
 )
 const isCreditRowPrivate = (table: InnovationCreditInfoTable, visibility: InnovationCreditVisibility) =>
-    table.status !== CREDIT_STATUS_NONE && visibility.hiddenInfoTables.includes(table.id)
+    visibility.hiddenInfoTables.includes(table.id)
 const CreditInfoTable = ({
     table,
     visibility,
@@ -298,7 +303,7 @@ const CreditInfoTable = ({
     const isRowPrivate = isCreditRowPrivate(table, visibility)
     return (
         <ReportTable
-            caption={`${table.title} — ${isRowPrivate ? PRIVATE_SHORT_LABEL : table.status}`}
+            caption={`${table.title} — ${isRowPrivate ? CREDIT_INFO_HIDDEN_TEXT : table.status}`}
             minWidthClassName="min-w-0"
             columns={table.columns.map((column, index) => ({
                 key: String(index),
@@ -326,8 +331,8 @@ const CreditInfoTable = ({
                           ),
                       }))
             }
-            emptyText={isRowPrivate ? PRIVATE_SHORT_LABEL : EMPTY_TABLE_TEXT}
-            // '해당사항 없음' · '비공개' 줄은 옅은 면으로 값 줄과 구분한다(PDF 템플릿과 같은 규칙).
+            emptyText={isRowPrivate ? CREDIT_INFO_HIDDEN_TEXT : EMPTY_TABLE_TEXT}
+            // '해당사항 없음' · '열람불가' 줄은 옅은 면으로 값 줄과 구분한다(PDF 템플릿과 같은 규칙).
             emptyClassName="bg-surface-subtle text-foreground-subtle"
         />
     )
@@ -558,9 +563,9 @@ const InnovationGrowthReportCredit = ({
                         {/* 등급 정의 — 등급 코드로 CRI 등급표(cri-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다(게이지가 '등급 코드 확인 필요' 표시). */}
                         {ratingDefinition ? <NoticeBox className="text-center">{ratingDefinition}</NoticeBox> : null}
                     </Card>
-                    <Card title="이전평가이력">
+                    <Card title="평가이력">
                         <GradeHistory
-                            title="기업신용등급 이전평가이력"
+                            title="기업신용등급 평가이력"
                             history={ratingHistory}
                             toValue={toGradeValue}
                             gradeHeader="신용등급"
@@ -575,42 +580,57 @@ const InnovationGrowthReportCredit = ({
                 <SectionTitle id="ig-credit-cash-flow" title="현금흐름등급" />
                 <Card>
                     <div className="grid grid-cols-1 items-center gap-6 xl:grid-cols-2">
-                        <GradeScaleGauge
-                            grades={CASH_FLOW_SCALE}
-                            // 등급을 받지 못하면 가운데에 '-'(기업신용등급 게이지 · PDF 와 같다).
-                            current={cashFlow.grade || EMPTY_VALUE}
-                            // 원호 안에는 등급만 둔다(설명 글자 없음).
-                            description=""
-                            lowLabel={CASH_FLOW_LOW_LABEL}
-                            highLabel={CASH_FLOW_HIGH_LABEL}
-                            scaleLabel="현금흐름 창출 능력"
-                            ariaLabel={`현금흐름등급 ${cashFlow.grade || EMPTY_VALUE}${cashFlowName ? `(${cashFlowName})` : ''}`}
-                        />
-                        {/* 평가이력 — 기업신용등급 이전평가이력과 같은 추이 그래프 + 최근 3건 표. */}
-                        <GradeHistory
-                            title="현금흐름등급 평가이력"
-                            history={cashFlow.history}
-                            toValue={toCashFlowValue}
-                            gradeHeader="현금흐름등급"
-                            dateHeader="결산일자"
-                        />
+                        {/* 게이지 칸 — 게이지(원호 안 등급 · 결산일자) · 등급 칸 줄 아래에 등급 정의 상자(칸 폭 안). */}
+                        <div className="flex flex-col gap-6">
+                            <GradeScaleGauge
+                                grades={CASH_FLOW_SCALE}
+                                // 등급을 받지 못하면 가운데에 '-'(기업신용등급 게이지 · PDF 와 같다).
+                                current={cashFlow.grade || EMPTY_VALUE}
+                                // 원호 안에는 등급만 둔다(설명 글자 없음).
+                                description=""
+                                lowLabel={CASH_FLOW_LOW_LABEL}
+                                highLabel={CASH_FLOW_HIGH_LABEL}
+                                scaleLabel="현금흐름 창출 능력"
+                                // 원호 안 등급 아래 결산일자(PDF 템플릿과 같은 값 · 비면 '-').
+                                details={CASH_FLOW_DETAIL_LABELS.map((label) => ({
+                                    label,
+                                    value: cashFlow.details.find((item) => item.label === label)?.value || EMPTY_VALUE,
+                                }))}
+                                ariaLabel={`현금흐름등급 ${cashFlow.grade || EMPTY_VALUE}${cashFlowName ? `(${cashFlowName})` : ''}`}
+                            />
+                            {/* 등급 정의 — 등급 코드로 현금흐름등급표(cash-flow-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다. */}
+                            {cashFlowDefinition ? (
+                                <NoticeBox className="text-center">{cashFlowDefinition}</NoticeBox>
+                            ) : null}
+                        </div>
+                        {/* 평가이력 — 소제목 + 기업신용등급 평가이력과 같은 추이 그래프 + 최근 3건 표. */}
+                        <div className="flex flex-col gap-6">
+                            <h4 className="typo-body-xl-bold text-foreground">평가이력</h4>
+                            <GradeHistory
+                                title="현금흐름등급 평가이력"
+                                history={cashFlow.history}
+                                toValue={toCashFlowValue}
+                                gradeHeader="현금흐름등급"
+                                dateHeader="결산일자"
+                            />
+                        </div>
                     </div>
-                    {/* 등급 정의 — 등급 코드로 현금흐름등급표(cash-flow-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다. */}
-                    {cashFlowDefinition ? <NoticeBox className="text-center">{cashFlowDefinition}</NoticeBox> : null}
                     <div className="flex flex-col gap-4">
                         <h4 className="typo-body-xl-bold text-foreground">기업신용정보</h4>
                         <div className="grid grid-cols-1 gap-x-12 gap-y-4 xl:grid-cols-2">
-                            {detail.creditInfo.map((table) => (
-                                <SubBlock
-                                    key={table.id}
-                                    title={table.title}
-                                    titleClassName="typo-body-l-medium"
-                                    // 비공개 표는 상태 글을 뺀다(값 줄과 함께 가린다).
-                                    status={isCreditRowPrivate(table, visibility) ? undefined : table.status}
-                                >
-                                    <CreditInfoTable table={table} visibility={visibility} />
-                                </SubBlock>
-                            ))}
+                            {detail.creditInfo
+                                .map((table) => applyCreditInfoVisibility(table, visibility))
+                                .map((table) => (
+                                    <SubBlock
+                                        key={table.id}
+                                        title={table.title}
+                                        titleClassName="typo-body-l-medium"
+                                        // 비공개 표는 상태 글을 뺀다(값 줄과 함께 가린다).
+                                        status={isCreditRowPrivate(table, visibility) ? undefined : table.status}
+                                    >
+                                        <CreditInfoTable table={table} visibility={visibility} />
+                                    </SubBlock>
+                                ))}
                         </div>
                     </div>
                 </Card>
@@ -696,7 +716,7 @@ const InnovationGrowthReportCredit = ({
                 </div>
             </section>
 
-            {/* 차입금 분석 — 변동률(선 그래프) · 현황 · 변동현황 카드. 단위는 WithUnit 규칙(innovation-growth-report-parts.tsx). */}
+            {/* 차입금 분석 — 변동률(선 그래프) · 현황 · 변동 현황 카드. 단위는 WithUnit 규칙(innovation-growth-report-parts.tsx). */}
             <section aria-labelledby="ig-credit-borrowing" className="flex flex-col gap-4">
                 <SectionTitle id="ig-credit-borrowing" title="차입금 분석" />
                 <div className="flex flex-col gap-6">
@@ -729,9 +749,9 @@ const InnovationGrowthReportCredit = ({
                         </WithUnit>
                     </Card>
                     {/* 단위는 줄 이름에 붙어 있다(차입금(백만원) 등) — 표 위 단위 줄이 없다. */}
-                    <Card title="차입금 변동현황" className="gap-4">
+                    <Card title="차입금 변동 현황" className="gap-4">
                         <ReportTable
-                            caption="차입금 변동현황"
+                            caption="차입금 변동 현황"
                             columns={[
                                 {key: 'label', label: '구분'},
                                 ...changeYears.map((year) => ({key: year, label: year})),

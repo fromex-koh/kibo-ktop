@@ -30,7 +30,7 @@ const CASH_FLOW_GRADES: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.m
     arcColor: `var(--ds-cash-flow-gauge-cf-${cashFlowLevel(item.grade)}-from)`,
     arcGradientTo: `var(--ds-cash-flow-gauge-cf-${cashFlowLevel(item.grade)}-to)`,
 }))
-// 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급만 둔다(description="").
+// 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급 · 결산일자만 둔다(description="").
 // 양 끝 이름은 등급표의 가장 낮은 · 높은 등급내용(CF6 부실 · CF1 우수)이다.
 const SCALE_LABELS = {
     description: '',
@@ -41,8 +41,11 @@ const SCALE_LABELS = {
 
 type CaseProps = Pick<
     GradeScaleGaugeProps,
-    'grades' | 'current' | 'description' | 'lowLabel' | 'highLabel' | 'scaleLabel'
+    'grades' | 'current' | 'description' | 'details' | 'lowLabel' | 'highLabel' | 'scaleLabel'
 >
+
+// 원호 안 등급 아래 날짜 줄 — 보고서 현금흐름등급의 결산일자(cashFlow.details).
+const SAMPLE_DETAILS = [{label: '결산일자', value: '2024-08-04'}] as const
 
 const USAGE_CODE = `import {GradeScaleGauge, type GradeScaleItem} from '@/components/custom/grade-scale-gauge'
 
@@ -63,7 +66,8 @@ const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.ma
   ariaLabel="현금흐름등급 CF4(열위)"
   grades={CASH_FLOW_SCALE}
   current="CF4"
-  description=""   // 원호 안에는 등급만(기본은 '현재 등급' 설명을 함께 적는다)
+  description=""   // 원호 안 설명 없음(기본은 '현재 등급' 설명을 함께 적는다)
+  details={[{label: '결산일자', value: '2024-08-04'}]} // 등급 아래 날짜 줄
   lowLabel="부실"  // 등급표 CF6 등급내용
   highLabel="우수" // 등급표 CF1 등급내용
   scaleLabel="현금흐름 창출 능력"
@@ -71,11 +75,16 @@ const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.ma
 
 const DATA_CODE = `// 척도(grades) · 양 끝 이름은 등급표에서 만들고, 현재 등급 코드(CF1 ~ CF6)만 받습니다.
 // 등급 정의(아래 설명 상자)도 같은 표에서 찾습니다 — findCashFlowGrade(cashFlow.grade)?.definition.
+// 결산일자는 cashFlow.details 에서 이름으로 찾고, 없거나 비면 '-' 를 넘깁니다.
 <GradeScaleGauge
   ariaLabel={\`현금흐름등급 \${cashFlow.grade}\`}
   grades={CASH_FLOW_SCALE}
   current={cashFlow.grade}
   description=""
+  details={['결산일자'].map((label) => ({
+    label,
+    value: cashFlow.details.find((item) => item.label === label)?.value || '-',
+  }))}
   lowLabel={CASH_FLOW_GRADES_LOW_FIRST[0].name}
   highLabel={CASH_FLOW_GRADES_LOW_FIRST.at(-1)?.name}
   scaleLabel="현금흐름 창출 능력"
@@ -139,6 +148,13 @@ const PROPS_ITEMS = [
         "가운데 등급 아래 설명입니다. 빈 문자열('')이면 등급만 보이고 등급 글자는 설명이 있을 때와 같은 높이에 남습니다. 보고서 현금흐름등급은 '' 입니다.",
         "'현재 등급'",
         'string',
+    ],
+    [
+        'GradeScaleGauge',
+        'details',
+        "원호 안 등급(· 설명) 아래 날짜 줄입니다. 이름(옅게) · 값 쌍이며 기업신용등급 게이지의 평가일자 줄과 같은 글자입니다. 보고서 현금흐름등급은 결산일자 한 줄, 값이 비면 사용처가 '-' 를 넘깁니다.",
+        '[]',
+        'readonly {label: string; value: string}[]',
     ],
     ['GradeScaleGauge', 'lowLabel', '척도 줄의 낮은 쪽(첫 칸 아래) 이름입니다.', 'undefined', 'string'],
     ['GradeScaleGauge', 'highLabel', '척도 줄의 높은 쪽(끝 칸 아래) 이름입니다.', 'undefined', 'string'],
@@ -204,6 +220,17 @@ const PROPS_ITEMS = [
 ] as const
 
 const SPECIAL_CASES: readonly {title: string; description: string; gauge: CaseProps}[] = [
+    {
+        title: '날짜 줄 (details)',
+        description:
+            "등급 아래에 이름 · 값 줄을 둡니다(보고서 현금흐름등급의 결산일자). 값을 받지 못하면 사용처가 '-' 를 넘겨 자리를 지킵니다.",
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF4', ...SCALE_LABELS, details: SAMPLE_DETAILS},
+    },
+    {
+        title: '날짜 값 없음',
+        description: "결산일자를 받지 못한 경우 — 값 자리에 '-' 를 적습니다.",
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF5', ...SCALE_LABELS, details: [{label: '결산일자', value: '-'}]},
+    },
     {
         title: '설명 글자 함께 (description)',
         description:
@@ -292,8 +319,8 @@ const GradeScaleGaugeGuidePage = () => (
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>grades</code> 는 낮은 등급부터 순서대로 넘기고 <code>current</code> 에 그중 하나의{' '}
                         <code>label</code> 을 줍니다. 원호의 채움 색은 현재 등급 칸의 색이며, 칸 폭은 등급 수만큼 똑같이
-                        나뉩니다. 보고서 현금흐름등급처럼 원호 안에 등급만 둘 때는 <code>description=&quot;&quot;</code>{' '}
-                        를 줍니다.
+                        나뉩니다. 보고서 현금흐름등급처럼 원호 안에 설명 없이 등급과 결산일자만 둘 때는{' '}
+                        <code>description=&quot;&quot;</code> 와 <code>details</code> 를 줍니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card flex max-w-147 min-w-0 flex-col gap-6 rounded-sm border p-6">
@@ -302,6 +329,7 @@ const GradeScaleGaugeGuidePage = () => (
                         grades={CASH_FLOW_GRADES}
                         current="CF4"
                         {...SCALE_LABELS}
+                        details={SAMPLE_DETAILS}
                     />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />

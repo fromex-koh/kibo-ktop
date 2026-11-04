@@ -119,13 +119,13 @@ export const MYPAGE_HOME_HREF: Record<UserType, string> = {
 
 // 화면이 있는 항목은 경로를 걸고, 아직 없는 항목은 이름만 둔다(경로 없이 '#').
 const MY_PAGE_ITEMS: Record<UserType, readonly MenuServiceItem[]> = {
-    // 기업은 여섯 항목 모두 화면이 있어 경로를 건다. 유료 서비스 관리는 결제내역이 첫 화면이다.
+    // 기업은 여섯 항목 모두 화면이 있어 경로를 건다. 이용권 관리는 결제내역이 첫 화면이다.
     corp: [
         {label: '내 정보', href: MYPAGE_HOME_HREF.corp},
         {label: '대표자 이력', href: '/corp/mypage/representative-history'},
         {label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
         {label: 'K-BIGx 보고서 이력', href: '/corp/mypage/k-bigx-report-history'},
-        {label: '유료 서비스 관리', href: '/corp/mypage/paid-services/payment-history'},
+        {label: '이용권 관리', href: '/corp/mypage/paid-services/payment-history'},
         {label: '1:1문의', href: '/corp/mypage/inquiry-history'},
     ],
     // 기관 "내 정보"는 회원 유형마다 화면이 갈린다 — MYPAGE_HOME_HREF 설명 참고.

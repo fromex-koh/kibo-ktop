@@ -20,7 +20,7 @@ import {PAYMENT_COMPLETE_TITLE, USAGE_PERIOD} from '@/content/service/pricing-pa
 // 짜임은 이용권 환불 완료 모달(PaidServiceRefundCompleteDialog)과 같다 — 닫기(X) 없이 [확인]으로만 닫는다.
 //
 // 시안 규격: 폭 588 · 반경 24 · 위 64 · 좌우 32 · 아이콘 60 · 아이콘과 제목 16 · 제목(20 Bold)과 결과 줄 8 ·
-// 결과 줄과 [확인] 56 · 아래 24. 결과 줄은 이용권(프리미엄 500건) | 기간이며 16 Medium 이다.
+// 결과 줄과 [확인] 56 · 아래 24. 결과 줄은 이용권(프리미엄 200건) | 기간이며 16 Medium 이다.
 // 시안에서 숨긴 "상품" · "기간" 이름은 화면에 보이지 않게 두고 읽기에만 남긴다.
 
 export type PaymentCompleteDialogProps = {
@@ -28,7 +28,7 @@ export type PaymentCompleteDialogProps = {
     defaultOpen?: boolean
     open?: boolean
     onOpenChange?: (open: boolean) => void
-    /** [확인]을 눌렀을 때. [프론트엔드 연동] 결제 후 이동할 화면(예: 유료 서비스 관리)을 연결한다. */
+    /** [확인]을 눌렀을 때. [프론트엔드 연동] 결제 후 이동할 화면(예: 이용권 관리)을 연결한다. */
     onConfirm?: () => void
 }
 

@@ -10,7 +10,7 @@ const CorpPaidServiceSuspendUnavailableRemainingDayPage = () => (
     <>
         <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
             <PopupPreviewNote title="이용중지불가(잔여기간 1일)">
-                현재 사용중인 이용권의 [이용중지] 버튼을 눌렀을 때 호출되는 팝업 — 잔여기간이 1일(만료일 = 오늘)인
+                사용중 이용권 카드의 [이용중지] 버튼을 눌렀을 때 호출되는 팝업 — 잔여기간이 1일(만료일 = 오늘)인
                 이용권일 때
             </PopupPreviewNote>
         </main>

@@ -227,29 +227,32 @@ const EnergyGroup = ({
                     ]}
                 />
             </KbxUnitBelow>
-            {/* 받은 구분이 하나도 없으면 그래프 자리에 높이 240 의 빈 상태. */}
-            <KbxChartBox isEmpty={!rows.length} emptyClassName="h-60">
-                <div className="flex flex-col gap-2.5">
-                    <MarkerLineChart
-                        width={ENERGY_CHART_WIDTH}
-                        height={ENERGY_CHART_HEIGHT}
-                        ariaLabel={`연도별 사업장 ${title}`}
-                        data={years.map((year, index) => ({
-                            id: year,
-                            label: year,
-                            values: Object.fromEntries(rows.map((row) => [row.key, row.values[index]])),
-                        }))}
-                        series={series}
-                        colors={ENERGY_CHART_COLORS}
-                        formatValue={(value) => kbxFixed2Format.format(value)}
-                    />
-                    <MarkerLineLegend
-                        series={series}
-                        dotFill={ENERGY_CHART_COLORS.dotFill}
-                        className="kbx-text-16 text-kbx-foreground-subtle"
-                    />
-                </div>
-            </KbxChartBox>
+            {/* 받은 구분이 하나도 없으면 그래프 자리에 높이 240 의 빈 상태.
+                표와 꺾은선 사이 40(블록 안 간격 16 + mt-6) — 재무비율진단과 같다. 쪽마다 두 묶음이라 쪽 높이가 48 는다. */}
+            <div className="mt-6">
+                <KbxChartBox isEmpty={!rows.length} emptyClassName="h-60">
+                    <div className="flex flex-col gap-2.5">
+                        <MarkerLineChart
+                            width={ENERGY_CHART_WIDTH}
+                            height={ENERGY_CHART_HEIGHT}
+                            ariaLabel={`연도별 사업장 ${title}`}
+                            data={years.map((year, index) => ({
+                                id: year,
+                                label: year,
+                                values: Object.fromEntries(rows.map((row) => [row.key, row.values[index]])),
+                            }))}
+                            series={series}
+                            colors={ENERGY_CHART_COLORS}
+                            formatValue={(value) => kbxFixed2Format.format(value)}
+                        />
+                        <MarkerLineLegend
+                            series={series}
+                            dotFill={ENERGY_CHART_COLORS.dotFill}
+                            className="kbx-text-16 text-kbx-foreground-subtle"
+                        />
+                    </div>
+                </KbxChartBox>
+            </div>
         </KbxSubBlock>
     )
 }

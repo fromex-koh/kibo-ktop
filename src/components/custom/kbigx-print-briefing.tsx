@@ -177,7 +177,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
                             />
                         </KbxChartBox>
                     </KbxSubBlock>
-                    <KbxSubBlock title="관련 기업 및 특허현황" className="grow basis-0">
+                    <KbxSubBlock title="관련 기업 및 특허 현황" className="grow basis-0">
                         <div className="gap-kbx-14 grid grid-cols-2">
                             {report.innovation.stats.map((stat) => (
                                 <KbxStatCard
@@ -193,13 +193,14 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
                                 key: row.label,
                                 label: row.label,
                                 // 값은 API 가 포맷한 문자열 — 비면 '-건', '0' · '0.0' 은 그대로.
-                                value: `${row.value?.trim() || KBX_EMPTY_VALUE}${row.unit}`,
+                                value: row.value?.trim() || KBX_EMPTY_VALUE,
+                                unit: row.unit,
                             }))}
                         />
                     </KbxSubBlock>
                 </div>
                 <div aria-hidden="true" className="h-24 min-h-4" />
-                {/* R&D 이슈 · 정부 R&D사업 접수현황은 소제목 · 본문 · 각주 세 행을 함께 쓴다(subgrid) — 두 칸의 본문
+                {/* R&D 이슈 · 정부 R&D 사업 현황은 소제목 · 본문 · 각주 세 행을 함께 쓴다(subgrid) — 두 칸의 본문
                     아랫선과 각주 시작 높이가 맞는다. */}
                 <div className="grid shrink-0 grid-cols-2 grid-rows-[auto_1fr_auto] gap-x-14 gap-y-4">
                     <KbxSubBlock title="R&D 이슈" className="row-span-3 grid grid-rows-subgrid">
@@ -218,7 +219,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
                         <KbxNote>{INNOVATION_ISSUE_NOTE}</KbxNote>
                     </KbxSubBlock>
                     <KbxSubBlock
-                        title="정부 R&D사업 접수현황"
+                        title="정부 R&D 사업 현황"
                         unit={`기준일자 · ${report.createdAt || KBX_EMPTY_VALUE}`}
                         // 기준일자는 소제목과 세로 가운데 정렬(기본은 아래 맞춤).
                         headerClassName="items-center"
@@ -243,7 +244,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
     )
 }
 
-// ── 진단브리핑 2(briefing-2) — 혁신성장역량지수 · 신용/재무 현황 ──
+// ── 진단브리핑 2(briefing-2) — Tech-Index · 신용/재무 현황 ──
 
 // 등급 박스 — 큰 등급 코드 + 등급 알약, 아래에 details 목록(기업신용등급: 평가일자 · 결산일자, 현금흐름등급: 결산일자. 값이 비면 '-').
 // 옆 박스와 높이를 맞춰 늘어난다(flex-1).
@@ -307,13 +308,10 @@ const KbigxPrintBriefingFinance = ({report}: PageProps) => {
 
     return (
         <>
-            <KbxBlock title="혁신성장역량지수" unit={techIndex.scoreNote}>
+            <KbxBlock title="Tech-Index">
                 <div className="flex items-stretch gap-x-14">
                     {/* 점수 칸은 최소 420 — 100.0 처럼 길면 알약까지 들어가도록 넓어지고 오른쪽 막대가 그만큼 짧아진다. */}
                     <div className="gap-kbx-14 flex min-w-105 shrink-0 flex-col justify-center">
-                        <div className="kbx-text-22 font-kbx-bold text-kbx-foreground-subtle" lang="en">
-                            Tech-Index
-                        </div>
                         <div className="gap-kbx-10 text-kbx-primary flex items-baseline whitespace-nowrap">
                             <span className="kbx-text-116 font-kbx-black leading-kbx-90 tracking-kbx-tight">
                                 {scoreText}

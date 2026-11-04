@@ -27,7 +27,7 @@ import {cn} from '@/lib/utils'
 //
 // 쓰는 곳 (본문 · 버튼은 같고 제목만 다르다)
 //   · K-BIGx 이용약관 동의 모달의 마케팅 항목 [자세히] — k-bigx-terms-agreement-dialog.tsx
-//   · 마이페이지 내 정보의 마케팅 알림 수신 동의 [자세히] — mypage-profile-form.tsx (title 로 제목만 바꾼다)
+//   · 마이페이지 내 정보의 K-BIGx 마케팅 알림 수신 동의 [자세히] — mypage-profile-form.tsx
 //
 // [프론트엔드 연동]
 //   · 문구는 content/service/k-bigx-marketing-consent.ts 에만 있다 — 문구를 서버에서 받게 되면 그 파일만 바꾼다.
@@ -45,7 +45,7 @@ type KbigxMarketingConsentDialogProps = {
     onDecline?: () => void
     /** [동의 후 이용]을 눌렀을 때. 모달은 스스로 닫힌다. */
     onAgree?: () => void
-    /** 제목 — 없으면 K-BIGx 서비스 문구. 마이페이지 내 정보는 MYPAGE_MARKETING_CONSENT_TITLE 을 넘긴다. */
+    /** 제목 — 없으면 K-BIGx 서비스 문구. */
     title?: string
 }
 

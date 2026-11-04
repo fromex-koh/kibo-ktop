@@ -2,13 +2,14 @@ import type {ComponentPropsWithoutRef, ReactNode} from 'react'
 import {cn} from '@/lib/utils'
 
 // 도넛 + 항목 목록(DonutListChart) — 분류별 비중을 도넛으로 그리고, 옆에 '색 칸 · 이름 · 비중 · 건수' 줄 목록을 둔다.
-// K-BIGx 보고서 인쇄본 기술혁신정보 "기술 보유현황(중분류 · 세부분야 기준)" 그래프.
+// K-BIGx 보고서 인쇄본 기술혁신정보 "기술보유 현황(중분류 · 세부분야 기준)" 그래프.
 // (화면 폭에 따라 범례가 아래로 내려가는 웹 화면용 도넛은 PercentageDonutChart, 지시선 라벨 원형은 CalloutPieChart.)
 //
 // 짜임(템플릿 기준)
 //   도넛 = 바깥 반지름 150 · 안쪽 83.3(viewBox 300) · 12시에서 시계 방향 · 조각 사이 흰 선 3. 크기는 사용처 className(w-*)로,
 //   고리 두께 · 선 두께는 ring 으로 바꾼다(기업 · 특허 현황 비중 도넛은 더 가는 고리).
-//   donutCaption 을 주면 도넛 바로 아래 가운데에 짧은 글(예: 2024년 기준)을 둔다 — 도넛 · 글 묶음 폭은 donutBoxClassName.
+//   donutCaption 을 주면 도넛 바로 아래 가운데에 짧은 글(예: 최근 3년 기준)을 둔다 — 도넛 · 글 묶음 폭은 donutBoxClassName.
+//   글 없이 donutBoxClassName 만 주면 도넛을 그 폭의 묶음 가운데에 둔다(도넛 칸 폭을 정할 때).
 //   목록 = 도넛 옆 세로 가운데. 줄마다 색 칸(12) · 이름 · 값('비중% · 건수개', 오른쪽 정렬)과 아래 구분선. 첫 줄 이름은 굵게
 //   (가장 큰 분류), 마지막 줄(기타)은 구분선 없이 위아래 여백을 줄인다.
 // 데이터에 따라
@@ -71,9 +72,9 @@ type DonutListChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
      * 도넛을 작게 그리면 선이 얇아 보이므로 크기에 맞춰 키운다(예: 172px 도넛에 화면 2.5px 선 = 4.36).
      */
     ring?: {outer: number; inner: number; gap: number}
-    /** 도넛 아래 가운데 짧은 글(예: 2024년 기준). 없으면 도넛만. */
+    /** 도넛 아래 가운데 짧은 글(예: 최근 3년 기준). 없으면 도넛만. */
     donutCaption?: ReactNode
-    /** 도넛 · 아래 글 묶음의 폭 · 정렬(예: w-1/2). donutCaption 이 있을 때만 쓴다. */
+    /** 도넛 · 아래 글 묶음의 폭 · 정렬(예: w-1/2). 글이 없어도 주면 도넛이 이 폭의 가운데에 놓인다. */
     donutBoxClassName?: string
     /** 도넛 아래 글 크기 · 색. 기본 typo-body-m-regular text-foreground-subtle. */
     captionClassName?: string
@@ -246,10 +247,14 @@ const DonutListChart = ({
 
     return (
         <div {...props} className={cn('flex w-full items-center gap-15', className)}>
-            {donutCaption ? (
+            {donutCaption || donutBoxClassName ? (
                 <div className={cn('flex shrink-0 flex-col items-center gap-3', donutBoxClassName)}>
                     {donut}
-                    <p className={captionClassName ?? 'typo-body-m-regular text-foreground-subtle'}>{donutCaption}</p>
+                    {donutCaption ? (
+                        <p className={captionClassName ?? 'typo-body-m-regular text-foreground-subtle'}>
+                            {donutCaption}
+                        </p>
+                    ) : null}
                 </div>
             ) : (
                 donut

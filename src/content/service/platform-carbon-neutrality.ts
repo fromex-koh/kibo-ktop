@@ -1,9 +1,9 @@
 import type {ProcedureStep} from '@/components/custom/procedure-steps'
 import type {RollingAccordionGroup} from '@/components/composite/rolling-accordion'
 
-// 진단 시작 주소(외부 탄소중립 플랫폼) — 바로가기는 이동 확인 모달을 거쳐 새 탭으로 연다.
-const CARBON_REDUCTION_SELF_CHECK_URL = 'https://www.kibo.or.kr/carbon/carbon-reduction/self-check'
-const K_TAXONOMY_SELF_CHECK_URL = 'https://www.kibo.or.kr/carbon/k-taxonomy/selected-self-check'
+// 진단 시작 버튼 주소(외부 탄소중립 플랫폼의 안내 화면) — 바로가기는 이동 확인 모달을 거쳐 새 탭으로 연다.
+const CARBON_REDUCTION_GUIDE_URL = 'https://www.kibo.or.kr/carbon/carbon-reduction/guide'
+const K_TAXONOMY_GUIDE_URL = 'https://www.kibo.or.kr/carbon/k-taxonomy/guide'
 
 // 플랫폼 소개 > 탄소중립 화면의 문구 — 시안 "탄소중립_선도기업" · "탄소중립_택소노미". 기업 · 기관 화면이 함께 쓴다.
 // 히어로 · '이런 기업에 적합합니다' · 바로가기는 두 플랫폼이 같고, 히어로 카드 · 분석 기능 · 아래 묶음은 고른 플랫폼에 따라 바뀐다.
@@ -139,7 +139,7 @@ const CARBON_PLATFORMS: readonly CarbonPlatform[] = [
             ],
         },
         startLabel: '탄소중립 진단 시작하기',
-        startHref: CARBON_REDUCTION_SELF_CHECK_URL,
+        startHref: CARBON_REDUCTION_GUIDE_URL,
     },
     {
         key: 'taxonomy',
@@ -206,7 +206,7 @@ const CARBON_PLATFORMS: readonly CarbonPlatform[] = [
             ],
         },
         startLabel: 'K-택소노미 진단 시작하기',
-        startHref: K_TAXONOMY_SELF_CHECK_URL,
+        startHref: K_TAXONOMY_GUIDE_URL,
     },
 ]
 

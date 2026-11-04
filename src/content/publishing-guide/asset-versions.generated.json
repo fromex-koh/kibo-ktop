@@ -1,9 +1,9 @@
 {
-    "version": "v3.4.8",
+    "version": "v3.4.9",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
@@ -13,17 +13,17 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
@@ -33,23 +33,23 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         },
         {
             "name": "src/lib",
             "version": "v3.4.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/hooks",
             "version": "v3.4.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/types",
@@ -59,7 +59,7 @@
         {
             "name": "tokens.json",
             "version": "v3.4.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/tokens.css",
@@ -94,7 +94,7 @@
         {
             "name": "tsconfig.json",
             "version": "v3.4.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "package.json",
@@ -124,7 +124,7 @@
         {
             "name": "public",
             "version": "v3.4.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "vendor/shadcn-baseline",
@@ -138,7 +138,7 @@
         },
         {
             "name": "templates/kbigx-report-template.html",
-            "version": "v3.4.8",
+            "version": "v3.4.9",
             "isCurrent": true
         }
     ],

@@ -209,14 +209,14 @@ const PROPS_ITEMS = [
     [
         'DonutListChart',
         'donutCaption',
-        '도넛 바로 아래 가운데 짧은 글입니다(예: 2024년 기준 — PDF 템플릿 담보 현황). 없으면 도넛만 그립니다.',
+        '도넛 바로 아래 가운데 짧은 글입니다(예: 기준 기간 · 집계 기준 같은 보조 설명). 없으면 도넛만 그립니다.',
         '-',
         'ReactNode',
     ],
     [
         'DonutListChart',
         'donutBoxClassName · captionClassName',
-        '도넛 · 아래 글 묶음의 폭 · 정렬과 아래 글 크기 · 색입니다(donutCaption 이 있을 때만).',
+        '도넛 · 아래 글 묶음의 폭 · 정렬과 아래 글 크기 · 색입니다. 글 없이 폭만 주면 도넛이 그 폭의 가운데에 놓입니다.',
         "- · 'typo-body-m-regular text-foreground-subtle'",
         'string',
     ],
@@ -280,7 +280,7 @@ const SectionHeading = ({id, title, children}: {id: string; title: string; child
 const DonutListChartGuidePage = () => (
     <GuidePageShell
         title="도넛 + 목록 (DonutListChart)"
-        description="분류별 비중을 도넛으로 그리고, 옆에 색 칸 · 이름 · 비중 · 건수 줄 목록을 두는 차트입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 기술 보유현황(중분류 · 세부분야 기준) · 매출 규모별 기업수 · 특허수 비중 그래프입니다."
+        description="분류별 비중을 도넛으로 그리고, 옆에 색 칸 · 이름 · 비중 · 건수 줄 목록을 두는 차트입니다. K-BIGx 보고서 PDF 템플릿 기술혁신정보의 기술보유 현황(중분류 · 세부분야 기준) · 매출 규모별 기업수 · 특허수 비중 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="dlc-basic" className="flex flex-col gap-6">
@@ -353,12 +353,12 @@ const DonutListChartGuidePage = () => (
                 <div className="grid gap-6 xl:grid-cols-2">
                     <Example
                         title="도넛 아래 글 (donutCaption)"
-                        description="도넛 바로 아래 가운데에 기준 연도 같은 짧은 글을 둡니다(PDF 템플릿 담보 현황 — 2024년 기준)."
+                        description="도넛 바로 아래 가운데에 기준 기간 같은 짧은 보조 글을 둡니다."
                     >
                         <DonutListChart
                             data={STANDARD_DATA.slice(0, 3)}
                             ariaLabel="도넛 아래 글 예시"
-                            donutCaption="2024년 기준"
+                            donutCaption="최근 3년 기준"
                         />
                     </Example>
                     <Example
