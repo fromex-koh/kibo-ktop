@@ -22,15 +22,15 @@ yarn dev                     # http://localhost:3000
 
 ## 기술 스택
 
-| 구분       | 사용 기술                                                        |
-| ---------- | ---------------------------------------------------------------- |
-| 프레임워크 | Next.js 16 (App Router) · React 19                               |
-| 언어       | TypeScript 5 (strict)                                            |
-| 스타일     | TailwindCSS 4 (설정은 CSS 로 — `tailwind.config.js` 없음)        |
-| 컴포넌트   | shadcn/ui (radix-ui) · Recharts · lucide-react                   |
-| 검사       | ESLint 9 + `eslint-plugin-jsx-a11y` · Prettier · Nu Html Checker |
-| 패키지     | Yarn 1.x                                                         |
-| 폰트       | Pretendard (로컬 가변 폰트 서브셋, `next/font/local`)            |
+| 구분       | 사용 기술                                                           |
+| ---------- | ------------------------------------------------------------------- |
+| 프레임워크 | Next.js 16 (App Router) · React 19                                  |
+| 언어       | TypeScript 5 (strict)                                               |
+| 스타일     | TailwindCSS 4 (설정은 CSS 로 — `tailwind.config.js` 없음)           |
+| 컴포넌트   | shadcn/ui (radix-ui, Combobox 는 Base UI) · Recharts · lucide-react |
+| 검사       | ESLint 9 + `eslint-plugin-jsx-a11y` · Prettier · Nu Html Checker    |
+| 패키지     | Yarn 1.x                                                            |
+| 폰트       | Pretendard (로컬 가변 폰트 서브셋, `next/font/local`)               |
 
 ## 브랜치
 
@@ -44,21 +44,22 @@ yarn dev                     # http://localhost:3000
 
 ## 스크립트
 
-| 명령                                | 설명                                                                   |
-| ----------------------------------- | ---------------------------------------------------------------------- |
-| `yarn dev`                          | 개발 서버                                                              |
-| `yarn build` · `yarn start`         | 프로덕션 빌드 · 실행                                                   |
-| `yarn verify`                       | push 전 통합 검사(아래 항목을 순서대로 실행)                           |
-| `yarn tokens`                       | `tokens.json` → `src/app/tokens.css` 생성                              |
-| `yarn lint`                         | ESLint(접근성 포함)                                                    |
-| `yarn format` · `yarn format:check` | Prettier 적용 · 검사                                                   |
-| `yarn check:conventions`            | Tailwind/className 컨벤션 검사                                         |
-| `yarn typecheck`                    | 타입 검사                                                              |
-| `yarn license-notices`              | 제3자 라이선스 고지(`THIRD_PARTY_LICENSES.md`) 갱신                    |
-| `yarn audit:accessibility`          | 전체 화면 W3C 마크업 검사                                              |
-| `yarn frontend-handoff`             | 전달본 생성                                                            |
-| `yarn kbigx-template`               | K-BIGx 보고서 PDF 템플릿 단독 HTML 생성(아래 "PDF 템플릿 다시 만들기") |
-| `yarn asset-versions`               | 릴리스 메타데이터 생성(GitHub Actions 전용)                            |
+| 명령                                | 설명                                                                                                                       |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `yarn dev`                          | 개발 서버                                                                                                                  |
+| `yarn build` · `yarn start`         | 프로덕션 빌드 · 실행                                                                                                       |
+| `yarn verify`                       | push 전 통합 검사 — tokens → screen-registry → license-notices:check → lint → format:check → check:conventions → typecheck |
+| `yarn tokens`                       | `tokens.json` → `src/app/tokens.css` 생성                                                                                  |
+| `yarn screen-registry`              | 화면 목록(`screen-registry.generated.json`) 생성 — `dev` · `build` 전에 자동 실행                                          |
+| `yarn lint`                         | ESLint(접근성 포함)                                                                                                        |
+| `yarn format` · `yarn format:check` | Prettier 적용 · 검사                                                                                                       |
+| `yarn check:conventions`            | Tailwind/className 컨벤션 검사                                                                                             |
+| `yarn typecheck`                    | 타입 검사                                                                                                                  |
+| `yarn license-notices` · `:check`   | 제3자 라이선스 고지(`THIRD_PARTY_LICENSES.md`) 갱신 · 최신인지 검사                                                        |
+| `yarn audit:accessibility`          | 전체 화면 W3C 마크업 검사                                                                                                  |
+| `yarn frontend-handoff`             | 전달본 생성                                                                                                                |
+| `yarn kbigx-template`               | K-BIGx 보고서 PDF 템플릿 단독 HTML 생성(아래 "PDF 템플릿 다시 만들기")                                                     |
+| `yarn asset-versions`               | 릴리스 메타데이터 생성(GitHub Actions 전용)                                                                                |
 
 `git push` 때 `yarn verify` 가 자동 실행되고, 실패하면 push 가 거부됩니다.
 
@@ -89,25 +90,27 @@ src/
     component-guide/        # 가이드 문서((guide)) · 완성 화면 데모((demo))
     page.tsx                # 시작 페이지 · 퍼블리싱 인덱스
     globals.css · fonts/    # 전역 스타일 · 로컬 폰트
+  styles/                   # 한 화면 · 한 컴포넌트 전용 CSS(쓰는 page · 컴포넌트가 직접 import)
   components/
     ui/                     # shadcn/ui 셸 — 구조 · 동작 · 접근성은 고치지 않습니다
     theme/                  # ui 부품의 프로젝트 스타일 — 모양은 여기서만 고칩니다
     composite/              # shadcn/ui 부품을 합성한 공통 컴포넌트
     custom/                 # 한 화면 · 한 업무를 위해 직접 만든 컴포넌트
   content/                  # 서비스 화면 목업 데이터 · 퍼블리싱 인덱스 데이터(JSON)
-  constants/ · lib/ · hooks/
+  constants/ · lib/ · hooks/ · types/
 ```
 
 ### 직접 고치지 않는 생성 파일
 
-| 파일                                                               | 만드는 곳                                                 |
-| ------------------------------------------------------------------ | --------------------------------------------------------- |
-| `src/app/tokens.css`                                               | `yarn tokens` (git 미추적)                                |
-| `src/content/publishing-guide/*.generated.json`                    | 릴리스 때 GitHub Actions 가 생성·커밋                     |
-| `src/content/publishing-guide/accessibility-audit.json`            | `yarn audit:accessibility`                                |
-| `THIRD_PARTY_LICENSES.md`                                          | `yarn license-notices`                                    |
-| `templates/kbigx-report-template.html`                             | `yarn kbigx-template`                                     |
-| `src/content/publishing-guide/third-party-licenses.generated.json` | `yarn license-notices`(가이드 '오픈소스 라이선스' 화면용) |
+| 파일                                                                                               | 만드는 곳                                                 |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `src/app/tokens.css`                                                                               | `yarn tokens` (git 미추적)                                |
+| `src/content/publishing-guide/{asset-versions,release-notes,release-notes-archive}.generated.json` | 릴리스 때 GitHub Actions 가 생성·커밋                     |
+| `src/content/publishing-guide/screen-registry.generated.json`                                      | `yarn screen-registry`(`dev` · `build` 전 자동)           |
+| `src/content/publishing-guide/accessibility-audit.json`                                            | `yarn audit:accessibility`                                |
+| `THIRD_PARTY_LICENSES.md`                                                                          | `yarn license-notices`                                    |
+| `templates/kbigx-report-template.html`                                                             | `yarn kbigx-template`                                     |
+| `src/content/publishing-guide/third-party-licenses.generated.json`                                 | `yarn license-notices`(가이드 '오픈소스 라이선스' 화면용) |
 
 ### PDF 템플릿 다시 만들기
 
