@@ -48,7 +48,19 @@ export const headerNavDropdownClassName =
 // outline-ring 은 평상시에도 지정한다 — outline-color 기본값이 currentColor 라 포커스 순간 글자색에서
 // 링 색으로 번지듯 전환된다(button.variants 와 같은 이유).
 export const headerNavDropdownItemClassName =
-    'typo-body-xl-medium text-label-foreground outline-ring hover:text-foreground focus-visible:text-foreground aria-[current=page]:text-foreground mainpage:!text-[var(--raw-gray-700)] mainpage:hover:!text-[var(--raw-gray-900)] mainpage:focus-visible:!text-[var(--raw-gray-900)] mainpage:aria-[current=page]:!text-[var(--raw-gray-900)] w-fit in-data-[slot=navigation-menu-content]:rounded-2xs p-0 outline-none hover:bg-transparent focus:bg-transparent hover:font-bold focus-visible:font-bold aria-[current=page]:font-bold'
+    'typo-body-xl-medium text-label-foreground outline-ring hover:text-foreground focus-visible:text-foreground aria-[current=page]:text-foreground mainpage:!text-[var(--raw-gray-700)] mainpage:hover:!text-[var(--raw-gray-900)] mainpage:focus-visible:!text-[var(--raw-gray-900)] mainpage:aria-[current=page]:!text-[var(--raw-gray-900)] w-fit in-data-[slot=navigation-menu-content]:rounded-2xs p-0 outline-none hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-active:hover:bg-transparent data-active:focus:bg-transparent hover:font-bold focus-visible:font-bold aria-[current=page]:font-bold'
+
+// GNB 현재 위치 강조선 — 메뉴 글자를 감싸는 span 에 건다. 감싼 트리거 · 링크에 data-active 가 있으면 보인다.
+// 글자 상자(행간 높이) 바로 아래 3px, ::after 라 자리를 차지하지 않아 글자가 움직이지 않는다.
+// 색 header-nav-indicator(라이트 blue.500 · 다크 blue.300 · 메인페이지 mint.500 — 바꾸려면 tokens.json 값만).
+// 선 모양으로도 구분된다[5.3.1].
+export const headerNavLabelClassName =
+    'relative block after:bg-header-nav-indicator after:absolute after:inset-x-0 after:top-full after:h-0.75 after:opacity-0 in-data-active:after:opacity-100'
+
+// 전체 메뉴(☰) 그룹 이름의 현재 위치 강조선 — GNB 와 같은 모양, 색만 전체 메뉴 강조색(menu-overlay-accent).
+// w-fit 은 선을 칸 너비가 아니라 글자 폭에 맞춘다.
+export const headerMenuLabelClassName =
+    'relative block w-fit after:bg-menu-overlay-accent after:absolute after:inset-x-0 after:top-full after:h-0.75 after:opacity-0 in-data-active:after:opacity-100'
 
 // GNB 트리거 — 하위 메뉴가 있는 항목은 링크가 아니라 버튼이 된다. 셸이 붙이는 컨트롤 외형(높이·면·여백)과
 // 기본 chevron 아이콘은 시안에 없으므로 지운다. 글자 크기는 사용처에서 typo 클래스로 덧붙인다.
