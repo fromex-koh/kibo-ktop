@@ -30,6 +30,8 @@ import {SegmentedControl, SegmentedControlItem} from '@/components/composite/seg
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {
     DEFAULT_HEADER_NAVIGATION,
+    getUserTypeFromPath,
+    isHeaderNavLinkActive,
     MENU_SERVICE_GROUPS,
     MYPAGE_HOME_HREF,
     UTILITY_LINKS,
@@ -41,6 +43,8 @@ import {
     headerIconGroupClassName,
     headerNavDropdownClassName,
     headerNavDropdownItemClassName,
+    headerMenuLabelClassName,
+    headerNavLabelClassName,
     headerNavTriggerClassName,
 } from '@/components/theme/header.variants'
 import {useThemeToggle} from '@/hooks/use-theme-toggle'
@@ -305,23 +309,34 @@ const HeaderThemeToggle = () => {
 }
 
 // 전체 메뉴 링크. external이면 새 창과 외부 링크 아이콘을 사용한다.
+// isActive — 현재 위치. aria-current="page" + 강조색 · 굵은 글씨(색만으로 구분하지 않음[5.3.1]).
+// labelClassName — 글자 span 에만 거는 스타일(그룹 이름 강조선 headerMenuLabelClassName).
 const MenuLink = ({
     label,
     href,
     external,
+    isActive,
     className,
+    labelClassName,
     onClick,
-}: HeaderNavLink & {className?: string; onClick?: () => void}) => (
+}: Pick<HeaderNavLink, 'label' | 'href' | 'external'> & {
+    isActive?: boolean
+    className?: string
+    labelClassName?: string
+    onClick?: () => void
+}) => (
     <Link
         href={href}
+        aria-current={isActive ? 'page' : undefined}
+        data-active={isActive || undefined}
         className={cn(
-            'hover:text-menu-overlay-accent aria-[current=page]:text-menu-overlay-accent inline-flex w-fit items-center gap-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
+            'hover:text-menu-overlay-accent aria-[current=page]:text-menu-overlay-accent inline-flex w-fit items-center gap-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-[current=page]:font-bold',
             className,
         )}
         onClick={onClick}
         {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
     >
-        {label}
+        {labelClassName ? <span className={labelClassName}>{label}</span> : label}
         {external ? <ExternalLink aria-hidden="true" className="size-icon-md -translate-y-0.5" /> : null}
     </Link>
 )
@@ -337,6 +352,7 @@ const HeaderMenu = ({
     open: boolean
     onOpenChange: (open: boolean) => void
 }) => {
+    const pathname = usePathname()
     const triggerRef = useRef<HTMLButtonElement>(null)
     const menuContentRef = useRef<HTMLDivElement>(null)
     const [isClosing, setIsClosing] = useState(false)
@@ -487,13 +503,22 @@ const HeaderMenu = ({
                         >
                             {navLinks.map((link) => (
                                 <div key={link.label} className="flex flex-col">
-                                    {/* 메뉴 그룹은 h3, 하위 메뉴는 목록으로 구성한다. */}
-                                    <h3 className="typo-h4-bold">
+                                    {/* 메뉴 그룹은 h3, 하위 메뉴는 목록으로 구성한다.
+                                        현재 화면이 속한 그룹은 GNB 처럼 이름 아래 강조선을 긋는다(h3 의 data-active). */}
+                                    <h3
+                                        data-active={isHeaderNavLinkActive(link, pathname) || undefined}
+                                        className="typo-h4-bold"
+                                    >
                                         {link.items?.length ? (
-                                            link.label
+                                            <span className={headerMenuLabelClassName}>{link.label}</span>
                                         ) : (
                                             <SheetClose asChild>
-                                                <MenuLink {...link} onClick={closeMenu} />
+                                                <MenuLink
+                                                    {...link}
+                                                    isActive={isHeaderNavLinkActive(link, pathname)}
+                                                    labelClassName={headerMenuLabelClassName}
+                                                    onClick={closeMenu}
+                                                />
                                             </SheetClose>
                                         )}
                                     </h3>
@@ -502,7 +527,11 @@ const HeaderMenu = ({
                                             {link.items.map((item) => (
                                                 <li key={item.label}>
                                                     <SheetClose asChild>
-                                                        <MenuLink {...item} onClick={closeMenu} />
+                                                        <MenuLink
+                                                            {...item}
+                                                            isActive={isHeaderNavLinkActive(item, pathname)}
+                                                            onClick={closeMenu}
+                                                        />
                                                     </SheetClose>
                                                 </li>
                                             ))}
@@ -533,7 +562,11 @@ const HeaderMenu = ({
                                                         />
                                                     ) : null}
                                                     <SheetClose asChild>
-                                                        <MenuLink {...menuItem} onClick={closeMenu} />
+                                                        <MenuLink
+                                                            {...menuItem}
+                                                            isActive={isHeaderNavLinkActive(menuItem, pathname)}
+                                                            onClick={closeMenu}
+                                                        />
                                                     </SheetClose>
                                                 </li>
                                             )
@@ -575,7 +608,8 @@ const HeaderContent = ({
     // 전달받은 userType의 메뉴를 데스크톱 GNB와 모바일 전체 메뉴에 동일하게 적용한다.
     const navLinks = (navigationByUserType ?? DEFAULT_HEADER_NAVIGATION)[userType]
     const [menuOpen, setMenuOpen] = useState(false)
-    const isSessionExtensionPage = usePathname().replace(/\/$/, '').endsWith('/session-extension')
+    const pathname = usePathname()
+    const isSessionExtensionPage = pathname.replace(/\/$/, '').endsWith('/session-extension')
 
     // GNB 드롭다운이 열릴 때 포커스를 패널 안으로 이동한다.
     const [openNavMenu, setOpenNavMenu] = useState('')
@@ -685,6 +719,9 @@ const HeaderContent = ({
                         <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
                             {navLinks.map((link, index) => {
                                 const navValue = `nav-${index}`
+                                // 현재 위치 표시 — 링크는 Radix active 가 data-active · aria-current="page" 를 붙인다.
+                                // 트리거(버튼)는 이동하지 않아 data-active 로 강조선만 켠다(보조기기엔 하위 항목이 알린다).
+                                const isActive = isHeaderNavLinkActive(link, pathname)
 
                                 return (
                                     <NavigationMenuItem key={link.label} value={navValue}>
@@ -692,13 +729,14 @@ const HeaderContent = ({
                                             // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
                                             <>
                                                 <NavigationMenuTrigger
+                                                    data-active={isActive || undefined}
                                                     onKeyDown={(event) => handleDropdownEntryKeyDown(event, navValue)}
                                                     className={cn(
                                                         headerNavTriggerClassName,
                                                         compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
                                                     )}
                                                 >
-                                                    {link.label}
+                                                    <span className={headerNavLabelClassName}>{link.label}</span>
                                                 </NavigationMenuTrigger>
                                                 <NavigationMenuContent
                                                     ref={enterDropdownOnMount}
@@ -707,6 +745,7 @@ const HeaderContent = ({
                                                     {link.items.map((item) => (
                                                         <NavigationMenuLink
                                                             key={item.label}
+                                                            active={isHeaderNavLinkActive(item, pathname)}
                                                             asChild
                                                             className={headerNavDropdownItemClassName}
                                                         >
@@ -731,9 +770,10 @@ const HeaderContent = ({
                                             </>
                                         ) : (
                                             <NavigationMenuLink
+                                                active={isActive}
                                                 asChild
                                                 className={cn(
-                                                    'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
+                                                    'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-active:hover:bg-transparent data-active:focus:bg-transparent',
                                                     compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
                                                 )}
                                             >
@@ -744,7 +784,7 @@ const HeaderContent = ({
                                                         ? {target: '_blank', rel: 'noopener noreferrer'}
                                                         : {})}
                                                 >
-                                                    {link.label}
+                                                    <span className={headerNavLabelClassName}>{link.label}</span>
                                                     {link.external ? (
                                                         <ExternalLink aria-hidden="true" className="size-icon-lg" />
                                                     ) : null}
@@ -813,7 +853,11 @@ const ResolvedHeaderContent = ({
     logoHref?: string
 }) => {
     // userType prop가 있으면 로그인 후 확정된 유형으로 고정하고, 없으면 로그인 전 내부 state를 사용한다.
-    const [selectedUserType, setSelectedUserType] = useState<UserType>(fixedUserType ?? 'corp')
+    // 로그인 전 토글의 처음 값은 화면 경로의 유형(/org/… 이면 기관, 그 밖에는 기업)이다.
+    const pathname = usePathname()
+    const [selectedUserType, setSelectedUserType] = useState<UserType>(
+        fixedUserType ?? getUserTypeFromPath(pathname) ?? 'corp',
+    )
     const userType = fixedUserType ?? selectedUserType
 
     return (

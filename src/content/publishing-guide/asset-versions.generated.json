@@ -1,9 +1,9 @@
 {
-    "version": "v3.5.0",
+    "version": "v3.5.1",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.5.0",
+            "version": "v3.5.1",
             "isCurrent": true
         },
         {
@@ -13,18 +13,18 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v3.5.0",
+            "version": "v3.5.1",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.5.0",
+            "version": "v3.5.1",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
             "version": "v3.5.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme-provider.tsx",
@@ -33,18 +33,18 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.5.0",
+            "version": "v3.5.1",
             "isCurrent": true
         },
         {
             "name": "src/content",
             "version": "v3.5.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/lib",
             "version": "v3.5.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/hooks",
@@ -58,7 +58,7 @@
         },
         {
             "name": "tokens.json",
-            "version": "v3.5.0",
+            "version": "v3.5.1",
             "isCurrent": true
         },
         {
@@ -124,7 +124,7 @@
         {
             "name": "public",
             "version": "v3.5.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "vendor/shadcn-baseline",

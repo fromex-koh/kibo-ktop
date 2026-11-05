@@ -563,6 +563,7 @@
   --ds-menu-overlay-foreground: var(--raw-gray-900);
   --ds-menu-overlay-foreground-subtle: var(--raw-gray-500);
   --ds-menu-overlay-accent: var(--raw-blue-600);
+  --ds-header-nav-indicator: var(--raw-blue-500);
   --ds-menu-overlay-border: var(--raw-black-a25);
   --ds-cta-surface: var(--raw-white-a75);
   --ds-pastel-info: var(--raw-info-50);
@@ -979,6 +980,7 @@
   --ds-menu-overlay-foreground: var(--raw-gray-900);
   --ds-menu-overlay-foreground-subtle: var(--raw-gray-500);
   --ds-menu-overlay-accent: var(--raw-blue-600);
+  --ds-header-nav-indicator: var(--raw-blue-500);
   --ds-menu-overlay-border: var(--raw-black-a25);
   --ds-cta-surface: var(--raw-white-a75);
   --ds-pastel-info: var(--raw-info-50);
@@ -1394,7 +1396,8 @@
   --ds-menu-overlay: var(--raw-gray-900);
   --ds-menu-overlay-foreground: var(--raw-common-white);
   --ds-menu-overlay-foreground-subtle: var(--raw-gray-50);
-  --ds-menu-overlay-accent: var(--raw-mint-500);
+  --ds-menu-overlay-accent: var(--raw-blue-300);
+  --ds-header-nav-indicator: var(--raw-blue-300);
   --ds-menu-overlay-border: var(--raw-white-a25);
   --ds-cta-surface: var(--raw-white-a10);
   --ds-pastel-info: var(--raw-info-900);
@@ -1811,6 +1814,7 @@
   --ds-menu-overlay-foreground: var(--raw-common-white);
   --ds-menu-overlay-foreground-subtle: var(--raw-gray-50);
   --ds-menu-overlay-accent: var(--raw-mint-500);
+  --ds-header-nav-indicator: var(--raw-mint-500);
   --ds-menu-overlay-border: var(--raw-white-a25);
   --ds-cta-surface: var(--raw-white-a10);
   --ds-pastel-info: var(--raw-gray-700);
@@ -2108,6 +2112,7 @@
   --color-menu-overlay-foreground: var(--ds-menu-overlay-foreground);
   --color-menu-overlay-foreground-subtle: var(--ds-menu-overlay-foreground-subtle);
   --color-menu-overlay-accent: var(--ds-menu-overlay-accent);
+  --color-header-nav-indicator: var(--ds-header-nav-indicator);
   --color-menu-overlay-border: var(--ds-menu-overlay-border);
   --color-cta-surface: var(--ds-cta-surface);
   --color-pastel-info: var(--ds-pastel-info);
@@ -2738,6 +2743,7 @@
     --ds-menu-overlay-foreground: var(--raw-gray-900);
     --ds-menu-overlay-foreground-subtle: var(--raw-gray-500);
     --ds-menu-overlay-accent: var(--raw-blue-600);
+    --ds-header-nav-indicator: var(--raw-blue-500);
     --ds-menu-overlay-border: var(--raw-black-a25);
     --ds-cta-surface: var(--raw-white-a75);
     --ds-pastel-info: var(--raw-info-50);
