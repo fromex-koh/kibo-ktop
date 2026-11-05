@@ -316,6 +316,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'menu-overlay-foreground-subtle': 'bg-menu-overlay-foreground-subtle',
     'menu-overlay-accent': 'bg-menu-overlay-accent',
     'menu-overlay-border': 'bg-menu-overlay-border',
+    'header-nav-indicator': 'bg-header-nav-indicator',
     'cta-surface': 'bg-cta-surface',
     'pastel-info': 'bg-pastel-info',
     'pastel-info-foreground': 'bg-pastel-info-foreground',
@@ -580,6 +581,7 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
     {name: 'platform-* (플랫폼 소개)', match: (n) => n.startsWith('platform-')},
     {name: 'menu-overlay (서비스 헤더 전체 메뉴)', match: (n) => n.startsWith('menu-overlay')},
+    {name: 'header-nav-indicator (헤더 GNB 현재 위치)', match: (n) => n === 'header-nav-indicator'},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
     {name: 'select-selected-foreground', match: (n) => n === 'select-selected-foreground'},
@@ -769,6 +771,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'menu-overlay (서비스 헤더 전체 메뉴)': (
         <>서비스 헤더의 햄버거 버튼으로 여는 전체 메뉴 전용입니다. Header 컴포넌트 안에서만 사용합니다.</>
+    ),
+    'header-nav-indicator (헤더 GNB 현재 위치)': (
+        <>
+            서비스 헤더 GNB 에서 현재 화면이 속한 메뉴 아래에 긋는 강조선입니다. 라이트 blue.500, 다크 blue.300 이고,
+            메인페이지는 메인 강조색과 같은 mint.500 입니다. Header 컴포넌트 안에서만 사용합니다.
+        </>
     ),
     pagination: <>Pagination의 현재 페이지 면(navy)과 그 위 글자입니다. 세 테마 값이 같습니다.</>,
     'select-selected-foreground': <>Select·드롭다운에서 현재 선택된 옵션의 글자색입니다.</>,
