@@ -877,6 +877,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-recheck",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -2771,6 +2778,13 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-report-recheck",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
             "isCurrent": false
         },
         {

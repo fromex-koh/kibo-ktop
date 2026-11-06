@@ -1529,6 +1529,13 @@
                             ]
                         },
                         {
+                            "label": "보고서 재조회 안내",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-report-recheck"
+                        },
+                        {
                             "label": "보고서 이용 안내",
                             "screenId": null,
                             "status": "완료",
@@ -3763,6 +3770,13 @@
                                     "key": "org-k-bigx-report-innovation-growth-report-search-result-company-self"
                                 }
                             ]
+                        },
+                        {
+                            "label": "보고서 재조회 안내",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-report-recheck"
                         },
                         {
                             "label": "기업정보 제공법적 근거",
