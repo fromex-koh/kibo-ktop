@@ -880,8 +880,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-report-recheck",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.5.2",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
@@ -2784,8 +2784,8 @@
             "key": "org-k-bigx-report-innovation-growth-report-report-recheck",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.5.2",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
