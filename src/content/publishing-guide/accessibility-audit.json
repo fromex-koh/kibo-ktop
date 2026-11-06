@@ -1,7 +1,7 @@
 {
-    "checkedAt": "2026-11-05T08:12:39.142Z",
-    "commit": "3e15103b52ba374afa710994b47834b1980fcf9f",
-    "sourceHash": "b1edbd2d96c92930184e1e90832d0c1a52469e7a90e3526edaa16763c2d4d69e",
+    "checkedAt": "2026-11-06T06:12:45.430Z",
+    "commit": "10e3bbc149efbb3f796861c3c0f0d360f13ea55b",
+    "sourceHash": "0cb40cd0ba054f20031601324cc58f49b98487771547d1f19f23a692765bc174",
     "validatorVersion": "26.11.4 (26b30ab)",
     "screens": [
         {
@@ -37838,6 +37838,272 @@
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
                     "firstColumn": 56930
+                }
+            ]
+        },
+        {
+            "path": "/corp/k-bigx-report/innovation-growth-report/report-recheck",
+            "name": "보고서 재조회 안내",
+            "errors": 1,
+            "warnings": 0,
+            "messages": [
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 65
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 88
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 157
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 291
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 352
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 419
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 480
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 547
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 640
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 733
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 1961
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2003
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2085
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2214
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2344
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2395
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2444
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2496
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2555
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2613
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2750
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2814
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2876
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2920
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2999
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3047
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3095
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3157
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3201
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3258
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3317
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3455
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3535
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3598
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3647
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3696
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3794
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3885
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 13594
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 13791
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 24327
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 24542
+                },
+                {
+                    "type": "error",
+                    "message": "Element “option” without attribute “label” must not be empty.",
+                    "lastLine": 1,
+                    "firstColumn": 29284
                 }
             ]
         },
@@ -111349,6 +111615,272 @@
                     "message": "Element “option” without attribute “label” must not be empty.",
                     "lastLine": 1,
                     "firstColumn": 36273
+                }
+            ]
+        },
+        {
+            "path": "/org/k-bigx-report/innovation-growth-report/report-recheck",
+            "name": "보고서 재조회 안내",
+            "errors": 1,
+            "warnings": 0,
+            "messages": [
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 65
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 88
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 157
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 291
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 352
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 419
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 480
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 547
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 640
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 733
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 1961
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2003
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2085
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2214
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2344
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2395
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2444
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2496
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2555
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2613
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2750
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2814
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2876
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2920
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 2999
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3047
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3095
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3157
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3201
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3258
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3317
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3455
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3535
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3598
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3647
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3696
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3794
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 3885
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 13613
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 13810
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 25150
+                },
+                {
+                    "type": "info",
+                    "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+                    "lastLine": 1,
+                    "firstColumn": 25365
+                },
+                {
+                    "type": "error",
+                    "message": "Element “option” without attribute “label” must not be empty.",
+                    "lastLine": 1,
+                    "firstColumn": 30104
                 }
             ]
         },

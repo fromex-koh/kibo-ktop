@@ -963,6 +963,13 @@
             "name": "정보 이용 동의"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-recheck",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/report-recheck",
+            "name": "보고서 재조회 안내"
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
             "screenId": null,
             "userType": "기업",
@@ -2858,6 +2865,13 @@
             "userType": "기관",
             "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-complete",
             "name": "(4) [창업] 일괄평가 신청 완료"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-report-recheck",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/report-recheck",
+            "name": "보고서 재조회 안내"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
