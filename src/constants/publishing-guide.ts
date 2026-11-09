@@ -300,6 +300,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'FormCard', href: '/component-guide/form-card', layers: ['composite']},
                     {label: 'RepeatCard', href: '/component-guide/repeat-card', layers: ['composite']},
                     {label: 'OptionCard', href: '/component-guide/option-card', layers: ['composite']},
+                    {label: 'PricingCard', href: '/component-guide/pricing-card', layers: ['composite']},
                     {label: 'RadioCard', href: '/component-guide/radio-card', layers: ['composite']},
                     {label: 'RadioChip', href: '/component-guide/radio-chip', layers: ['composite']},
                     {label: 'CardCarousel', href: '/component-guide/card-carousel', layers: ['custom']},
@@ -322,6 +323,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'FormTabs', href: '/component-guide/form-tabs', layers: ['composite']},
                     {label: 'PillTabs', href: '/component-guide/pill-tabs', layers: ['theme']},
+                    {label: 'SegmentedTabs', href: '/component-guide/segmented-tabs', layers: ['composite']},
                     {label: 'Tabs', href: '/component-guide/tabs', layers: ['ui']},
                     {label: 'TextTabs', href: '/component-guide/text-tabs', layers: ['composite']},
                     {
@@ -602,6 +604,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         items: [
                             {label: 'ProgressBar', href: '/component-guide/progress-bar', layers: ['custom']},
                             {label: 'Table', href: '/component-guide/table', layers: ['custom']},
+                            {
+                                label: 'PlanComparisonTable',
+                                href: '/component-guide/plan-comparison-table',
+                                layers: ['custom'],
+                            },
                             {label: 'ReviewList', href: '/component-guide/review-list', layers: ['composite']},
                             {label: 'HistoryList', href: '/component-guide/history-list', layers: ['composite']},
                             {label: 'EvaluationCard', href: '/component-guide/evaluation-card', layers: ['custom']},

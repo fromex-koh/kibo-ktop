@@ -267,6 +267,16 @@ const CHOICE_ROWS = [
             '패널을 전환하는 탭입니다. 값만 고르는 컨트롤이 아닙니다.',
         ],
     },
+    {
+        key: 'segmented-tabs',
+        cells: [
+            '세그먼트 모양으로 본문 패널 전환',
+            <Link key="component" href="/component-guide/segmented-tabs" className={LINK_CLASS}>
+                SegmentedTabs
+            </Link>,
+            '회색 트랙 모양은 비슷하지만 역할이 탭(tablist)입니다. 예: 가격정책의 회원유형 탭.',
+        ],
+    },
 ] as const
 
 const SIZES = ['sm', 'md', 'lg'] as const
