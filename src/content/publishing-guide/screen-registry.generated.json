@@ -61,8 +61,8 @@
             "key": "corp-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.4",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "corp-platform",
@@ -881,7 +881,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
@@ -1573,8 +1573,8 @@
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.4.4",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "org-platform",
@@ -2785,7 +2785,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
@@ -2966,29 +2966,29 @@
             "key": "corp-pricing-payment",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing-payment-seller-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing-payment-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "org-pricing-payment-unavailable",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.9",
-            "isCurrent": false
+            "version": "v3.5.3",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",
