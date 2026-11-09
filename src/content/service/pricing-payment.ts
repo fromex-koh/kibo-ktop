@@ -25,7 +25,7 @@ const PAYMENT_USAGE_GUIDE = {
     items: [
         '이용기간은 이용권 개시일로부터 1개월간 이용하실 수 있습니다.',
         '만료 시 잔여 횟수는 소멸되며 이월되지 않습니다.',
-        '자사 조회(본인 기업 조회), 기술혁신정보 미제공, 당일 재조회 등의 경우 이용 횟수가 차감되지 않습니다.',
+        '자사 조회(본인 기업 조회)의 경우 이용 횟수가 차감되지 않습니다.',
         '본 보고서는 정보 제공을 목적으로 하며, 여신 등의 심사 근거나 조달청 입찰 등의 용도로 사용하실 수 없습니다.',
     ],
 } as const
@@ -51,11 +51,11 @@ const SELLER_INFO: readonly {label: string; value: string}[] = [
 ]
 
 // 결제 불가 안내 모달(PaymentUnavailableDialog) — 기관회원은 이용권을 직접 구매할 수 없어 담당자와 협의하도록 안내한다.
-// [프론트엔드 연동] 문의전화는 확정된 번호로 바꾼다(아래는 임시 번호).
+// 안내는 문장 단위로 나눈다 — MESSAGE 는 굵은 안내 한 문장, GUIDE 는 그 아래 설명이다.
 const PAYMENT_UNAVAILABLE_TITLE = '결제 불가 안내'
-const PAYMENT_UNAVAILABLE_MESSAGE = '기관회원은 이용권을 직접 구매할 수 없습니다. 유료서비스 이용을 원하시는 경우,'
-const PAYMENT_UNAVAILABLE_GUIDE = '담당자와 협의를 통해 신청해 주시기 바랍니다.'
-const PAYMENT_UNAVAILABLE_CONTACT = '문의전화: 111-1111-1111'
+const PAYMENT_UNAVAILABLE_MESSAGE = '기관회원은 이용권을 직접 구매할 수 없습니다.'
+const PAYMENT_UNAVAILABLE_GUIDE = '유료서비스 이용을 원하시는 경우, 담당자와 협의를 통해 신청해 주시기 바랍니다.'
+const PAYMENT_UNAVAILABLE_CONTACT = '담당자 연락처 : 051-606-7596'
 
 const PAYMENT_AGREEMENT = '주문 내용을 확인하였으며, 이용 안내 및 환불 안내에 동의합니다.(필수)'
 const PAYMENT_AGREEMENT_HINT = '필수 동의 항목에 체크하시면 결제하실 수 있습니다.'

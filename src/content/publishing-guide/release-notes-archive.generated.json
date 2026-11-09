@@ -1,6 +1,216 @@
 {
     "releases": [
         {
+            "version": "v3.5.3",
+            "releasedAt": "2026-11-09",
+            "changes": [
+                "카드는 위에서부터 작업할 순서대로 나열했습니다. '한 번에 적용'이 적힌 카드는 함께 넣어야 빌드됩니다.",
+                {"type": "group", "title": "가격정책 화면 개편 — 기업 · 기관 회원유형 탭 추가 · 로그인 헤더 적용"},
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] SegmentedTabs — 세그먼트 탭 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/segmented-tabs.tsx\nsrc/components/theme/segmented-tabs.variants.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "회색 트랙 안에서 하나를 고르면 아래 내용(TabsContent)이 바뀌는 탭(가격정책의 기업회원 · 기관회원)\nui/tabs 의 Tabs · TabsContent 를 그대로 쓰고 목록(SegmentedTabsList) · 칸(SegmentedTabsTrigger)만 바꿈\n칸: 높이 40 · 최소 폭 120 · 글자 가운데, 고른 칸은 흰 면 + 파란 굵은 글자"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[세그먼트 탭 (SegmentedTabs)](/component-guide/segmented-tabs)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/23a52fc95453ef46a281417e39a738d5547c8293)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] PricingCard — 가격 카드 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/pricing-card.tsx\nsrc/components/theme/pricing-card.variants.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "구역을 골라 쌓는 카드: 머리(이름 · 보조 설명 · 무료/유료 배지) · 금액 · 핵심 안내 상자 · 이름표 줄(평가모형) · 버튼\nsize(md 이용권 카드 · lg 서비스 카드) · elevated(한 장 카드 그림자 shadow-1) · interactive(hover · 포커스 강조)\ninteractive 카드는 마우스를 올리거나 버튼에 포커스가 가면 파란 테두리 · 옅은 파란 면, 버튼은 채운 파란 버튼(기존 이용권 카드 강조 그대로)\n[구매하기] 버튼은 프로젝트 버튼 규격(secondary · md · 반경 8)"
+                        },
+                        {"label": "영향 화면", "value": "[가격 카드 (PricingCard)](/component-guide/pricing-card)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/866e7a8efb7531a80e6425656b708685dd010694)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] PlanComparisonTable — 플랜 비교표 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/plan-comparison-table.tsx"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "이용권을 열로, 비교 항목을 행으로 놓는 표. 칸 값은 글자 · 제공(파란 체크) · 해당 없음(줄표)\n좁은 화면은 표만 가로 스크롤 · 항목 이름 열 왼쪽 고정. 스크롤 상자의 contain-inline-size · relative 는 지우지 않음(없으면 모바일 페이지 전체가 가로로 넘침)"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[플랜 비교표 (PlanComparisonTable)](/component-guide/plan-comparison-table)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/106a3fc10b9adac2a031365c28ea760912db486d)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] PricingMemberTabs — 가격정책 회원유형 탭 묶음 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/pricing-member-tabs.tsx"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "가운데 제목 · 설명 → 회원유형 탭 → 고른 회원의 내용. 설명 문구가 고른 회원유형에 따라 바뀜"
+                        },
+                        {"label": "함께 작업", "value": "아래 가격정책 카드 · 화면 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/20fba5a07d014f17299b23a17c771463cd28ae66)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[데이터 · 화면] 가격정책 — 회원유형 탭 · 카드 · 비교표로 재구성",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/pricing.ts\nsrc/components/custom/pricing-policy.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "짜임: 1뎁스 탭(기술평가 · K-BIGx 보고서) 아래에 회원유형 탭(기업회원 · 기관회원) 추가\n기술평가 · 기업회원: 자가진단 카드 한 장 / 기관회원: 개별평가 · 일괄평가 카드 + 기관 이용 안내\nK-BIGx · 기업회원: 자사조회 + 이용권 4장 카드, 플랜별 비교표, 이용 안내 / 기관회원: 계약 안내 카드 + 파트너(기관) 이용 안내\n반응형: 이용권 카드 PC 5열 · 태블릿 3열 · 모바일 1열, 기관 기술평가 카드 태블릿부터 2열\n데이터: 문구 · 이용권은 pricing.ts, 비교표 열 · 행은 buildPlanComparison(이용권 목록)이 만듦\n[프론트엔드 연동] 이용권을 API 로 받으면 PricingPolicy 의 plans 로 넘김 — 카드 · 비교표가 함께 바뀜(pricing.ts 머리 주석)"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "기업 · 기관 화면이 같은 본문을 쓰고, 처음 열리는 회원유형만 다름(defaultMember)"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[가격정책 (기업)](/corp/pricing)\n[가격정책 (기관)](/org/pricing)"
+                        },
+                        {"label": "함께 작업", "value": "위 컴포넌트 카드 · 아래 화면 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/18a4ede76ab7bfae1f7fbdd8169ac4509d8c145e)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[화면] 가격정책 · 결제 화면 — 로그인 헤더로 이동",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/pricing/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/pricing/payment/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/pricing/payment/complete/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/pricing/payment/seller-info/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/pricing/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/pricing/payment-unavailable/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "폴더 이동: (logged-out)/pricing → (logged-in)/pricing (기업 · 기관). 주소는 그대로\n헤더: 로그인 전 헤더 → 기업 · 기관 로그인 헤더(회원유형별 흐름이 화면에서 구분됨)\n가격정책 page.tsx: defaultMember 전달(기업 corp · 기관 org) — 기관은 기존처럼 [구매하기]가 결제 불가 안내 모달을 엶"
+                        },
+                        {"label": "결과", "value": "예전 (logged-out)/pricing 폴더는 지움(아래 [삭제])"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[가격정책 (기업)](/corp/pricing)\n[가격정책 (기관)](/org/pricing)\n[결제하기](/corp/pricing/payment)\n[결제 불가 팝업](/org/pricing/payment-unavailable)"
+                        },
+                        {"label": "함께 작업", "value": "위 가격정책 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/05b13af8b0a55ac207df486c9efeaeb353786625)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "delete",
+                    "title": "[화면] 로그인 전 레이아웃의 가격정책 폴더",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-out)/pricing\nsrc/app/(user-type)/org/(service)/(logged-out)/pricing"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "폴더 삭제(위 카드에서 (logged-in) 아래로 옮김 — 같은 주소가 두 곳에 있으면 빌드 오류)"
+                        },
+                        {"label": "함께 작업", "value": "위 화면 카드와 한 번에 적용"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c70bb4a3991623449dd4b87b3e1f6e66945ea3b5)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[문구] 결제 불가 안내 팝업 · 결제하기 이용 안내 수정",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/payment-unavailable-dialog.tsx\nsrc/content/service/pricing-payment.ts"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "결제 불가 안내 문구: 쉼표 뒤 강제 줄바꿈 대신 문장 단위로 나눔 — 굵은 안내 \"기관회원은 이용권을 직접 구매할 수 없습니다.\" + 설명(16 · 회색)\n결제 불가 안내 좁은 화면: 두 문장 모두 낱말 단위로 고르게 접힘\n결제 불가 안내 연락처: \"문의전화: 111-1111-1111\" → \"담당자 연락처 : 051-606-7596\"\n결제하기 이용 안내 3번째 줄: \"자사 조회(본인 기업 조회), 기술혁신정보 미제공, 당일 재조회 등의 경우 …\" → \"자사 조회(본인 기업 조회)의 경우 이용 횟수가 차감되지 않습니다.\""
+                        },
+                        {"label": "결과", "value": "문구만 바뀜 — 팝업 · 결제하기 화면 짜임과 동작은 그대로"},
+                        {
+                            "label": "영향 화면",
+                            "value": "[결제 불가 팝업](/org/pricing/payment-unavailable)\n[결제하기](/corp/pricing/payment)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[결제 불가 안내](https://github.com/fromex-koh/kibo-ktop/commit/f025ab73fe87b7fe8414882af3b7d3cc2053bd3d) · [결제하기 이용 안내](https://github.com/fromex-koh/kibo-ktop/commit/3d350da59da2c54f21d6898ebf93b860fa5878c6)"
+                        }
+                    ]
+                },
+                {"type": "group", "title": "컴포넌트 가이드 — 가격정책 컴포넌트 3종 추가"},
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 가격정책 컴포넌트 가이드 추가 · 탭 가이드 갱신",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/component-guide/(guide)/segmented-tabs/page.tsx\nsrc/app/component-guide/(guide)/pricing-card/page.tsx\nsrc/app/component-guide/(guide)/plan-comparison-table/page.tsx\nsrc/app/component-guide/(guide)/segmented-control/page.tsx\nsrc/app/component-guide/(guide)/tabs/page.tsx\nsrc/constants/publishing-guide.ts"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "[세그먼트 탭 (SegmentedTabs)](/component-guide/segmented-tabs): 새 가이드\n[가격 카드 (PricingCard)](/component-guide/pricing-card): 새 가이드\n[플랜 비교표 (PlanComparisonTable)](/component-guide/plan-comparison-table): 새 가이드\n[세그먼티드 컨트롤 (Segmented Control)](/component-guide/segmented-control): 고르는 기준 표에 SegmentedTabs 추가\n[탭 (Tabs)](/component-guide/tabs): default · plain 행에 SegmentedTabs 안내\n가이드 메뉴: 위 새 가이드 3개 등록"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/42cb883b45a61ced19e76a5594403c9d759028fd)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.5.2",
             "releasedAt": "2026-11-06",
             "changes": [

@@ -14,7 +14,9 @@ import {isPricingView, PRICING_TAB_QUERY_KEY} from '@/content/service/pricing'
 export const metadata: Metadata = {title: '가격정책'}
 
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
-// 1뎁스 탭(기술평가 · K-BIGx 보고서)과 탭 본문은 PricingPolicy 가 갖는다.
+// 1뎁스 탭(기술평가 · K-BIGx 보고서) · 회원유형 탭(기업회원 · 기관회원)과 탭 본문은 PricingPolicy 가 갖는다.
+// 기업 화면은 [기업회원] 탭이 처음 열린다. (logged-in) 아래라 기업 로그인 헤더가 붙는다 — 기업 · 기관 흐름이 달라
+// 화면마다 회원유형을 분명히 보이게 한다(주소는 /corp/pricing 그대로).
 // ?tab=kbigx 로 들어오면 [K-BIGx 보고서] 탭이 열린다(없거나 모르는 값이면 [기술평가]).
 // 화면 바탕은 시안처럼 옅은 회색(gray.50)이다.
 type PricingPageProps = {searchParams: Promise<Record<string, string | string[] | undefined>>}
@@ -41,7 +43,11 @@ const CorpPricingPage = async ({searchParams}: PricingPageProps) => {
                         </Breadcrumb>
                     }
                 />
-                <PricingPolicy paymentHref="/corp/pricing/payment" defaultView={isPricingView(tab) ? tab : undefined} />
+                <PricingPolicy
+                    paymentHref="/corp/pricing/payment"
+                    defaultView={isPricingView(tab) ? tab : undefined}
+                    defaultMember="corp"
+                />
             </div>
         </main>
     )

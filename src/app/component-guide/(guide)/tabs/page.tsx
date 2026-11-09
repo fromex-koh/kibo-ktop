@@ -157,7 +157,7 @@ const VARIANT_ROWS = [
         cells: [
             <code key="v">default</code>,
             'shadcn 기본 세그먼트. 회색 면 안에서 활성 탭만 흰 면으로 떠 보입니다.',
-            '서비스 화면에서는 쓰지 않습니다.',
+            '서비스 화면에서는 쓰지 않습니다. 같은 모양의 회원유형 탭(가격정책)은 SegmentedTabs 를 씁니다.',
         ],
     },
     {
@@ -165,7 +165,7 @@ const VARIANT_ROWS = [
         cells: [
             <code key="v">plain</code>,
             '표면 스타일이 없는 구조만 남깁니다.',
-            '탭 모양이 전혀 다른 composite 가 자기 디자인을 얹을 때(FormTabs · 로그인 회원 유형).',
+            '탭 모양이 전혀 다른 composite 가 자기 디자인을 얹을 때(FormTabs · 로그인 회원 유형 · SegmentedTabs).',
         ],
     },
 ] as const
