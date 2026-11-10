@@ -6,6 +6,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
     useSyncExternalStore,
     type ReactNode,
@@ -628,33 +629,50 @@ const RadioGroup = ({name, onValueChange, ...props}: RadioGroupProps) => {
 
 type SelectTriggerProps = Parameters<typeof BaseSelectTrigger>[0]
 
+// 값을 고르면 오류를 거두는 통로 — 오류는 트리거 id 로 저장되는데 Select(뿌리)는 그 id 를 모른다.
+// 트리거가 자기 clear 를 등록하고, Select 가 onValueChange 때 부른다(다른 입력 래퍼의 onChange 의 clear 와 같다).
+const SelectClearContext = createContext<((clear: () => void) => void) | null>(null)
+
 // 검사 메시지는 값을 고르는 트리거에 붙는다 — 라벨의 htmlFor 가 가리키는 것도 이 요소다.
-// 값을 고르면(Select 의 onValueChange) 메시지가 남지 않도록 다음 검사 때 다시 계산된다.
 const SelectTrigger = (props: SelectTriggerProps) => {
     const validation = useFieldValidation(props.id, props['aria-describedby'])
+    const registerClear = useContext(SelectClearContext)
+    const {clear} = validation
+
+    useEffect(() => {
+        registerClear?.(clear)
+    }, [registerClear, clear])
 
     return <BaseSelectTrigger {...props} {...validation.props} />
 }
 
 type SelectProps = Parameters<typeof BaseSelect>[0]
 
-// Select 의 뿌리(Root)에는 id 가 없다 — id 는 트리거에 붙으므로 검사 표시도 아래 SelectTrigger 가 맡는다.
+// Select 의 뿌리(Root)에는 id 가 없다 — id 는 트리거에 붙으므로 검사 표시도 SelectTrigger 가 맡는다.
+// 값을 고르면 트리거가 등록한 clear 로 오류 문구 · 오류 스타일을 바로 거둔다.
 const Select = ({name, onValueChange, ...props}: SelectProps) => {
     const field = useFieldValue(name)
     const required = useCardRequired(props.required)
     useRegisterField(name, {required, readOnly: props.disabled})
+    const clearRef = useRef<(() => void) | null>(null)
+    const registerClear = useCallback((clear: () => void) => {
+        clearRef.current = clear
+    }, [])
 
     return (
-        <BaseSelect
-            {...props}
-            required={required}
-            name={name}
-            value={field ? field.value : props.value}
-            onValueChange={(value) => {
-                field?.setValue(value)
-                onValueChange?.(value)
-            }}
-        />
+        <SelectClearContext.Provider value={registerClear}>
+            <BaseSelect
+                {...props}
+                required={required}
+                name={name}
+                value={field ? field.value : props.value}
+                onValueChange={(value) => {
+                    field?.setValue(value)
+                    clearRef.current?.()
+                    onValueChange?.(value)
+                }}
+            />
+        </SelectClearContext.Provider>
     )
 }
 
