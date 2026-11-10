@@ -329,6 +329,8 @@ const CHECKS = [
     {fg: 'disabled', bg: 'background', min: TEXT, kind: '비활성 텍스트'},
     {fg: 'disabled', bg: 'surface', min: TEXT, kind: '표면 비활성 텍스트'},
     {fg: 'disabled', bg: 'field-disabled', min: TEXT, kind: '비활성 필드 텍스트'},
+    {fg: 'label-foreground', bg: 'field-invalid', min: TEXT, kind: '오류 필드 텍스트'},
+    {fg: 'destructive', bg: 'field-invalid', min: UI, kind: '오류 필드 경계'},
     {fg: 'disabled-subtle', bg: 'control-disabled-subtle', min: UI, kind: '비활성 컨트롤 경계'},
     {fg: 'primary', bg: 'background', min: TEXT, kind: '링크 텍스트'},
     {fg: 'primary', bg: 'surface', min: TEXT, kind: '표면 링크 텍스트'},
