@@ -4,7 +4,13 @@ import {useEffect, useId, useRef, useState, type FormEvent} from 'react'
 import {RotateCcw, Search} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import {EmptyState} from '@/components/composite/empty-state'
-import {CardActions, CountBadge, EvaluationDetail, EvaluationDetailList} from '@/components/custom/evaluation-card'
+import {
+    CountBadge,
+    EvaluationCardActions,
+    EvaluationDetail,
+    EvaluationDetailList,
+    toGuaranteeCompletedActions,
+} from '@/components/custom/evaluation-card'
 import {Pagination} from '@/components/composite/pagination'
 import {
     DateRangeField,
@@ -20,7 +26,6 @@ import {Tabs, TabsContent, TabsTrigger} from '@/components/ui/tabs'
 import {Badge} from '@/components/ui/badge'
 import {
     getOrgEvaluationRequestActions,
-    GUARANTEE_HISTORY_LABEL,
     GUARANTEE_RECOMMENDATION_FIELD,
     ORG_EVALUATION_REQUEST_STATUS,
     ORG_EVALUATION_SEARCH_TARGETS,
@@ -41,7 +46,7 @@ import {useIsMobile} from '@/hooks/use-mobile'
 
 // 개별평가 결과 한 건 — 모형명·결과값 / 평가일·기업명·사업자번호·조회 기관 / 결과를 여는 버튼(시안).
 // 버튼 수는 모형마다 다르다 — KTRS-FM 은 [보증추천](입력을 마쳤으면 [보증이력])까지 셋이고,
-// 나머지 모형은 결과 둘이다.
+// 나머지 모형은 결과 둘이다. 결과 버튼은 보조 · 왼쪽, 보증 버튼은 주요 · 오른쪽이다.
 const IndividualEvaluationCard = ({
     item,
     modelLabel,
@@ -59,8 +64,9 @@ const IndividualEvaluationCard = ({
     <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-4">
-                    <h3 className="typo-title-l-bold text-foreground min-w-0 truncate">{modelLabel}</h3>
+                {/* 모형명 · 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄(모형명은 말줄임 없이 다 보인다) */}
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                    <h3 className="typo-title-l-bold text-foreground min-w-0 grow break-keep">{modelLabel}</h3>
                     <CountBadge value={item.grade} unit={unit} />
                 </div>
                 <EvaluationDetailList>
@@ -75,16 +81,9 @@ const IndividualEvaluationCard = ({
                 </EvaluationDetailList>
             </div>
 
-            <CardActions
-                actions={
-                    isGuaranteeRecommended
-                        ? item.actions.map((action) =>
-                              action.opens === 'guarantee-recommendation'
-                                  ? {...action, label: GUARANTEE_HISTORY_LABEL, opens: 'guarantee-history' as const}
-                                  : action,
-                          )
-                        : item.actions
-                }
+            {/* 결과 버튼은 보조 · 왼쪽, [보증추천] · [보증이력] 은 주요 · 오른쪽(EvaluationCardActions). */}
+            <EvaluationCardActions
+                actions={isGuaranteeRecommended ? toGuaranteeCompletedActions(item.actions) : item.actions}
                 onGuaranteeCompleted={onGuaranteeCompleted}
                 guaranteeDefaults={{
                     [GUARANTEE_RECOMMENDATION_FIELD.companyName]: item.companyName,
@@ -104,13 +103,14 @@ const EvaluationRequestCard = ({item, modelLabel}: {item: OrgEvaluationRequestIt
         <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between gap-4">
+                    {/* 모형명 · 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄(모형명은 말줄임 없이 다 보인다) */}
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                         {/* 상태 배지는 모형명 위에 붙는다 — 이 신청이 지금 어느 단계인지가 먼저 읽힌다. */}
-                        <div className="flex min-w-0 flex-col gap-1">
+                        <div className="flex min-w-0 grow flex-col gap-1">
                             <Badge size="xs" shape="round" color={status.color}>
                                 {status.label}
                             </Badge>
-                            <h3 className="typo-title-l-bold text-foreground min-w-0 truncate">{modelLabel}</h3>
+                            <h3 className="typo-title-l-bold text-foreground min-w-0 break-keep">{modelLabel}</h3>
                         </div>
                         <CountBadge value={String(item.companyCount)} unit="개 기업" />
                     </div>
@@ -122,7 +122,8 @@ const EvaluationRequestCard = ({item, modelLabel}: {item: OrgEvaluationRequestIt
                     </EvaluationDetailList>
                 </div>
 
-                <CardActions actions={getOrgEvaluationRequestActions(item.status, item.canCancel)} />
+                {/* 신청 건의 버튼은 모두 보조 · 왼쪽이다(주요 동작이 없다). */}
+                <EvaluationCardActions actions={getOrgEvaluationRequestActions(item.status, item.canCancel)} />
             </div>
         </BaseCard>
     )
