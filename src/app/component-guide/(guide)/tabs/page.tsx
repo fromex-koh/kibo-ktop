@@ -219,7 +219,21 @@ const TabsGuidePage = () => (
                     <p className="typo-body-l-regular text-label-foreground">
                         1뎁스 탭은 <code>TabsList</code> 대신 <code>TabsScrollArea</code> 로 감쌉니다. 탭이 폭을 넘치면
                         좌우 화살표와 가장자리 페이드가 자동으로 붙어 좁은 화면에서도 모든 탭에 닿을 수 있습니다. 탭과
-                        본문 사이 간격은 각 <code>TabsContent</code> 에 줍니다.
+                        본문 사이 간격은 각 <code>TabsContent</code> 에 줍니다. 스크롤 동작은 공용{' '}
+                        <Link
+                            href="/component-guide/horizontal-scroll-area"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            HorizontalScrollArea
+                        </Link>{' '}
+                        가 맡으며, 탭이 아닌 한 줄 목록(세그먼트 필터)도 같은 컴포넌트로 감쌉니다(
+                        <Link
+                            href="/component-guide/segmented-control"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            세그먼티드 컨트롤
+                        </Link>
+                        ).
                     </p>
                 </div>
                 <Tabs defaultValue={MYPAGE_TABS[0][0]}>

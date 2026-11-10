@@ -8,11 +8,32 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
+import {HorizontalScrollArea} from '@/components/composite/horizontal-scroll-area'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import UserTypeSwitchDemo from './user-type-switch-demo'
 import SegmentedControlFormDemo from './segmented-control-form-demo'
 
 export const metadata: Metadata = {title: '세그먼티드 컨트롤 (Segmented Control)'}
+
+const USAGE_SCROLL = `import {HorizontalScrollArea} from '@/components/composite/horizontal-scroll-area'
+
+{/* 칸이 많아 좁은 화면에서 넘칠 수 있으면 감싼다 — 넘칠 때만 좌우 화살표가 생기고 이 영역만 가로로 스크롤된다.
+    컨트롤은 w-max 로 자기 내용 폭을 갖게 한다(부모 폭에 맞춰 줄면 스크롤이 생기지 않는다). */}
+<HorizontalScrollArea itemSelector='[data-slot="segmented-control-item"]' scrollLabel="이용권 상태 필터">
+  <SegmentedControl type="radio" variant="solid" size="md" value={filter} onValueChange={…}
+    aria-label="이용권 상태 필터" className="w-max">
+    <SegmentedControlItem value="all">전체</SegmentedControlItem>
+    …
+  </SegmentedControl>
+</HorizontalScrollArea>`
+
+const SCROLL_FILTERS = [
+    {value: 'all', label: '전체'},
+    {value: 'using', label: '사용중'},
+    {value: 'waiting', label: '대기중'},
+    {value: 'expired', label: '만료'},
+    {value: 'refunded', label: '환불'},
+] as const
 
 const USAGE_RADIO_TYPE = `import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 
@@ -597,6 +618,62 @@ const SegmentedControlGuidePage = () => (
                 </div>
                 <SegmentedControlFormDemo />
                 <CodeBlock code={USAGE_FORM} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tg-scroll" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="tg-scroll" className="typo-h4-bold">
+                        넘칠 때 가로 스크롤
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        칸이 많아 좁은 화면(모바일)에서 폭을 넘칠 수 있으면{' '}
+                        <Link
+                            href="/component-guide/horizontal-scroll-area"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            HorizontalScrollArea
+                        </Link>{' '}
+                        로 감쌉니다. 탭 목록(
+                        <Link href="/component-guide/tabs" className="text-primary-strong underline underline-offset-4">
+                            TabsScrollArea
+                        </Link>
+                        )과 같은 방식으로, 넘칠 때만 좌우 화살표와 가장자리 페이드가 생기고 페이지 전체가 아니라 이
+                        영역만 가로로 스크롤됩니다. 실제 화면 —{' '}
+                        <Link
+                            href="/corp/mypage/paid-services/payment-history"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            마이페이지 &gt; 이용권 관리
+                        </Link>
+                        의 상태 필터. 아래 예시는 폭을 좁힌 상자라 화살표가 보입니다.
+                    </p>
+                </div>
+                <div className="bg-muted rounded-md p-6">
+                    <div className="max-w-xs">
+                        <HorizontalScrollArea
+                            itemSelector='[data-slot="segmented-control-item"]'
+                            scrollLabel="가로 스크롤 예시 필터"
+                        >
+                            <SegmentedControl
+                                type="radio"
+                                variant="solid"
+                                size="md"
+                                defaultValue="all"
+                                aria-label="가로 스크롤 예시 필터"
+                                className="w-max"
+                            >
+                                {SCROLL_FILTERS.map((item) => (
+                                    <SegmentedControlItem key={item.value} value={item.value}>
+                                        {item.label}
+                                    </SegmentedControlItem>
+                                ))}
+                            </SegmentedControl>
+                        </HorizontalScrollArea>
+                    </div>
+                </div>
+                <CodeBlock code={USAGE_SCROLL} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

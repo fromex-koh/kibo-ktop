@@ -288,6 +288,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'StepHeader', href: '/component-guide/step-header', layers: ['composite']},
                     {label: 'StepProgress', href: '/component-guide/step-progress', layers: ['composite']},
                     {label: 'ActionBar', href: '/component-guide/action-bar', layers: ['composite']},
+                    {label: 'CardActionBar', href: '/component-guide/card-action-bar', layers: ['composite']},
                     {label: 'StickyActionBar', href: '/component-guide/sticky-action-bar', layers: ['composite']},
                     {label: 'StepNavigation', href: '/component-guide/step-navigation', layers: ['composite']},
                 ],
@@ -322,6 +323,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '탭',
                 items: [
                     {label: 'FormTabs', href: '/component-guide/form-tabs', layers: ['composite']},
+                    {
+                        label: 'HorizontalScrollArea',
+                        href: '/component-guide/horizontal-scroll-area',
+                        layers: ['composite'],
+                    },
                     {label: 'PillTabs', href: '/component-guide/pill-tabs', layers: ['theme']},
                     {label: 'SegmentedTabs', href: '/component-guide/segmented-tabs', layers: ['composite']},
                     {label: 'Tabs', href: '/component-guide/tabs', layers: ['ui']},
