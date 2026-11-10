@@ -2,10 +2,12 @@
 
 import Image from 'next/image'
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {ArrowDown, ArrowUp} from 'lucide-react'
+import {ArrowDown, ArrowUp, CreditCard, NotepadText} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
+import {CardActionBar, CardActionBarEnd} from '@/components/composite/card-action-bar'
 import {EmptyState} from '@/components/composite/empty-state'
+import {HorizontalScrollArea} from '@/components/composite/horizontal-scroll-area'
 import {
     PaidServiceUsageHistoryDialog,
     type PaidServiceUsageHistoryItem,
@@ -492,11 +494,16 @@ const CurrentPass = ({
     // 사용중 이용권 카드 — 구매한 이용권 목록 안에 다른 카드와 함께 놓인다(테두리만 강조색).
     <article className="border-primary bg-card overflow-hidden rounded-lg border">
         <div className="flex flex-col gap-6 px-6 pt-8 md:px-8">
-            <div className="flex items-center gap-4">
-                {item.gradeImage ? <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} /> : null}
-                <div className="min-w-0 flex-1">
-                    <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
-                    <h3 className="typo-h4-bold text-foreground">{item.grade}</h3>
+            {/* (등급 이미지 + 이용권 이름) · 상태 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄 */}
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <div className="flex min-w-0 grow items-center gap-4">
+                    {item.gradeImage ? (
+                        <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} />
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                        <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
+                        <h3 className="typo-h4-bold text-foreground break-keep">{item.grade}</h3>
+                    </div>
                 </div>
                 {item.suspension ? (
                     <Badge color="error" shape="round">
@@ -528,7 +535,7 @@ const CurrentPass = ({
                             style={{width: `${Math.min(Math.max((item.used / item.total) * 100, 0), 100)}%`}}
                         />
                     </div>
-                    <div className="typo-body-l-regular flex justify-between">
+                    <div className="typo-body-l-regular flex flex-wrap justify-between gap-x-4">
                         <span className="text-foreground-subtle">사용량</span>
                         <span className="text-foreground">
                             <strong>{item.used}</strong>건 / {item.total}건
@@ -542,7 +549,8 @@ const CurrentPass = ({
                 </div>
             </div>
         </div>
-        <div className="border-subtle-3 bg-secondary flex flex-col gap-3 border-t border-dashed px-6 py-4 sm:flex-row sm:items-center sm:justify-between md:px-8">
+        {/* 안내 문구 · 버튼은 lg(1024) 이상에서만 한 줄 — 태블릿에서는 버튼 셋 옆 문구가 두 줄로 접혀 위아래로 둔다. */}
+        <div className="border-subtle-3 bg-secondary flex flex-col gap-3 border-t border-dashed px-6 py-4 md:px-8 lg:flex-row lg:items-center lg:justify-between">
             <p className="typo-body-m-regular text-foreground-subtle">
                 {item.suspension
                     ? '이용중지 기간에는 이용권이 차감되는 서비스를 이용할 수 없습니다.'
@@ -553,28 +561,32 @@ const CurrentPass = ({
                         : '사용 이력이 있는 이용권은 환불할 수 없습니다.'}
             </p>
             {/* [이용중지] · [이용중지 변경] 은 이용권 상태에 따라 Action 이 고르고, 이력이 있으면 렌더하지 않는다. */}
-            {/* 버튼이 셋(환불하기 · 이용중지 · 이용내역)이면 좁은 화면에서 줄을 바꾼다. */}
-            <div className="flex flex-wrap justify-end gap-2">
-                {item.isRefundable ? (
-                    <PaidServiceRefundDialog grade={item.grade} onConfirm={() => onRefund?.(item.id)}>
-                        <Button type="button" variant="tertiary" size="sm">
-                            환불하기
+            {/* 보조(환불하기 · 이용중지) → 주요(이용내역) 순서 — 배치는 CardActionBar. */}
+            <CardActionBar>
+                <CardActionBarEnd>
+                    {item.isRefundable ? (
+                        <PaidServiceRefundDialog grade={item.grade} onConfirm={() => onRefund?.(item.id)}>
+                            <Button type="button" variant="secondary" size="sm">
+                                <CreditCard aria-hidden="true" />
+                                환불하기
+                            </Button>
+                        </PaidServiceRefundDialog>
+                    ) : null}
+                    <PaidServiceSuspendAction pass={item} onSubmit={onSuspend} />
+                    <PaidServiceUsageHistoryDialog
+                        defaultOpen={usageHistoryDefaultOpen}
+                        pass={{grade: item.grade, remaining: item.remaining}}
+                        items={item.usageHistory}
+                        totalPages={item.usageHistoryTotalPages}
+                        onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
+                    >
+                        <Button type="button" size="sm" onClick={() => onViewHistory?.(item.id)}>
+                            <NotepadText aria-hidden="true" />
+                            이용내역
                         </Button>
-                    </PaidServiceRefundDialog>
-                ) : null}
-                <PaidServiceSuspendAction pass={item} onSubmit={onSuspend} />
-                <PaidServiceUsageHistoryDialog
-                    defaultOpen={usageHistoryDefaultOpen}
-                    pass={{grade: item.grade, remaining: item.remaining}}
-                    items={item.usageHistory}
-                    totalPages={item.usageHistoryTotalPages}
-                    onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
-                >
-                    <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
-                        이용내역
-                    </Button>
-                </PaidServiceUsageHistoryDialog>
-            </div>
+                    </PaidServiceUsageHistoryDialog>
+                </CardActionBarEnd>
+            </CardActionBar>
         </div>
     </article>
 )
@@ -598,11 +610,16 @@ const PurchasedPassCard = ({
         className={`border-subtle-3 overflow-hidden rounded-lg border ${item.status === 'waiting' ? 'bg-card' : 'bg-surface-subtle'}`}
     >
         <div className="flex flex-col gap-6 px-6 pt-8 md:px-8">
-            <div className="flex items-center gap-4">
-                {item.gradeImage ? <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} /> : null}
-                <div className="min-w-0 flex-1">
-                    <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
-                    <h3 className="typo-h4-bold text-foreground break-keep">{item.grade}</h3>
+            {/* (등급 이미지 + 이용권 이름) · 상태 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄 */}
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <div className="flex min-w-0 grow items-center gap-4">
+                    {item.gradeImage ? (
+                        <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} />
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                        <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
+                        <h3 className="typo-h4-bold text-foreground break-keep">{item.grade}</h3>
+                    </div>
                 </div>
                 <Badge
                     color={item.status === 'refunded' ? 'error' : item.status === 'expired' ? 'neutral' : 'success'}
@@ -641,35 +658,39 @@ const PurchasedPassCard = ({
             </div>
         </div>
         <div
-            className={`border-subtle-3 flex flex-col gap-3 border-t border-dashed px-6 py-4 sm:flex-row sm:items-center md:px-8 ${item.refundNotice ? 'sm:justify-between' : 'sm:justify-end'} ${item.status === 'waiting' ? 'bg-secondary' : 'bg-surface-subtle'}`}
+            className={`border-subtle-3 flex flex-col gap-3 border-t border-dashed px-6 py-4 md:px-8 lg:flex-row lg:items-center ${item.refundNotice ? 'lg:justify-between' : 'lg:justify-end'} ${item.status === 'waiting' ? 'bg-secondary' : 'bg-surface-subtle'}`}
         >
             {item.refundNotice ? (
                 <p className="typo-body-l-regular text-foreground-subtle">{item.refundNotice}</p>
             ) : null}
-            <div className="flex justify-end gap-2">
-                {item.refundable ? (
-                    <PaidServiceRefundDialog
-                        grade={item.grade}
-                        defaultOpen={refundDefaultOpen}
-                        onConfirm={() => onRefund?.(item.id)}
+            <CardActionBar>
+                <CardActionBarEnd>
+                    {item.refundable ? (
+                        <PaidServiceRefundDialog
+                            grade={item.grade}
+                            defaultOpen={refundDefaultOpen}
+                            onConfirm={() => onRefund?.(item.id)}
+                        >
+                            <Button type="button" variant="secondary" size="sm">
+                                <CreditCard aria-hidden="true" />
+                                환불하기
+                            </Button>
+                        </PaidServiceRefundDialog>
+                    ) : null}
+                    <PaidServiceUsageHistoryDialog
+                        defaultOpen={usageHistoryDefaultOpen}
+                        pass={{grade: item.grade, remaining: item.remaining}}
+                        items={item.usageHistory}
+                        totalPages={item.usageHistoryTotalPages}
+                        onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
                     >
-                        <Button type="button" variant="tertiary" size="sm">
-                            환불하기
+                        <Button type="button" size="sm" onClick={() => onViewHistory?.(item.id)}>
+                            <NotepadText aria-hidden="true" />
+                            이용내역
                         </Button>
-                    </PaidServiceRefundDialog>
-                ) : null}
-                <PaidServiceUsageHistoryDialog
-                    defaultOpen={usageHistoryDefaultOpen}
-                    pass={{grade: item.grade, remaining: item.remaining}}
-                    items={item.usageHistory}
-                    totalPages={item.usageHistoryTotalPages}
-                    onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
-                >
-                    <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
-                        이용내역
-                    </Button>
-                </PaidServiceUsageHistoryDialog>
-            </div>
+                    </PaidServiceUsageHistoryDialog>
+                </CardActionBarEnd>
+            </CardActionBar>
         </div>
     </article>
 )
@@ -803,22 +824,29 @@ const PaidServiceHistory = ({
                 <h2 id="purchased-pass-title" className="typo-h4-bold text-foreground">
                     구매한 이용권 내역
                 </h2>
-                <SegmentedControl
-                    type="radio"
-                    variant="solid"
-                    size="md"
-                    value={filter}
-                    aria-label="이용권 상태 필터"
-                    onValueChange={(value) => {
-                        if (isPassFilter(value)) changeFilter(value)
-                    }}
+                {/* 상태 필터가 넘치면(모바일) 필터만 가로 스크롤 — 탭 목록과 같은 방식(HorizontalScrollArea). */}
+                <HorizontalScrollArea
+                    itemSelector='[data-slot="segmented-control-item"]'
+                    scrollLabel="이용권 상태 필터"
                 >
-                    {FILTERS.map((item) => (
-                        <SegmentedControlItem key={item.value} value={item.value}>
-                            {item.label}
-                        </SegmentedControlItem>
-                    ))}
-                </SegmentedControl>
+                    <SegmentedControl
+                        type="radio"
+                        variant="solid"
+                        size="md"
+                        value={filter}
+                        aria-label="이용권 상태 필터"
+                        className="w-max"
+                        onValueChange={(value) => {
+                            if (isPassFilter(value)) changeFilter(value)
+                        }}
+                    >
+                        {FILTERS.map((item) => (
+                            <SegmentedControlItem key={item.value} value={item.value}>
+                                {item.label}
+                            </SegmentedControlItem>
+                        ))}
+                    </SegmentedControl>
+                </HorizontalScrollArea>
                 <div ref={listRef} className="flex scroll-mt-56 items-center gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                     <p className="typo-body-xl-regular text-foreground min-w-0 flex-1">
                         총{' '}

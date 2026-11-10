@@ -69,10 +69,11 @@ const PaidServiceUsageHistoryDialog = ({
             >
                 <DialogHeader className={items.length === 0 ? 'pb-10' : undefined}>
                     <DialogTitle>이용내역</DialogTitle>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
+                    {/* 이용권 이름 · 잔여 건수: 들어가면 한 줄, 모자라면 잔여 건수가 다음 줄 */}
+                    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+                        <div className="min-w-0 grow">
                             <p className="typo-caption-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
-                            <h3 className="typo-h4-bold text-foreground">{pass.grade}</h3>
+                            <h3 className="typo-h4-bold text-foreground break-keep">{pass.grade}</h3>
                         </div>
                         <p className="typo-title-m-regular text-foreground">
                             현재 잔여 이용권 <strong className="typo-title-l-bold">{pass.remaining}</strong>건
