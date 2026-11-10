@@ -1,9 +1,9 @@
 'use client'
 
 import {useEffect, useRef, useState, type FormEvent} from 'react'
-import Link from 'next/link'
 import {RotateCcw, Search} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {EvaluationCardActions} from '@/components/custom/evaluation-card'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Pagination} from '@/components/composite/pagination'
 import {
@@ -12,14 +12,11 @@ import {
     SearchFilterFields,
     SearchFilterForm,
 } from '@/components/composite/search-filter-form'
-import {NewWindowLink} from '@/components/composite/new-window-link'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 import {Button} from '@/components/ui/button'
 import {Tabs, TabsContent, TabsTrigger} from '@/components/ui/tabs'
-import {EVALUATION_REPORT_WINDOW_HEIGHT, EVALUATION_REPORT_WINDOW_WIDTH} from '@/constants/evaluation-report'
 import type {EvaluationGradeUnit, EvaluationModelTab, EvaluationResultItem} from '@/constants/evaluation-result'
 import {useIsMobile} from '@/hooks/use-mobile'
-import {cn} from '@/lib/utils'
 
 // 평가결과 조회 목록 — Figma "마이페이지_평가결과 조회".
 // 모형 탭 · 조회 필터 · 건수 · 결과 카드 · 페이지 이동이 한 덩어리로 움직인다.
@@ -48,8 +45,8 @@ const GradeBadge = ({grade, unit}: {grade: string; unit: EvaluationGradeUnit}) =
 // 결과 한 건 — 모형명·결과값 / 평가일 / 버튼(시안 "평가결과 조회 case").
 // 응답이 주는 것은 모형 코드뿐이라 화면에 쓸 이름(modelLabel)과 단위(unit)는 탭 표에서 찾아 넘겨받는다.
 //
-// 버튼 수는 모형마다 다르다 — KTRS-FM 은 [자가진단 결과·은행 전송·보증신청] 셋이고 나머지 모형은
-// [자가진단 결과] 하나다(시안). 셋일 때는 카드 폭을 고르게 나누고, 하나일 때는 오른쪽에 세운다.
+// 버튼 수는 모형마다 다르다 — KTRS-FM 은 [자가진단 결과] (왼쪽) · [은행 전송 · 보증신청] (오른쪽) 셋이고
+// 나머지 모형은 [자가진단 결과] 하나다. 버튼 모양 · 자리는 EvaluationCardActions(evaluation-card.tsx)가 정한다.
 const EvaluationResultCard = ({
     item,
     modelLabel,
@@ -59,14 +56,13 @@ const EvaluationResultCard = ({
     modelLabel: string
     unit: EvaluationGradeUnit
 }) => {
-    const isSingleAction = item.actions.length === 1
-
     return (
         <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between gap-4">
-                        <h3 className="typo-title-l-bold text-foreground min-w-0 truncate">{modelLabel}</h3>
+                    {/* 모형명 · 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄(모형명은 말줄임 없이 다 보인다) */}
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                        <h3 className="typo-title-l-bold text-foreground min-w-0 grow break-keep">{modelLabel}</h3>
                         <GradeBadge grade={item.grade} unit={unit} />
                     </div>
                     {/* 평가일은 라벨과 값이 한 줄이다(시안) — 좁은 화면에서 값이 길어지면 다음 줄로 넘어간다. */}
@@ -79,51 +75,7 @@ const EvaluationResultCard = ({
                     </p>
                 </div>
 
-                {/* 좁은 화면에서는 버튼이 한 줄에 하나씩 쌓인다. */}
-                <div
-                    className={cn(
-                        'grid gap-2',
-                        isSingleAction ? 'sm:flex sm:justify-end' : 'sm:auto-cols-fr sm:grid-flow-col',
-                    )}
-                >
-                    {item.actions.map((action) =>
-                        action.done ? (
-                            <Button
-                                key={action.label}
-                                type="button"
-                                variant="tertiary"
-                                size="sm"
-                                disabled
-                                className={cn(isSingleAction && 'sm:w-45')}
-                            >
-                                {action.label}
-                            </Button>
-                        ) : (
-                            <Button
-                                key={action.label}
-                                asChild
-                                variant="tertiary"
-                                size="sm"
-                                className={cn(isSingleAction && 'sm:w-45')}
-                            >
-                                {action.newWindow ? (
-                                    // 인쇄용 리포트는 시안 폭에 맞춘 새 창으로 연다 — 같은 이름으로 열어
-                                    // 여러 번 눌러도 창이 쌓이지 않는다.
-                                    <NewWindowLink
-                                        href={action.href}
-                                        width={EVALUATION_REPORT_WINDOW_WIDTH}
-                                        height={EVALUATION_REPORT_WINDOW_HEIGHT}
-                                        windowName="evaluation-report"
-                                    >
-                                        {action.label}
-                                    </NewWindowLink>
-                                ) : (
-                                    <Link href={action.href}>{action.label}</Link>
-                                )}
-                            </Button>
-                        ),
-                    )}
-                </div>
+                <EvaluationCardActions actions={item.actions} />
             </div>
         </BaseCard>
     )
