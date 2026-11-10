@@ -27,29 +27,22 @@ const GENERAL_ANALYSIS_PATH = '/org/mypage/evaluation-history/general-analysis'
 // 이름(verification-2-history-2)을 쓰지만, 연동하면 조회 결과의 건 번호가 그대로 들어가 짧아진다 —
 // 화면에 보이는 값이 아니라 리포트가 어느 건을 그릴지 고르는 열쇠다.
 const selfCheckResult = (id: string): EvaluationResultAction => ({
-    label: '자가진단 일반 결과',
+    type: 'self-diagnosis-general',
     href: `${GENERAL_ANALYSIS_PATH}/ktrs-fm?id=${id}`,
     newWindow: true,
 })
 
 const verificationResult = (id: string): EvaluationResultAction => ({
-    label: '평가검증 결과',
+    type: 'verification-result',
     href: `${GENERAL_ANALYSIS_PATH}/ktrs-fm?id=${id}`,
     newWindow: true,
 })
 
-// 보증추천은 화면 이동이 아니라 모달을 연다(opens). 입력을 마치면 버튼 이름이 [보증이력] 으로 바뀐다.
-const GUARANTEE_RECOMMEND: EvaluationResultAction = {
-    label: '보증추천',
-    href: NOT_READY_PATH,
-    opens: 'guarantee-recommendation',
-}
+// 보증추천 · 보증이력은 화면 이동이 아니라 모달을 연다 — 종류(type)를 보고 버튼 묶음이 모달로 감싼다(href 는 쓰지 않는다).
+// 보증추천은 입력을 마치면 [보증이력] 으로 바뀐다.
+const GUARANTEE_RECOMMEND: EvaluationResultAction = {type: 'guarantee-recommendation', href: NOT_READY_PATH}
 
-const GUARANTEE_HISTORY: EvaluationResultAction = {
-    label: '보증이력',
-    href: NOT_READY_PATH,
-    opens: 'guarantee-history',
-}
+const GUARANTEE_HISTORY: EvaluationResultAction = {type: 'guarantee-history', href: NOT_READY_PATH}
 
 // 시안 "마이페이지_평가검증 신청 조회"의 카드 두 장을 그대로 옮긴 것이다. 값(등급·접수일·기업명·
 // 사업자번호·검증 팀·검증일)도 시안에 적힌 그대로다.

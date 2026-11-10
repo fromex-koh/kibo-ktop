@@ -58,14 +58,54 @@ export const EVALUATION_MODEL_TABS: readonly EvaluationModelTab[] = [
     {value: 'investment-model', label: '투자모형', unit: '등급'},
 ]
 
+// 평가 카드(기업 평가결과 조회 · 기관 평가결과 조회 · 기관 평가검증 신청 조회)의 버튼 종류.
+// [프론트엔드 연동] 응답의 버튼은 글자가 아니라 이 코드(type)로 받는다.
+//   · 글자: 아래 EVALUATION_RESULT_ACTION_LABEL — 문구가 바뀌면 여기만 고친다.
+//   · 아이콘 · 주요/보조 · 자리: components/custom/evaluation-card-action-style.ts
+//   · 종류를 늘리면 두 표를 함께 채운다(빠뜨리면 타입 검사가 알려 준다).
+export type EvaluationResultActionType =
+    // 기업 평가결과 조회
+    | 'self-diagnosis'
+    | 'bank-transfer'
+    | 'guarantee'
+    // 기관 평가결과 조회 — 개별평가
+    | 'general-result'
+    | 'deep-result'
+    // 기관 평가검증 신청 조회
+    | 'self-diagnosis-general'
+    | 'verification-result'
+    // 기관 — 보증추천(모달). 입력을 마치면 보증이력(모달)으로 바뀐다.
+    | 'guarantee-recommendation'
+    | 'guarantee-history'
+    // 기관 평가결과 조회 — 일괄평가 · 대량정보조회 신청 건
+    | 'cancel'
+    | 'excel-result'
+    | 'html-archive'
+    | 're-register'
+
+export const EVALUATION_RESULT_ACTION_LABEL: Readonly<Record<EvaluationResultActionType, string>> = {
+    'self-diagnosis': '자가진단 결과',
+    'bank-transfer': '은행 전송',
+    guarantee: '보증신청',
+    'general-result': '개별평가 일반 결과',
+    'deep-result': '개별평가 심층 결과',
+    'self-diagnosis-general': '자가진단 일반 결과',
+    'verification-result': '평가검증 결과',
+    'guarantee-recommendation': '보증추천',
+    'guarantee-history': '보증이력',
+    cancel: '접수취소',
+    'excel-result': '엑셀결과',
+    'html-archive': 'HTML 압축파일',
+    're-register': '재등록',
+}
+
 // 결과 카드의 버튼 한 개 — 이미 마친 동작은 눌러도 할 일이 없어 잠긴다(은행전송 · 보증신청을
 // 마치면 비활성). 잠긴 버튼은 링크가 아니라 button 으로 그려 키보드로도 눌리지 않게 한다.
+// 보증추천 · 보증이력은 화면 이동이 아니라 모달을 연다 — 종류(type)만 보고 버튼 묶음이 모달로 감싼다(href 는 쓰지 않는다).
 export type EvaluationResultAction = {
-    label: string
+    type: EvaluationResultActionType
     href: string
     done?: boolean
-    /** 화면으로 가지 않고 모달을 여는 버튼이면 그 모달의 이름. 목록이 이 값을 보고 트리거로 감싼다. */
-    opens?: 'guarantee-recommendation' | 'guarantee-history'
     /**
      * 같은 창이 아니라 새 창으로 여는 버튼. 인쇄용 리포트처럼 폭이 정해진 문서에 쓴다 —
      * 창 크기는 constants/evaluation-report.ts 의 문서 폭을 따른다.
@@ -116,9 +156,6 @@ export const ORG_EVALUATION_SEARCH_TARGETS = [
     {value: 'companyName', label: '기업명'},
     {value: 'requestedBy', label: '조회 기관'},
 ] as const
-
-/** 보증추천을 마친 건의 버튼 이름 — 입력이 끝나면 [보증추천] 이 이 이름으로 바뀐다. */
-export const GUARANTEE_HISTORY_LABEL = '보증이력'
 
 // 신청 건의 진행 상태 — 일괄평가·대량정보조회는 신청해 두고 처리를 기다리는 일이라 상태가 붙는다.
 export const ORG_EVALUATION_REQUEST_STATUS = {
@@ -182,20 +219,18 @@ export type OrgEvaluationHistoryItem = OrgIndividualEvaluationItem | OrgEvaluati
 //   승인대기중 : 아직 처리 전이라 결과 파일이 없다.
 //   승인완료   : 결과 파일을 내려받을 수 있다.
 // 접수취소만은 상태가 아니라 건마다 다르므로(canCancel) 아래에서 따로 얹는다.
-// 화면이 여는 주소는 아직 정해지지 않아 비워 둔다 — 연동 시 이 표의 href 만 채우면 된다.
+// [프론트엔드 연동] 화면이 여는 주소는 아직 정해지지 않아 비워 둔다('#') — 연동 시 이 표의 href 만 채우면 된다.
 const NOT_READY_PATH = '#'
 
-const CANCEL_ACTION_LABEL = '접수취소'
-
 const ORG_EVALUATION_REQUEST_REST_ACTIONS: Record<OrgEvaluationRequestStatus, readonly EvaluationResultAction[]> = {
-    rejected: [{label: '재등록', href: NOT_READY_PATH}],
+    rejected: [{type: 're-register', href: NOT_READY_PATH}],
     pending: [
-        {label: '엑셀결과', href: NOT_READY_PATH, done: true},
-        {label: 'HTML 압축파일', href: NOT_READY_PATH, done: true},
+        {type: 'excel-result', href: NOT_READY_PATH, done: true},
+        {type: 'html-archive', href: NOT_READY_PATH, done: true},
     ],
     approved: [
-        {label: '엑셀결과', href: NOT_READY_PATH},
-        {label: 'HTML 압축파일', href: NOT_READY_PATH},
+        {type: 'excel-result', href: NOT_READY_PATH},
+        {type: 'html-archive', href: NOT_READY_PATH},
     ],
 }
 
@@ -204,7 +239,7 @@ export const getOrgEvaluationRequestActions = (
     status: OrgEvaluationRequestStatus,
     canCancel: boolean = status === 'pending',
 ): readonly EvaluationResultAction[] => [
-    {label: CANCEL_ACTION_LABEL, href: NOT_READY_PATH, done: !canCancel},
+    {type: 'cancel', href: NOT_READY_PATH, done: !canCancel},
     ...ORG_EVALUATION_REQUEST_REST_ACTIONS[status],
 ]
 

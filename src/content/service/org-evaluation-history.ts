@@ -30,21 +30,21 @@ const DEEP_ANALYSIS_PATH = '/org/mypage/evaluation-history/deep-analysis'
 // 같은 곳을 가리키는 셈이 된다(스크린리더가 같은 링크를 되풀이해 읽고 WAVE 도 Redundant link 로 잡는다).
 // 공지 목록(notice/announcements)에서 쓴 방식과 같고, 연동하면 조회 결과의 건 번호가 그 자리에 들어간다.
 const generalResult = (model: EvaluationModel, id: string): EvaluationResultAction => ({
-    label: '개별평가 일반 결과',
+    type: 'general-result',
     href: `${GENERAL_ANALYSIS_PATH}/${model}?id=${id}`,
     newWindow: true,
 })
 
 const deepResult = (model: EvaluationModel, id: string): EvaluationResultAction => ({
-    label: '개별평가 심층 결과',
+    type: 'deep-result',
     href: `${DEEP_ANALYSIS_PATH}/${model}?id=${id}`,
     newWindow: true,
 })
-// 보증추천은 입력을 마치면 버튼 이름이 [보증이력]으로 바뀐다(시안 주석) — 어느 이름을 보일지는
+// 보증추천은 입력을 마치면 버튼이 [보증이력]으로 바뀐다(시안 주석) — 어느 쪽을 보일지는
 // 응답이 정하므로 화면이 아니라 이 데이터가 들고 있다.
-// [보증추천]은 화면 이동이 아니라 모달을 연다(opens).
-const GUARANTEE_RECOMMEND = {label: '보증추천', href: NOT_READY_PATH, opens: 'guarantee-recommendation'} as const
-const GUARANTEE_HISTORY = {label: '보증이력', href: NOT_READY_PATH, opens: 'guarantee-history'} as const
+// 두 버튼 모두 화면 이동이 아니라 모달을 연다 — 종류(type)를 보고 버튼 묶음이 모달로 감싼다(href 는 쓰지 않는다).
+const GUARANTEE_RECOMMEND: EvaluationResultAction = {type: 'guarantee-recommendation', href: NOT_READY_PATH}
+const GUARANTEE_HISTORY: EvaluationResultAction = {type: 'guarantee-history', href: NOT_READY_PATH}
 
 // 시안 "평가결과 조회 case"(40007389:132689)의 카드 17장을 그대로 옮긴 것이다 — 시트에 없는 건은 두지
 // 않는다. 값(기업명·사업자번호·조회 기관·신청일·처리일·사업/과제명·기업 수)도 시트에 적힌 그대로다.
