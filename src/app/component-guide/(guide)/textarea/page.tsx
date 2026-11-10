@@ -143,7 +143,7 @@ const STATE_ROWS = [
         cells: [
             '오류',
             <code key="prop">aria-invalid</code>,
-            'Field 에 data-invalid 를 함께 주고, 메시지를 aria-describedby 로 연결합니다.',
+            'Field 에 data-invalid 를 함께 주고, 메시지를 aria-describedby 로 연결합니다. 칸은 붉은 테두리(destructive) + 옅은 붉은 면(bg-field-invalid)입니다.',
         ],
     },
     {
@@ -280,7 +280,8 @@ const TextareaGuidePage = () => (
                         상태와 오류
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        상태는 Field 와 Textarea 에 함께 지정합니다.
+                        상태는 Field 와 Textarea 에 함께 지정합니다. 오류 칸은 붉은 테두리 + 옅은 붉은 면(
+                        <code>bg-field-invalid</code>)입니다.
                     </p>
                 </div>
                 <Table caption="Textarea 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />

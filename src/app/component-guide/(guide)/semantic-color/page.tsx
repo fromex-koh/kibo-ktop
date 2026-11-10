@@ -233,6 +233,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'control-disabled': 'bg-control-disabled',
     'control-disabled-subtle': 'bg-control-disabled-subtle',
     'field-disabled': 'bg-field-disabled',
+    'field-invalid': 'bg-field-invalid',
     'icon-solid-neutral': 'bg-icon-solid-neutral',
     'icon-solid-neutral-foreground': 'bg-icon-solid-neutral-foreground',
     'icon-solid-subtle': 'bg-icon-solid-subtle',
@@ -475,6 +476,8 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'surface', match: (n) => n === 'surface'},
     {name: 'page (서비스 페이지 본문 바탕)', match: (n) => n === 'page'},
     {name: 'field (입력 칸 바탕)', match: (n) => n === 'field'},
+    // 검사에 걸린 입력 칸 바탕 — Input · Textarea · InputGroup · Select 의 aria-invalid(테두리는 destructive).
+    {name: 'field-invalid (오류 입력 칸 바탕)', match: (n) => n === 'field-invalid'},
     // 카드 안에 한 단계 들어간 옅은 면 — 공지 상세의 첨부파일 줄처럼 흰 카드 위 영역을 구분한다.
     {name: 'surface-subtle', match: (n) => n === 'surface-subtle'},
     {
