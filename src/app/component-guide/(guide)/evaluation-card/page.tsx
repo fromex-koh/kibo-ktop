@@ -1,13 +1,21 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
-import {CardActions, CountBadge, EvaluationDetail, EvaluationDetailList} from '@/components/custom/evaluation-card'
+import {ACTION_STYLE} from '@/components/custom/evaluation-card-action-style'
+import {
+    CountBadge,
+    EvaluationCardActions,
+    EvaluationDetail,
+    EvaluationDetailList,
+} from '@/components/custom/evaluation-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {VerificationApplicationCard} from '@/components/custom/verification-application-card'
+import {EVALUATION_RESULT_ACTION_LABEL, type EvaluationResultActionType} from '@/constants/evaluation-result'
 import type {VerificationApplicationItem} from '@/constants/verification-application'
 
 export const metadata: Metadata = {title: '평가 카드 (EvaluationCard)'}
@@ -23,8 +31,8 @@ const DEMO_ITEM: VerificationApplicationItem = {
     businessNumber: '683-68-00428',
     verifyHref: '#',
     actions: [
-        {label: '자가진단 일반 결과', href: '#'},
-        {label: '보증추천', href: '#', opens: 'guarantee-recommendation'},
+        {type: 'self-diagnosis-general', href: '#'},
+        {type: 'guarantee-recommendation', href: '#'},
     ],
     history: [
         {
@@ -33,8 +41,8 @@ const DEMO_ITEM: VerificationApplicationItem = {
             verifiedAt: '2026-05-15',
             grade: 'AA',
             actions: [
-                {label: '평가검증 결과', href: '#'},
-                {label: '보증이력', href: '#', opens: 'guarantee-history'},
+                {type: 'verification-result', href: '#'},
+                {type: 'guarantee-history', href: '#'},
             ],
         },
     ],
@@ -62,21 +70,33 @@ const DETAIL_CODE = `import {EvaluationDetail, EvaluationDetailList} from '@/com
   <EvaluationDetail label="기업 사업자번호" value="683-68-00428" />
 </EvaluationDetailList>`
 
-const ACTIONS_CODE = `import {CardActions} from '@/components/custom/evaluation-card'
+const ACTIONS_CODE = `import {EvaluationCardActions} from '@/components/custom/evaluation-card'
 
-<CardActions
+// 버튼 글자 · 아이콘 · 주요/보조 · 자리는 종류(type)가 정한다 — 응답은 type 만 준다
+<EvaluationCardActions
   actions={[
-    {label: '개별평가 일반 결과', href: '/…/general-analysis/ktrs-fm?id=001', newWindow: true},
-    {label: '보증추천', href: '#', opens: 'guarantee-recommendation'},
-    {label: '은행전송', href: '#', done: true},
+    {type: 'general-result', href: '/…/general-analysis/ktrs-fm?id=001', newWindow: true},
+    {type: 'deep-result', href: '/…/deep-analysis/ktrs-fm?id=001', newWindow: true},
+    {type: 'guarantee-recommendation', href: '#'}, // 모달을 연다
   ]}
   guaranteeDefaults={{guaranteeCompanyName: '(주)테크놀로지'}}
   onGuaranteeCompleted={() => markRecommended(item.id)}
+/>
+
+// 카드의 주요 동작이 데이터 밖에 있을 때 — 데이터 버튼은 모두 보조 · 왼쪽, end 가 오른쪽 primary
+<EvaluationCardActions
+  actions={item.actions}
+  hasPrimary={false}
+  end={
+    <Button asChild size="sm">
+      <Link href={item.verifyHref}><PencilLine aria-hidden="true" />평가검증 하기</Link>
+    </Button>
+  }
 />`
 
 const HREF_CODE = `// 같은 모형 카드가 여럿이면 주소가 같아지므로 건을 가르는 id 를 쿼리로 넘긴다
 const generalResult = (model, id) => ({
-  label: '개별평가 일반 결과',
+  type: 'general-result',
   href: \`/org/mypage/evaluation-history/general-analysis/\${model}?id=\${id}\`,
   newWindow: true,
 })`
@@ -88,7 +108,14 @@ const ACTION_COLUMNS = [
 ] as const
 
 const ACTION_ROWS = [
-    {key: 'label', cells: [<code key="f">label</code>, <code key="t">string</code>, '버튼 글자입니다.']},
+    {
+        key: 'type',
+        cells: [
+            <code key="f">type</code>,
+            <code key="t">EvaluationResultActionType</code>,
+            '버튼 종류입니다. 글자 · 아이콘 · 주요/보조 · 자리 · 여는 모달이 이 값으로 정해집니다(아래 버튼 종류 표).',
+        ],
+    },
     {
         key: 'href',
         cells: [
@@ -106,14 +133,6 @@ const ACTION_ROWS = [
         ],
     },
     {
-        key: 'opens',
-        cells: [
-            <code key="f">opens</code>,
-            <code key="t">&apos;guarantee-recommendation&apos; | &apos;guarantee-history&apos;</code>,
-            '화면 이동 대신 해당 모달을 여는 버튼이 됩니다.',
-        ],
-    },
-    {
         key: 'done',
         cells: [
             <code key="f">done</code>,
@@ -122,6 +141,54 @@ const ACTION_ROWS = [
         ],
     },
 ] as const
+
+const TYPE_COLUMNS = [
+    {key: 'type', header: 'type', align: 'start', rowHeader: true},
+    {key: 'label', header: '버튼 글자', align: 'start'},
+    {key: 'icon', header: '아이콘(lucide)', align: 'start'},
+    {key: 'look', header: '모양 · 자리', align: 'start'},
+    {key: 'screen', header: '쓰는 화면', align: 'start', wrap: true},
+] as const
+
+// 아이콘 · 모양 · 자리는 컴포넌트의 스타일 표(ACTION_STYLE · evaluation-card-action-style.ts)에서 읽는다 — 가이드에 따로 적지 않는다.
+// 여기서는 화면에서의 쓰임만 적는다.
+const TYPE_SCREENS: Readonly<Record<EvaluationResultActionType, string>> = {
+    'self-diagnosis': '기업 평가결과 조회',
+    'bank-transfer': '기업 평가결과 조회',
+    guarantee: '기업 평가결과 조회',
+    'general-result': '기관 평가결과 조회(개별평가)',
+    'deep-result': '기관 평가결과 조회(개별평가)',
+    'guarantee-recommendation': '기관 평가결과 조회(개별평가) — 모달 · 평가검증 신청 조회에서는 보조로 그림',
+    'guarantee-history': '기관 평가결과 조회(개별평가) — 모달 · 평가검증 신청 조회에서는 보조로 그림',
+    'self-diagnosis-general': '기관 평가검증 신청 조회',
+    'verification-result': '기관 평가검증 신청 조회(이력)',
+    cancel: '기관 평가결과 조회(일괄평가 · 대량정보조회 신청)',
+    'excel-result': '기관 평가결과 조회(일괄평가 · 대량정보조회 신청)',
+    'html-archive': '기관 평가결과 조회(일괄평가 · 대량정보조회 신청)',
+    're-register': '기관 평가결과 조회(일괄평가 · 대량정보조회 신청)',
+}
+
+const isActionType = (value: string): value is EvaluationResultActionType => value in TYPE_SCREENS
+
+const TYPE_ROWS = Object.keys(TYPE_SCREENS)
+    .filter(isActionType)
+    .map((type) => {
+        const {icon: ActionIcon, variant, placement} = ACTION_STYLE[type]
+        const look = `${variant === 'default' ? '주요(primary)' : '보조(secondary)'} · ${placement === 'end' ? '오른쪽' : '왼쪽'}`
+        return {
+            key: type,
+            cells: [
+                <code key="t">{type}</code>,
+                EVALUATION_RESULT_ACTION_LABEL[type],
+                <span key="i" className="inline-flex items-center gap-2">
+                    <ActionIcon aria-hidden="true" className="size-icon-sm" />
+                    <code>{ActionIcon.displayName}</code>
+                </span>,
+                look,
+                TYPE_SCREENS[type],
+            ],
+        }
+    })
 
 const PROPS_ITEMS = [
     ['CountBadge', 'value', '크게 보일 값입니다(등급·점수·개수).', '-', 'string'],
@@ -136,20 +203,40 @@ const PROPS_ITEMS = [
     ],
     ['EvaluationDetailList', 'children', 'EvaluationDetail 들입니다.', '-', 'ReactNode'],
     [
-        'CardActions',
+        'EvaluationCardActions',
         'actions',
         '버튼 목록입니다. 항목 필드는 위 표를 따릅니다.',
         '-',
         'readonly EvaluationResultAction[]',
     ],
     [
-        'CardActions',
+        'EvaluationCardActions',
+        'hasPrimary',
+        'false 면 모든 버튼을 보조(secondary) · 왼쪽으로 그립니다. 주요 동작이 데이터 밖에 있거나(end) 보조 동작만 있을 때 씁니다.',
+        'true',
+        'boolean',
+    ],
+    [
+        'EvaluationCardActions',
+        'end',
+        '오른쪽 끝에 더 붙일 주요 버튼입니다(예: [평가검증 하기]).',
+        'undefined',
+        'ReactNode',
+    ],
+    [
+        'EvaluationCardActions',
         'guaranteeDefaults',
         '[보증추천] 모달이 미리 채울 값입니다.',
         'undefined',
         'Record<string, string>',
     ],
-    ['CardActions', 'onGuaranteeCompleted', '[보증추천] 입력을 마쳤을 때 호출됩니다.', 'undefined', '() => void'],
+    [
+        'EvaluationCardActions',
+        'onGuaranteeCompleted',
+        '[보증추천] 입력을 마쳤을 때 호출됩니다.',
+        'undefined',
+        '() => void',
+    ],
     [
         'VerificationApplicationCard',
         'item',
@@ -179,7 +266,7 @@ const SUB_LIST = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-
 const EvaluationCardGuidePage = () => (
     <GuidePageShell
         title="평가 카드 (EvaluationCard)"
-        description="평가결과 조회·평가검증 신청 조회의 결과 카드를 이루는 조각(값 배지·상세 줄·동작 버튼)과 조립된 신청 카드입니다."
+        description="기업·기관 평가결과 조회와 평가검증 신청 조회의 결과 카드를 이루는 조각(값 배지·상세 줄·동작 버튼)과 조립된 신청 카드입니다."
     >
         <BaseCard>
             <section aria-labelledby="ec-basic" className="flex flex-col gap-6">
@@ -188,8 +275,9 @@ const EvaluationCardGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>VerificationApplicationCard</code> 는 모형명·결과값, 상세 줄과 [평가검증 하기], 동작 버튼,
-                        검증 이력 펼침으로 이루어집니다. 펼침 줄은 <code>item.history</code> 가 있을 때만 나옵니다.
+                        <code>VerificationApplicationCard</code> 는 모형명·결과값, 상세 줄, 동작 버튼(보조는 왼쪽 ·
+                        [평가검증 하기] 는 오른쪽 primary), 검증 이력 박스로 이루어집니다. 이력 박스는{' '}
+                        <code>item.history</code> 가 있을 때만 나오고, 펼치면 테두리가 생기며 그 안에 이력이 이어집니다.
                     </p>
                 </div>
                 <div className="bg-background border-border rounded-md border p-6">
@@ -214,7 +302,10 @@ const EvaluationCardGuidePage = () => (
                     <div className={SUB_BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">값 배지 (CountBadge)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            등급·점수·기업 수를 같은 모양으로 보여 줍니다. 값은 크게, 단위는 작게 붙습니다.
+                            등급·점수·기업 수를 같은 모양으로 보여 줍니다. 값은 크게, 단위는 작게 붙습니다. 카드
+                            머리에서 제목(모형명 · 팀 이름)과 배지는 한 줄에 들어가는 동안 좌우로 놓이고, 폭이 모자랄
+                            때만(모바일 · BBB+ 같은 긴 등급 · 긴 이름) 배지가 다음 줄로 내려갑니다. 말줄임으로 제목을
+                            자르지 않습니다.
                         </p>
                         <div className="border-border flex flex-wrap items-center gap-4 rounded-md border p-6">
                             <CountBadge value="AA" unit="등급" />
@@ -250,30 +341,49 @@ const EvaluationCardGuidePage = () => (
                     </div>
 
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">동작 버튼 (CardActions)</h3>
+                        <h3 className="typo-title-m-bold text-foreground">동작 버튼 (EvaluationCardActions)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            버튼 수와 관계없이 카드 폭을 고르게 나누고, 좁은 화면(<code>sm</code> 미만)에서는 한 줄에
-                            하나씩 쌓입니다. 라벨이 <code>접수취소</code> 인 버튼만 <code>secondary</code>, 나머지는{' '}
-                            <code>tertiary</code> 입니다.
+                            마이페이지 공통 버튼 배치(
+                            <Link
+                                href="/component-guide/card-action-bar"
+                                className="text-primary-strong underline underline-offset-4"
+                            >
+                                CardActionBar
+                            </Link>
+                            ) 위에서 버튼 종류(<code>type</code>)마다 글자 · 아이콘 · 주요/보조 · 자리를 정합니다.
+                            보조는 왼쪽, 주요는 오른쪽 끝이고 버튼 폭은 글자만큼입니다. 640 미만에서는 주요 버튼이 맨 위
+                            한 줄을 채웁니다.
                         </p>
                         <div className="border-border flex flex-col gap-4 rounded-md border p-6">
-                            <CardActions
+                            <EvaluationCardActions
                                 actions={[
-                                    {label: '개별평가 일반 결과', href: '#'},
-                                    {label: '개별평가 심층 결과', href: '#'},
-                                    {label: '보증추천', href: '#', opens: 'guarantee-recommendation'},
+                                    {type: 'general-result', href: '#'},
+                                    {type: 'deep-result', href: '#'},
+                                    {type: 'guarantee-recommendation', href: '#'},
                                 ]}
                             />
-                            <CardActions
+                            <EvaluationCardActions
                                 actions={[
-                                    {label: '신청서 확인', href: '#'},
-                                    {label: '접수취소', href: '#'},
-                                    {label: '은행전송', href: '#', done: true},
+                                    {type: 'cancel', href: '#', done: true},
+                                    {type: 'excel-result', href: '#'},
+                                    {type: 'html-archive', href: '#'},
                                 ]}
                             />
                         </div>
                         <CodeBlock code={ACTIONS_CODE} language="tsx" copyLabel="복사" />
                         <Table caption="actions 항목 필드" columns={ACTION_COLUMNS} rows={ACTION_ROWS} size="md" />
+                        <p className="typo-body-l-regular text-label-foreground">
+                            버튼 종류 — 글자는 <code>EVALUATION_RESULT_ACTION_LABEL</code>
+                            (constants/evaluation-result.ts), 아이콘 · 모양 · 자리는 <code>ACTION_STYLE</code>
+                            (evaluation-card.tsx)이 정합니다. 종류를 늘리면 두 표를 함께 채웁니다(빠뜨리면 타입 검사가
+                            알려 줍니다).
+                        </p>
+                        <Table
+                            caption="버튼 종류(type)별 글자 · 모양 · 쓰는 화면"
+                            columns={TYPE_COLUMNS}
+                            rows={TYPE_ROWS}
+                            size="md"
+                        />
                     </div>
                 </div>
             </section>
@@ -306,6 +416,9 @@ const EvaluationCardGuidePage = () => (
                     <li>
                         <code>CountBadge</code> 는 보이는 두 조각을 <code>aria-hidden</code> 으로 감추고 “AA 등급” 한
                         문장을 <code>sr-only</code> 로 읽게 합니다[8.1.1].
+                    </li>
+                    <li>
+                        버튼 아이콘은 꾸밈이라 <code>aria-hidden</code> 이고, 버튼 이름은 글자입니다[5.1.1].
                     </li>
                     <li>
                         <code>EvaluationDetail</code> 은 <code>dl</code> · <code>dt</code> · <code>dd</code> 로 “라벨:

@@ -223,7 +223,7 @@ const STATE_ROWS = [
         cells: [
             '오류',
             <code key="prop">aria-invalid</code>,
-            'Field 에 data-invalid 를 함께 주고, 메시지를 aria-describedby 로 연결합니다.',
+            'Field 에 data-invalid 를 함께 주고, 메시지를 aria-describedby 로 연결합니다. 칸은 붉은 테두리(destructive) + 옅은 붉은 면(bg-field-invalid)입니다.',
         ],
     },
     {
@@ -423,7 +423,7 @@ const InputGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         상태는 Field 와 Input 에 함께 지정합니다. 비활성·읽기전용 배경은 <code>bg-field-disabled</code>{' '}
-                        로 같습니다.
+                        로 같고, 오류 배경은 <code>bg-field-invalid</code> 입니다(InputGroup 도 같음).
                     </p>
                 </div>
                 <Table caption="Input 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />

@@ -21,7 +21,7 @@ const GUARANTEE_PATH = '/corp/mypage/evaluation-results/guarantee-application'
 // 같은 모형의 평가 카드가 여러 장이어도 링크가 같은 주소가 되지 않도록 평가 건 ID를 함께 넘긴다.
 // 기관 평가결과·평가검증 목록과 같은 형식이며, 연동 후에는 조회 결과의 건 번호가 id 자리에 들어간다.
 const selfDiagnosisResult = (model: EvaluationModel, id: string): EvaluationResultAction => ({
-    label: '자가진단 결과',
+    type: 'self-diagnosis',
     href: `${GENERAL_ANALYSIS_PATH}/${model}?id=${id}`,
     newWindow: true,
 })
@@ -43,8 +43,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '14:26',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-001'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -55,8 +55,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '09:12',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-002'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
-            {label: '보증신청', href: GUARANTEE_PATH, done: true},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH, done: true},
+            {type: 'guarantee', href: GUARANTEE_PATH, done: true},
         ],
     },
     {
@@ -67,8 +67,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '16:48',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-003'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -79,8 +79,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '11:05',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-004'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
-            {label: '보증신청', href: GUARANTEE_PATH, done: true},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH, done: true},
+            {type: 'guarantee', href: GUARANTEE_PATH, done: true},
         ],
     },
     {
@@ -91,8 +91,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '13:37',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-005'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -103,8 +103,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '10:21',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-006'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
-            {label: '보증신청', href: GUARANTEE_PATH, done: true},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH, done: true},
+            {type: 'guarantee', href: GUARANTEE_PATH, done: true},
         ],
     },
     {
@@ -115,8 +115,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '15:54',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-007'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -127,8 +127,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '17:30',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-008'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -139,8 +139,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '08:47',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-009'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
-            {label: '보증신청', href: GUARANTEE_PATH, done: true},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH, done: true},
+            {type: 'guarantee', href: GUARANTEE_PATH, done: true},
         ],
     },
     {
@@ -151,8 +151,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '12:09',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-010'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -163,8 +163,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '18:15',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-011'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH},
-            {label: '보증신청', href: GUARANTEE_PATH},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH},
+            {type: 'guarantee', href: GUARANTEE_PATH},
         ],
     },
     {
@@ -175,8 +175,8 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         evaluatedTime: '14:26',
         actions: [
             selfDiagnosisResult('ktrs-fm', 'corp-evaluation-012'),
-            {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
-            {label: '보증신청', href: GUARANTEE_PATH, done: true},
+            {type: 'bank-transfer', href: BANK_TRANSFER_PATH, done: true},
+            {type: 'guarantee', href: GUARANTEE_PATH, done: true},
         ],
     },
     {

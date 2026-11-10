@@ -1,5 +1,6 @@
 'use client'
 
+import {Pause} from 'lucide-react'
 import {NoticeDialog} from '@/components/composite/notice-dialog'
 import {PaidServiceSuspendDialog} from '@/components/composite/paid-service-suspend-dialog'
 import {Button} from '@/components/ui/button'
@@ -47,7 +48,8 @@ const PaidServiceSuspendAction = ({pass, onSubmit}: PaidServiceSuspendActionProp
     if (pass.isFree) {
         return (
             <NoticeDialog title={UNAVAILABLE_TITLE} message={SUSPEND_UNAVAILABLE_MESSAGE.freePass}>
-                <Button type="button" variant="tertiary" size="sm">
+                <Button type="button" variant="secondary" size="sm">
+                    <Pause aria-hidden="true" />
                     이용중지
                 </Button>
             </NoticeDialog>
@@ -57,7 +59,8 @@ const PaidServiceSuspendAction = ({pass, onSubmit}: PaidServiceSuspendActionProp
     if (pass.suspension) {
         return (
             <PaidServiceSuspendDialog pass={suspendPass} suspension={pass.suspension} onSubmit={handleSubmit}>
-                <Button type="button" variant="tertiary" size="sm">
+                <Button type="button" variant="secondary" size="sm">
+                    <Pause aria-hidden="true" />
                     이용중지 변경
                 </Button>
             </PaidServiceSuspendDialog>
@@ -69,7 +72,8 @@ const PaidServiceSuspendAction = ({pass, onSubmit}: PaidServiceSuspendActionProp
     if (pass.remainingDays <= 1) {
         return (
             <NoticeDialog title={UNAVAILABLE_TITLE} message={SUSPEND_UNAVAILABLE_MESSAGE.remainingDay}>
-                <Button type="button" variant="tertiary" size="sm">
+                <Button type="button" variant="secondary" size="sm">
+                    <Pause aria-hidden="true" />
                     이용중지
                 </Button>
             </NoticeDialog>
@@ -78,7 +82,8 @@ const PaidServiceSuspendAction = ({pass, onSubmit}: PaidServiceSuspendActionProp
 
     return (
         <PaidServiceSuspendDialog pass={suspendPass} onSubmit={handleSubmit}>
-            <Button type="button" variant="tertiary" size="sm">
+            <Button type="button" variant="secondary" size="sm">
+                <Pause aria-hidden="true" />
                 이용중지
             </Button>
         </PaidServiceSuspendDialog>

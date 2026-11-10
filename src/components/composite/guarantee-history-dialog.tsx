@@ -78,8 +78,9 @@ const Section = ({title, children}: {title: string; children: ReactNode}) => (
 // 상단 카드의 상세 한 줄 — 아래 요약 목록보다 한 단계 작은 글자다(시안 14/21).
 const TopDetail = ({term, children}: {term: string; children: ReactNode}) => (
     <div className="flex items-start justify-between gap-4">
-        <dt className="typo-body-l-regular text-foreground-subtle">{term}</dt>
-        <dd className="typo-body-l-regular text-foreground m-0 text-right">{children}</dd>
+        <dt className="typo-body-l-regular text-foreground-subtle shrink-0 break-keep">{term}</dt>
+        {/* 긴 값은 자기 칸 안에서 줄바꿈(이름 칸을 밀지 않는다) */}
+        <dd className="typo-body-l-regular text-foreground m-0 min-w-0 text-right break-words">{children}</dd>
     </div>
 )
 
@@ -123,13 +124,12 @@ const GuaranteeHistoryDialog = ({
             <div className={cn(dialogBodyClassName, 'gap-6')}>
                 {/* 상단 — 어느 기업의 이력인지와 그 상태. 다른 구획과 달리 파란 면으로 두어 머리로 읽힌다. */}
                 <div className="bg-primary-subtle border-navy-200 flex flex-col gap-4 rounded-lg border p-6">
-                    {/* 좁은 화면에서는 배지를 이름 위로 올린다 — 옆에 두면 이름에 남는 폭이 125 밖에 되지
-                        않아 긴 이름이 석 줄로 접힌다(신청 카드의 상태 배지와 같은 배치다). */}
-                    <div className="flex flex-col-reverse items-start gap-2 sm:flex-row sm:justify-between sm:gap-4">
+                    {/* 기업명 · 상태 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄 */}
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                         {/* 이름은 줄여 보이지 않는다 — 어느 기업의 이력인지가 이 모달의 첫 정보라, 길면
                             말줄임 대신 줄을 바꾼다. 줄바꿈은 폭에 맡긴다 — 괄호 뒤에서만 끊으면
                             "(주)" 한 조각이 첫 줄에 남는다. */}
-                        <h3 className="typo-title-l-bold text-foreground min-w-0 flex-1">{values.companyName}</h3>
+                        <h3 className="typo-title-l-bold text-foreground min-w-0 grow">{values.companyName}</h3>
                         <Badge variant="outline" color="info" shape="pill" size="sm">
                             {values.status}
                         </Badge>

@@ -62,7 +62,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform",
@@ -1574,7 +1574,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform",
@@ -2967,28 +2967,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-pricing-payment-seller-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-pricing-payment-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-pricing-payment-unavailable",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.5.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",

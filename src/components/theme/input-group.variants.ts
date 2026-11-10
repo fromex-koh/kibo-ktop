@@ -1,5 +1,6 @@
 import {cva} from 'class-variance-authority'
 
+// 오류(aria-invalid) 칸은 테두리 destructive(error.600) + 면 field-invalid(라이트 error.50 · 다크 error.900).
 // PROJECT-STYLE: 검사에 걸린 칸(aria-invalid)은 focus-visible 이 아니라 focus 에도 포커스 표시를 낸다.
 // 제출 버튼을 마우스로 누른 뒤 첫 오류 칸으로 포커스를 옮기면 브라우저가 :focus-visible 을 켜지 않아
 // 표시가 보이지 않는다 — 어디로 이동했는지 알 수 없으면 안 된다[6.1.2].
@@ -14,7 +15,7 @@ import {cva} from 'class-variance-authority'
 //
 // 면은 bg-field — 입력형 컨트롤 전용 면 토큰(라이트 흰색 · 다크 gray.900, Input·Textarea·Select 와 같음).
 const inputGroupClassName =
-    'group/input-group border-control bg-field has-disabled:bg-field-disabled has-disabled:opacity-100 has-[input:read-only]:bg-field-disabled relative flex h-control-h-md w-full min-w-0 items-center gap-2 rounded-sm border px-4 transition-colors outline-none has-[[data-slot=input-group-control]:focus-visible]:outline-ring has-[[data-slot=input-group-control]:focus-visible]:outline-2 has-[[data-slot=input-group-control]:focus-visible]:outline-offset-2 has-[[data-slot=input-group-control]:focus-visible]:outline-solid has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-ring has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-2 has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-offset-2 has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-solid has-[[data-slot][aria-invalid=true]]:border-destructive has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto has-[>[data-align=inline-end-fill]]:pe-0'
+    'group/input-group border-control bg-field has-disabled:bg-field-disabled has-disabled:opacity-100 has-[input:read-only]:bg-field-disabled relative flex h-control-h-md w-full min-w-0 items-center gap-2 rounded-sm border px-4 transition-colors outline-none has-[[data-slot=input-group-control]:focus-visible]:outline-ring has-[[data-slot=input-group-control]:focus-visible]:outline-2 has-[[data-slot=input-group-control]:focus-visible]:outline-offset-2 has-[[data-slot=input-group-control]:focus-visible]:outline-solid has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-ring has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-2 has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-offset-2 has-[[data-slot=input-group-control][aria-invalid=true]:focus]:outline-solid has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:bg-field-invalid has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto has-[>[data-align=inline-end-fill]]:pe-0'
 
 const inputGroupAddonVariants = cva(
     "text-foreground-subtle group-has-disabled/input-group:text-disabled flex h-auto cursor-text items-center justify-center gap-2 text-sm font-medium select-none [&>svg:not([class*='size-'])]:size-icon-sm",

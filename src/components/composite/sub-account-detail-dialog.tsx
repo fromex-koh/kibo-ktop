@@ -95,10 +95,9 @@ const SubAccountDetailDialog = ({children, defaultOpen, open, onOpenChange, item
                         aria-label="계정 정보"
                         className="bg-primary-subtle border-navy-200 flex flex-col gap-4 rounded-lg border p-6"
                     >
-                        {/* 좁은 화면에서는 배지를 이름 위로 올린다 — 옆에 두면 이름에 남는 폭이 얼마 되지
-                            않아 긴 이름이 여러 줄로 접힌다(보증이력 모달의 상단 카드와 같은 배치다). */}
-                        <div className="flex flex-col-reverse items-start gap-2 sm:flex-row sm:justify-between sm:gap-4">
-                            <h3 className="typo-title-l-bold text-foreground min-w-0 flex-1">{item.name}</h3>
+                        {/* 계정 이름 · 상태 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄 */}
+                        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                            <h3 className="typo-title-l-bold text-foreground min-w-0 grow">{item.name}</h3>
                             {/* 시안의 상태 표시는 테두리 배지다 — 옅은 파랑 카드 위라 면을 채우면 카드와
                                 뭉개진다. 색은 목록 카드와 같은 값에서 나온다(사용 하늘색 · 사용정지 회색). */}
                             <SubAccountStatusBadge status={item.status} tone="outline" />

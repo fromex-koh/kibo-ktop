@@ -1,5 +1,6 @@
 'use client'
 
+import {Download} from 'lucide-react'
 import {KbigxPrintOutputSelectionDialog} from '@/components/composite/k-bigx-print-output-selection-dialog'
 import {Button} from '@/components/ui/button'
 import {K_BIGX_REPORT_ACTION, type KBigxReportHistoryItem} from '@/constants/k-bigx-report-history'
@@ -24,10 +25,9 @@ type KBigxReportDownloadButtonProps = {
     item: KBigxReportHistoryItem
     /** 보고서 문서 화면 주소 — 기업 KBIGX_PRINT_CORP_PATH · 기관 KBIGX_PRINT_ORG_PATH(k-bigx-print-report.ts). */
     printPath: string
-    className?: string
 }
 
-const KBigxReportDownloadButton = ({item, printPath, className}: KBigxReportDownloadButtonProps) => {
+const KBigxReportDownloadButton = ({item, printPath}: KBigxReportDownloadButtonProps) => {
     // 모달 위 대상 요약 — 웹 보고서(toPrintOutputSummary)와 같은 두 줄. 조회기준일 자리는 위 [프론트엔드 연동] 참고.
     const summary = [
         {label: '기업명', value: item.companyName},
@@ -39,7 +39,9 @@ const KBigxReportDownloadButton = ({item, printPath, className}: KBigxReportDown
     return (
         <KbigxPrintOutputSelectionDialog summary={summary} onPrint={openPreview}>
             {/* 어느 건의 보고서인지 이름에 담는다[6.4.3]. */}
-            <Button type="button" variant="tertiary" size="sm" className={className}>
+            {/* 마이페이지 공통 버튼 배치 — 보조 버튼(secondary) + 내려받기 아이콘. */}
+            <Button type="button" variant="secondary" size="sm">
+                <Download aria-hidden="true" />
                 {K_BIGX_REPORT_ACTION.download}
                 <span className="sr-only">{` (${item.companyName})`}</span>
             </Button>

@@ -1,9 +1,11 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {KbigxPrintOutputSelectionDialog} from '@/components/composite/k-bigx-print-output-selection-dialog'
 import CodeBlock from '@/components/custom/code-block'
+import {KBigxReportCard} from '@/components/custom/k-bigx-report-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
@@ -12,6 +14,9 @@ import {
     MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED,
     MOCK_PRINT_OUTPUT_SELECTION_SUMMARY,
 } from '@/content/service/k-bigx-print-output-selection'
+import {KBIGX_PRINT_CORP_PATH, KBIGX_PRINT_ORG_PATH} from '@/content/service/k-bigx-print-report'
+import {getKBigxReportHistory, K_BIGX_REPORT_ROUTES} from '@/content/service/k-bigx-report-history'
+import {getOrgKBigxReportHistory} from '@/content/service/org-k-bigx-report-history'
 
 export const metadata: Metadata = {title: '보고서 내용 선택 (KbigxPrintOutputSelectionDialog)'}
 
@@ -32,8 +37,28 @@ import {openReportTab} from '@/lib/open-report-print-tab'
 const HISTORY_USAGE_CODE = `import {KBigxReportDownloadButton} from '@/components/custom/k-bigx-report-download-button'
 import {KBIGX_PRINT_CORP_PATH} from '@/content/service/k-bigx-print-report'
 
-// 기업 화면은 KBIGX_PRINT_CORP_PATH, 기관 화면은 KBIGX_PRINT_ORG_PATH
+// 기업 화면은 KBIGX_PRINT_CORP_PATH, 기관 화면은 KBIGX_PRINT_ORG_PATH — 버튼 모양(보조 + 내려받기 아이콘)은 같다
 <KBigxReportDownloadButton item={item} printPath={KBIGX_PRINT_CORP_PATH} />`
+
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+
+// 보고서 이력 카드의 [보고서 다운로드] 버튼(KBigxReportDownloadButton) — 모달을 붙인 카드 버튼이다.
+const DOWNLOAD_BUTTON_PROPS_ITEMS = [
+    [
+        'KBigxReportDownloadButton',
+        'item',
+        '보고서 이력 한 건입니다. 모달 요약(기업명 · 조회기준일)과 보고서 id 를 씁니다.',
+        '-',
+        'KBigxReportHistoryItem',
+    ],
+    [
+        'KBigxReportDownloadButton',
+        'printPath',
+        '미리보기로 열 보고서 화면 주소입니다. 기업 KBIGX_PRINT_CORP_PATH · 기관 KBIGX_PRINT_ORG_PATH.',
+        '-',
+        'string',
+    ],
+] as const
 
 const FLOW_COLUMNS = [
     {key: 'step', header: '단계', align: 'start', rowHeader: true},
@@ -103,92 +128,140 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
-const KbigxPrintOutputSelectionDialogGuidePage = () => (
-    <GuidePageShell
-        title="보고서 내용 선택 (KbigxPrintOutputSelectionDialog)"
-        description="K-BIGx 웹 보고서와 마이페이지 K-BIGx 보고서 이력 카드의 [보고서 다운로드]에서 여는 모달입니다. 한 부의 보고서에 넣을 내용을 고르고 미리보기를 엽니다."
-    >
-        <BaseCard>
-            <section aria-labelledby="print-select-basic" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="print-select-basic" className="typo-h4-bold">
-                        기본 사용
-                    </h2>
+const KbigxPrintOutputSelectionDialogGuidePage = async () => {
+    // 실제 이력 화면과 같은 목업 — 기업 첫 건([보고서 다운로드])과 기관 대량정보조회 건(결과 파일 둘)을 나란히 보여 준다.
+    const [historyItem] = await getKBigxReportHistory()
+    // 기관 이력 중 대량정보조회 건 — 결과 파일 버튼 둘을 보여 준다.
+    const orgBulkItem = (await getOrgKBigxReportHistory()).find((item) => item.reportType === 'bulk-info')
+
+    return (
+        <GuidePageShell
+            title="보고서 내용 선택 (KbigxPrintOutputSelectionDialog)"
+            description="K-BIGx 웹 보고서와 마이페이지 K-BIGx 보고서 이력 카드의 [보고서 다운로드]에서 여는 모달입니다. 한 부의 보고서에 넣을 내용을 고르고 미리보기를 엽니다."
+        >
+            <BaseCard>
+                <section aria-labelledby="print-select-basic" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="print-select-basic" className="typo-h4-bold">
+                            기본 사용
+                        </h2>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            전체선택은 항목을 모두 켜고 끄며, 일부만 골라지면 &apos;일부&apos; 상태가 됩니다. 아래
+                            데모는 onPrint 가 없어 [보고서 미리보기]를 눌러도 새 탭을 열지 않습니다.
+                        </p>
+                    </div>
+                    <div>
+                        <KbigxPrintOutputSelectionDialog
+                            summary={MOCK_PRINT_OUTPUT_SELECTION_SUMMARY}
+                            defaultSelected={MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED}
+                        >
+                            <Button type="button" variant="tertiary" size="md">
+                                보고서 다운로드
+                            </Button>
+                        </KbigxPrintOutputSelectionDialog>
+                    </div>
+                    <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+                </section>
+            </BaseCard>
+
+            <BaseCard>
+                <section aria-labelledby="print-select-history" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="print-select-history" className="typo-h4-bold">
+                            보고서 이력 카드에서 쓰기
+                        </h2>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            마이페이지 K-BIGx 보고서 이력(기업 · 기관)의 카드 버튼은 KBigxReportDownloadButton 이 이
+                            모달을 엽니다. 모달 요약은 카드의 기업명 · 조회일시의 날짜(조회기준일)이고, 미리보기는 카드
+                            id 로 보고서를 다시 조회합니다. 카드 값을 보고서로 넘기지 않으므로 카드와 PDF 의 같은 정보는
+                            보고서 API 가 맞춰 내려 줍니다. 버튼은 기업 · 기관 모두 보조(secondary) · 아이콘 ·
+                            왼쪽입니다 (CardActionBar). 기관의 대량정보조회 건은 [보고서 다운로드] 대신 결과 파일 버튼
+                            둘입니다.
+                        </p>
+                    </div>
+                    {historyItem && orgBulkItem ? (
+                        <div className="grid gap-6 xl:grid-cols-2">
+                            <div className="flex min-w-0 flex-col gap-3">
+                                <h3 className="typo-title-m-bold text-foreground">
+                                    기업 —{' '}
+                                    <Link href="/corp/mypage/k-bigx-report-history" className={LINK_CLASS}>
+                                        마이페이지 &gt; K-BIGx 보고서 이력
+                                    </Link>
+                                </h3>
+                                <KBigxReportCard
+                                    item={historyItem}
+                                    routes={K_BIGX_REPORT_ROUTES}
+                                    printPath={KBIGX_PRINT_CORP_PATH}
+                                />
+                            </div>
+                            <div className="flex min-w-0 flex-col gap-3">
+                                <h3 className="typo-title-m-bold text-foreground">
+                                    기관 —{' '}
+                                    <Link href="/org/mypage/k-bigx-report-history" className={LINK_CLASS}>
+                                        마이페이지 &gt; K-BIGx 보고서 이력
+                                    </Link>
+                                </h3>
+                                <p className="typo-body-l-regular text-label-foreground">
+                                    대량정보조회 건 — [엑셀결과] · [HTML 압축파일](모달 없이 파일로 연결).
+                                </p>
+                                <KBigxReportCard
+                                    item={orgBulkItem}
+                                    routes={K_BIGX_REPORT_ROUTES}
+                                    printPath={KBIGX_PRINT_ORG_PATH}
+                                />
+                            </div>
+                        </div>
+                    ) : null}
                     <p className="typo-body-l-regular text-label-foreground">
-                        전체선택은 항목을 모두 켜고 끄며, 일부만 골라지면 &apos;일부&apos; 상태가 됩니다. 아래 데모는
-                        onPrint 가 없어 [보고서 미리보기]를 눌러도 새 탭을 열지 않습니다.
+                        위 카드의 [보고서 다운로드]는 실제 화면과 같이 모달 → [보고서 미리보기] → 새 탭 보고서로
+                        이어집니다.
                     </p>
-                </div>
-                <div>
-                    <KbigxPrintOutputSelectionDialog
-                        summary={MOCK_PRINT_OUTPUT_SELECTION_SUMMARY}
-                        defaultSelected={MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED}
-                    >
-                        <Button type="button" variant="tertiary" size="md">
-                            보고서 다운로드
-                        </Button>
-                    </KbigxPrintOutputSelectionDialog>
-                </div>
-                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
+                    <CodeBlock code={HISTORY_USAGE_CODE} language="tsx" copyLabel="복사" />
+                    <PropsTable items={DOWNLOAD_BUTTON_PROPS_ITEMS} caption="KBigxReportDownloadButton Props 목록" />
+                </section>
+            </BaseCard>
 
-        <BaseCard>
-            <section aria-labelledby="print-select-history" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="print-select-history" className="typo-h4-bold">
-                        보고서 이력 카드에서 쓰기
-                    </h2>
-                    <p className="typo-body-l-regular text-label-foreground">
-                        마이페이지 K-BIGx 보고서 이력(기업 · 기관)의 카드 버튼은 KBigxReportDownloadButton 이 이 모달을
-                        엽니다. 모달 요약은 카드의 기업명 · 조회일시의 날짜(조회기준일)이고, 미리보기는 카드 id 로
-                        보고서를 다시 조회합니다. 카드 값을 보고서로 넘기지 않으므로 카드와 PDF 의 같은 정보는 보고서
-                        API 가 맞춰 내려 줍니다.
-                    </p>
-                </div>
-                <CodeBlock code={HISTORY_USAGE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
+            <BaseCard>
+                <section aria-labelledby="print-select-flow" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="print-select-flow" className="typo-h4-bold">
+                            흐름
+                        </h2>
+                    </div>
+                    <Table caption="보고서 다운로드 흐름" columns={FLOW_COLUMNS} rows={FLOW_ROWS} size="md" />
+                </section>
+            </BaseCard>
 
-        <BaseCard>
-            <section aria-labelledby="print-select-flow" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="print-select-flow" className="typo-h4-bold">
-                        흐름
-                    </h2>
-                </div>
-                <Table caption="보고서 다운로드 흐름" columns={FLOW_COLUMNS} rows={FLOW_ROWS} size="md" />
-            </section>
-        </BaseCard>
+            <BaseCard>
+                <section aria-labelledby="print-select-a11y" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="print-select-a11y" className="typo-h4-bold">
+                            접근성
+                        </h2>
+                    </div>
+                    <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                        <li>
+                            항목 묶음은 fieldset · legend 로 이름을 갖고, 체크박스마다 보이는 이름표와
+                            연결됩니다[7.4.1].
+                        </li>
+                        <li>전체선택은 일부만 골라지면 &apos;일부&apos;(indeterminate) 상태로 읽힙니다[8.2.1].</li>
+                        <li>포커스 가두기 · Esc 닫기 · 포커스 복귀는 Dialog(Radix)가 처리합니다[8.2.1].</li>
+                    </ul>
+                </section>
+            </BaseCard>
 
-        <BaseCard>
-            <section aria-labelledby="print-select-a11y" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="print-select-a11y" className="typo-h4-bold">
-                        접근성
-                    </h2>
-                </div>
-                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>
-                        항목 묶음은 fieldset · legend 로 이름을 갖고, 체크박스마다 보이는 이름표와 연결됩니다[7.4.1].
-                    </li>
-                    <li>전체선택은 일부만 골라지면 &apos;일부&apos;(indeterminate) 상태로 읽힙니다[8.2.1].</li>
-                    <li>포커스 가두기 · Esc 닫기 · 포커스 복귀는 Dialog(Radix)가 처리합니다[8.2.1].</li>
-                </ul>
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="print-select-props" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="print-select-props" className="typo-h4-bold">
-                        Props API
-                    </h2>
-                </div>
-                <PropsTable items={PROPS_ITEMS} caption="KbigxPrintOutputSelectionDialog Props 목록" />
-            </section>
-        </BaseCard>
-    </GuidePageShell>
-)
+            <BaseCard>
+                <section aria-labelledby="print-select-props" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="print-select-props" className="typo-h4-bold">
+                            Props API
+                        </h2>
+                    </div>
+                    <PropsTable items={PROPS_ITEMS} caption="KbigxPrintOutputSelectionDialog Props 목록" />
+                </section>
+            </BaseCard>
+        </GuidePageShell>
+    )
+}
 
 export default KbigxPrintOutputSelectionDialogGuidePage

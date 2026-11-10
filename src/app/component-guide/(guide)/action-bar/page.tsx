@@ -80,6 +80,16 @@ const CHOICE_ROWS = [
             'ActionBarCenter 위에 배경 · 여백 · 반응형(md 미만 세로 쌓기)을 더한 컴포넌트입니다.',
         ],
     },
+    {
+        key: 'card-action-bar',
+        cells: [
+            '목록 카드 아래의 버튼(보조 왼쪽 · 주요 오른쪽)',
+            <Link key="c" href="/component-guide/card-action-bar" className={LINK_CLASS}>
+                CardActionBar
+            </Link>,
+            '버튼 폭은 글자만큼이고, 모바일에서 주요 버튼이 맨 위 한 줄을 채웁니다.',
+        ],
+    },
 ] as const
 
 const PROPS_ITEMS = [
@@ -164,7 +174,7 @@ const ActionBarGuidePage = () => (
                     </h2>
                 </div>
                 <Table
-                    caption="ActionBar · StepNavigation 사용 기준"
+                    caption="ActionBar · StepNavigation · CardActionBar 사용 기준"
                     columns={CHOICE_COLUMNS}
                     rows={CHOICE_ROWS}
                     size="md"

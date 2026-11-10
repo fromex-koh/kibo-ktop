@@ -1,5 +1,7 @@
 import type {ReactNode} from 'react'
+import {FileDigit, FolderOpen, type LucideIcon} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {CardActionBar, CardActionBarStart} from '@/components/composite/card-action-bar'
 import {Badge} from '@/components/ui/badge'
 import {KBigxReportDownloadButton} from '@/components/custom/k-bigx-report-download-button'
 import {Button} from '@/components/ui/button'
@@ -53,9 +55,9 @@ type KBigxReportCardProps = {
     printPath: string
 }
 
-const BULK_REPORT_ACTIONS: readonly {action: KBigxBulkReportAction; label: string}[] = [
-    {action: 'excel', label: K_BIGX_BULK_REPORT_ACTION.excel},
-    {action: 'htmlArchive', label: K_BIGX_BULK_REPORT_ACTION.htmlArchive},
+const BULK_REPORT_ACTIONS: readonly {action: KBigxBulkReportAction; label: string; icon: LucideIcon}[] = [
+    {action: 'excel', label: K_BIGX_BULK_REPORT_ACTION.excel, icon: FileDigit},
+    {action: 'htmlArchive', label: K_BIGX_BULK_REPORT_ACTION.htmlArchive, icon: FolderOpen},
 ]
 
 const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
@@ -70,9 +72,9 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
         <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    {/* 기업명(기관은 배지+기업명 묶음)이 오른쪽 이용권 배지 높이의 가운데에 선다. */}
-                    <div className="flex items-center justify-between gap-4">
-                        <div className="flex min-w-0 flex-col items-start gap-1">
+                    {/* 기업명 · 이용권 배지: 들어가면 한 줄(배지 세로 가운데), 모자라면 배지가 다음 줄 */}
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                        <div className="flex min-w-0 grow flex-col items-start gap-1">
                             {reportType ? (
                                 <Badge variant="outline" color={reportType.color} shape="round" size="xs">
                                     {reportType.label}
@@ -116,28 +118,26 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
                     </dl>
                 </div>
 
-                {/* 시안: 카드 오른쪽 끝에 버튼 하나(180). 대량정보조회는 결과 파일 둘이 같은 폭으로 나란하다.
-                    좁은 화면에서는 줄을 가득 채운다(대량정보조회는 위아래로 쌓는다).
-                    어느 건의 보고서인지 이름에 담는다[6.4.3]. */}
-                <div className={cn('flex justify-end gap-2', isBulkReport && 'max-sm:flex-col')}>
-                    {isBulkReport ? (
-                        BULK_REPORT_ACTIONS.map(({action: bulkAction, label}) => (
-                            <Button key={bulkAction} asChild variant="tertiary" size="sm" className="w-full sm:flex-1">
-                                <a href={routes[bulkAction]}>
-                                    {label}
-                                    <span className="sr-only">{` (${item.companyName})`}</span>
-                                </a>
-                            </Button>
-                        ))
-                    ) : (
-                        // 웹 보고서와 같은 흐름 — 보고서 내용 선택 모달 → 새 탭 미리보기 → [PDF 다운로드](k-bigx-report-download-button.tsx).
-                        <KBigxReportDownloadButton
-                            item={item}
-                            printPath={printPath}
-                            className="max-sm:w-full sm:w-45"
-                        />
-                    )}
-                </div>
+                {/* 버튼: 보조 · 아이콘 · 왼쪽(CardActionBar). 대량정보조회는 결과 파일 둘, 나머지는 [보고서 다운로드].
+                    sr-only 기업명으로 어느 건의 버튼인지 알린다[6.4.3]. */}
+                <CardActionBar>
+                    <CardActionBarStart>
+                        {isBulkReport ? (
+                            BULK_REPORT_ACTIONS.map(({action: bulkAction, label, icon: BulkIcon}) => (
+                                <Button key={bulkAction} asChild variant="secondary" size="sm">
+                                    <a href={routes[bulkAction]}>
+                                        <BulkIcon aria-hidden="true" />
+                                        {label}
+                                        <span className="sr-only">{` (${item.companyName})`}</span>
+                                    </a>
+                                </Button>
+                            ))
+                        ) : (
+                            // 웹 보고서와 같은 흐름 — 보고서 내용 선택 모달 → 새 탭 미리보기 → [PDF 다운로드](k-bigx-report-download-button.tsx).
+                            <KBigxReportDownloadButton item={item} printPath={printPath} />
+                        )}
+                    </CardActionBarStart>
+                </CardActionBar>
             </div>
         </BaseCard>
     )

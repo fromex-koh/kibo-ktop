@@ -487,6 +487,7 @@
   --ds-control-disabled: var(--raw-gray-100);
   --ds-control-disabled-subtle: var(--raw-common-white);
   --ds-field-disabled: var(--raw-gray-50);
+  --ds-field-invalid: var(--raw-error-50);
   --ds-icon-solid-neutral: var(--raw-gray-700);
   --ds-icon-solid-neutral-foreground: var(--raw-common-white);
   --ds-icon-solid-subtle: var(--raw-gray-200);
@@ -904,6 +905,7 @@
   --ds-control-disabled: var(--raw-gray-100);
   --ds-control-disabled-subtle: var(--raw-common-white);
   --ds-field-disabled: var(--raw-gray-50);
+  --ds-field-invalid: var(--raw-error-50);
   --ds-icon-solid-neutral: var(--raw-gray-700);
   --ds-icon-solid-neutral-foreground: var(--raw-common-white);
   --ds-icon-solid-subtle: var(--raw-gray-200);
@@ -1321,6 +1323,7 @@
   --ds-control-disabled: var(--raw-gray-700);
   --ds-control-disabled-subtle: var(--raw-gray-800);
   --ds-field-disabled: var(--raw-gray-800);
+  --ds-field-invalid: var(--raw-error-900);
   --ds-icon-solid-neutral: var(--raw-gray-100);
   --ds-icon-solid-neutral-foreground: var(--raw-gray-900);
   --ds-icon-solid-subtle: var(--raw-gray-600);
@@ -1738,6 +1741,7 @@
   --ds-control-disabled: var(--raw-gray-700);
   --ds-control-disabled-subtle: var(--raw-gray-800);
   --ds-field-disabled: var(--raw-gray-700);
+  --ds-field-invalid: var(--raw-error-900);
   --ds-icon-solid-neutral: var(--raw-gray-100);
   --ds-icon-solid-neutral-foreground: var(--raw-gray-900);
   --ds-icon-solid-subtle: var(--raw-gray-600);
@@ -2036,6 +2040,7 @@
   --color-control-disabled: var(--ds-control-disabled);
   --color-control-disabled-subtle: var(--ds-control-disabled-subtle);
   --color-field-disabled: var(--ds-field-disabled);
+  --color-field-invalid: var(--ds-field-invalid);
   --color-icon-solid-neutral: var(--ds-icon-solid-neutral);
   --color-icon-solid-neutral-foreground: var(--ds-icon-solid-neutral-foreground);
   --color-icon-solid-subtle: var(--ds-icon-solid-subtle);
@@ -2667,6 +2672,7 @@
     --ds-control-disabled: var(--raw-gray-100);
     --ds-control-disabled-subtle: var(--raw-common-white);
     --ds-field-disabled: var(--raw-gray-50);
+    --ds-field-invalid: var(--raw-error-50);
     --ds-icon-solid-neutral: var(--raw-gray-700);
     --ds-icon-solid-neutral-foreground: var(--raw-common-white);
     --ds-icon-solid-subtle: var(--raw-gray-200);

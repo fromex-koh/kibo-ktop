@@ -2,15 +2,17 @@
 
 import type {ReactNode} from 'react'
 import Link from 'next/link'
+import {CardActionBar, CardActionBarEnd, CardActionBarStart} from '@/components/composite/card-action-bar'
+import {ACTION_STYLE, type ActionStyle} from '@/components/custom/evaluation-card-action-style'
 import {GuaranteeHistoryDialog} from '@/components/composite/guarantee-history-dialog'
 import {GuaranteeRecommendationDialog} from '@/components/composite/guarantee-recommendation-dialog'
 import {NewWindowLink} from '@/components/composite/new-window-link'
 import {Button} from '@/components/ui/button'
 import {EVALUATION_REPORT_WINDOW_HEIGHT, EVALUATION_REPORT_WINDOW_WIDTH} from '@/constants/evaluation-report'
-import type {EvaluationResultAction} from '@/constants/evaluation-result'
+import {EVALUATION_RESULT_ACTION_LABEL, type EvaluationResultAction} from '@/constants/evaluation-result'
 
 // 평가 결과 카드를 이루는 조각들 — 값 배지 · 상세 줄 · 동작 버튼.
-// 평가결과 조회와 평가검증 신청 조회가 같은 카드 언어를 쓰므로 한곳에 두고 두 목록이 함께 쓴다([SC-04]).
+// 기업 평가결과 조회 · 기관 평가결과 조회 · 기관 평가검증 신청 조회가 같은 카드 언어를 쓰므로 한곳에 두고 함께 쓴다([SC-04]).
 
 // 값 배지 — 시안의 "카운트" 묶음이다(navy.100 면 · navy.200 테두리 · navy.600 글자).
 // 개별평가는 등급·점수를, 신청 건은 기업 수를 같은 모양으로 보여 준다. 값만 크고 단위는 작게 붙는다.
@@ -46,78 +48,135 @@ const EvaluationDetailList = ({children}: {children: ReactNode}) => (
     <dl className="flex flex-wrap gap-x-6 gap-y-4">{children}</dl>
 )
 
-// 카드 버튼 — 잠긴 것(done)은 링크가 아니라 button 으로 그려 키보드로도 눌리지 않게 한다.
-// [접수취소] 만 강조 외곽선(secondary)이고 나머지는 일반(tertiary)이다(시안).
-const CANCEL_ACTION_LABEL = '접수취소'
+/** 보증추천을 마친 건의 버튼 — [보증추천] 을 [보증이력] 으로 바꾼다(주소 · 잠김은 그대로). */
+const toGuaranteeCompletedActions = (actions: readonly EvaluationResultAction[]): readonly EvaluationResultAction[] =>
+    actions.map((action) =>
+        action.type === 'guarantee-recommendation' ? {...action, type: 'guarantee-history'} : action,
+    )
 
-type CardActionsProps = {
+type EvaluationCardActionButtonProps = {
+    action: EvaluationResultAction
+    variant: ActionStyle['variant']
+    guaranteeDefaults?: Record<string, string>
+    onGuaranteeCompleted?: () => void
+}
+
+// 버튼 하나 — 잠긴 것(done)은 링크가 아니라 button 으로 그려 키보드로도 눌리지 않게 한다.
+// 보증추천 · 보증이력은 화면으로 가지 않고 모달을 연다 — 트리거로 감싼다.
+const EvaluationCardActionButton = ({
+    action,
+    variant,
+    guaranteeDefaults,
+    onGuaranteeCompleted,
+}: EvaluationCardActionButtonProps) => {
+    const ActionIcon = ACTION_STYLE[action.type].icon
+    const content = (
+        <>
+            <ActionIcon aria-hidden="true" />
+            {EVALUATION_RESULT_ACTION_LABEL[action.type]}
+        </>
+    )
+
+    if (action.done) {
+        return (
+            <Button type="button" variant={variant} size="sm" disabled>
+                {content}
+            </Button>
+        )
+    }
+
+    if (action.type === 'guarantee-recommendation') {
+        return (
+            <GuaranteeRecommendationDialog defaultValues={guaranteeDefaults} onCompleted={onGuaranteeCompleted}>
+                <Button type="button" variant={variant} size="sm">
+                    {content}
+                </Button>
+            </GuaranteeRecommendationDialog>
+        )
+    }
+
+    if (action.type === 'guarantee-history') {
+        return (
+            <GuaranteeHistoryDialog>
+                <Button type="button" variant={variant} size="sm">
+                    {content}
+                </Button>
+            </GuaranteeHistoryDialog>
+        )
+    }
+
+    return (
+        <Button asChild variant={variant} size="sm">
+            {action.newWindow ? (
+                // 인쇄용 리포트는 시안 폭에 맞춘 새 창으로 연다 — 같은 이름으로 열어 여러 번
+                // 눌러도 창이 쌓이지 않는다.
+                <NewWindowLink
+                    href={action.href}
+                    width={EVALUATION_REPORT_WINDOW_WIDTH}
+                    height={EVALUATION_REPORT_WINDOW_HEIGHT}
+                    windowName="evaluation-report"
+                >
+                    {content}
+                </NewWindowLink>
+            ) : (
+                <Link href={action.href}>{content}</Link>
+            )}
+        </Button>
+    )
+}
+
+type EvaluationCardActionsProps = {
     actions: readonly EvaluationResultAction[]
+    /**
+     * 주요 버튼을 두는지. false 면 모든 버튼이 보조(secondary)로 왼쪽에 선다 — 카드의 주요 동작이
+     * 따로 있을 때(평가검증 신청 카드의 [평가검증 하기] → end) · 펼친 이력 줄처럼 보조 동작만 있을 때 쓴다.
+     */
+    hasPrimary?: boolean
+    /** 오른쪽 끝에 더 붙일 주요 버튼 — 데이터 밖의 동작(예: [평가검증 하기]). Button 을 바로 넣는다. */
+    end?: ReactNode
     /** [보증추천] 모달이 미리 채울 값 — 그 카드가 들고 있는 기업 정보다. */
     guaranteeDefaults?: Record<string, string>
     /** 보증추천을 마쳤을 때 — 이 카드의 버튼이 [보증이력] 으로 바뀐다. */
     onGuaranteeCompleted?: () => void
 }
 
-const CardActions = ({actions, guaranteeDefaults, onGuaranteeCompleted}: CardActionsProps) => (
-    // 버튼이 몇 개든 카드 폭을 고르게 나눈다. 좁은 화면에서는 한 줄에 하나씩 쌓인다.
-    <div className="grid gap-2 sm:auto-cols-fr sm:grid-flow-col">
-        {actions.map((action) => {
-            const variant = action.label === CANCEL_ACTION_LABEL ? 'secondary' : 'tertiary'
+// 카드 버튼 묶음 — 버튼마다 type 만 보고 그린다(CardActionBar 위).
+//   · 글자: EVALUATION_RESULT_ACTION_LABEL(constants/evaluation-result.ts)
+//   · 아이콘 · 주요/보조 · 왼쪽/오른쪽: ACTION_STYLE(evaluation-card-action-style.ts)
+//   · 보증추천 · 보증이력은 모달을 연다.
+const EvaluationCardActions = ({
+    actions,
+    hasPrimary = true,
+    end,
+    guaranteeDefaults,
+    onGuaranteeCompleted,
+}: EvaluationCardActionsProps) => {
+    const getStyle = (action: EvaluationResultAction): Omit<ActionStyle, 'icon'> =>
+        hasPrimary ? ACTION_STYLE[action.type] : {variant: 'secondary', placement: 'start'}
+    const startActions = actions.filter((action) => getStyle(action).placement === 'start')
+    const endActions = actions.filter((action) => getStyle(action).placement === 'end')
+    const renderButton = (action: EvaluationResultAction) => (
+        <EvaluationCardActionButton
+            key={action.type}
+            action={action}
+            variant={getStyle(action).variant}
+            guaranteeDefaults={guaranteeDefaults}
+            onGuaranteeCompleted={onGuaranteeCompleted}
+        />
+    )
 
-            if (action.done) {
-                return (
-                    <Button key={action.label} type="button" variant={variant} size="sm" disabled>
-                        {action.label}
-                    </Button>
-                )
-            }
+    return (
+        <CardActionBar>
+            {startActions.length ? <CardActionBarStart>{startActions.map(renderButton)}</CardActionBarStart> : null}
+            {endActions.length || end ? (
+                <CardActionBarEnd>
+                    {endActions.map(renderButton)}
+                    {end}
+                </CardActionBarEnd>
+            ) : null}
+        </CardActionBar>
+    )
+}
 
-            // 화면으로 가지 않고 모달을 여는 버튼 — 트리거로 감싼다.
-            if (action.opens === 'guarantee-recommendation') {
-                return (
-                    <GuaranteeRecommendationDialog
-                        key={action.label}
-                        defaultValues={guaranteeDefaults}
-                        onCompleted={onGuaranteeCompleted}
-                    >
-                        <Button type="button" variant={variant} size="sm">
-                            {action.label}
-                        </Button>
-                    </GuaranteeRecommendationDialog>
-                )
-            }
-
-            if (action.opens === 'guarantee-history') {
-                return (
-                    <GuaranteeHistoryDialog key={action.label}>
-                        <Button type="button" variant={variant} size="sm">
-                            {action.label}
-                        </Button>
-                    </GuaranteeHistoryDialog>
-                )
-            }
-
-            return (
-                <Button key={action.label} asChild variant={variant} size="sm">
-                    {action.newWindow ? (
-                        // 인쇄용 리포트는 시안 폭에 맞춘 새 창으로 연다 — 같은 이름으로 열어 여러 번
-                        // 눌러도 창이 쌓이지 않는다.
-                        <NewWindowLink
-                            href={action.href}
-                            width={EVALUATION_REPORT_WINDOW_WIDTH}
-                            height={EVALUATION_REPORT_WINDOW_HEIGHT}
-                            windowName="evaluation-report"
-                        >
-                            {action.label}
-                        </NewWindowLink>
-                    ) : (
-                        <Link href={action.href}>{action.label}</Link>
-                    )}
-                </Button>
-            )
-        })}
-    </div>
-)
-
-export {CountBadge, EvaluationDetail, EvaluationDetailList, CardActions, CANCEL_ACTION_LABEL}
-export type {CardActionsProps}
+export {CountBadge, EvaluationDetail, EvaluationDetailList, EvaluationCardActions, toGuaranteeCompletedActions}
+export type {EvaluationCardActionsProps}

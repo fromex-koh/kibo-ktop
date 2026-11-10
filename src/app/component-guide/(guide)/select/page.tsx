@@ -369,7 +369,8 @@ const SelectGuidePage = () => (
                         <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                             <li>
                                 오류: <code>SelectTrigger</code> 에 <code>aria-invalid</code>, <code>Field</code> 에{' '}
-                                <code>data-invalid</code>, 메시지는 <code>aria-describedby</code> 로 연결합니다.
+                                <code>data-invalid</code>, 메시지는 <code>aria-describedby</code> 로 연결합니다. 칸은
+                                붉은 테두리 + 옅은 붉은 면(<code>bg-field-invalid</code>)입니다.
                             </li>
                             <li>읽기전용: 목록이 열리지 않고 값은 폼 제출에 포함됩니다.</li>
                             <li>비활성: 포커스와 목록 열기가 막히고 폼 제출에서 빠집니다.</li>
