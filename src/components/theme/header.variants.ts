@@ -50,12 +50,15 @@ export const headerNavDropdownClassName =
 export const headerNavDropdownItemClassName =
     'typo-body-xl-medium text-label-foreground outline-ring hover:text-foreground focus-visible:text-foreground aria-[current=page]:text-foreground mainpage:!text-[var(--raw-gray-700)] mainpage:hover:!text-[var(--raw-gray-900)] mainpage:focus-visible:!text-[var(--raw-gray-900)] mainpage:aria-[current=page]:!text-[var(--raw-gray-900)] w-fit in-data-[slot=navigation-menu-content]:rounded-2xs p-0 outline-none hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-active:hover:bg-transparent data-active:focus:bg-transparent hover:font-bold focus-visible:font-bold aria-[current=page]:font-bold'
 
-// GNB 현재 위치 강조선 — 메뉴 글자를 감싸는 span 에 건다. 감싼 트리거 · 링크에 data-active 가 있으면 보인다.
-// 글자 상자(행간 높이) 바로 아래 3px, ::after 라 자리를 차지하지 않아 글자가 움직이지 않는다.
+// GNB 강조선 — 메뉴 글자를 감싸는 span 에 건다. 글자 상자 바로 아래 3px, ::after 라 글자가 움직이지 않는다.
 // 색 header-nav-indicator(라이트 blue.500 · 다크 blue.300 · 메인페이지 mint.500 — 바꾸려면 tokens.json 값만).
-// 선 모양으로도 구분된다[5.3.1].
+//   · 현재 위치(감싼 트리거 · 링크의 data-active): 늘 보인다. 선 모양으로도 구분된다[5.3.1].
+//   · hover · 키보드 포커스: 왼쪽 → 오른쪽으로 늘어나고(origin-left), 떠나면 오른쪽으로 빠져나간다(origin-right).
+//   · 하위 메뉴가 열린 동안(트리거 data-open): 선을 유지한다 — 드롭다운으로 옮겨 가도 사라지지 않는다.
+//   · 0.3초, prefers-reduced-motion 이면 움직임 없이 바로 바뀐다[6.3.1].
+// in-[a:hover,button:hover] — 이 span 을 감싼 링크 · 트리거만 가리킨다(GNB 안에 다른 a · button 조상은 없다).
 export const headerNavLabelClassName =
-    'relative block after:bg-header-nav-indicator after:absolute after:inset-x-0 after:top-full after:h-0.75 after:opacity-0 in-data-active:after:opacity-100'
+    'relative block after:bg-header-nav-indicator after:absolute after:inset-x-0 after:top-full after:h-0.75 after:origin-right after:scale-x-0 after:transition-transform after:duration-300 after:ease-out motion-reduce:after:transition-none in-[a:hover,button:hover]:after:origin-left in-[a:hover,button:hover]:after:scale-x-100 in-focus-visible:after:origin-left in-focus-visible:after:scale-x-100 in-data-open:after:origin-left in-data-open:after:scale-x-100 in-data-active:after:scale-x-100'
 
 // 전체 메뉴(☰) 그룹 이름의 현재 위치 강조선 — GNB 와 같은 모양, 색만 전체 메뉴 강조색(menu-overlay-accent).
 // w-fit 은 선을 칸 너비가 아니라 글자 폭에 맞춘다.
