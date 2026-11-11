@@ -131,7 +131,7 @@ const INDICATOR_ROWS = [
         key: 'gnb',
         cells: [
             'GNB',
-            '글자 아래 강조선',
+            '글자 아래 강조선 — 다른 메뉴는 hover · 키보드 포커스 · 하위 메뉴 열림 때 왼쪽에서 오른쪽으로 그어지고, 떠나면 오른쪽으로 빠져나감(0.3초, 움직임 줄이기 설정 시 바로 바뀜)',
             '드롭다운에서 굵은 글씨',
             <span key="color">
                 <code>header-nav-indicator</code> blue.500 · blue.300 · mint.500
