@@ -28,7 +28,7 @@ const PRICING_MEMBERS = [
 type PricingMember = (typeof PRICING_MEMBERS)[number]['value']
 
 // 회원유형 탭 위 구획 제목 — 설명은 고른 탭(1뎁스 · 회원유형)에 따라 바뀐다.
-const MEMBER_SECTION_TITLE = '회원 별 서비스 안내'
+const MEMBER_SECTION_TITLE = '회원별 서비스 안내'
 
 // 카드 머리의 무료 · 유료 표시 — free 파랑 · paid 보라 배지.
 type PricingTone = 'free' | 'paid'
@@ -38,16 +38,15 @@ const PRICING_TONE_LABEL: Record<PricingTone, string> = {free: '무료', paid: '
 type PricingHighlight = {title: string; description?: string}
 
 // ── [기술평가] 탭 ──
-// 회원 카드 — 이름 · 회원 구분 · 무료/유료 · 핵심 안내 · 이용 가능한 평가모형. 가격 · 결제는 없다.
+// 회원 카드 — 이름 · 무료/유료 · 핵심 안내 · 이용 가능한 평가모형. 가격 · 결제는 없다.
 type TechServiceCard = {
     id: 'self-diagnosis' | 'individual' | 'bulk'
     name: string
-    nameDetail: string
     tone: PricingTone
     highlight: PricingHighlight
     models: readonly string[]
 }
-const TECH_EVALUATION_MODELS = ['KTRS-FM', '투자모형', 'Tech-Index(일반)', 'Tech-Index(창업)'] as const
+const TECH_EVALUATION_MODELS = ['KTRS-FM', 'Tech-Index(일반)', 'Tech-Index(창업)', '투자모형'] as const
 // 카드 아래 평가모형 줄의 이름표.
 const TECH_MODEL_LABEL = '평가모형'
 
@@ -61,21 +60,19 @@ const TECH_PRICING: Record<PricingMember, {description: string; cards: readonly 
             cards: [
                 {
                     id: 'self-diagnosis',
-                    name: '기술평가 (자가진단)',
-                    nameDetail: '기업회원 (본인 기업 조회)',
+                    name: '기술평가(자가진단)',
                     tone: 'free',
-                    highlight: {title: '평가모형 별 월 1회 제공', description: '이용권 불필요'},
+                    highlight: {title: '평가모형별 월 1회', description: '자사 무료 조회'},
                     models: TECH_EVALUATION_MODELS,
                 },
             ],
         },
         org: {
-            description: '기관은 별도의 협약을 통해 타기업 대상 개별평가 및 일괄평가 서비스를 이용할 수 있습니다.',
+            description: '기관은 협약을 통해 개별평가 및 일괄평가를 이용할 수 있습니다.',
             cards: [
                 {
                     id: 'individual',
                     name: '개별평가',
-                    nameDetail: '기관회원 (타 기업 조회)',
                     tone: 'paid',
                     highlight: {title: '협약 체결 후 이용'},
                     models: TECH_EVALUATION_MODELS,
@@ -83,7 +80,6 @@ const TECH_PRICING: Record<PricingMember, {description: string; cards: readonly 
                 {
                     id: 'bulk',
                     name: '일괄평가',
-                    nameDetail: '기관회원 (타 기업 조회)',
                     tone: 'paid',
                     highlight: {title: '협약 체결 후 이용'},
                     // 일괄평가는 Tech-Index 두 모형만 된다.
@@ -103,21 +99,19 @@ const TECH_PRICING: Record<PricingMember, {description: string; cards: readonly 
 
 // ── [K-BIGx 보고서] 탭 ──
 const KBIGX_DESCRIPTION: Record<PricingMember, string> = {
-    corp: '다른 기업의 보고서 조회는 유료로 제공됩니다. 필요한 조회 건수에 따라 선택하실 수 있습니다. (부가세 포함)',
+    corp: '다른 기업의 보고서 조회는 유료로 제공됩니다. 필요한 조회 건수에 따라 선택하실 수 있습니다.',
     org: '기관은 기술보증기금과 계약 체결 후 이용하실 수 있습니다.',
 }
 
 // 기업회원 첫 카드 — 본인 기업 조회는 무료다(구매 없음).
 const SELF_LOOKUP_PLAN = {
     name: '자사조회',
-    description: '(본인 기업 조회)',
     priceLabel: '무료',
     highlight: {title: '횟수 무제한', description: '이용권 불필요'},
 } as const
 
-// 이용권 카드 문구 — 금액 위 설명 · 금액 아래 설명 · 핵심 안내 상자. 이용권 값에서 만든다.
+// 이용권 카드 문구 — 금액 아래 설명 · 핵심 안내 상자. 이용권 값에서 만든다.
 const PAID_PLAN_LIST_LABEL = '이용권'
-const PAID_PLAN_DESCRIPTION = '다른 기업 보고서 조회'
 const paidPlanNote = (plan: PricingPlan) => `${plan.period} · 부가세 포함`
 const paidPlanHighlight = (plan: PricingPlan): PricingHighlight => ({
     title: `조회 ${plan.quota}건`,
@@ -219,11 +213,10 @@ const USAGE_GUIDE: InfoGuide = {
     ],
 } as const
 
-// 기관회원 카드 — 금액 대신 계약 안내를 크게 보인다.
+// 기관회원 카드 — 금액 없이 이용 조건(안내 상자 한 줄)만 보인다.
 const KBIGX_PARTNER_CARD = {
     name: 'K-BIGx 보고서',
-    label: '파트너(기관)',
-    title: '계약 체결 후 이용',
+    title: '협약 체결 후 이용',
 } as const
 
 const PARTNER_GUIDE: InfoGuide = {
@@ -259,7 +252,6 @@ export {
     KBIGX_DESCRIPTION,
     KBIGX_PARTNER_CARD,
     MEMBER_SECTION_TITLE,
-    PAID_PLAN_DESCRIPTION,
     PAID_PLAN_LIST_LABEL,
     PAID_PLANS,
     paidPlanHighlight,
