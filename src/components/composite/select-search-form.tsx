@@ -7,21 +7,22 @@ import {SelectContent, SelectField, SelectItem} from '@/components/composite/sel
 import {Button} from '@/components/ui/button'
 import {SelectTrigger, SelectValue} from '@/components/ui/select'
 import {cn} from '@/lib/utils'
-// 테두리 글로우(hasGlow) — @property · 마스크가 필요해 유틸리티로 쓸 수 없어 CSS 로 둔다.
+// 테두리 글로우(hasGlow) — @property · 마스크가 필요해 유틸리티 대신 CSS 로 둔다.
 import '@/styles/select-search-form.css'
 
-// 기준 선택 검색 — 검색 기준(셀렉트)을 고르고 번호 · 검색어를 한 줄에 크게 입력해 조회하는 검색 카드다.
-// 특허 등급조회의 '특허등록번호 / 특허출원번호' 검색이 이 형태다.
+// 기준 선택 검색 — 검색 기준(셀렉트)을 고르고 번호 · 검색어를 한 줄에 크게 입력해 조회하는 검색 카드.
+// 사용처: 특허 등급조회(patent-grade-lookup) · K-BIGx 기업혁신성장 조회(innovation-growth-report-lookup).
 //
-// 규격: 카드 면(bg-card) · 반경 24 · 그림자(shadow-1) · 여백 40(모바일 24) ·
-// 입력 줄 높이 40 — 기준 셀렉트(20 Medium foreground, 안쪽 여백 4, 글자와 아래 화살표(20) 사이 4)와
-// 입력(24 Regular label-foreground)이 24 떨어져 한 줄 · 입력 줄 아래 24 에 구분선(subtle-3) ·
-// 구분선 아래 24 에 오른쪽 정렬 [초기화](새로고침 16 + 16 Regular 밑줄) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
-// 16 Medium · 아이콘과 글자 사이 4).
-// 오류 상태: 입력 줄 아래 4 에 빨간 안내(16 Regular · field-error-foreground)가 입력과 같은 왼쪽 선에 선다.
-// 구분선 색은 상태와 관계없이 바꾸지 않는다 — 포커스는 입력 칸의 포커스 링, 오류는 안내 문구로만 알린다.
-// 좁은 화면(768 미만)은 기준 · 입력이 위아래로 쌓이고, 오류 안내는 왼쪽 끝에서 시작한다.
-// 테두리 글로우(hasGlow): 테두리를 따라 도는 그라데이션 선 + 바깥 번짐(styles/select-search-form.css).
+// 규격
+//   · 카드: bg-card · 반경 24 · shadow-1 · 여백 40(모바일 24)
+//   · 입력 줄(높이 40): 기준 셀렉트(20 Medium) — 24 — 입력(24 Regular). 768 미만은 위아래로 쌓인다.
+//   · 입력 줄 아래 24 에 구분선(subtle-3), 그 아래 24 에 [초기화] · [검색하기](오른쪽 정렬).
+// 오류
+//   · 입력 칸: 다른 입력칸의 오류 칸과 같다 — 테두리 destructive · 면 field-invalid(InputGroup theme 이 그린다).
+//   · 안내: 입력 줄 아래 4 에 빨간 문구, 입력 글자와 같은 왼쪽 선. 색 + 문구로 함께 알린다[5.3.1].
+//
+// [프론트엔드 연동] 조회 API 는 onSearch 에서 호출하고, 응답이 올 때까지 isSearching 을 넘긴다.
+// 빈 값 · 형식(pattern) 검사는 컴포넌트가 하므로 onSearch 에는 검사를 통과한 값만 온다.
 
 type SelectSearchOption = {
     value: string
@@ -181,12 +182,9 @@ const SelectSearchForm = ({
                     <label htmlFor={selectId} className="sr-only">
                         {typeLabel}
                     </label>
-                    {/* 목록은 프로젝트 공통 드롭다운(SelectField)과 같다 — 트리거 아래 4 에 열리고, 항목 높이 · hover 면 ·
-                        선택 표시가 다른 셀렉트와 같다. 트리거만 테두리 없는 글자형(20 Medium + 화살표 20)이다.
-                        md 이상에서 트리거 자리는 최소 136 — 기준 이름이 짧아도('기업 검색') 입력 글자와
-                        오류 문구가 같은 160 선에서 시작한다. 화살표는 글자 바로 뒤에 붙는다(justify-start).
-                        바탕은 비운다(라이트 · 다크 공통). theme 의 bg-field 와 셸 · theme 의 다크 전용 규칙(dark:bg-input/30 · dark:bg-field 등)까지
-                        이기도록 data-[slot=select-trigger]: 로 우선순위를 한 단계 올린다 — 사용처에서 dark: 로 다시 분기하지 않는다[PB-06]. */}
+                    {/* 목록은 공통 드롭다운(SelectField)과 같고, 트리거만 테두리 · 바탕 없는 글자형이다.
+                        md 이상 최소 폭 136 — 기준 이름 길이와 상관없이 입력 글자 · 오류 문구가 같은 선(160)에서 시작한다.
+                        바탕 투명은 data-[slot=select-trigger]: 로 우선순위를 올려 theme · 다크 규칙을 이긴다[PB-06]. */}
                     <SelectField name="searchType" value={searchType} onValueChange={handleTypeChange}>
                         <SelectTrigger
                             id={selectId}
@@ -205,13 +203,12 @@ const SelectSearchForm = ({
                     <label htmlFor={inputId} className="sr-only">
                         {selectedLabel}
                     </label>
-                    {/* 값이 있고 칸에 포커스가 있으면 오른쪽에 지우기(X) 버튼이 뜬다 — 프로젝트 ClearableInput 과 같다.
-                        바깥 상자는 테두리 없이 두고, 포커스 링은 입력 칸의 기본 포커스 링을 쓴다.
-                        상자의 안쪽 여백(16)만큼 왼쪽으로 당겨(-ms-4) 글자가 셀렉트에서 24 떨어진 자리에 오게 하고,
-                        포커스 링은 글자 둘레에 여유를 두고 그려지게 한다. 좁은 화면(768 미만)은 입력이 한 줄을 다 쓰므로
-                        오른쪽도 같은 만큼 늘려(-me-4) 상자가 카드 폭에 꽉 차게 한다. */}
-                    {/* autoComplete="off" — 브라우저 자동완성 목록과 자동완성 배경색(파란 면)을 끈다. 검색어는 매번 새로
-                        입력하는 값이고, 자동완성 면이 테두리 없는 입력에 박스처럼 떠 보이기 때문이다. */}
+                    {/* 입력 상자(ClearableInput — 값 + 포커스일 때 지우기(X) 버튼)
+                        · 평소: 테두리 · 바탕 투명. 테두리는 자리만 잡아 두어 오류 때 생겨도 크기가 그대로다.
+                        · 오류(aria-invalid): InputGroup theme 이 테두리 · 면을 그린다 — 위 투명 값보다 우선한다.
+                        · -ms-4: 상자 안쪽 여백(16)만큼 당겨 글자를 셀렉트에서 24 떨어진 자리에 맞춘다.
+                          768 미만은 -me-4 도 줘서 상자를 카드 폭에 꽉 채운다. */}
+                    {/* autoComplete="off" — 자동완성 목록 · 파란 자동완성 면을 끈다(테두리 없는 칸에 박스처럼 떠 보인다). */}
                     <ClearableInput
                         id={inputId}
                         name="keyword"
@@ -226,7 +223,7 @@ const SelectSearchForm = ({
                         aria-describedby={
                             [error ? errorId : '', selected?.note ? noteId : ''].filter(Boolean).join(' ') || undefined
                         }
-                        className="-ms-4 h-auto min-w-0 flex-1 border-0 bg-transparent shadow-none max-md:-me-4 max-md:w-auto"
+                        className="-ms-4 h-auto min-w-0 flex-1 border-transparent bg-transparent shadow-none max-md:-me-4 max-md:w-auto"
                         inputClassName="typo-h4-regular text-label-foreground h-auto px-0"
                     />
                 </div>
@@ -242,8 +239,8 @@ const SelectSearchForm = ({
                 ) : null}
                 <hr className="border-subtle-3 mt-6" />
             </div>
-            {/* 버튼 줄 — 왼쪽에 고른 기준의 도움말(14 Regular gray.600), 오른쪽에 [초기화] · [검색하기].
-                좁은 화면에서는 도움말이 위 줄, 버튼이 아래 줄 오른쪽으로 내려간다. 도움말은 입력의 설명으로도 잇는다. */}
+            {/* 버튼 줄 — 왼쪽 도움말(고른 기준의 note) · 오른쪽 [초기화] · [검색하기]. 768 미만은 도움말이 위, 버튼이 아래.
+                도움말은 aria-describedby 로 입력에 연결된다. */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-5">
                 {selected?.note ? (
                     <p id={noteId} className="typo-body-l-regular text-foreground-subtle min-w-0 flex-1 break-keep">
@@ -253,20 +250,16 @@ const SelectSearchForm = ({
                     <span className="hidden flex-1 md:block" aria-hidden="true" />
                 )}
                 <div className="flex items-center justify-end gap-5">
-                    {/* [초기화]는 글자 버튼이다 — 누르면 기준과 입력이 처음 상태로 돌아간다.
-                    조회 중에는 disabled 로 막는다 — 포커스는 [검색하기]에 있으므로 [초기화]가 꺼져도 포커스를 잃지 않는다. */}
+                    {/* [초기화] — 기준 · 입력을 처음 상태로 되돌린다(handleReset). 조회 중에는 disabled
+                    (포커스는 [검색하기]에 있어 꺼져도 잃지 않는다). */}
                     <Button type="reset" variant="text-underline" size="md" disabled={isSearching}>
                         <RotateCcw aria-hidden="true" />
                         {resetLabel}
                     </Button>
-                    {/* [검색하기] — md 크기에 기본(primary) md 의 굵게 대신 Medium, 간격 8 대신 4 를 둔다.
-                    조회 중에는 돋보기 자리에 도는 표시를 두고 글자를 searchingLabel 로 바꾼다 — 최소 폭 128 을 잡아 두어
-                    글자가 짧아져도 버튼이 흔들리지 않는다. 표시는 장식이라 읽히지 않게 하고, 진행 중이라는 사실은
-                    aria-busy 가 전한다[8.2.1]. 동작 줄이기 설정에서는 돌지 않는다[6.3.1].
-                    조회 중에도 disabled 를 쓰지 않는다 — 키보드로 누른 버튼이 disabled 가 되면 브라우저가 포커스를 빼서
-                    다음 Tab 이 화면 맨 위부터 시작한다[6.1.2]. 대신 aria-disabled 로 알리고 다시 제출은 handleSubmit 이 막는다.
-                    흐리게(disabled 모양) 하지 않는다 — 도는 표시와 바뀐 글자가 이미 조회 중임을 보여 주고, 흐린 버튼은
-                    포커스 표시까지 약하게 보여 지금 위치를 놓치기 쉽다. */}
+                    {/* [검색하기] — 기본 md 에서 굵기만 Medium, 아이콘 간격 4. 최소 폭 128 로 글자가 바뀌어도 흔들리지 않는다.
+                    조회 중(isSearching): 돋보기 → 도는 표시(장식, 동작 줄이기면 멈춤[6.3.1]) · 글자 → searchingLabel · aria-busy[8.2.1].
+                    disabled 는 쓰지 않는다 — 포커스가 빠져 다음 Tab 이 화면 맨 위로 간다[6.1.2].
+                    aria-disabled 로 알리고 다시 제출은 handleSubmit 이 막는다. 흐리게도 하지 않는다(포커스 표시가 약해진다). */}
                     <Button
                         type="submit"
                         size="md"
