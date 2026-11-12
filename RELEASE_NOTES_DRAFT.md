@@ -90,3 +90,56 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 내용:
     - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 상태 표의 빈 값 오류 · 형식 오류에 오류 칸(빨간 테두리 · 연한 빨간 면) 설명 추가
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ff6a2405277d38be0fd580f4eb4deee16d372253)
+
+# 작업: [현업 요청사항] 가격정책 — 기술평가 · K-BIGx 보고서 탭 문구 · 안내 상자 정리
+
+## [Diff 확인]
+
+### [데이터] 가격정책 — 기술평가 · K-BIGx 탭 문구 변경
+
+- 대상: src/content/service/pricing.ts
+- 변경:
+    - 공통: 회원유형 탭 위 제목 '회원 별 서비스 안내' → '회원별 서비스 안내'(기술평가 · K-BIGx 탭 모두)
+    - 기술평가 › 기업회원: 카드 이름 '기술평가 (자가진단)' → '기술평가(자가진단)' · 보조 설명 '기업회원 (본인 기업 조회)' 삭제 · 안내 '평가모형 별 월 1회 제공 / 이용권 불필요' → '평가모형별 월 1회 / 자사 무료 조회'
+    - 기술평가 › 기관회원: 설명 → '기관은 협약을 통해 개별평가 및 일괄평가를 이용할 수 있습니다.' · 개별평가 · 일괄평가 보조 설명 '기관회원 (타 기업 조회)' 삭제
+    - 평가모형 순서: KTRS-FM · Tech-Index(일반) · Tech-Index(창업) · 투자모형(투자모형을 맨 뒤로, 기업 자가진단 · 기관 개별평가 공통)
+    - K-BIGx › 기업회원: 설명 끝 '(부가세 포함)' 삭제 · 이용권 카드 '다른 기업 보고서 조회' 삭제 · 자사조회 카드 '(본인 기업 조회)' 삭제
+    - K-BIGx › 기관회원: 카드 라벨 '파트너(기관)' 삭제 · 안내 '계약 체결 후 이용' → '협약 체결 후 이용'
+    - 정리: 쓰이지 않게 된 값 삭제 — 카드 보조 설명(nameDetail) · PAID_PLAN_DESCRIPTION · 자사조회 description · 기관 카드 label
+- 결과: 가격정책 기술평가 · K-BIGx 탭의 문구가 위 내용으로 바뀜. 이용권 카드 '1개월 · 부가세 포함' · 비교표 · 이용 안내 · '파트너(기관) 이용 안내' 제목은 그대로
+- 영향 화면:
+    - [가격정책 (기업)](/corp/pricing)
+    - [가격정책 (기관)](/org/pricing)
+- 함께 작업: 아래 가격정책 화면 카드와 한 번에 적용(지운 값을 화면 파일이 더 이상 읽지 않아야 빌드됨)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/02b3b9738b65809dd1dba56d0dc2a96c69b3b21e)
+
+### [화면] 가격정책 — 카드 보조 설명 · 금액 위 설명 제거 · K-BIGx 기관 안내 상자 작게
+
+- 대상: src/components/custom/pricing-policy.tsx
+- 변경:
+    - 기술평가 카드에 보조 설명(nameDetail)을 넘기던 부분 삭제
+    - K-BIGx 이용권 카드 · 자사조회 카드의 금액 위 설명(label) 삭제
+    - K-BIGx 기관회원 카드: 라벨 삭제 · 안내 상자를 큰 상자(emphasis, 28 Bold) → 작은 상자(inline, 14 Bold)로 — 기술평가 개별 · 일괄평가 카드와 같은 모양
+- 결과: 자사조회 카드 금액이 이용권 카드 금액과 같은 높이 · K-BIGx 기관 카드가 '협약 체결 후 이용' 작은 안내 상자 한 줄
+- 영향 화면:
+    - [가격정책 (기업)](/corp/pricing)
+    - [가격정책 (기관)](/org/pricing)
+- 함께 작업: 위 가격정책 데이터 카드와 한 번에 적용
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/1f4a241e4425787d33b86355c948fcfd0f436747)
+
+### [컴포넌트] PricingCard — 주석 예시 정리
+
+- 대상: src/components/composite/pricing-card.tsx
+- 변경: detail · label 설명 주석의 예시 문구를 지금 화면에 맞게 정리(동작 · 스타일 변화 없음)
+- 결과: 화면 변화 없음
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee30425ff974751a4e1b5c619cd2b15602e67d7a)
+
+## [덮어쓰기]
+
+### [문서] 가격 카드 가이드 — 예시를 바뀐 문구에 맞춤
+
+- 대상: src/app/component-guide/(guide)/pricing-card/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용:
+    - [가격 카드 (PricingCard)](/component-guide/pricing-card): 이용권 카드 예시 금액 위 설명 삭제 · 서비스 카드 예시 이름 · 안내 문구 · 평가모형 순서 갱신(보조 설명 삭제) · 큰 안내 예시 라벨 삭제 · '협약 체결 후 이용'으로, 큰 안내는 지금 서비스 화면에서 쓰지 않는다는 설명 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cfa448c5cdcef256acd3729aee8cc6883a4fb1ff)
