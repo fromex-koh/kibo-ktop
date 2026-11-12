@@ -62,3 +62,31 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 내용:
     - [헤더 (Header)](/component-guide/header): 현재 위치 표시 표의 GNB 행에 hover · 포커스 · 하위 메뉴 열림 모션 설명 추가
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e65e26ab844ead54281781f60ffde81b74b87021)
+
+# 작업: 기준 선택 검색 카드 — 입력칸 오류 표시
+
+## [Diff 확인]
+
+### [컴포넌트] SelectSearchForm — 입력칸 오류 표시 추가
+
+- 대상: src/components/composite/select-search-form.tsx
+- 변경: 입력 상자의 평소 테두리를 border-0 → border-transparent 로 바꿈(자리만 잡아 둠) · 주석 정리
+- 결과:
+    - 검색어가 비었거나 형식이 틀리면 입력칸이 다른 입력칸의 오류 칸과 같아짐 — 빨간 테두리(destructive) · 연한 빨간 면(field-invalid) · 반경 8
+    - 오류가 없을 때 모양 · 크기는 그대로, 오류 문구 위치 · 색도 그대로
+- 영향 화면:
+    - [K-BIGx 기업혁신성장 (기업)](/corp/k-bigx-report/innovation-growth-report)
+    - [K-BIGx 기업혁신성장 (기관)](/org/k-bigx-report/innovation-growth-report)
+    - [특허 등급조회 (기업)](/corp/patent-evaluation/patent-grade-list)
+    - [특허 등급조회 (기관)](/org/patent-evaluation/patent-grade-list)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e2b7d41e4fdb6a1f294901dcb02c040403c58667)
+
+## [덮어쓰기]
+
+### [문서] 기준 선택 검색 가이드 — 오류 칸 모양 안내
+
+- 대상: src/app/component-guide/(guide)/select-search-form/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용:
+    - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 상태 표의 빈 값 오류 · 형식 오류에 오류 칸(빨간 테두리 · 연한 빨간 면) 설명 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ff6a2405277d38be0fd580f4eb4deee16d372253)
