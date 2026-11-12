@@ -35,7 +35,7 @@ import {pricingCardButtonClassName} from '@/components/theme/pricing-card.varian
     iconSrc="/images/ticket-grade/ticket-grade-basic.webp"
     badge={<Badge variant="solid-pastel" color="secondary-purple" shape="round" size="sm">유료</Badge>}
   />
-  <PricingCardPrice label="다른 기업 보고서 조회" amount={330000} note="1개월 · 부가세 포함" />
+  <PricingCardPrice amount={330000} note="1개월 · 부가세 포함" />
   <PricingCardHighlight title="조회 20건" description="이용 기간 1개월" />
   <PricingCardAction>
     <Button variant="secondary" size="md" className={pricingCardButtonClassName}>구매하기</Button>
@@ -43,9 +43,9 @@ import {pricingCardButtonClassName} from '@/components/theme/pricing-card.varian
 </PricingCard>`
 
 const SERVICE_CODE = `<PricingCard size="lg" elevated>
-  <PricingCardHeader title="기술평가 (자가진단)" detail="기업회원 (본인 기업 조회)" badge={…} size="lg" />
+  <PricingCardHeader title="기술평가(자가진단)" badge={…} size="lg" />
   <div className="flex flex-col gap-3">
-    <PricingCardHighlight layout="inline" title="평가모형 별 월 1회 제공" description="이용권 불필요" />
+    <PricingCardHighlight layout="inline" title="평가모형별 월 1회" description="자사 무료 조회" />
     <PricingCardMeta label="평가모형">
       <Badge variant="solid-pastel" color="info" shape="round" size="sm">KTRS-FM</Badge>
       …
@@ -132,7 +132,7 @@ const PlanCardDemo = () => (
                 </Badge>
             }
         />
-        <PricingCardPrice label="다른 기업 보고서 조회" amount={330000} note="1개월 · 부가세 포함" />
+        <PricingCardPrice amount={330000} note="1개월 · 부가세 포함" />
         <PricingCardHighlight title="조회 20건" description="이용 기간 1개월" />
         <PricingCardAction>
             <Button type="button" variant="secondary" size="md" className={pricingCardButtonClassName}>
@@ -179,8 +179,7 @@ const PricingCardGuidePage = () => (
                 </div>
                 <PricingCard size="lg" elevated className="max-w-modal">
                     <PricingCardHeader
-                        title="기술평가 (자가진단)"
-                        detail="기업회원 (본인 기업 조회)"
+                        title="기술평가(자가진단)"
                         size="lg"
                         badge={
                             <Badge variant="solid-pastel" color="info" shape="round" size="sm">
@@ -189,13 +188,9 @@ const PricingCardGuidePage = () => (
                         }
                     />
                     <div className="flex flex-col gap-3">
-                        <PricingCardHighlight
-                            layout="inline"
-                            title="평가모형 별 월 1회 제공"
-                            description="이용권 불필요"
-                        />
+                        <PricingCardHighlight layout="inline" title="평가모형별 월 1회" description="자사 무료 조회" />
                         <PricingCardMeta label="평가모형">
-                            {['KTRS-FM', '투자모형', 'Tech-Index(일반)', 'Tech-Index(창업)'].map((model) => (
+                            {['KTRS-FM', 'Tech-Index(일반)', 'Tech-Index(창업)', '투자모형'].map((model) => (
                                 <Badge key={model} variant="solid-pastel" color="info" shape="round" size="sm">
                                     {model}
                                 </Badge>
@@ -213,7 +208,9 @@ const PricingCardGuidePage = () => (
                         큰 안내 (Highlight emphasis)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        금액 대신 이용 조건을 크게 보일 때 씁니다(가격정책 K-BIGx 보고서 · 기관회원).
+                        금액 대신 이용 조건을 크게 보일 때 씁니다. 지금 서비스 화면에서는 쓰지 않습니다 — 가격정책
+                        K-BIGx 보고서 · 기관회원 카드는 기술평가 카드와 같은 작은 안내 상자(<code>inline</code>)를
+                        씁니다.
                     </p>
                 </div>
                 <PricingCard size="lg" elevated className="max-w-modal gap-4 md:gap-4">
@@ -226,7 +223,7 @@ const PricingCardGuidePage = () => (
                             </Badge>
                         }
                     />
-                    <PricingCardHighlight layout="emphasis" label="파트너(기관)" title="계약 체결 후 이용" />
+                    <PricingCardHighlight layout="emphasis" title="협약 체결 후 이용" />
                 </PricingCard>
             </section>
         </BaseCard>
