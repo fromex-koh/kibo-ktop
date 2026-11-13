@@ -13,6 +13,10 @@ export const sonnerStyle: SonnerStyle = {
     '--normal-text': 'var(--color-toast-foreground)',
     '--normal-border': 'transparent',
     '--border-radius': 'var(--radius-full)',
+    // 토스터 폭 — sonner 기본 356px 은 PC 에서도 한 줄 문구를 줄바꿈시켜 container.toast 로 넓힌다.
+    // 토스트 자체는 w-fit 이라 짧은 문구는 그대로 내용만큼이다. 좁은 창에서는 좌우 16씩 남기고 줄어든다
+    // (600px 이하는 globals.css § 5 가 폭을 따로 잡는다).
+    '--width': 'min(var(--container-toast), calc(100vw - var(--spacing) * 8))',
     zIndex: 'var(--ds-z-toast)',
 }
 
@@ -21,7 +25,7 @@ export const sonnerToastClassNames = {
     // Figma 토스트는 반투명 검정(black 75%) 알약에 흰 글자 한 줄이므로
     // bg-toast/text-toast-foreground + rounded-full 을 쓴다.
     // 시안(1920 기준) 189×45 = 좌우 여백 24 + 아이콘 20 + 간격 8 + 글자 + 위아래 여백 12.
-    // w-fit — 시안은 폭이 내용만큼이다. 긴 문구는 토스터 폭(max-w-full)에서 줄바꿈한다.
+    // w-fit — 시안은 폭이 내용만큼이다. 긴 문구는 토스터 폭(위 --width, max-w-full)에서 줄바꿈한다.
     // 가운데 위치(top-center·bottom-center)에서는 그 폭을 토스터 안에서 가운데로 모은다 — sonner 의 토스터는
     // 위치와 무관하게 늘 같은 폭(--width)이라, 내용만큼만 차지하는 알약을 그냥 두면 화면 가운데가 아니라
     // 그 상자의 왼쪽 끝에 붙는다. 좌우 위치의 토스트는 그 끝에 붙어야 하므로 가운데일 때만 적용한다.
