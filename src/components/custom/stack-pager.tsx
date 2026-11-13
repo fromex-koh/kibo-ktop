@@ -12,10 +12,31 @@ export const STACK_PAGER_TRANSITION_DURATION_MS = 600
 // 메인 헤더 배경색 페이드 시간. 헤더가 새 섹션이 화면을 채우는 시점에 완료되도록
 // StackPager 의 레이어 전환 종료보다 이 시간만큼 앞서 시작한다.
 const HEADER_BACKGROUND_TRANSITION_MS = 500
-const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
-const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
-// 페이저가 켜지는 화면 조건 — globals.css 의 .stack-page 고정 레이어 미디어쿼리와 같은 값이어야 한다.
-// 값을 바꾸면 globals.css 도 함께 고친다. 같은 판단이 필요한 화면 코드는 이 상수를 import 한다.
+// 키보드 — ↓ · PageDown · Space = 다음 섹션, ↑ · PageUp · Shift+Space = 이전 섹션, Home · End = 첫 · 마지막 섹션.
+const NEXT_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
+const PREVIOUS_KEYS = new Set(['ArrowUp', 'PageUp'])
+// 섹션 안쪽 스크롤 한 번의 이동량 — 화살표는 브라우저 기본과 비슷한 40px,
+// PageUp/Down · Space 는 화면 높이의 87.5%(앞 화면 끝줄이 조금 남아 읽던 위치를 잃지 않는다).
+const KEY_ARROW_SCROLL_STEP_PX = 40
+const KEY_PAGE_SCROLL_RATIO = 0.875
+// 포커스가 이 안에 있으면 키를 그 요소에 맡긴다(글자 입력 · 방향키 위젯 · 대화상자).
+const KEY_OWNER_SELECTOR = [
+    'input',
+    'textarea',
+    'select',
+    '[contenteditable=""]',
+    '[contenteditable="true"]',
+    '[role="dialog"]',
+    '[role="alertdialog"]',
+    ...['combobox', 'listbox', 'menu', 'menubar', 'radiogroup', 'slider', 'spinbutton', 'tablist', 'tree', 'grid'].map(
+        (role) => `[role="${role}"]`,
+    ),
+].join(',')
+// 여기에 포커스가 있으면 Space 는 '누르기'로 남겨 둔다.
+const SPACE_ACTIVATES_SELECTOR =
+    'button, a[href], summary, [role="button"], [role="link"], [role="checkbox"], [role="switch"]'
+// 페이저가 켜지는 화면 조건 — CSS 변형 pager-on: 과 같은 값. 기준은 tokens.json(breakpoint.md · breakpointHeight)이며
+// 어긋나면 yarn tokens 가 실패한다. 같은 판단이 필요한 화면 코드는 이 상수를 import 한다.
 export const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 640px)'
 // 페이지 안쪽 스크롤로 인정하는 overflow 값 — hidden 은 화면이 움직이지 않으므로 제외한다.
 const SCROLLABLE_OVERFLOW = new Set(['auto', 'scroll'])
@@ -57,6 +78,7 @@ const syncPageElements = (container: HTMLElement, activePage: number, isDesktop:
 // 화면 너비와 높이가 모두 충분하면 실제 문서 스크롤 대신 고정 레이어의 상태만 전환한다.
 // 한 제스처가 끝날 때까지 다음 입력을 받지 않아 트랙패드 관성이 여러 페이지를 통과시키지 않는다.
 // 모바일 또는 낮은 데스크톱 화면은 고정 레이어를 사용하지 않고 자연 스크롤을 유지한다. [KWCAG 6.1.1]
+// 섹션 이동 입력: 휠 · 터치 스와이프 · 키보드(위 NEXT_KEYS 설명) · 페이지 안 #앵커 링크.
 const StackPager = ({
     children,
     className,
@@ -67,7 +89,7 @@ const StackPager = ({
     className?: string
     mediaQuery?: string
     // slide: 이전 페이지가 위로 빠진다. cover: 이전 페이지를 제자리에 두고 다음 페이지가 덮는다
-    // (전환 중 두 페이지 사이로 빈 배경이 드러나지 않는다). 실제 전환 규칙은 globals.css.
+    // (전환 중 두 페이지 사이로 빈 배경이 드러나지 않는다). 실제 전환 규칙은 theme/stack-pager.variants.ts.
     transition?: 'slide' | 'cover'
 }) => {
     const ref = useRef<HTMLDivElement>(null)
@@ -85,11 +107,13 @@ const StackPager = ({
     // 맞춰야 하므로 별도 상태를 둔다. 헤더의 300ms 색상 페이드는 새 화면이 도착하는 시점에 끝난다.
     const [headerPage, setHeaderPage] = useState(0)
 
-    const movePage = useCallback((direction: 1 | -1, pageCount: number) => {
+    // 섹션 전환 애니메이션과 함께 targetPage 로 이동한다. 휠 · 터치 · 키보드가 모두 이 함수를 거친다.
+    const moveToPage = useCallback((targetPage: number, pageCount: number) => {
         if (isTransitioningRef.current || !isGestureArmedRef.current) return
 
-        const nextPage = Math.min(pageCount - 1, Math.max(0, activePageRef.current + direction))
+        const nextPage = Math.min(pageCount - 1, Math.max(0, targetPage))
         if (nextPage === activePageRef.current) return
+        const direction = nextPage > activePageRef.current ? 1 : -1
 
         const nextPageElement = ref.current?.querySelectorAll<HTMLElement>('[data-stack-page]')[nextPage]
         // 역방향 진입 시에도 내부 트랙의 첫 지점으로 되감으면, 두 화면으로 구성된 섹션은 마지막
@@ -120,6 +144,11 @@ const StackPager = ({
             isTransitioningRef.current = false
         }, STACK_PAGER_TRANSITION_DURATION_MS)
     }, [])
+
+    const movePage = useCallback(
+        (direction: 1 | -1, pageCount: number) => moveToPage(activePageRef.current + direction, pageCount),
+        [moveToPage],
+    )
 
     const goToPage = useCallback(
         (page: number) => {
@@ -297,11 +326,54 @@ const StackPager = ({
             if (targetIndex >= 0) goToPage(targetIndex)
         }
 
+        // 키보드 — 섹션이 고정 레이어라 브라우저 기본 키 스크롤이 동작하지 않아 직접 처리한다. [KWCAG 6.1.1]
+        // 포커스 위치(본문 · 헤더 등)와 무관하게 받도록 document 에 건다.
+        // 안쪽 스크롤이 남은 섹션은 안쪽을 먼저 내리고, 끝에 닿은 뒤의 다음 입력부터 섹션을 넘긴다.
+        const keyDirection = (event: KeyboardEvent): 1 | -1 | null => {
+            if (event.key === ' ') return event.shiftKey ? -1 : 1
+            if (NEXT_KEYS.has(event.key)) return 1
+            if (PREVIOUS_KEYS.has(event.key)) return -1
+            return null
+        }
+
+        const isKeyOwnedByTarget = (event: KeyboardEvent) => {
+            if (!(event.target instanceof Element)) return false
+            if (event.target.closest(KEY_OWNER_SELECTOR)) return true
+            return event.key === ' ' && Boolean(event.target.closest(SPACE_ACTIVATES_SELECTOR))
+        }
+
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (!desktopQuery.matches || event.target !== container) return
-            const direction = PAGE_DOWN_KEYS.has(event.key) ? 1 : PAGE_UP_KEYS.has(event.key) ? -1 : null
+            if (!desktopQuery.matches || event.defaultPrevented) return
+            if (event.altKey || event.ctrlKey || event.metaKey) return
+            // 팝업 · 시트가 열려 배경 스크롤이 잠긴 동안(Radix 가 body 에 붙이는 속성)은 무시한다.
+            if (document.body.hasAttribute('data-scroll-locked')) return
+            if (isKeyOwnedByTarget(event)) return
+
+            if (event.key === 'Home' || event.key === 'End') {
+                event.preventDefault()
+                if (event.repeat) return
+                isGestureArmedRef.current = true
+                moveToPage(event.key === 'Home' ? 0 : pages.length - 1, pages.length)
+                return
+            }
+
+            const direction = keyDirection(event)
             if (direction === null) return
             event.preventDefault()
+
+            const activePageElement = pages[activePageRef.current]
+            if (activePageElement && canScrollPageInside(activePageElement, direction)) {
+                const isArrowKey = event.key === 'ArrowDown' || event.key === 'ArrowUp'
+                const step = isArrowKey
+                    ? KEY_ARROW_SCROLL_STEP_PX
+                    : activePageElement.clientHeight * KEY_PAGE_SCROLL_RATIO
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                activePageElement.scrollBy({top: step * direction, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+                return
+            }
+
+            // 꾹 누른 자동 반복 입력으로는 섹션을 넘기지 않는다(안쪽 끝에서 여러 섹션을 연달아 지나침 방지).
+            if (event.repeat) return
             isGestureArmedRef.current = true
             movePage(direction, pages.length)
         }
@@ -323,7 +395,7 @@ const StackPager = ({
         container.addEventListener('touchmove', handleTouchMove, {passive: false})
         container.addEventListener('touchend', handleTouchEnd, {passive: true})
         container.addEventListener('touchcancel', handleTouchEnd, {passive: true})
-        container.addEventListener('keydown', handleKeyDown)
+        document.addEventListener('keydown', handleKeyDown)
         container.addEventListener('click', handleFragmentClick)
         desktopQuery.addEventListener('change', handleDesktopChange)
 
@@ -336,7 +408,7 @@ const StackPager = ({
             container.removeEventListener('touchmove', handleTouchMove)
             container.removeEventListener('touchend', handleTouchEnd)
             container.removeEventListener('touchcancel', handleTouchEnd)
-            container.removeEventListener('keydown', handleKeyDown)
+            document.removeEventListener('keydown', handleKeyDown)
             container.removeEventListener('click', handleFragmentClick)
             desktopQuery.removeEventListener('change', handleDesktopChange)
             pages.forEach((page) => {
@@ -346,7 +418,7 @@ const StackPager = ({
                 page.inert = false
             })
         }
-    }, [movePage, goToPage, mediaQuery])
+    }, [movePage, moveToPage, goToPage, mediaQuery])
 
     return (
         <StackPagerActivePageContext.Provider value={activePage}>
