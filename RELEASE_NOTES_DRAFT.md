@@ -55,14 +55,6 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [헤더 가이드](/component-guide/header)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2f385c98c1a3de978fbe6ec39659f63429916cfd)
 
-### [문서] 헤더 가이드 — GNB 강조선 hover 모션 안내
-
-- 대상: src/app/component-guide/(guide)/header/page.tsx
-- 적용: 지정한 파일만 교체
-- 내용:
-    - [헤더 (Header)](/component-guide/header): 현재 위치 표시 표의 GNB 행에 hover · 포커스 · 하위 메뉴 열림 모션 설명 추가
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e65e26ab844ead54281781f60ffde81b74b87021)
-
 # 작업: 검색 카드(SelectSearchForm) — 검색어 오류 시 입력칸에 빨간 테두리 표시
 
 ## [Diff 확인]
@@ -85,16 +77,6 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [특허 등급조회 (기업)](/corp/patent-evaluation/patent-grade-list)
     - [특허 등급조회 (기관)](/org/patent-evaluation/patent-grade-list)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e2b7d41e4fdb6a1f294901dcb02c040403c58667)
-
-## [덮어쓰기]
-
-### [문서] 기준 선택 검색 가이드 — 오류 칸 모양 안내
-
-- 대상: src/app/component-guide/(guide)/select-search-form/page.tsx
-- 적용: 지정한 파일만 교체
-- 내용:
-    - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 상태 표의 빈 값 오류 · 형식 오류에 오류 칸(빨간 테두리 · 연한 빨간 면) 설명 추가
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ff6a2405277d38be0fd580f4eb4deee16d372253)
 
 # 작업: [현업 요청사항] 가격정책 — 기술평가 · K-BIGx 보고서 탭 문구 · 안내 상자 정리
 
@@ -138,16 +120,6 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 변경: detail · label 설명 주석의 예시 문구를 지금 화면에 맞게 정리(동작 · 스타일 변화 없음)
 - 결과: 화면 변화 없음
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee30425ff974751a4e1b5c619cd2b15602e67d7a)
-
-## [덮어쓰기]
-
-### [문서] 가격 카드 가이드 — 예시를 바뀐 문구에 맞춤
-
-- 대상: src/app/component-guide/(guide)/pricing-card/page.tsx
-- 적용: 지정한 파일만 교체
-- 내용:
-    - [가격 카드 (PricingCard)](/component-guide/pricing-card): 이용권 카드 예시 금액 위 설명 삭제 · 서비스 카드 예시 이름 · 안내 문구 · 평가모형 순서 갱신(보조 설명 삭제) · 큰 안내 예시 라벨 삭제 · '협약 체결 후 이용'으로, 큰 안내는 지금 서비스 화면에서 쓰지 않는다는 설명 추가
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cfa448c5cdcef256acd3729aee8cc6883a4fb1ff)
 
 # 작업: 메인 홈 — 키보드로 섹션 이동
 
@@ -199,6 +171,34 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [자동저장](/corp/technology-evaluation/ktrs-fm/additional-company-info/autosave)
 - 함께 작업: 위 토큰 카드와 한 번에 적용(새 토큰이 없으면 폭이 적용되지 않음)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8ee95ebbda62bef316ba6cdbef5516d5926662ee)
+
+# 작업: 컴포넌트 가이드 문서 갱신
+
+## [덮어쓰기]
+
+### [문서] 헤더 가이드 — GNB 강조선 hover 모션 안내
+
+- 대상: src/app/component-guide/(guide)/header/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용:
+    - [헤더 (Header)](/component-guide/header): 현재 위치 표시 표의 GNB 행에 hover · 포커스 · 하위 메뉴 열림 모션 설명 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e65e26ab844ead54281781f60ffde81b74b87021)
+
+### [문서] 기준 선택 검색 가이드 — 오류 칸 모양 안내
+
+- 대상: src/app/component-guide/(guide)/select-search-form/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용:
+    - [기준 선택 검색 (SelectSearchForm)](/component-guide/select-search-form): 상태 표의 빈 값 오류 · 형식 오류에 오류 칸(빨간 테두리 · 연한 빨간 면) 설명 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ff6a2405277d38be0fd580f4eb4deee16d372253)
+
+### [문서] 가격 카드 가이드 — 예시를 바뀐 문구에 맞춤
+
+- 대상: src/app/component-guide/(guide)/pricing-card/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용:
+    - [가격 카드 (PricingCard)](/component-guide/pricing-card): 이용권 카드 예시 금액 위 설명 삭제 · 서비스 카드 예시 이름 · 안내 문구 · 평가모형 순서 갱신(보조 설명 삭제) · 큰 안내 예시 라벨 삭제 · '협약 체결 후 이용'으로, 큰 안내는 지금 서비스 화면에서 쓰지 않는다는 설명 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cfa448c5cdcef256acd3729aee8cc6883a4fb1ff)
 
 ### [문서] 토스트 가이드 — 최대 폭 안내
 
