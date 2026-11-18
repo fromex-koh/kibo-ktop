@@ -9,9 +9,16 @@ type PageTitleBarProps = {
     title: ReactNode
     badge?: ReactNode
     breadcrumb?: ReactNode
+    /**
+     * 제목 크기. lg = 48(모바일 38, 기본) · sm = 26 — 바로 아래 큰 히어로 제목이 화면의 주인공인 화면(플랫폼 소개)에서
+     * 제목을 위치 안내 정도로 낮출 때 쓴다.
+     */
+    size?: 'lg' | 'sm'
 } & Omit<ComponentPropsWithoutRef<'header'>, 'title'>
 
-const PageTitleBar = ({title, badge, breadcrumb, className, ...props}: PageTitleBarProps) => (
+const TITLE_SIZE_CLASS = {lg: 'typo-display-l-bold', sm: 'typo-h3-bold'} as const
+
+const PageTitleBar = ({title, badge, breadcrumb, size = 'lg', className, ...props}: PageTitleBarProps) => (
     <header
         data-slot="page-title-bar"
         className={cn(
@@ -30,7 +37,7 @@ const PageTitleBar = ({title, badge, breadcrumb, className, ...props}: PageTitle
         <div data-slot="page-title-bar-heading" className="flex flex-col-reverse items-start gap-2 md:block">
             {/* break-keep — 좁은 화면에서 낱말 가운데가 아니라 낱말 사이에서만 줄이 바뀐다
                 ("혁신성장역량지수 (일반)"이 "(일 / 반)"으로 쪼개지지 않고 괄호째 다음 줄로 내려간다). */}
-            <h1 className="typo-display-l-bold text-foreground break-keep md:inline">{title}</h1>
+            <h1 className={cn(TITLE_SIZE_CLASS[size], 'text-foreground break-keep md:inline')}>{title}</h1>
             {/* align-top + mt-3 — 시안은 뱃지 윗변이 제목 글자 윗변에 맞는다(제목 줄 상자 위에서 12).
                 가운데 정렬로 두면 제목 줄 높이가 커서 뱃지가 글자보다 아래로 내려앉는다. */}
             {badge ? <span className="shrink-0 md:mt-3 md:ml-2 md:inline-block md:align-top">{badge}</span> : null}
