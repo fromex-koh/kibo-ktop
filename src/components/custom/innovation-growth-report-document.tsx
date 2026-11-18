@@ -87,7 +87,7 @@ import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 // K-BIGx 기업혁신성장 보고서 — 새 창으로 여는 웹 보고서(진단브리핑 · 구성 항목 탭).
 // 조회 화면의 [K-BIGx 보고서 출력] → 보고서 생성 모달 [보고서 생성] → 조회횟수 차감안내 모달 [이용권 사용]을 거쳐 열린다.
 //
-// 짜임(위에서 아래로): 남색 머리(배지 · 제목 · 기업명 | 발급일 · [보고서 다운로드]) → 구성 항목 탭 → 진단브리핑
+// 짜임(위에서 아래로): 남색 머리(배지 · 제목 · 기업명 | 발급일 · [인쇄 · 다운로드]) → 구성 항목 탭 → 진단브리핑
 //   기업 정보(표) → 기술혁신정보(보유기술 도넛 · 관련 기업/특허 현황 · R&D 이슈 워드클라우드 · 정부 R&D 사업 현황)
 //   → 혁신성장역량지수(점수 게이지 · 동일업종 상위 %) → 신용/재무 현황(신용등급 게이지 · 재무비율진단 · 부문별 비교 레이더 ·
 //   최근 3개년 재무 표 + 묶음 막대) → 활동성 정보(분기별 종업원수 선 · 인당 매출액 막대).
@@ -229,7 +229,7 @@ type InnovationGrowthReportDocumentProps = {
     /** 차감 없이 열린 보고서(?from=free · 자사조회 · 기관회원). [퍼블리싱 확인용] PUBLISHING_ALWAYS_SHOW_CREATED_TOAST 가
      *  켜져 있어도 차감 알림을 막는다 — 그 상수를 지우면 없어도 된다. */
     isFreeReport?: boolean
-    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH). 주면 [보고서 다운로드]가 보고서 내용 선택 모달을 열고, 모달의 [보고서 미리보기]가 인쇄본을 새 탭으로 연다. 없으면 동작 없는 버튼이다. */
+    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH). 주면 [인쇄 · 다운로드]가 보고서 내용 선택 모달을 열고, 모달의 [보고서 미리보기]가 인쇄본을 새 탭으로 연다. 없으면 동작 없는 버튼이다. */
     printPath?: string
 }
 
@@ -270,7 +270,7 @@ const ReportDocumentBody = ({
     pcViewParams.delete(INNOVATION_REPORT_CREATED_QUERY)
     const pcViewHref = `${pathname}?${pcViewParams.toString()}`
     // 보고서 내용 선택 [보고서 미리보기] — 고른 장만 담은 보고서 문서 화면(report-print)을 새 탭으로 연다. 사용자는 그 화면의
-    // [PDF 다운로드]로 받는다. 문서 화면은 이 화면을 찍지 않고 같은 보고서(reportId)를 다시 조회해 고른 장만 그린다.
+    // [PDF 다운로드]로 받거나 [인쇄하기]로 인쇄한다. 문서 화면은 이 화면을 찍지 않고 같은 보고서(reportId)를 다시 조회해 고른 장만 그린다.
     // ?case= · ?empty= 는 퍼블리싱 확인용(열람 케이스 · 값 모양)이라 문서 화면에도 그대로 넘긴다(연동 후 지운다).
     const printSections = (sections: PrintOutputSectionId[]) => {
         if (!printPath) return
@@ -414,9 +414,9 @@ const ReportDocumentBody = ({
                                         </p>
                                     </div>
                                 </div>
-                                {/* 버튼은 인쇄물에서 사라진다(종이에서는 누를 수 없다). 모바일(768 미만)은 진단브리핑만 보이므로 [보고서 다운로드] 옆에
+                                {/* 버튼은 인쇄물에서 사라진다(종이에서는 누를 수 없다). 모바일(768 미만)은 진단브리핑만 보이므로 [인쇄 · 다운로드] 옆에
                                     [더보기]를 함께 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
-                                    [보고서 다운로드] → 보고서 내용 선택 모달 → [보고서 미리보기] → 고른 장만 담은 보고서 문서를 새 탭에서 연다 → 그 화면의 [PDF 다운로드]로 받는다
+                                    [인쇄 · 다운로드] → 보고서 내용 선택 모달 → [보고서 미리보기] → 고른 장만 담은 보고서 문서를 새 탭에서 연다 → 그 화면의 [PDF 다운로드] · [인쇄하기]
                                     (printSections). 인쇄본 주소(printPath)를 넘기지 않으면 동작 없는 버튼이다. */}
                                 <div className="flex shrink-0 flex-wrap gap-2 md:self-center print:hidden">
                                     {printPath ? (
@@ -1597,12 +1597,13 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                             </div>
                         </div>
                     </div>
-                    {/* 버튼 자리 — 모바일은 [보고서 다운로드] · [더보기], 그 위는 [보고서 다운로드]. */}
+                    {/* 버튼 자리 — 모바일은 [인쇄 · 다운로드] · [더보기], 그 위는 [인쇄 · 다운로드].
+                        폭은 실제 버튼에 맞춘다(w-42 = 168 · w-29 = 116) — 버튼 글자가 바뀌면 같이 고친다. */}
                     <div className="flex shrink-0 gap-2 md:self-center">
-                        <Skeleton className="bg-tab-pill-active-foreground/20 h-control-h-md w-36 rounded-sm" />
+                        <Skeleton className="bg-tab-pill-active-foreground/20 h-control-h-md w-42 rounded-sm" />
                         <Skeleton
                             className={cn(
-                                'bg-tab-pill-active-foreground/20 h-control-h-md w-24 rounded-sm md:hidden',
+                                'bg-tab-pill-active-foreground/20 h-control-h-md w-29 rounded-sm md:hidden',
                                 isPcOnlyTab && 'hidden',
                             )}
                         />
