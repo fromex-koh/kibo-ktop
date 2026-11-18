@@ -1,7 +1,5 @@
 import type {Metadata} from 'next'
 import {PlatformIntro} from '@/components/custom/platform-intro'
-// 이 화면 전용 CSS — 상단 등장 연출(PB-18: 화면 CSS 는 그 화면의 page.tsx 에서 import).
-import '@/styles/platform-intro.css'
 
 export const metadata: Metadata = {title: '플랫폼 소개'}
 
