@@ -18,6 +18,7 @@ const ROUNDED_CLASS: Record<keyof typeof tokens.radius, string> = {
     '2xs': 'rounded-2xs',
     xs: 'rounded-xs',
     sm: 'rounded-sm',
+    paper: 'rounded-paper',
     md: 'rounded-md',
     lg: 'rounded-lg',
     xl: 'rounded-xl',
@@ -113,6 +114,7 @@ const RadiusGuidePage = () => (
                         않습니다.
                     </li>
                     <li>
+                        <code>rounded-paper</code>(10)는 종이처럼 보이는 그림(K-BIGx 보고서 표지) 전용입니다.{' '}
                         <code>rounded-glass</code>(32)는 히어로 띠 위 반투명 유리 카드 전용입니다(K-BIGx 보고서 소개) —
                         24 와 40 사이 값이라 쓰임새로 이름을 붙였습니다.
                     </li>

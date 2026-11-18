@@ -19,8 +19,12 @@ export type MotionPreviewKind =
     | 'pop'
     | 'label'
     | 'draw'
-    | 'drift'
-    | 'marquee'
+    | 'orbit'
+    | 'float'
+    | 'reveal'
+    | 'skeleton'
+    | 'combine'
+    | 'spread'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -78,6 +82,84 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
             </span>
         )
     }
+    if (kind === 'orbit') {
+        // 궤도가 돌고 칸은 반대로 돌아 글자가 똑바로 남는 실제 조합(플랫폼 소개 히어로).
+        return (
+            <span data-paused={isPaused} className={`animate-orbit-spin relative block size-12 ${PAUSABLE}`}>
+                <span className="border-subtle-2 absolute inset-2 rounded-full border border-dashed" />
+                <span
+                    data-paused={isPaused}
+                    className={`animate-orbit-counter bg-primary typo-micro-bold text-primary-foreground absolute top-0 left-0 grid size-4 place-items-center rounded-xs ${PAUSABLE}`}
+                >
+                    A
+                </span>
+            </span>
+        )
+    }
+    if (kind === 'float') {
+        // 카드가 8px 떠올랐다 내려오는 실제 움직임(플랫폼 소개 히어로 카드 묶음).
+        return (
+            <span
+                data-paused={isPaused}
+                className={`animate-platform-float bg-card border-subtle-2 block h-8 w-16 rounded-sm border shadow-sm ${PAUSABLE}`}
+            />
+        )
+    }
+    if (kind === 'reveal') {
+        // 20px 아래에서 떠오르며 나타나는 실제 움직임(플랫폼 소개 순서대로 나타나기).
+        return (
+            <span className="animate-platform-reveal bg-primary block h-8 w-16 rounded-sm motion-reduce:animate-none" />
+        )
+    }
+    if (kind === 'skeleton') {
+        // 회색 자리 위로 빛 띠가 지나가는 실제 조합(보고서 미리보기 불러오는 중).
+        return (
+            <span className="bg-muted relative block h-10 w-24 overflow-hidden rounded-sm">
+                <span
+                    data-paused={isPaused}
+                    className={`animate-platform-skeleton via-skeleton-shine absolute inset-0 bg-linear-100 from-transparent from-30% to-transparent to-70% bg-size-[200%_100%] ${PAUSABLE}`}
+                />
+            </span>
+        )
+    }
+    if (kind === 'combine') {
+        // + 원이 뛰고 화살표 선이 그려진 뒤 화살촉이 나타나는 실제 조합(투자모형 결합평가).
+        return (
+            <svg aria-hidden="true" viewBox="0 0 64 40" className="h-10 w-16 overflow-visible">
+                <g className="stroke-foreground-subtle fill-none" strokeWidth={1.8} strokeLinecap="round">
+                    <path
+                        d="M32 12V6H6"
+                        pathLength={1}
+                        data-paused={isPaused}
+                        className={`animate-platform-combine-line ${PAUSABLE}`}
+                    />
+                    <path
+                        d="M10 2L6 6L10 10"
+                        data-paused={isPaused}
+                        className={`animate-platform-combine-head-left ${PAUSABLE}`}
+                    />
+                </g>
+                <circle
+                    cx={32}
+                    cy={24}
+                    r={9}
+                    data-paused={isPaused}
+                    className={`animate-platform-combine-core fill-foreground origin-center transform-fill ${PAUSABLE}`}
+                />
+            </svg>
+        )
+    }
+    if (kind === 'spread') {
+        // 삼각형 면이 가운데에서 퍼지는 실제 움직임(특허평가 히어로 방사형 차트).
+        return (
+            <svg aria-hidden="true" viewBox="0 0 40 40" className="size-12">
+                <polygon
+                    points="20,4 4,34 36,34"
+                    className="fill-primary/30 stroke-primary animate-platform-radar-spread origin-center [--platform-spread-delay:0s] transform-fill motion-reduce:animate-none"
+                />
+            </svg>
+        )
+    }
     if (kind === 'label') {
         // 막대(wipe-right)가 다 자란 뒤 값 글자가 나타나는 실제 조합.
         return (
@@ -97,51 +179,24 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
             </span>
         )
     }
-    if (kind === 'marquee') {
-        // 칩 두 벌을 이어 붙여 왼쪽으로 흐르는 실제 조합(-50% 이동이면 처음 모습과 같아진다).
-        return (
-            <span className="block w-24 overflow-hidden">
-                <span data-paused={isPaused} className={`animate-marquee flex w-max gap-1 ${PAUSABLE}`}>
-                    {['A', 'B', 'C', 'A', 'B', 'C'].map((label, index) => (
-                        <span
-                            key={`${label}-${index}`}
-                            className="border-navy-200 typo-caption-bold text-navy-600 bg-blue-10 rounded-xs border px-2 py-1"
-                        >
-                            {label}
-                        </span>
-                    ))}
-                </span>
-            </span>
-        )
-    }
-    if (kind === 'drift') {
-        // 번진 원이 천천히 떠다니는 실제 조합(옅은 남색 띠 위 radial 원). 끝없이 오가므로 정지/재생 버튼이 붙는다.
-        return (
-            <span className="bg-navy-100 relative isolate block h-12 w-24 overflow-hidden rounded-md">
-                <span
-                    data-paused={isPaused}
-                    className={`animate-ambient-drift-a absolute -top-4 -left-4 size-16 rounded-full bg-radial from-blue-200 to-transparent to-70% ${PAUSABLE}`}
-                />
-                <span
-                    data-paused={isPaused}
-                    className={`animate-ambient-drift-b absolute -right-4 -bottom-4 size-16 rounded-full bg-radial from-purple-200 to-transparent to-70% ${PAUSABLE}`}
-                />
-            </span>
-        )
-    }
     if (kind === 'draw') {
-        // 원 그래프 호가 12시부터 시계 방향으로 그려지는 실제 조합(pathLength 1 · dasharray "1 2").
+        // K-BIGx 히어로 반원 게이지 — 값 호가 0 에서 74% 까지 올라가는 실제 조합(pathLength 100 · dasharray "74 100").
         return (
-            <svg aria-hidden="true" viewBox="0 0 48 48" className="size-12">
-                <circle cx={24} cy={24} r={18} strokeWidth={6} className="stroke-gauge-track fill-none" />
+            <svg aria-hidden="true" viewBox="0 0 200 108" className="w-16">
                 <path
-                    d="M 24 6 A 18 18 0 1 1 6 24"
-                    strokeWidth={6}
+                    d="M16 100 A84 84 0 0 1 184 100"
+                    strokeWidth={18}
                     strokeLinecap="round"
-                    pathLength={1}
-                    strokeDasharray="1 2"
+                    className="stroke-platform-bigx-gauge-track fill-none"
+                />
+                <path
+                    d="M16 100 A84 84 0 0 1 184 100"
+                    pathLength={100}
+                    strokeWidth={18}
+                    strokeLinecap="round"
+                    strokeDasharray="74 100"
                     data-paused={isPaused}
-                    className={`stroke-primary animate-chart-draw fill-none ${PAUSABLE}`}
+                    className={`stroke-service-hero-navy-emphasis animate-platform-gauge fill-none ${PAUSABLE}`}
                 />
             </svg>
         )

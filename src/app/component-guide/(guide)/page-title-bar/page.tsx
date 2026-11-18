@@ -67,6 +67,13 @@ const PROPS_ITEMS = [
         'undefined',
         'ReactNode',
     ],
+    [
+        'PageTitleBar',
+        'size',
+        "제목 크기입니다. 'sm'(26)은 바로 아래 큰 히어로 제목이 있는 화면(플랫폼 소개)에서 제목을 위치 안내 정도로 낮출 때 씁니다.",
+        "'lg'",
+        "'lg' | 'sm'",
+    ],
     ['PageTitleBar', 'className', '최상위 header 요소에 덧붙일 클래스입니다.', 'undefined', 'string'],
     [
         'PageTitleBar',
