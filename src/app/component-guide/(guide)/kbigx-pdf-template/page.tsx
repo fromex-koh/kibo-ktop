@@ -242,7 +242,7 @@ const KBX_PART_ROWS = [
         key: 'preparing',
         cells: [
             <code key="p">KbigxPrintPreparing</code>,
-            '준비 안내 — 주소에 ?print=1 이 붙은 바로 인쇄 흐름에서만 나옵니다(서비스 흐름 [보고서 미리보기] → 문서 화면 → [PDF 다운로드]에서는 쓰지 않음). 차트가 그려지고 인쇄 대화상자가 뜰 때까지 LoadingState 로 화면을 덮고, 인쇄물에는 나오지 않습니다. loading.tsx 는 두지 않습니다(스트리밍 빈 표가 남음).',
+            '준비 안내 — 주소에 ?print=1 이 붙은 바로 인쇄 흐름에서만 나옵니다(서비스 흐름 [보고서 미리보기] → 문서 화면 → [인쇄하기] · [PDF 다운로드]에서는 쓰지 않음). 차트가 그려지고 인쇄 대화상자가 뜰 때까지 LoadingState 로 화면을 덮고, 인쇄물에는 나오지 않습니다. loading.tsx 는 두지 않습니다(스트리밍 빈 표가 남음).',
         ],
     },
     {
@@ -551,6 +551,7 @@ const KBX_CODE = `// 보고서 문서를 .kbigx-print 상자로 감싼다 — �
   <ReportPrintShell
     title="K-BIGx 기업혁신성장 보고서"
     primaryAction="pdf-download"
+    secondaryAction="print"
     pdfFileName="K-BIGx 기업혁신성장 보고서_프롬엑스테크"
   >
     <ReportSheet page={3} total={31}>
@@ -574,7 +575,7 @@ const KbigxPdfTemplateGuidePage = () => (
                     </h2>
                     <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>
-                            문서 틀(도구 막대 · 용지 · [PDF 다운로드])은{' '}
+                            문서 틀(도구 막대 · 용지 · [인쇄하기] · [PDF 다운로드])은{' '}
                             <Link href="/component-guide/report-shell" className={LINK_CLASS}>
                                 리포트 공통
                             </Link>{' '}

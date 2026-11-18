@@ -25,8 +25,8 @@ const PART_ROWS = [
         key: 'shell',
         cells: [
             <code key="p">ReportPrintShell · ReportSheet</code>,
-            '도구 막대 + A4 용지. 용지는 1360px 폭으로 그려 화면 폭에 맞춰 줄입니다. 주된 버튼은 [인쇄하기](기본) 또는 [PDF 다운로드](primaryAction="pdf-download" — 쪽들을 PDF 한 파일로 바로 받음)입니다. ?print=1 이면 다 그린 뒤 인쇄 대화상자를 엽니다.',
-            '특허평가 결과 보고서([인쇄하기]) · K-BIGx 기업혁신성장 보고서([PDF 다운로드])',
+            '도구 막대 + A4 용지. 용지는 1360px 폭으로 그려 화면 폭에 맞춰 줄입니다. 주된 버튼은 [인쇄하기](기본) 또는 [PDF 다운로드](primaryAction="pdf-download" — 쪽들을 PDF 한 파일로 바로 받음)이고, 그 앞에 보조 버튼(secondaryAction)을 하나 더 둘 수 있습니다. 모바일(768 미만)은 제목 오른쪽에 [닫기]가 X 아이콘 버튼으로 붙고, 그 아래 줄에 나머지 버튼이 폭을 똑같이 나눠 갖습니다(K-BIGx 보고서는 [인쇄하기] · [PDF 다운로드] 반씩). ?print=1 이면 다 그린 뒤 인쇄 대화상자를 엽니다.',
+            '특허평가 결과 보고서([인쇄하기]) · K-BIGx 기업혁신성장 보고서([인쇄하기] · [PDF 다운로드])',
         ],
     },
     {
@@ -109,6 +109,13 @@ const PROPS_ITEMS = [
     ],
     [
         'ReportPrintShell',
+        'secondaryAction',
+        "주된 버튼 앞에 두는 보조 버튼(secondary 모양)입니다. K-BIGx 보고서는 'print' — [PDF 다운로드] 옆에 [인쇄하기]를 둡니다. PDF 를 만드는 동안에는 함께 막힙니다.",
+        '-',
+        "'print' | 'pdf-download'",
+    ],
+    [
+        'ReportPrintShell',
         'pdfFileName',
         "pdf-download 로 받을 파일 이름(확장자 제외)입니다. 없으면 title. K-BIGx 는 '보고서 이름_기업명' 입니다.",
         'title',
@@ -172,7 +179,7 @@ const ReportShellGuidePage = () => (
                             숨긴 프레임으로 엽니다.
                         </li>
                         <li>
-                            K-BIGx 웹 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기]는 고른 장만 담은
+                            K-BIGx 웹 보고서 [인쇄 · 다운로드] → 보고서 내용 선택 [보고서 미리보기]는 고른 장만 담은
                             보고서 화면을 새 탭으로 엽니다(<code>openReportTab</code> — 자동 인쇄 없음). 사용자는 그
                             화면의 [PDF 다운로드]로 받습니다.
                         </li>
@@ -245,15 +252,21 @@ const ReportShellGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        도구 막대의 [인쇄하기](K-BIGx 는 [PDF 다운로드]) · [닫기] 는{' '}
+                        도구 막대의 [인쇄하기](K-BIGx 는 [인쇄하기] · [PDF 다운로드]) · [닫기] 는{' '}
                         <code>button type=&quot;button&quot;</code>
                         이고 글자 이름이 보입니다. 함께 놓인 Printer(Download) · X 아이콘과 안내 문구의 Info 아이콘은{' '}
                         <code>aria-hidden=&quot;true&quot;</code> 로 숨깁니다[5.1.1].
                     </li>
                     <li>
-                        [PDF 다운로드]는 만드는 동안 눌리지 않고 아이콘이 도는 스피너(LoaderCircle)로, 글자가 &lsquo;PDF
-                        만드는 중…&rsquo; 으로 바뀌며 <code>aria-busy</code> 로 진행 중임을 알립니다. 만들지 못하면 도구
-                        막대 아래에 오류 문구를 <code>role=&quot;alert&quot;</code> 로 띄웁니다[7.4.2].
+                        모바일(768 미만)의 [닫기]는 제목 옆 X 아이콘 버튼이라 <code>aria-label=&quot;닫기&quot;</code>{' '}
+                        로 이름을 줍니다[5.1.1]. 태블릿 이상의 글자 버튼과 폭마다 하나만 보이고, CSS 로 순서를 바꾸지
+                        않아 읽는 순서와 화면 순서가 같습니다[7.3.1].
+                    </li>
+                    <li>
+                        [PDF 다운로드]는 만드는 동안(옆 [인쇄하기]도 함께) 눌리지 않고 아이콘이 도는
+                        스피너(LoaderCircle)로, 글자가 &lsquo;PDF 만드는 중…&rsquo; 으로 바뀌며 <code>aria-busy</code>{' '}
+                        로 진행 중임을 알립니다. 만들지 못하면 도구 막대 아래에 오류 문구를{' '}
+                        <code>role=&quot;alert&quot;</code> 로 띄웁니다[7.4.2].
                     </li>
                     <li>
                         도구 막대와 템플릿 안내는 <code>.report-toolbar</code> 로 화면에서만 보이고 인쇄물에는 빠집니다.

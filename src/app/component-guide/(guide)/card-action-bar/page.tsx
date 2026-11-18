@@ -44,7 +44,7 @@ const START_ONLY_CODE = `<CardActionBar>
   <CardActionBarStart>
     <Button variant="secondary" size="sm">
       <Download aria-hidden="true" />
-      보고서 다운로드
+      인쇄 · 다운로드
     </Button>
   </CardActionBarStart>
 </CardActionBar>`
@@ -158,7 +158,7 @@ const CardActionsGuidePage = () => (
                                 <CardActionBarStart>
                                     <Button type="button" variant="secondary" size="sm">
                                         <Download aria-hidden="true" />
-                                        보고서 다운로드
+                                        인쇄 · 다운로드
                                     </Button>
                                 </CardActionBarStart>
                             </CardActionBar>
@@ -244,7 +244,7 @@ const CardActionsGuidePage = () => (
                         순서(데스크톱과 같음)로 지나갑니다[7.3.1].
                     </li>
                     <li>
-                        같은 이름의 버튼이 카드마다 반복되면 어느 건인지 sr-only 로 덧붙입니다(예: 보고서 다운로드 뒤의
+                        같은 이름의 버튼이 카드마다 반복되면 어느 건인지 sr-only 로 덧붙입니다(예: 인쇄 · 다운로드 뒤의
                         기업명)[6.4.3].
                     </li>
                 </ul>
