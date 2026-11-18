@@ -192,21 +192,38 @@ for (const [k, v] of Object.entries(overlay)) {
     for (const mode of ['light', 'dark'])
         if (!alphaHas(v[mode])) errors.push(`overlay.${k}.${mode}="${v[mode]}" — alpha 프리미티브 없음`)
 }
+// 물든 그림자 색 'tint.<퍼센트>' — 요소가 정한 --shadow-tint 색(없으면 투명)을 그 비율로 섞는다.
+//   강조색으로 번지는 그림자(서비스 소개 도식 등)를 토큰 하나로 쓰고, 색은 사용처가 [--shadow-tint:…] 로 넘긴다.
+const SHADOW_TINT = /^tint\.(\d{1,3})$/
+const isShadowTint = (ref) => SHADOW_TINT.test(String(ref)) && Number(String(ref).split('.')[1]) <= 100
+const shadowLayers = (v) => (Array.isArray(v) ? v : [v])
+const hasShadowTint = (v) =>
+    shadowLayers(v).some((layer) => isShadowTint(layer?.color?.light) || isShadowTint(layer?.color?.dark))
 // shadow: { x,y,blur,spread(px 숫자) + color:{light,dark} alpha 참조 } → 생성기가 rem 변환·조립
+//   여러 겹이 필요하면 같은 모양의 객체를 배열로 둔다(앞쪽이 위 겹) — box-shadow 에 쉼표로 이어 붙인다.
 for (const [k, v] of Object.entries(effect.shadow ?? {})) {
-    if (!v || typeof v !== 'object') {
-        errors.push(`effect.shadow.${k} 는 { x,y,blur,spread,color } 객체여야 함`)
-        continue
-    }
-    for (const f of ['x', 'y', 'blur', 'spread'])
-        if (v[f] !== undefined && typeof v[f] !== 'number') errors.push(`effect.shadow.${k}.${f} 는 숫자(px)여야 함`)
-    if (v.y === undefined || v.blur === undefined) errors.push(`effect.shadow.${k} 는 y·blur(px) 필요`)
-    if (!v.color || typeof v.color.light !== 'string' || typeof v.color.dark !== 'string')
-        errors.push(`effect.shadow.${k}.color 는 {light,dark} 참조 필요`)
-    else
-        for (const mode of ['light', 'dark'])
-            if (!alphaHas(v.color[mode]))
-                errors.push(`effect.shadow.${k}.color.${mode}="${v.color[mode]}" — alpha 프리미티브 없음`)
+    const layers = Array.isArray(v) ? v : [v]
+    if (!layers.length) errors.push(`effect.shadow.${k} 는 겹이 하나 이상 필요`)
+    if (hasShadowTint(v) && layers.some((layer) => layer?.color?.light !== layer?.color?.dark))
+        errors.push(
+            `effect.shadow.${k} — tint 겹이 있는 그림자는 light · dark 색이 같아야 함(테마에 값 하나로 들어간다)`,
+        )
+    layers.forEach((layer, index) => {
+        const at = Array.isArray(v) ? `effect.shadow.${k}[${index}]` : `effect.shadow.${k}`
+        if (!layer || typeof layer !== 'object') {
+            errors.push(`${at} 는 { x,y,blur,spread,color } 객체여야 함`)
+            return
+        }
+        for (const f of ['x', 'y', 'blur', 'spread'])
+            if (layer[f] !== undefined && typeof layer[f] !== 'number') errors.push(`${at}.${f} 는 숫자(px)여야 함`)
+        if (layer.y === undefined || layer.blur === undefined) errors.push(`${at} 는 y·blur(px) 필요`)
+        if (!layer.color || typeof layer.color.light !== 'string' || typeof layer.color.dark !== 'string')
+            errors.push(`${at}.color 는 {light,dark} 참조 필요`)
+        else
+            for (const mode of ['light', 'dark'])
+                if (!alphaHas(layer.color[mode]) && !isShadowTint(layer.color[mode]))
+                    errors.push(`${at}.color.${mode}="${layer.color[mode]}" — alpha 프리미티브 · tint.<퍼센트> 아님`)
+    })
 }
 for (const [name, t] of Object.entries(typography)) {
     if (t.size?.mobile === undefined || t.size?.tablet === undefined || t.size?.pc === undefined)
@@ -548,8 +565,14 @@ L.push('}', '')
 const shadow = effect.shadow ?? {}
 const blur = effect.blur ?? {}
 // box-shadow 조립: 지오메트리(px→rem) + 색(primitive 참조). offset/blur/spread 도 rem 통일. [PB-03]
-const shadowCss = (v, mode) =>
-    `${toRem(v.x ?? 0)} ${toRem(v.y ?? 0)} ${toRem(v.blur ?? 0)} ${toRem(v.spread ?? 0)} ${resolveAlpha(v.color[mode])}`
+//   겹 배열이면 겹마다 조립해 쉼표로 잇는다.
+const shadowColor = (ref) =>
+    isShadowTint(ref)
+        ? `color-mix(in srgb, var(--shadow-tint, transparent) ${String(ref).split('.')[1]}%, transparent)`
+        : resolveAlpha(ref)
+const shadowLayerCss = (v, mode) =>
+    `${toRem(v.x ?? 0)} ${toRem(v.y ?? 0)} ${toRem(v.blur ?? 0)} ${toRem(v.spread ?? 0)} ${shadowColor(v.color[mode])}`
+const shadowCss = (v, mode) => (Array.isArray(v) ? v : [v]).map((layer) => shadowLayerCss(layer, mode)).join(', ')
 L.push(':root {')
 if (Object.keys(size).length) {
     L.push('  /* fixed size (명명) → size-* w-* h-* */')
@@ -647,7 +670,9 @@ L.push('}', '')
 L.push('@theme inline {')
 for (const k of Object.keys(size)) L.push(`  --spacing-${k}: var(--ds-spacing-${k});`)
 for (const k of Object.keys(radius)) L.push(`  --radius-${k}: var(--ds-radius-${k});`)
-for (const k of Object.keys(shadow)) L.push(`  --shadow-${k}: var(--ds-shadow-${k});`)
+// 물든 그림자(tint)는 값을 그대로 둔다 — var(--ds-…) 로 거치면 --shadow-tint 가 :root 에서 풀려 요소의 색을 못 받는다.
+for (const [k, v] of Object.entries(shadow))
+    L.push(`  --shadow-${k}: ${hasShadowTint(v) ? shadowCss(v, 'light') : `var(--ds-shadow-${k})`};`)
 for (const k of Object.keys(blur)) L.push(`  --blur-${k}: var(--ds-blur-${k});`)
 for (const [k, v] of Object.entries(tracking)) L.push(`  --tracking-${k}: ${toRem(v)};`)
 L.push('}', '')
