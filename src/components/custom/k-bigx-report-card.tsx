@@ -18,7 +18,7 @@ import {cn} from '@/lib/utils'
 // K-BIGx 보고서 이력 카드 — Figma "SB-FOTA-CM0-0017_마이페이지_K-BIGx 보고서 이력"(기업)·
 // "기관 - K-BIGx 보고서 이력" 조회결과 case(기관)의 리스트 한 장.
 // 기업명 / 이용권 배지 · 상세 · 버튼 하나로 이루어진다. 기관 카드에는 두 가지가 더 붙는다.
-//   · 기업명 위의 보고서 유형 배지(기업혁신성장·대량정보조회) — 유형에 따라 버튼이 [보고서 다운로드] 하나 · [엑셀 결과]·[HTML 압축파일] 둘로 갈린다.
+//   · 기업명 위의 보고서 유형 배지(기업혁신성장·대량정보조회) — 유형에 따라 버튼이 [인쇄 · 다운로드] 하나 · [엑셀 결과]·[HTML 압축파일] 둘로 갈린다.
 //   · 상세 네 번째 칸 [조회 기관] — 누가 조회했는지.
 // 두 값은 기관 데이터에만 있어, 값이 없으면(기업) 그 자리도 그리지 않는다.
 
@@ -51,7 +51,7 @@ type KBigxReportCardProps = {
     item: KBigxReportHistoryItem
     /** 대량정보조회 [엑셀 결과]·[HTML 압축파일] 이 가는 곳(결과 파일). */
     routes: Record<KBigxBulkReportAction, string>
-    /** [보고서 다운로드] 의 보고서 문서 화면 주소 — 기업 · 기관 report-print(k-bigx-print-report.ts 의 KBIGX_PRINT_*_PATH). */
+    /** [인쇄 · 다운로드] 의 보고서 문서 화면 주소 — 기업 · 기관 report-print(k-bigx-print-report.ts 의 KBIGX_PRINT_*_PATH). */
     printPath: string
 }
 
@@ -63,7 +63,7 @@ const BULK_REPORT_ACTIONS: readonly {action: KBigxBulkReportAction; label: strin
 const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
     const inquiryType = K_BIGX_REPORT_INQUIRY_TYPE[item.inquiryType]
     const reportType = item.reportType ? K_BIGX_REPORT_TYPE[item.reportType] : undefined
-    // 버튼 — 대량정보조회만 결과 파일 둘이고, 나머지(기업 카드·기업혁신성장)는 [보고서 다운로드] 하나다.
+    // 버튼 — 대량정보조회만 결과 파일 둘이고, 나머지(기업 카드·기업혁신성장)는 [인쇄 · 다운로드] 하나다.
     const isBulkReport = item.reportType === 'bulk-info'
     // 이 건에 이용권이 깎였는지만 알린다 — 수가 아니라 차감 · 미차감 두 가지다.
     const deductionLabel = item.isTicketDeducted ? TICKET_DEDUCTION_BADGE.deducted : TICKET_DEDUCTION_BADGE.notDeducted
@@ -118,7 +118,7 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
                     </dl>
                 </div>
 
-                {/* 버튼: 보조 · 아이콘 · 왼쪽(CardActionBar). 대량정보조회는 결과 파일 둘, 나머지는 [보고서 다운로드].
+                {/* 버튼: 보조 · 아이콘 · 왼쪽(CardActionBar). 대량정보조회는 결과 파일 둘, 나머지는 [인쇄 · 다운로드].
                     sr-only 기업명으로 어느 건의 버튼인지 알린다[6.4.3]. */}
                 <CardActionBar>
                     <CardActionBarStart>

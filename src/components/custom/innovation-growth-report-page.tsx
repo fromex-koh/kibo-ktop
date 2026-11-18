@@ -33,7 +33,7 @@ type InnovationReportSearchParams = Promise<Record<string, string | string[] | u
 
 type InnovationGrowthReportPageProps = {
     searchParams: InnovationReportSearchParams
-    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH) — 주면 [보고서 다운로드]가 동작한다. */
+    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH) — 주면 [인쇄 · 다운로드]가 동작한다. */
     printPath?: string
 }
 

@@ -1,7 +1,7 @@
 // 보고서 문서를 새 탭으로 연다 — 두 가지다.
 //   · openReportTab — 문서 화면만 연다. 사용자가 그 화면 도구 막대의 버튼으로 받는다.
-//     K-BIGx 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기] → 고른 내용만 담은 보고서 화면 → [PDF 다운로드].
-//   · openReportPrintTab — 열자마자 인쇄한다(?print=1). 지금은 쓰는 곳이 없다(K-BIGx 가 PDF 다운로드 흐름으로 바뀜).
+//     K-BIGx 보고서 [인쇄 · 다운로드] → 보고서 내용 선택 [보고서 미리보기] → 고른 내용만 담은 보고서 화면 → [인쇄하기] · [PDF 다운로드].
+//   · openReportPrintTab — 열자마자 인쇄한다(?print=1). 지금은 쓰는 곳이 없다(K-BIGx 는 문서 화면의 [인쇄하기] · [PDF 다운로드]로 바뀜).
 // 새 탭(?print=1)은 문서가 다 그려지면 스스로 인쇄 대화상자를 열고, 인쇄가 끝나거나 취소되면 스스로 닫힌다
 // (components/custom/report-print-shell.tsx 의 useAutoPrint). Chrome · Safari 모두 같은 방식이다.
 //

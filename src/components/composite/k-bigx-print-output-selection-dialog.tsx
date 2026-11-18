@@ -20,7 +20,7 @@ import {cn} from '@/lib/utils'
 //   · 전체선택은 항목을 모두 켜고 끈다. 일부만 골라지면 '일부'(indeterminate) 상태다.
 //   · 아무 항목도 고르지 않으면 [보고서 미리보기]가 눌리지 않는다.
 //   · 열 때마다 defaultSelected 로 되돌린다 — 지난번 미리보기 · 취소 때 고른 항목은 남기지 않는다.
-// 쓰는 곳: 웹 보고서 [보고서 다운로드](innovation-growth-report-document.tsx) · 모달 단독 확인 화면(print-output-selection).
+// 쓰는 곳: 웹 보고서 [인쇄 · 다운로드](innovation-growth-report-document.tsx) · 모달 단독 확인 화면(print-output-selection).
 
 type KbigxPrintOutputSelectionDialogProps = {
     /** 대상 요약 — 기업명 · 조회기준일 등(항목명 · 값). [프론트엔드 연동] 조회 중인 보고서 정보로 채운다. */

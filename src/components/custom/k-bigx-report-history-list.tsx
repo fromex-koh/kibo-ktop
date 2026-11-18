@@ -95,7 +95,7 @@ type KBigxReportHistoryListProps = {
 const KBigxReportHistoryList = ({items, pageSize = 10, userType = 'corp'}: KBigxReportHistoryListProps) => {
     const [page, setPage] = useState(1)
     const isMobile = useIsMobile()
-    // [보고서 다운로드] 가 여는 보고서 문서 화면 — 기업 · 기관 화면마다 다르다(웹 보고서와 같은 주소).
+    // [인쇄 · 다운로드] 가 여는 보고서 문서 화면 — 기업 · 기관 화면마다 다르다(웹 보고서와 같은 주소).
     const printPath = userType === 'org' ? KBIGX_PRINT_ORG_PATH : KBIGX_PRINT_CORP_PATH
 
     // 받은 순서를 그대로 그린다 — 정렬은 조회 조건과 함께 서버가 정한다.
