@@ -130,8 +130,9 @@ const INNOVATION_REPORT_FINANCE_FALLBACK_YEAR_COUNT = 3
 const INNOVATION_REPORT_EMERGING_EMPTY_PERIOD_COUNT = 5
 
 const INNOVATION_REPORT_BADGE = 'K-BIGx - 기업혁신성장 보고서'
-const INNOVATION_REPORT_PRINT_LABEL = '보고서 다운로드'
-// 모바일(768 미만)에서 [보고서 다운로드] 대신 보이는 버튼 — 누르면 PC 화면(모든 탭)을 새 창으로 연다.
+// 머리 버튼 이름 — 보고서 이력 카드 버튼(constants/k-bigx-report-history.ts 의 K_BIGX_REPORT_ACTION.download)과 같은 이름을 쓴다. 바꾸면 둘 다 바꾼다.
+const INNOVATION_REPORT_PRINT_LABEL = '인쇄 · 다운로드'
+// 모바일(768 미만)에서 [인쇄 · 다운로드] 옆에 함께 보이는 버튼 — 누르면 PC 화면(모든 탭)을 새 창으로 연다.
 const INNOVATION_REPORT_MORE_LABEL = '더보기'
 
 // 쿼리
