@@ -5,17 +5,20 @@ import {useEffect, useLayoutEffect, useRef, useState, type ReactNode} from 'reac
 import {Download, Info, LoaderCircle, Printer, X} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {downloadReportPdf} from '@/lib/download-report-pdf'
+import {cn} from '@/lib/utils'
 import {REPORT_AUTO_PRINT_QUERY} from '@/lib/open-report-print-tab'
 
 // 인쇄용 보고서를 감싸는 껍데기 — 위쪽 도구 막대와 용지를 놓는 보고서 영역으로 이루어진다.
 // 보고서 화면이 모두 같은 껍데기를 쓴다(특허평가 결과 보고서 등).
 //
-// 주소에 ?print=1 이 붙으면 문서가 다 그려진 뒤 스스로 인쇄 대화상자를 연다 — 화면의 [출력] 버튼이 이 값을 붙여 열므로
-// 미리보기 화면을 거치지 않는다. 특허평가 보고서는 숨긴 프레임으로(patent-grade-lookup.tsx), K-BIGx 보고서는 새 탭으로
-// 연다(lib/open-report-print-tab.ts — 새 탭은 인쇄가 끝나면 스스로 닫힌다). 주소를 그대로 열면 대화상자 없이 문서만 보인다.
+// 주소에 ?print=1 이 붙으면 문서가 다 그려진 뒤 스스로 인쇄 대화상자를 연다 — 미리보기 화면 없이 바로 인쇄하는 흐름이다.
+//   · 특허평가 [결과 보고서 출력] — 숨긴 프레임으로 연다(patent-grade-lookup.tsx).
+//   · K-BIGx — 지금 서비스는 쓰지 않는다(이 화면에서 [인쇄하기] · [PDF 다운로드]). 새 탭 바로 인쇄(openReportPrintTab)는 남겨 둠.
+// 주소를 그대로 열면 대화상자 없이 문서만 보인다.
 //
 // 도구 막대는 화면에서만 보이고 인쇄물에는 나오지 않는다 — .report-toolbar 규칙은 styles/report-print.css 에 있다.
 // 용지 규격(A4 비율 · 배율)도 같은 CSS 가 갖는다 — 쓰는 쪽은 .report-sheet 안에 내용만 그린다.
+// PDF 도 용지(.report-sheet)만 떠서 만든다 — 도구 막대 · 안내 줄을 고쳐도 인쇄물 · PDF 결과는 바뀌지 않는다.
 
 // 차트는 브라우저가 크기를 잰 뒤에 그려진다 — 스켈레톤이 남아 있으면 그 상태로 인쇄된다.
 // 다 그려질 때까지 짧게 기다렸다가 열고, 그래도 안 끝나면 더 기다리지 않는다(문서가 없는 화면도 있다).
@@ -24,16 +27,20 @@ const PRINT_READY_TIMEOUT_MS = 5000
 
 const CLOSE_LABEL = '닫기'
 
-// 도구 막대의 주된 버튼 — 보고서마다 고른다(primaryAction).
+// 모바일(768 미만) 버튼 — 제목 아래 줄에서 폭을 똑같이 나눠 갖는다(좌우 여백도 줄여 320 폭까지 한 줄).
+const MOBILE_TOOLBAR_BUTTON_CLASS = 'max-md:min-w-0 max-md:flex-1 max-md:px-2'
+
+// 도구 막대의 버튼 — 보고서마다 주된 버튼(primaryAction)과, 필요하면 보조 버튼(secondaryAction)을 고른다.
 //   · print(기본) — [인쇄하기] · 브라우저 인쇄 대화상자를 연다(특허평가 결과 보고서).
 //   · pdf-download — [PDF 다운로드] · 화면의 쪽들을 PDF 한 파일로 바로 내려받는다(K-BIGx 보고서). 인쇄 대화상자는 열지 않는다.
 //     브라우저에서 쪽을 그림으로 떠 만든다(lib/download-report-pdf.ts). 만드는 동안 버튼이 '만드는 중'으로 바뀌고 눌리지 않는다.
-//     [프론트엔드 연동] 서버에서 PDF 를 만들어 주게 되면 handlePrimaryAction 의 downloadReportPdf 자리를 그 다운로드로 바꾼다.
-type ReportPrintPrimaryAction = 'print' | 'pdf-download'
-const PRIMARY_ACTIONS = {
+//     [프론트엔드 연동] 서버에서 PDF 를 만들어 주게 되면 downloadPdf 안의 downloadReportPdf 자리를 그 다운로드로 바꾼다.
+// 같은 두 값을 보조 버튼(secondaryAction)에도 쓴다 — K-BIGx 보고서는 [인쇄하기](보조) + [PDF 다운로드](주된).
+type ReportPrintAction = 'print' | 'pdf-download'
+const REPORT_ACTIONS = {
     print: {label: '인쇄하기', icon: Printer},
     'pdf-download': {label: 'PDF 다운로드', icon: Download},
-} as const satisfies Record<ReportPrintPrimaryAction, {label: string; icon: typeof Printer}>
+} as const satisfies Record<ReportPrintAction, {label: string; icon: typeof Printer}>
 const PDF_DOWNLOADING_LABEL = 'PDF 만드는 중…'
 const PDF_ERROR_MESSAGE = 'PDF 파일을 만들지 못했습니다. 잠시 뒤 다시 시도해 주세요.'
 const PDF_FILE_EXTENSION = '.pdf'
@@ -139,7 +146,9 @@ type ReportPrintShellProps = {
     /** 도구 막대 아래 안내 문구(화면에서만 보인다). 없으면 특허평가 결과 보고서 문구, null 이면 안내 줄을 뺀다. */
     notice?: string | null
     /** 도구 막대의 주된 버튼. 기본 print([인쇄하기]), K-BIGx 보고서는 pdf-download([PDF 다운로드]). */
-    primaryAction?: ReportPrintPrimaryAction
+    primaryAction?: ReportPrintAction
+    /** 주된 버튼 앞에 둘 보조 버튼(secondary 모양). K-BIGx 보고서는 print([인쇄하기]) — PDF 다운로드와 함께 바로 인쇄도 고를 수 있다. */
+    secondaryAction?: ReportPrintAction
     /** pdf-download 로 받을 파일 이름(확장자 제외). 없으면 title. [프론트엔드 연동] 보고서마다 구분되게 기업명 등을 넣는다. */
     pdfFileName?: string
 }
@@ -149,10 +158,11 @@ const ReportPrintShell = ({
     children,
     notice = DEFAULT_TEMPLATE_NOTICE,
     primaryAction = 'print',
+    secondaryAction,
     pdfFileName,
 }: ReportPrintShellProps) => {
     const stageRef = useSheetScale()
-    const {label: primaryLabel, icon: PrimaryIcon} = PRIMARY_ACTIONS[primaryAction]
+    const {label: primaryLabel, icon: PrimaryIcon} = REPORT_ACTIONS[primaryAction]
     const [isPdfDownloading, setIsPdfDownloading] = useState(false)
     const [pdfError, setPdfError] = useState('')
 
@@ -168,7 +178,9 @@ const ReportPrintShell = ({
         }
     }
 
-    const handlePrimaryAction = () => void (primaryAction === 'pdf-download' ? downloadPdf() : printWhenFitted())
+    const runAction = (action: ReportPrintAction) =>
+        void (action === 'pdf-download' ? downloadPdf() : printWhenFitted())
+    const secondary = secondaryAction ? REPORT_ACTIONS[secondaryAction] : undefined
 
     usePrintFit()
     useAutoPrint()
@@ -177,19 +189,46 @@ const ReportPrintShell = ({
         <div className="bg-background flex min-h-dvh w-full flex-col">
             {/* 도구 막대 — 화면 위에 고정해 긴 문서에서도 주된 버튼([인쇄하기] · [PDF 다운로드])이 늘 보인다. header · main 은 화면 낭독기의 영역 이동용 랜드마크다. */}
             <header className="report-toolbar border-subtle-3 bg-card sticky top-0 z-10 border-b">
-                <div className="max-w-content mx-auto flex items-center justify-between gap-4 px-6 py-3">
-                    <div className="typo-body-xl-bold text-foreground min-w-0 truncate">{title}</div>
-                    {/* 주된 버튼이 이 화면의 주된 행동이라 primary 로 둔다. [닫기]는 보조라 tertiary 다. */}
-                    <div className="flex shrink-0 items-center gap-2">
+                {/* 버튼 배치 — 모바일(768 미만): 1줄 제목 + [닫기](X 아이콘) / 2줄 나머지 버튼을 같은 폭으로.
+                    태블릿 이상: 제목 왼쪽 · 버튼 오른쪽 한 줄([닫기]는 글자 버튼).
+                    [닫기]는 두 개를 두고 폭마다 하나만 보인다(md:hidden · max-md:hidden) — 고칠 때 둘 다 고친다. CSS 로 순서를 바꾸지 않아 읽는 순서 = 화면 순서. */}
+                <div className="max-w-content mx-auto flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 md:px-6">
+                    <div className="typo-body-xl-bold text-foreground min-w-0 flex-1 truncate">{title}</div>
+                    {/* 모바일 [닫기] — 제목(16px) 옆이라 아이콘을 20px(icon-sm)로 둔다. */}
+                    <Button
+                        type="button"
+                        variant="plain"
+                        size="icon-sm"
+                        className="shrink-0 md:hidden"
+                        aria-label={CLOSE_LABEL}
+                        onClick={() => window.close()}
+                    >
+                        <X aria-hidden="true" />
+                    </Button>
+                    {/* 주된 버튼이 이 화면의 주된 행동이라 primary 로 둔다. 보조 버튼은 secondary, [닫기]는 tertiary 다. */}
+                    <div className="flex w-full items-center gap-2 md:w-auto md:shrink-0">
+                        {secondaryAction && secondary ? (
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="md"
+                                className={cn('gap-1', MOBILE_TOOLBAR_BUTTON_CLASS)}
+                                disabled={isPdfDownloading}
+                                onClick={() => runAction(secondaryAction)}
+                            >
+                                <secondary.icon aria-hidden="true" />
+                                {secondary.label}
+                            </Button>
+                        ) : null}
                         {/* PDF 를 만드는 동안(쪽 수에 따라 몇 초) 버튼을 막고 아이콘을 도는 스피너로, 글자를 '만드는 중'으로 바꾼다
                             — aria-busy 로 진행 중임을 알린다(버튼 가이드의 '진행 중' 상태와 같다). */}
                         <Button
                             type="button"
                             size="md"
-                            className="gap-1"
+                            className={cn('gap-1', MOBILE_TOOLBAR_BUTTON_CLASS)}
                             disabled={isPdfDownloading}
                             aria-busy={isPdfDownloading || undefined}
-                            onClick={handlePrimaryAction}
+                            onClick={() => runAction(primaryAction)}
                         >
                             {isPdfDownloading ? (
                                 <LoaderCircle aria-hidden="true" className="animate-spin" />
@@ -202,7 +241,7 @@ const ReportPrintShell = ({
                             type="button"
                             variant="tertiary"
                             size="md"
-                            className="bg-card gap-1"
+                            className="bg-card gap-1 max-md:hidden"
                             onClick={() => window.close()}
                         >
                             <X aria-hidden="true" />
@@ -217,7 +256,7 @@ const ReportPrintShell = ({
                 <div className="report-toolbar border-subtle-3 bg-background border-b">
                     <p
                         role="alert"
-                        className="max-w-content typo-body-l-medium text-error mx-auto px-6 py-3 break-keep"
+                        className="max-w-content typo-body-l-medium text-error mx-auto px-4 py-3 break-keep md:px-6"
                     >
                         {pdfError}
                     </p>
@@ -227,7 +266,7 @@ const ReportPrintShell = ({
             {/* 안내 — 화면에서만 보인다(.report-toolbar 규칙으로 인쇄물에서는 빠진다). */}
             {notice === null ? null : (
                 <div className="report-toolbar border-subtle-3 bg-background border-b">
-                    <p className="max-w-content typo-body-l-regular text-foreground-subtle mx-auto flex items-start gap-2 px-6 py-3 break-keep">
+                    <p className="max-w-content typo-body-l-regular text-foreground-subtle mx-auto flex items-start gap-2 px-4 py-3 break-keep md:px-6">
                         <Info aria-hidden="true" className="size-icon-sm mt-0.5 shrink-0" />
                         <span className="min-w-0">{notice}</span>
                     </p>
@@ -261,4 +300,4 @@ const ReportSheet = ({page, total, children}: {page?: number; total?: number; ch
 )
 
 export {ReportPrintShell, ReportSheet}
-export type {ReportPrintPrimaryAction, ReportPrintShellProps}
+export type {ReportPrintAction, ReportPrintShellProps}
