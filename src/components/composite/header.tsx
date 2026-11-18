@@ -679,7 +679,7 @@ const HeaderContent = ({
                         <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />
                     ) : null}
                     <div className="flex flex-wrap items-center gap-4">
-                        {(user ? MENU_SERVICE_GROUPS[userType].utilityLinks : UTILITY_LINKS).map((link) => {
+                        {(user ? MENU_SERVICE_GROUPS[userType].utilityLinks : UTILITY_LINKS[userType]).map((link) => {
                             const className = cn(
                                 'transition-colors duration-200 ease-in-out motion-reduce:transition-none',
                                 menuOpen && 'text-menu-overlay-foreground',

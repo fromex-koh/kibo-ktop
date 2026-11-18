@@ -1,5 +1,6 @@
 import Image, {type StaticImageData} from 'next/image'
 import type {ReactNode} from 'react'
+import type {UserType} from '@/constants/header-navigation'
 import patentEvaluationVisual from '@public/images/main-hero/patent-evaluation.webp'
 import techEvaluationVisual from '@public/images/main-hero/tech-evaluation.webp'
 
@@ -10,15 +11,23 @@ export type TechEvalService = {
     description: string
     tags: string[]
     image: StaticImageData
-    // "시작하기" CTA 가 이동할 화면. 목업이 없는 서비스는 '#'.
+    // "시작하기" CTA 가 이동할 화면 — buildTechEvalServices 가 userType 별 경로로 채운다.
     ctaHref: string
 }
 
 // [기술평가] 카드의 제목 — 이 항목만 CTA 경로를 화면마다 다르게 받는다. [MD-010]
 const TECHNOLOGY_EVALUATION_TITLE = '기술평가'
 
-// 목업이 없는 서비스의 CTA. [MD-010]
+// 경로를 채우기 전의 자리값 — buildTechEvalServices 가 서비스마다 실제 경로로 바꾼다. [MD-010]
 const NO_LINK = '#'
+
+// 기술평가 외 서비스의 "시작하기" 도착지 — 서비스별 플랫폼 소개 화면(/{userType}/platform/…).
+// 같은 '#' 가 나란히 놓이면 같은 곳으로 가는 링크가 겹친다(WAVE Redundant link). [MD-010]
+const PLATFORM_INTRO_SEGMENTS: Readonly<Record<string, string>> = {
+    특허평가: 'patent-evaluation',
+    'K-BIGx 보고서': 'k-bigx-report',
+    탄소중립: 'carbon-neutrality',
+}
 
 // "시작하기" CTA가 PC 롤링·모바일 정적 배치에서 공유하는 좌→우 배경 채움 효과.
 export const TECH_EVAL_CTA_FILL_CLASS =
@@ -131,8 +140,10 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
 )
 
 // [기술평가] 시작하기 CTA 는 이 메인 화면을 쓰는 경로가 갈 곳을 정한다 — 기업 홈은 기업 Tech-Index
-// 선택 화면, 기관 홈은 기관 것으로 간다. 나머지 서비스는 목업이 없어 그대로 둔다.
-export const buildTechEvalServices = (technologyEvaluationHref: string): TechEvalService[] =>
-    TECH_EVAL_SERVICES.map((service) =>
-        service.title === TECHNOLOGY_EVALUATION_TITLE ? {...service, ctaHref: technologyEvaluationHref} : service,
-    )
+// 선택 화면, 기관 홈은 기관 것으로 간다. 나머지 서비스는 해당 userType 의 플랫폼 소개 화면으로 간다.
+export const buildTechEvalServices = (technologyEvaluationHref: string, userType: UserType): TechEvalService[] =>
+    TECH_EVAL_SERVICES.map((service) => {
+        if (service.title === TECHNOLOGY_EVALUATION_TITLE) return {...service, ctaHref: technologyEvaluationHref}
+        const segment = PLATFORM_INTRO_SEGMENTS[service.title]
+        return segment ? {...service, ctaHref: `/${userType}/platform/${segment}`} : service
+    })

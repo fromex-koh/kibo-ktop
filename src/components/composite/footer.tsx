@@ -13,10 +13,11 @@ import {cn} from '@/lib/utils'
 type FooterLink = {label: string; href: string; external?: boolean}
 
 // 푸터 하단 유틸 링크. 서비스 userType이 있으면 해당 서비스 경로로 연결한다.
+// 같은 주소(#)의 링크가 나란히 있으면 WAVE 가 '중복 링크(Redundant link)'로 잡으므로 화면이 있는 링크는 실제 주소를 둔다.
 const createUtilityLinks = (userType?: UserType): (FooterLink & {emphasized?: boolean})[] => [
-    {label: '이용약관', href: '#'},
+    {label: '이용약관', href: userType ? `/${userType}/terms` : '#'},
     {label: '신용정보 활용체제', href: userType ? `/${userType}/credit-information-policy` : '#'},
-    {label: '가격정책', href: '#'},
+    {label: '가격정책', href: userType ? `/${userType}/pricing` : '#'},
     {label: '개인정보처리방침', href: userType ? `/${userType}/privacy-policy` : '#', emphasized: true},
     {label: '공지사항', href: userType ? `/${userType}/notice/announcements` : '#'},
 ]

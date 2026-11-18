@@ -6,14 +6,21 @@ import {
     TechEvalServiceVisual,
     buildTechEvalServices,
 } from '@/components/custom/tech-eval-services'
+import type {UserType} from '@/constants/header-navigation'
 import {cn} from '@/lib/utils'
 
 // 모바일 2섹션은 자동 전환 없이 네 가지 서비스를 문서 순서대로 모두 펼쳐 읽는다.
-// [기술평가] 시작하기 CTA 가 갈 곳은 PC 배치와 같이 사용처가 정한다.
-const MobileTechEvalContent = ({technologyEvaluationHref}: {technologyEvaluationHref: string}) => (
+// [기술평가] 시작하기 CTA 가 갈 곳과 나머지 서비스의 사용자 유형은 PC 배치와 같이 사용처가 정한다.
+const MobileTechEvalContent = ({
+    technologyEvaluationHref,
+    userType,
+}: {
+    technologyEvaluationHref: string
+    userType: UserType
+}) => (
     <div className="grid-layout w-full">
         <div className="col-span-4 flex min-w-0 flex-col">
-            {buildTechEvalServices(technologyEvaluationHref).map((service, index) => (
+            {buildTechEvalServices(technologyEvaluationHref, userType).map((service, index) => (
                 <article
                     key={service.title}
                     aria-labelledby={`mobile-tech-eval-title-${index}`}
