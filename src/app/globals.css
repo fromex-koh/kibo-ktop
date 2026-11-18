@@ -85,18 +85,6 @@
         }
     }
 
-    /* 호 · 선이 처음부터 끝까지 그려짐 — SVG 선(path · circle)에 pathLength={1} · strokeDasharray="1 2" 를 함께 준다.
-       선 길이를 1 로 두어 어떤 길이의 선이든 같은 키프레임으로 그린다. */
-    --animate-chart-draw: chart-draw 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    @keyframes chart-draw {
-        0% {
-            stroke-dashoffset: 1;
-        }
-        100% {
-            stroke-dashoffset: 0;
-        }
-    }
-
     /* 값 글자 — 막대가 다 자란 뒤(지연 600ms = chart-reveal.tsx 의 CHART_ANIMATION_MS) 옅게 나타난다. 지연을 바꾸면 함께 고친다. */
     --animate-chart-label: chart-label 300ms ease-out 600ms both;
     @keyframes chart-label {
@@ -189,60 +177,176 @@
         }
     }
 
-    /* 칩 줄이 왼쪽으로 끊김 없이 계속 흐름(마퀴) — 같은 목록을 여러 벌 이어 붙이고 절반(-50%)만큼 같은 속도로 옮긴 뒤 처음으로
-       돌아가 이음매가 보이지 않는다(가속 없음 — 멈췄다 다시 시작하는 느낌이 없다). 멈춤 · 동작 줄이기는 사용처가 맡는다.
-       사용처: custom/chip-marquee.tsx(네 벌 — 절반이 두 벌 길이라 넓은 화면에서도 끝 빈자리가 없음). */
-    --animate-marquee: marquee 60s linear infinite;
-    @keyframes marquee {
+    /* 플랫폼 소개 히어로 궤도 — 서비스 칸들이 K-TOP 둘레 원을 따라 40초에 한 바퀴 돈다(orbit-spin).
+       칸 자신은 같은 속도로 반대로 돌려(orbit-counter) 글자가 늘 똑바로 보인다. rotate 프로퍼티를 써서 자리 잡기용
+       translate 와 겹치지 않는다. 끝없이 돌지만 느린 꾸밈이라 동작 줄이기(motion-safe) · 마우스 올림에서 멈춘다.
+       사용처: custom/platform-hub-orbit.tsx. */
+    --animate-orbit-spin: orbit-spin 40s linear infinite;
+    @keyframes orbit-spin {
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    --animate-orbit-counter: orbit-counter 40s linear infinite;
+    @keyframes orbit-counter {
+        to {
+            rotate: -360deg;
+        }
+    }
+
+    /* 플랫폼 소개 보고서 미리보기 불러오는 동안 — 빛 띠가 오른쪽 밖에서 왼쪽 밖으로 1.4초마다 지나간다.
+       동작 줄이기(motion-safe)면 멈춘다. 사용처: custom/platform-report-preview.tsx. */
+    /* K-BIGx 보고서 소개 히어로 표지 — 7초에 한 번 8px 떠오르며 1.2도 기운다(platform-float-tilt).
+       느린 꾸밈이라 동작 줄이기(motion-safe) · 마우스 올림에서 멈춘다. 사용처: custom/platform-k-bigx-report-cover.tsx. */
+    --animate-platform-float-tilt: platform-float-tilt 7s ease-in-out infinite;
+    @keyframes platform-float-tilt {
+        50% {
+            translate: 0 calc(--spacing(2) * -1); /* -8px */
+            rotate: 1.2deg;
+        }
+    }
+
+    /* K-BIGx 보고서 소개 히어로 반원 게이지 — 값 호가 0 에서 제 길이까지 차오른다(0.35초 뒤 1.6초, 한 번).
+       호는 pathLength 100 · stroke-dasharray '값 100' 이라 시작 모습만 둔다. 동작 줄이기(motion-safe)면 처음부터 다 그려져 있다.
+       시작 '0 101' + 투명 — 둥근 끝(round cap)은 길이 0 이어도 점으로 그려져, 빈칸을 100 보다 길게 둬 오른쪽 끝 점을 없애고
+       대기(0.35초) 동안 왼쪽 점이 먼저 보이지 않게 한다.
+       사용처: custom/platform-k-bigx-report-cover.tsx. */
+    --animate-platform-gauge: platform-gauge 1.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.35s both;
+    @keyframes platform-gauge {
         from {
-            translate: 0 0;
+            stroke-dasharray: 0 101;
+            opacity: 0;
+        }
+        6% {
+            opacity: 1;
+        }
+    }
+
+    --animate-platform-skeleton: platform-skeleton 1.4s ease-in-out infinite;
+    @keyframes platform-skeleton {
+        from {
+            background-position: 120% 0;
         }
         to {
-            translate: -50% 0;
+            background-position: -120% 0;
         }
     }
 
-    /* 배경 번짐 원이 천천히 떠다님(앰비언트) — 위치가 크게 옮겨 가고 크기가 커졌다 작아진다. 끝없이 오가지만
-       느리고(14 · 18초) 꾸밈 배경이라 정지 버튼 대신 동작 줄이기 설정(motion-safe)에서만 움직인다.
-       두 원을 다른 경로 · 주기로 두어 같은 박자로 움직여 보이지 않게 한다. 오른쪽 원(b)은 중심이 카드 뒤라
-       카드 밖 빈 공간(왼쪽 위)으로 더 크게 돈다. 사용처: custom/platform-k-bigx-report.tsx 히어로. */
-    --animate-ambient-drift-a: ambient-drift-a 14s ease-in-out infinite alternate;
-    @keyframes ambient-drift-a {
-        0% {
-            translate: 0 0;
-            scale: 1;
+    /* 투자모형 구성도 결합평가 — + 원이 살짝 뛰고(combine-core), 위 · 아래 화살표 선이 그려진 뒤(combine-line, pathLength 1)
+       화살촉이 각자 모형 쪽으로 6px 밀려 나타나고(combine-head-left · -right), 머물렀다 함께 사라지며 3.2초마다 반복한다.
+       느린 꾸밈이라 동작 줄이기(motion-safe)면 멈춘다. 사용처: custom/investment-model-structure-diagram.tsx. */
+    --animate-platform-combine-line: platform-combine-line 3.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+    @keyframes platform-combine-line {
+        0%,
+        8% {
+            stroke-dasharray: 1 1;
+            stroke-dashoffset: 1;
+            opacity: 1;
         }
-        33% {
-            translate: 14% 10%;
-            scale: 1.15;
+        42%,
+        80% {
+            stroke-dasharray: 1 1;
+            stroke-dashoffset: 0;
+            opacity: 1;
         }
-        66% {
-            translate: 4% 22%;
-            scale: 0.9;
-        }
+        96%,
         100% {
-            translate: 18% -6%;
-            scale: 1.1;
+            stroke-dasharray: 1 1;
+            stroke-dashoffset: 0;
+            opacity: 0;
         }
     }
 
-    --animate-ambient-drift-b: ambient-drift-b 18s ease-in-out infinite alternate;
-    @keyframes ambient-drift-b {
-        0% {
+    --animate-platform-combine-head-left: platform-combine-head-left 3.2s ease infinite;
+    @keyframes platform-combine-head-left {
+        0%,
+        38% {
+            opacity: 0;
+            translate: --spacing(1.5) 0; /* 6px */
+        }
+        48%,
+        80% {
+            opacity: 1;
             translate: 0 0;
+        }
+        96%,
+        100% {
+            opacity: 0;
+            translate: 0 0;
+        }
+    }
+
+    --animate-platform-combine-head-right: platform-combine-head-right 3.2s ease infinite;
+    @keyframes platform-combine-head-right {
+        0%,
+        38% {
+            opacity: 0;
+            translate: calc(--spacing(1.5) * -1) 0; /* -6px */
+        }
+        48%,
+        80% {
+            opacity: 1;
+            translate: 0 0;
+        }
+        96%,
+        100% {
+            opacity: 0;
+            translate: 0 0;
+        }
+    }
+
+    --animate-platform-combine-core: platform-combine-core 3.2s ease-in-out infinite;
+    @keyframes platform-combine-core {
+        0%,
+        14%,
+        100% {
             scale: 1;
         }
-        33% {
-            translate: -22% -14%;
-            scale: 1.15;
+        6% {
+            scale: 1.12;
         }
-        66% {
-            translate: -8% -30%;
-            scale: 0.9;
+    }
+}
+
+/* 요소마다 늦춤 변수(--reveal-i · --platform-float-delay)를 읽는 모션 — inline 이라 값이 유틸리티에 그대로 들어가
+   var() 가 :root 가 아니라 그 요소에서 풀린다. */
+@theme inline {
+    /* 특허평가 소개 히어로 방사형 차트 — 면이 차트 중심에서 0 → 원래 크기로 퍼지며 나타난다(1.1초, 한 번). 늦춤은 요소의
+       --platform-spread-delay(기본 0.35초 — 화면이 뜬 직후) · 면마다 다르게 준다. 사용처: custom/platform-patent-grade-card.tsx. */
+    --animate-platform-radar-spread: platform-radar-spread 1.1s cubic-bezier(0.2, 0.8, 0.2, 1)
+        var(--platform-spread-delay, 0.35s) both;
+    @keyframes platform-radar-spread {
+        from {
+            scale: 0;
+            opacity: 0;
         }
-        100% {
-            translate: -28% -4%;
-            scale: 1.1;
+        40% {
+            opacity: 1;
+        }
+        to {
+            scale: 1;
+            opacity: 1;
+        }
+    }
+
+    /* 플랫폼 소개 순서대로 나타나기 — 20px 아래에서 제자리로 떠오르며 나타난다(0.8초). 늦춤 = 요소의 --reveal-i × 0.14초(값 안에 넣는다 — 따로 animation-delay 를 주면 이 줄임말이 덮어쓴다).
+       시작 전 모습을 늦춤 동안 유지한다(backwards). 사용처: custom/platform-reveal.tsx. */
+    --animate-platform-reveal: platform-reveal 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-i, 0) * 140ms)
+        backwards;
+    @keyframes platform-reveal {
+        from {
+            opacity: 0;
+            translate: 0 --spacing(5); /* 20px */
+        }
+    }
+
+    /* 플랫폼 소개 히어로 카드 — 6초에 한 번 8px 떠올랐다 내려온다(platform-float). 카드마다 시작점을 2초씩 엇갈린다(--platform-float-delay, 값 안에 넣어 줄임말이 덮어쓰지 않게).
+       느린 꾸밈이라 동작 줄이기(motion-safe) · 마우스 올림에서 멈춘다. 사용처: custom/platform-hero-card-stack.tsx. */
+    --animate-platform-float: platform-float 6s ease-in-out var(--platform-float-delay, 0s) infinite;
+    @keyframes platform-float {
+        50% {
+            translate: 0 calc(--spacing(2) * -1); /* -8px */
         }
     }
 }
