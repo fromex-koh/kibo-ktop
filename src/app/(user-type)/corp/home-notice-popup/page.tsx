@@ -13,11 +13,7 @@ const CorpHomeNoticePopupPage = async () => {
 
     return (
         <>
-            <MainPageScreen
-                logoHref="/"
-                userType="corp"
-                technologyEvaluationHref="/corp/home/technology-evaluation-model-selection"
-            />
+            <MainPageScreen logoHref="/" technologyEvaluationHref="/corp/home/technology-evaluation-model-selection" />
             <HomeNoticePopup items={notices} />
         </>
     )

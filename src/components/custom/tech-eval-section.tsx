@@ -9,7 +9,6 @@ import Reveal from './reveal'
 import {useStackPagerActivePage} from './stack-pager'
 import {TECH_EVAL_CTA_FILL_CLASS, TechEvalServiceVisual, buildTechEvalServices} from './tech-eval-services'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
-import type {UserType} from '@/constants/header-navigation'
 
 // 목차(롤링)와 모바일 목록을 가르는 조건 — 아래 max-md:hidden · md:hidden 과 같은 값이어야 한다.
 // 값이 어긋나면 두 벌이 함께 보이거나 둘 다 사라지므로 tokens.json 의 breakpoint.md 와 한 세트로 검증한다.
@@ -44,18 +43,15 @@ const useIsDesktopWidth = () => {
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
 const TechEvalSection = ({
     technologyEvaluationHref,
-    userType,
     bottomContent,
     mobileContent,
 }: {
     // [기술평가] 시작하기 CTA 가 갈 곳 — 기업 홈·기관 홈이 각자의 Tech-Index 선택 화면을 넘긴다.
     technologyEvaluationHref: string
-    // 나머지 서비스 CTA 가 갈 플랫폼 소개 화면의 사용자 유형(기업 · 기관).
-    userType: UserType
     bottomContent?: ReactNode
     mobileContent?: ReactNode
 }) => {
-    const services = buildTechEvalServices(technologyEvaluationHref, userType)
+    const services = buildTechEvalServices(technologyEvaluationHref)
     const stackPage = useStackPagerActivePage()
     const isDesktop = useIsDesktopWidth()
     const [activeIndex, setActiveIndex] = useState(0)

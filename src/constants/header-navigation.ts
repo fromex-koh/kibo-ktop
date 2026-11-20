@@ -247,17 +247,10 @@ export const MENU_SERVICE_GROUPS: Record<UserType, MenuServiceConfig> = {
     org: createMenuServiceConfig('org'),
 }
 
-// 로그인 전 상단 유틸리티 링크 — 가격정책 · 이용안내는 로그인 후와 같은 회원유형별 화면으로 간다.
-// 같은 주소(#)의 링크가 나란히 있으면 WAVE 가 '중복 링크(Redundant link)'로 잡으므로 실제 주소를 둔다.
-// 로그인/회원가입은 로그인 안내 화면(login-guide)으로 간다 — 본문 바로가기(#main) 바로 뒤라 # 이면 같은 화면 주소로 겹친다.
-const createUtilityLinks = (userType: UserType): readonly Pick<HeaderNavLink, 'label' | 'href' | 'external'>[] => [
-    {label: '로그인/회원가입', href: `/${userType}/login-guide`},
-    {label: '가격정책', href: `/${userType}/pricing`},
-    {label: '이용안내', href: `/${userType}/guide`},
+// 로그인 전 상단 유틸리티 링크.
+export const UTILITY_LINKS: readonly Pick<HeaderNavLink, 'label' | 'href' | 'external'>[] = [
+    {label: '로그인/회원가입', href: '#'},
+    {label: '가격정책', href: '#'},
+    {label: '이용안내', href: '#'},
     KIBO_EXTERNAL_LINK,
 ]
-
-export const UTILITY_LINKS: Record<UserType, readonly Pick<HeaderNavLink, 'label' | 'href' | 'external'>[]> = {
-    corp: createUtilityLinks('corp'),
-    org: createUtilityLinks('org'),
-}
