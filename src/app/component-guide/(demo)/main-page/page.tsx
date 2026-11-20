@@ -7,6 +7,7 @@ export const metadata: Metadata = {title: '메인페이지'}
 const MainPage = () => (
     <MainPageScreen
         logoHref="/component-guide/main-page"
+        userType="corp"
         technologyEvaluationHref="/component-guide/self-diagnosis/evaluation-model"
     />
 )
