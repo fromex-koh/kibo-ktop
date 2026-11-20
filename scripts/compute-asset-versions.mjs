@@ -101,8 +101,11 @@ for (const key of Object.keys(screenVersionOverrides)) {
     }
 }
 
-const generated = assetVersions.map(({name, path}) => {
-    const resolvedVersion = applyBaselineVersion(resolvePathVersion(path), path)
+// versionOverride — 되돌리기 커밋처럼 내용 변화 없이 경로를 건드린 커밋이 새 릴리스로 오인될 때만 둔다.
+// 화면의 versionOverrides 와 같은 규칙이다: throughCommit 이후 경로가 다시 바뀌면 예외가 자동으로 풀린다.
+const generated = assetVersions.map(({name, path, versionOverride}) => {
+    const resolvedVersion =
+        resolveVersionOverride(path, versionOverride) ?? applyBaselineVersion(resolvePathVersion(path), path)
     // 최신 태그 이후 변경은 아직 이를 포함하는 태그가 없어서 '미배포'다. 릴리스 파일을 만드는
     // 이 시점에만 해당 변경을 곧 생성할 태그 버전으로 확정한다.
     const version = resolvedVersion === '미배포' ? releaseVersion : resolvedVersion
