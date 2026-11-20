@@ -402,3 +402,16 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 지정한 파일만 교체
 - 내용: 메인 페이지 데모(MainPageScreen)에 userType="corp" 추가(userType 이 필수 속성이 됨)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4ce2857d121ed96e81a451f6f6f048cb8adb1023)
+
+### [문서] 퍼블리싱 인덱스 — 원래대로 돌린 화면 · public 버전 고정
+
+- 대상:
+    - src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.json
+    - src/content/publishing-guide/types.ts
+- 적용: 지정한 파일만 교체
+- 내용:
+    - 화면 현황표: 플랫폼 소개 10개 화면을 v3.4.7 로 고정(versionOverrides) — 원래대로 돌린 화면이 이번 버전 변경으로 표시되지 않음
+    - 인계 자산 표: public 을 v3.5.0 으로 고정(새 versionOverride 항목, AssetVersionSource 타입 추가)
+    - 다음에 해당 화면 · public 이 실제로 바뀌면 고정이 자동으로 풀림
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2e0dd616f43a909ac69bc7a89c2eccc628bbb9d3)
