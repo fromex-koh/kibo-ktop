@@ -188,46 +188,6 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 함께 작업: 위 '디자인 토큰 갱신' 카드 다음에 적용(새 토큰이 없으면 폭이 적용되지 않음)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8ee95ebbda62bef316ba6cdbef5516d5926662ee)
 
-# 작업: 헤더 · 푸터 · 홈 서비스 카드 — 빈 '#' 링크를 실제 화면으로
-
-- 작업 성격: 링크 주소 연결 + 필수 속성(userType) 추가 / 검토: 보통 — 화면 모양은 그대로, MainPageScreen 등에 userType 을 넘기는 곳 확인
-
-## [Diff 확인]
-
-### [데이터] 헤더 · 푸터 · 홈 서비스 카드 링크 주소
-
-- 대상:
-    - src/constants/header-navigation.ts
-    - src/components/composite/header.tsx
-    - src/components/composite/footer.tsx
-    - src/components/custom/tech-eval-services.tsx
-    - src/components/custom/tech-eval-section.tsx
-    - src/components/custom/mobile-tech-eval-content.tsx
-    - src/components/custom/main-page-screen.tsx
-- 변경:
-    - 로그인 전 헤더 위 링크: 로그인/회원가입 → 로그인 안내 · 가격정책 · 이용안내를 회원유형별 실제 주소로(UTILITY_LINKS 를 기업 · 기관별로)
-    - 푸터: 이용약관 · 가격정책을 회원유형별 실제 주소로
-    - 홈 서비스 카드 [시작하기]: 특허평가 · K-BIGx · 탄소중립을 각 플랫폼 소개 화면으로(buildTechEvalServices 에 userType 추가)
-    - MainPageScreen · TechEvalSection · MobileTechEvalContent 가 userType 을 받아 아래로 넘김
-- 결과: 같은 '#' 링크가 나란히 있어 생기던 WAVE 'Redundant link' 경고가 사라지고 링크가 실제 화면으로 이동
-- 함께 작업: 아래 홈 page.tsx 카드와 한 번에 적용(userType 이 필수 속성이 됨)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6b7e4d64bb12b2aa2bc59eeba0ccdfd66ecb92a)
-
-### [화면] 홈 · 전체메뉴 · 공지 팝업 page.tsx — userType 넘김
-
-- 대상:
-    - src/app/(user-type)/corp/home/page.tsx
-    - src/app/(user-type)/corp/full-menu/page.tsx
-    - src/app/(user-type)/corp/home-notice-popup/page.tsx
-    - src/app/(user-type)/org/ 아래 같은 3개
-- 변경: MainPageScreen 에 userType('corp' · 'org') 추가
-- 결과: 화면 변화 없음(링크 주소만 실제 화면으로)
-- 영향 화면:
-    - [기업 홈](/corp/home)
-    - [기관 홈](/org/home)
-- 함께 작업: 위 링크 카드와 한 번에 적용
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/97550a08a672a4f557e89b620fffceb39145910f)
-
 # 작업: [현업 요청사항] K-BIGx 보고서 미리보기에 [인쇄하기] 추가 — PDF 다운로드만 되던 화면에서 바로 인쇄도 가능
 
 - 작업 성격: 버튼(동작) 추가 + 안내 문구 · 버튼 이름 변경 / 검토: 보통 — 기존 인쇄 함수를 그대로 부르는 버튼이라 새 로직은 없음, 화면 위쪽 버튼 영역의 버튼 순서 · 모바일 버튼 배치와 Chrome · Safari 인쇄를 직접 눌러 확인(이름 바꾼 카드는 문구만)
@@ -396,13 +356,6 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [CardActionBar](/component-guide/card-action-bar): 카드 예시 버튼 이름을 [인쇄 · 다운로드]로
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6b6366325829e625dc048a2bcf25939b9e5de505)
 
-### [문서] 메인 페이지 데모 — userType 전달
-
-- 대상: src/app/component-guide/(demo)/main-page/page.tsx
-- 적용: 지정한 파일만 교체
-- 내용: 메인 페이지 데모(MainPageScreen)에 userType="corp" 추가(userType 이 필수 속성이 됨)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4ce2857d121ed96e81a451f6f6f048cb8adb1023)
-
 ### [문서] 퍼블리싱 인덱스 — 원래대로 돌린 화면 · public 버전 고정
 
 - 대상:
@@ -411,7 +364,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/types.ts
 - 적용: 지정한 파일만 교체
 - 내용:
-    - 화면 현황표: 플랫폼 소개 10개 화면을 v3.4.7 로 고정(versionOverrides) — 원래대로 돌린 화면이 이번 버전 변경으로 표시되지 않음
+    - 화면 현황표: 원래대로 돌린 화면을 각자 이전 버전으로 고정(versionOverrides) — 이번 버전 변경으로 표시되지 않음
+        - 플랫폼 소개 10개 화면: v3.4.7
+        - 홈 · 전체메뉴 · 공지 팝업 6개 화면: 기업 홈 · 전체메뉴 v3.3.0, 기관 홈 v3.0.4, 기관 전체메뉴 v3.0.7, 공지 팝업 홈 v3.3.7
     - 인계 자산 표: public 을 v3.5.0 으로 고정(새 versionOverride 항목, AssetVersionSource 타입 추가)
     - 다음에 해당 화면 · public 이 실제로 바뀌면 고정이 자동으로 풀림
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2e0dd616f43a909ac69bc7a89c2eccc628bbb9d3)
+- 커밋: [플랫폼 소개 · public](https://github.com/fromex-koh/kibo-ktop/commit/2e0dd616f43a909ac69bc7a89c2eccc628bbb9d3) · [홈 · 전체메뉴 · 공지 팝업](https://github.com/fromex-koh/kibo-ktop/commit/f0cb6cfbe6747335f225b323f5e43aa643516458)
