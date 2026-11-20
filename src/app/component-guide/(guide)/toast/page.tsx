@@ -2,6 +2,7 @@
 
 import type {Metadata} from 'next'
 import Link from 'next/link'
+import tokens from '@tokens'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -222,7 +223,8 @@ const ToastGuidePage = () => (
                                 무관하게 같은 값입니다.
                             </li>
                             <li>
-                                폭은 내용만큼 늘어나고 긴 문구는 토스터 폭에서 줄바꿈합니다. 모서리는{' '}
+                                폭은 내용만큼 늘어나고, 최대 {tokens.container.toast}px(<code>container.toast</code>)을
+                                넘는 긴 문구만 줄바꿈합니다. 좁은 화면에서는 좌우 16px 을 남기고 줄어듭니다. 모서리는{' '}
                                 <code>rounded-full</code> 입니다.
                             </li>
                             <li>

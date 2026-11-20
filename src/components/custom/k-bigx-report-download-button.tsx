@@ -8,10 +8,10 @@ import {getKbigxPrintHref} from '@/content/service/k-bigx-print-report'
 import type {PrintOutputSectionId} from '@/content/service/k-bigx-print-output-selection'
 import {openReportTab} from '@/lib/open-report-print-tab'
 
-// K-BIGx 보고서 이력 카드의 [보고서 다운로드] — 웹 보고서의 [보고서 다운로드] 와 같은 흐름이다(모달 · 새 탭 · PDF 저장을 그대로 쓴다).
-//   1. [보고서 다운로드] → 보고서 내용 선택 모달에서 넣을 장을 고른다
+// K-BIGx 보고서 이력 카드의 [인쇄 · 다운로드] — 웹 보고서의 [인쇄 · 다운로드] 와 같은 흐름이다(모달 · 새 탭 · 인쇄 · PDF 저장을 그대로 쓴다).
+//   1. [인쇄 · 다운로드] → 보고서 내용 선택 모달에서 넣을 장을 고른다
 //   2. [보고서 미리보기] → 새 탭: report-print?reportId=<item.id>&sections=<고른 장>
-//   3. 새 탭이 보고서를 다시 조회해 고른 장만 그린다 → 도구 막대 [PDF 다운로드] 로 받는다
+//   3. 새 탭이 보고서를 다시 조회해 고른 장만 그린다 → 도구 막대 [인쇄하기] · [PDF 다운로드]
 //
 // [프론트엔드 연동] 보통은 이 파일을 고치지 않는다. 아래만 확인한다.
 //   · 보고서 데이터: 새 탭이 getInnovationGrowthReport(reportId) 로 받는다 → k-bigx-innovation-report.ts 머리 체크리스트대로 API 연결.

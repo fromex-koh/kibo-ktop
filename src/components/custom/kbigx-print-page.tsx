@@ -23,8 +23,8 @@ import {
 // K-BIGx 기업혁신성장 보고서 인쇄본 페이지 본문 — 기업 · 기관 report-print/page.tsx 가 함께 쓴다.
 // (/corp · /org 의 k-bigx-report/innovation-growth-report/report-print)
 //
-// 서비스 흐름: 웹 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기] → 이 주소를 새 탭으로 연다(고른 장만 ?sections=)
-//   → 고른 장만 담은 보고서 화면이 뜨고(도구 막대 아래 안내 문구), 도구 막대의 [PDF 다운로드]로 받는다.
+// 서비스 흐름: 웹 보고서 [인쇄 · 다운로드] → 보고서 내용 선택 [보고서 미리보기] → 이 주소를 새 탭으로 연다(고른 장만 ?sections=)
+//   → 고른 장만 담은 보고서 화면이 뜨고(도구 막대 아래 안내 문구), 도구 막대의 [PDF 다운로드]로 받거나 [인쇄하기]로 바로 인쇄한다.
 // ?print=1 은 예전 바로 인쇄 흐름이다 — 지금 서비스는 쓰지 않지만 남겨 둔다. 붙이면 차트가 그려지고 인쇄 대화상자가 뜰 때까지
 //   준비 안내(KbigxPrintPreparing)가 화면을 덮고, 인쇄가 끝나면 탭이 닫힌다(lib/open-report-print-tab.ts · report-print-shell.tsx).
 // report-print 폴더에 loading.tsx 는 두지 않는다 — 두면 화면을 나눠 보내며(스트리밍) 문서 끝에 빈 숨김 표(<table hidden>)가 남아 접근성 검사에 걸린다.
@@ -62,11 +62,12 @@ const KbigxPrintPage = async ({searchParams}: KbigxPrintPageProps) => {
 
     return (
         <div className="kbigx-print">
-            {/* 예전 바로 인쇄 흐름(?print=1)에서는 PDF 다운로드 안내 줄을 뺀다 — 화면을 보지 않고 바로 인쇄하기 때문이다. */}
+            {/* 예전 바로 인쇄 흐름(?print=1)에서는 안내 줄(Safari 인쇄 안내)을 뺀다 — 화면을 보지 않고 바로 인쇄하기 때문이다. */}
             <ReportPrintShell
                 title={KBIGX_PRINT_REPORT_TITLE}
                 notice={isAutoPrint ? null : KBIGX_PRINT_PDF_NOTICE}
                 primaryAction="pdf-download"
+                secondaryAction="print"
                 pdfFileName={`${KBIGX_PRINT_REPORT_TITLE}_${report.companyName}`}
             >
                 <KbigxPrintDocument report={report} pages={pages} />

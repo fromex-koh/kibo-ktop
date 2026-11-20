@@ -52,8 +52,9 @@ const KBIGX_PRINT_NOTICE =
 // 날짜 표기 — 2026-09-30 → 2026.09.30(표지 발급일).
 const formatKbigxPrintDate = (date: string) => date.replaceAll('-', '.')
 
-// 도구 막대 아래 안내 — 화면에서만 보이고 인쇄물에는 나오지 않는다. 도구 막대의 [PDF 다운로드]와 짝이다.
-const KBIGX_PRINT_PDF_NOTICE = '보고서를 인쇄하려면 PDF 파일을 다운로드한 후, 파일에서 인쇄해 주세요.'
+// 도구 막대 아래 안내(화면에서만 · 인쇄물 · PDF 에는 안 나옴) — Safari 는 직접 인쇄하면 화면이 깨질 수 있어 PDF 로 받아 인쇄하도록 안내한다.
+const KBIGX_PRINT_PDF_NOTICE =
+    'Safari 브라우저에서는 인쇄 시 화면이 깨질 수 있으므로, [PDF 다운로드] 후 PDF 문서에서 인쇄해 주세요.'
 
 // 고른 장을 받는 주소 쿼리 — ?sections=briefing,company
 const KBIGX_PRINT_SECTIONS_QUERY = 'sections'
@@ -506,7 +507,7 @@ const parseKbigxPrintSections = (value: string | string[] | undefined): readonly
     return selected.length ? selected : PRINT_OUTPUT_SELECTION_SECTIONS.map((section) => section.id)
 }
 
-// 인쇄본 주소(기업 · 기관) — 웹 보고서 [보고서 다운로드] → 보고서 내용 선택 [보고서 미리보기]가 이 주소를 새 탭으로 연다(lib/open-report-print-tab.ts).
+// 인쇄본 주소(기업 · 기관) — 웹 보고서 [인쇄 · 다운로드] → 보고서 내용 선택 [보고서 미리보기]가 이 주소를 새 탭으로 연다(lib/open-report-print-tab.ts).
 // 두 화면은 같은 인쇄본을 그린다. 각 사용자 유형의 웹 보고서 page.tsx 가 자기 주소를 printPath 로 넘긴다.
 const KBIGX_PRINT_CORP_PATH = '/corp/k-bigx-report/innovation-growth-report/report-print'
 const KBIGX_PRINT_ORG_PATH = '/org/k-bigx-report/innovation-growth-report/report-print'

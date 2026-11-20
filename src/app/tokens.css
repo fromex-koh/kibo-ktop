@@ -2827,6 +2827,7 @@
   --container-content: 75rem;
   --container-modal: 36.75rem;
   --container-report: 49.625rem;
+  --container-toast: 40rem;
 }
 
 @theme inline {

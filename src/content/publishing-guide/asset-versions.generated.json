@@ -1,9 +1,9 @@
 {
-    "version": "v3.5.4",
+    "version": "v3.5.5",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
@@ -13,17 +13,17 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
@@ -33,23 +33,23 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
             "name": "src/lib",
-            "version": "v3.5.0",
-            "isCurrent": false
+            "version": "v3.5.5",
+            "isCurrent": true
         },
         {
             "name": "src/hooks",
-            "version": "v3.4.8",
-            "isCurrent": false
+            "version": "v3.5.5",
+            "isCurrent": true
         },
         {
             "name": "src/types",
@@ -58,7 +58,7 @@
         },
         {
             "name": "tokens.json",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
@@ -68,13 +68,13 @@
         },
         {
             "name": "scripts/build-tokens.mjs",
-            "version": "v3.5.4",
+            "version": "v3.5.5",
             "isCurrent": true
         },
         {
             "name": "src/app/globals.css",
-            "version": "v3.4.7",
-            "isCurrent": false
+            "version": "v3.5.5",
+            "isCurrent": true
         },
         {
             "name": "postcss.config.mjs",

@@ -40,7 +40,7 @@ type PricingCardHeaderProps = {
     /** 카드 이름. 목록의 카드라면 id 를 주고 카드에 aria-labelledby 로 잇는다. */
     title: ReactNode
     titleId?: string
-    /** 이름 오른쪽 보조 설명(14 · 회색). 예: 기업회원 (본인 기업 조회) */
+    /** 이름 오른쪽 보조 설명(14 · 회색). 없으면 이름만 보인다. */
     detail?: ReactNode
     /** 이름 앞 그림(24) — 이름이 바로 옆에 있어 꾸밈으로 둔다. */
     iconSrc?: string
@@ -90,7 +90,7 @@ const WON_ICON_DARK_SRC = '/images/pricing/icon-won-dark.webp'
 type PricingCardPriceProps = {
     /** 금액(원). 숫자면 천 단위 쉼표와 원화 표시를 붙이고, 글자(예: 무료)면 그대로 보인다. */
     amount: number | string
-    /** 금액 위 설명. 예: 다른 기업 보고서 조회 */
+    /** 금액 위 설명. */
     label?: ReactNode
     /** 금액 아래 설명. 예: 1개월 · 부가세 포함 */
     note?: ReactNode
@@ -137,7 +137,7 @@ type PricingCardHighlightProps = PricingCardHighlightVariantProps & {
     title: ReactNode
     /** 보조 설명 — stack 은 다음 줄, inline 은 같은 줄에 잇는다. */
     description?: ReactNode
-    /** emphasis 에서 큰 글자 위 작은 이름표. 예: 파트너(기관) */
+    /** emphasis 에서 큰 글자 위 작은 이름표. */
     label?: ReactNode
     className?: string
 }

@@ -231,10 +231,39 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChangeValue): ReleaseNote
     return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
+// 작업 성격 — 초안의 '# 작업:' 바로 아래 '- 작업 성격: <성격> / 검토: <가볍게|보통|꼼꼼히> — <설명>' 한 줄.
+//   프론트엔드가 이 작업을 얼마나 자세히 볼지(단순 문구 · 띄어쓰기는 가볍게, 정책 · 동작 변경은 꼼꼼히) 먼저 알게 한다.
+const WORK_NATURE_PREFIX = '작업 성격:'
+const WORK_NATURE_PATTERN = /^작업 성격:\s*(.+?)\s*\/\s*검토:\s*(가볍게|보통|꼼꼼히)\s*(?:—\s*(.+))?$/
+const REVIEW_LEVEL_COLOR = {가볍게: 'success', 보통: 'warning', 꼼꼼히: 'error'} as const
+
+const WorkNature = ({change}: {change: string}) => {
+    const match = WORK_NATURE_PATTERN.exec(change)
+    if (!match) return <ReleaseNoteChange change={change} />
+    const [, nature, level, note] = match
+    const reviewLevel = level === '가볍게' || level === '보통' ? level : '꼼꼼히'
+    return (
+        <div className="bg-muted/40 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 rounded-sm px-3 py-2">
+            <Badge variant="solid-pastel" color={REVIEW_LEVEL_COLOR[reviewLevel]} shape="round" size="sm">
+                검토: {reviewLevel}
+            </Badge>
+            <strong className="typo-body-m-bold text-foreground break-keep">{nature}</strong>
+            {note ? <span className="typo-body-m-regular text-foreground-subtle break-keep">{note}</span> : null}
+        </div>
+    )
+}
+
 // 변경 목록 — 일반 문장 · 전달 카드를 초안에 적은 순서대로 그린다(묶음 머리는 바깥에서 이미 걸러 낸다).
 const ReleaseNoteItems = ({changes}: {changes: readonly ReleaseNoteChangeValue[]}) => (
     <ul className="flex list-none flex-col gap-2">
         {changes.map((displayChange, changeIndex) => {
+            if (typeof displayChange === 'string' && displayChange.startsWith(WORK_NATURE_PREFIX)) {
+                return (
+                    <li key={`${displayChange}-${changeIndex}`}>
+                        <WorkNature change={displayChange} />
+                    </li>
+                )
+            }
             if (typeof displayChange === 'string') {
                 return (
                     <li key={`${displayChange}-${changeIndex}`} className="flex">
@@ -283,7 +312,7 @@ const ReleaseNoteChangeList = ({changes}: {changes: readonly ReleaseNoteChangeVa
                             </Badge>
                             <h4 className="typo-title-m-bold text-foreground min-w-0 break-keep">{section.title}</h4>
                             <span className="typo-body-m-regular text-foreground-subtle">
-                                카드 {section.items.length}개
+                                카드 {section.items.filter(isReleaseNoteHandoff).length}개
                             </span>
                         </header>
                         <ReleaseNoteItems changes={section.items} />

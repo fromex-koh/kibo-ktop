@@ -107,8 +107,8 @@ const STATE_ROWS = [
             '빈 값 오류',
             '입력을 비우고 검색',
             <span key="behavior">
-                <code>emptyError</code> 문구가 입력 아래에 뜨고 포커스가 입력으로 옮겨집니다. <code>onSearch</code>는
-                호출되지 않습니다.
+                입력 칸이 오류 칸(빨간 테두리 · 연한 빨간 면)으로 바뀌고 <code>emptyError</code> 문구가 입력 아래에
+                뜹니다. 포커스가 입력으로 옮겨지며 <code>onSearch</code>는 호출되지 않습니다.
             </span>,
         ],
     },
@@ -120,7 +120,8 @@ const STATE_ROWS = [
                 값이 고른 기준의 <code>pattern</code>과 다름
             </span>,
             <span key="behavior">
-                <code>invalidError</code> 문구가 같은 자리에 뜹니다. 입력하거나 기준을 바꾸면 사라집니다.
+                같은 오류 칸 모양으로 <code>invalidError</code> 문구가 같은 자리에 뜹니다. 입력하거나 기준을 바꾸면
+                사라집니다.
             </span>,
         ],
     },

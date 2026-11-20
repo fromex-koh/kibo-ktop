@@ -27,10 +27,10 @@ import {openReportTab} from '@/lib/open-report-print-tab'
 
 <KbigxPrintOutputSelectionDialog
   summary={toPrintOutputSummary(report)}
-  // [보고서 미리보기] — 고른 장만 담은 보고서 화면(report-print)을 새 탭으로 연다. 그 화면의 [PDF 다운로드]로 받는다.
+  // [보고서 미리보기] — 고른 장만 담은 보고서 화면(report-print)을 새 탭으로 연다. 그 화면의 [PDF 다운로드] · [인쇄하기]를 쓴다.
   onPrint={(sections) => openReportTab(getKbigxPrintHref(KBIGX_PRINT_CORP_PATH, {reportId, sections}))}
 >
-  <Button type="button" variant="tertiary" size="md">보고서 다운로드</Button>
+  <Button type="button" variant="tertiary" size="md">인쇄 · 다운로드</Button>
 </KbigxPrintOutputSelectionDialog>`
 
 // 마이페이지 K-BIGx 보고서 이력 카드 — 같은 모달을 카드 버튼에 붙인다(k-bigx-report-download-button.tsx).
@@ -42,7 +42,7 @@ import {KBIGX_PRINT_CORP_PATH} from '@/content/service/k-bigx-print-report'
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
-// 보고서 이력 카드의 [보고서 다운로드] 버튼(KBigxReportDownloadButton) — 모달을 붙인 카드 버튼이다.
+// 보고서 이력 카드의 [인쇄 · 다운로드] 버튼(KBigxReportDownloadButton) — 모달을 붙인 카드 버튼이다.
 const DOWNLOAD_BUTTON_PROPS_ITEMS = [
     [
         'KBigxReportDownloadButton',
@@ -70,7 +70,7 @@ const FLOW_ROWS = [
         key: 'open',
         cells: [
             '웹 보고서 · 보고서 이력',
-            '웹 보고서 머리의 [보고서 다운로드], 또는 마이페이지 K-BIGx 보고서 이력 카드의 [보고서 다운로드]를 누르면 이 모달이 열립니다.',
+            '웹 보고서 머리의 [인쇄 · 다운로드], 또는 마이페이지 K-BIGx 보고서 이력 카드의 [인쇄 · 다운로드]를 누르면 이 모달이 열립니다.',
         ],
     },
     {
@@ -90,8 +90,8 @@ const FLOW_ROWS = [
     {
         key: 'download',
         cells: [
-            'PDF 다운로드',
-            '새 탭 위쪽 막대의 [PDF 다운로드]로 PDF 파일을 받습니다(리포트 공통 참고). 새 탭은 주소의 보고서 id(?reportId=)로 보고서를 다시 조회해 그립니다.',
+            'PDF 다운로드 · 인쇄하기',
+            '새 탭 위쪽 막대의 [PDF 다운로드]로 PDF 파일을 받거나 [인쇄하기]로 바로 인쇄합니다(Safari 는 PDF 를 받아 인쇄하도록 안내 · 리포트 공통 참고). 새 탭은 주소의 보고서 id(?reportId=)로 보고서를 다시 조회해 그립니다.',
         ],
     },
 ] as const
@@ -129,7 +129,7 @@ const PROPS_ITEMS = [
 ] as const
 
 const KbigxPrintOutputSelectionDialogGuidePage = async () => {
-    // 실제 이력 화면과 같은 목업 — 기업 첫 건([보고서 다운로드])과 기관 대량정보조회 건(결과 파일 둘)을 나란히 보여 준다.
+    // 실제 이력 화면과 같은 목업 — 기업 첫 건([인쇄 · 다운로드])과 기관 대량정보조회 건(결과 파일 둘)을 나란히 보여 준다.
     const [historyItem] = await getKBigxReportHistory()
     // 기관 이력 중 대량정보조회 건 — 결과 파일 버튼 둘을 보여 준다.
     const orgBulkItem = (await getOrgKBigxReportHistory()).find((item) => item.reportType === 'bulk-info')
@@ -137,7 +137,7 @@ const KbigxPrintOutputSelectionDialogGuidePage = async () => {
     return (
         <GuidePageShell
             title="보고서 내용 선택 (KbigxPrintOutputSelectionDialog)"
-            description="K-BIGx 웹 보고서와 마이페이지 K-BIGx 보고서 이력 카드의 [보고서 다운로드]에서 여는 모달입니다. 한 부의 보고서에 넣을 내용을 고르고 미리보기를 엽니다."
+            description="K-BIGx 웹 보고서와 마이페이지 K-BIGx 보고서 이력 카드의 [인쇄 · 다운로드]에서 여는 모달입니다. 한 부의 보고서에 넣을 내용을 고르고 미리보기를 엽니다."
         >
             <BaseCard>
                 <section aria-labelledby="print-select-basic" className="flex flex-col gap-6">
@@ -156,7 +156,7 @@ const KbigxPrintOutputSelectionDialogGuidePage = async () => {
                             defaultSelected={MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED}
                         >
                             <Button type="button" variant="tertiary" size="md">
-                                보고서 다운로드
+                                인쇄 · 다운로드
                             </Button>
                         </KbigxPrintOutputSelectionDialog>
                     </div>
@@ -175,7 +175,7 @@ const KbigxPrintOutputSelectionDialogGuidePage = async () => {
                             모달을 엽니다. 모달 요약은 카드의 기업명 · 조회일시의 날짜(조회기준일)이고, 미리보기는 카드
                             id 로 보고서를 다시 조회합니다. 카드 값을 보고서로 넘기지 않으므로 카드와 PDF 의 같은 정보는
                             보고서 API 가 맞춰 내려 줍니다. 버튼은 기업 · 기관 모두 보조(secondary) · 아이콘 ·
-                            왼쪽입니다 (CardActionBar). 기관의 대량정보조회 건은 [보고서 다운로드] 대신 결과 파일 버튼
+                            왼쪽입니다 (CardActionBar). 기관의 대량정보조회 건은 [인쇄 · 다운로드] 대신 결과 파일 버튼
                             둘입니다.
                         </p>
                     </div>
@@ -213,7 +213,7 @@ const KbigxPrintOutputSelectionDialogGuidePage = async () => {
                         </div>
                     ) : null}
                     <p className="typo-body-l-regular text-label-foreground">
-                        위 카드의 [보고서 다운로드]는 실제 화면과 같이 모달 → [보고서 미리보기] → 새 탭 보고서로
+                        위 카드의 [인쇄 · 다운로드]는 실제 화면과 같이 모달 → [보고서 미리보기] → 새 탭 보고서로
                         이어집니다.
                     </p>
                     <CodeBlock code={HISTORY_USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -228,7 +228,7 @@ const KbigxPrintOutputSelectionDialogGuidePage = async () => {
                             흐름
                         </h2>
                     </div>
-                    <Table caption="보고서 다운로드 흐름" columns={FLOW_COLUMNS} rows={FLOW_ROWS} size="md" />
+                    <Table caption="인쇄 · 다운로드 흐름" columns={FLOW_COLUMNS} rows={FLOW_ROWS} size="md" />
                 </section>
             </BaseCard>
 

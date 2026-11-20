@@ -20,7 +20,6 @@ import {
     KBIGX_DESCRIPTION,
     KBIGX_PARTNER_CARD,
     MEMBER_SECTION_TITLE,
-    PAID_PLAN_DESCRIPTION,
     PAID_PLAN_LIST_LABEL,
     PAID_PLANS,
     paidPlanHighlight,
@@ -94,7 +93,6 @@ const TechServiceCardItem = ({card, isSingle}: {card: TechServiceCard; isSingle:
                 <PricingCardHeader
                     title={card.name}
                     titleId={titleId}
-                    detail={card.nameDetail}
                     badge={<ToneBadge tone={card.tone} />}
                     size={isSingle ? 'lg' : 'md'}
                 />
@@ -192,7 +190,7 @@ const KbigxCorpPanel = ({
                             titleId="pricing-plan-self"
                             badge={<ToneBadge tone="free" />}
                         />
-                        <PricingCardPrice label={SELF_LOOKUP_PLAN.description} amount={SELF_LOOKUP_PLAN.priceLabel} />
+                        <PricingCardPrice amount={SELF_LOOKUP_PLAN.priceLabel} />
                         <PricingCardHighlight
                             title={SELF_LOOKUP_PLAN.highlight.title}
                             description={SELF_LOOKUP_PLAN.highlight.description}
@@ -210,11 +208,7 @@ const KbigxCorpPanel = ({
                                     iconSrc={plan.image}
                                     badge={<ToneBadge tone="paid" />}
                                 />
-                                <PricingCardPrice
-                                    label={PAID_PLAN_DESCRIPTION}
-                                    amount={plan.price}
-                                    note={paidPlanNote(plan)}
-                                />
+                                <PricingCardPrice amount={plan.price} note={paidPlanNote(plan)} />
                                 <PricingCardHighlight {...paidPlanHighlight(plan)} />
                                 <PricingCardAction>
                                     <PurchaseButton
@@ -249,12 +243,13 @@ const KbigxCorpPanel = ({
     )
 }
 
-// 기관회원 — 금액 대신 계약 안내를 크게 보이는 카드 한 장. 머리와 안내 사이는 16(다른 lg 카드 28보다 좁다).
+// 기관회원 — 금액 없이 이용 조건만 보이는 카드 한 장. 안내 상자는 기술평가 카드와 같은 작은 상자(inline)다.
+// 머리와 안내 사이는 16(다른 lg 카드 28보다 좁다).
 const KbigxOrgPanel = () => (
     <div className="flex flex-col gap-10">
         <PricingCard size="lg" elevated className={cn(singleCardClassName, 'gap-4 md:gap-4')}>
             <PricingCardHeader title={KBIGX_PARTNER_CARD.name} badge={<ToneBadge tone="paid" />} size="lg" />
-            <PricingCardHighlight layout="emphasis" label={KBIGX_PARTNER_CARD.label} title={KBIGX_PARTNER_CARD.title} />
+            <PricingCardHighlight layout="inline" title={KBIGX_PARTNER_CARD.title} />
         </PricingCard>
         <GuideBox guide={PARTNER_GUIDE} />
     </div>

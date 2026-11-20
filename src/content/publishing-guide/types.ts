@@ -125,6 +125,8 @@ export type AssetVersionSource = {
     path: string
     kind: AssetKind
     description: string
+    // 내용 변화 없는 커밋(되돌리기 등)으로 새 릴리스처럼 보일 때만 이전 버전을 고정한다 — throughCommit 이후 다시 바뀌면 풀린다.
+    versionOverride?: {version: string; throughCommit: string}
 }
 
 // 사이트 구조는 뎁스 제한 없는 트리다 — 자식이 있으면 branch(더 깊은 메뉴), 없으면 leaf(실제 화면 1건).
