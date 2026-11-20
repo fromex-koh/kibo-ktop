@@ -137,10 +137,15 @@ import medalB from '@public/images/grade-medal/b.webp'
 import medalCcc from '@public/images/grade-medal/ccc.webp'
 import medalCc from '@public/images/grade-medal/cc.webp'
 import medalC from '@public/images/grade-medal/c.webp'
+import ktrsFmIcon from '@public/images/platform-technology-evaluation/ktrs-fm-icon.webp'
+import economicUseIcon from '@public/images/platform-patent-evaluation/economic-use.webp'
+import patentTradeIcon from '@public/images/platform-patent-evaluation/patent-trade.webp'
+import patentedKnowledgeIcon from '@public/images/platform-patent-evaluation/patented-knowledge.webp'
 import kbigxAiAnalysisReportDarkIcon from '@public/images/platform-k-bigx-report/ai-analysis-report-dark.webp'
 import kbigxPeerComparisonDarkIcon from '@public/images/platform-k-bigx-report/peer-comparison-dark.webp'
 import kbigxIndustryTrendDarkIcon from '@public/images/platform-k-bigx-report/industry-trend-dark.webp'
 import kbigxInsightDarkIcon from '@public/images/platform-k-bigx-report/insight-dark.webp'
+import kbigxApplicantDarkIcon from '@public/images/platform-k-bigx-report/applicant-dark.webp'
 import kbigxPatentInfoDarkIcon from '@public/images/platform-k-bigx-report/patent-info-dark.webp'
 import kbigxCompanyInfoDarkIcon from '@public/images/platform-k-bigx-report/company-info-dark.webp'
 import kbigxLlmDarkIcon from '@public/images/platform-k-bigx-report/llm-dark.webp'
@@ -149,22 +154,15 @@ import carbonEmissionDiagnosisDarkIcon from '@public/images/platform-carbon-neut
 import carbonReductionPlanDarkIcon from '@public/images/platform-carbon-neutrality/reduction-plan-dark.webp'
 import carbonKeywordSearchDarkIcon from '@public/images/platform-carbon-neutrality/keyword-search-dark.webp'
 import carbonSelfDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/self-diagnosis-dark.webp'
-import economicUseVioletDarkIcon from '@public/images/platform-patent-evaluation/economic-use-violet-dark.webp'
-import economicUseVioletIcon from '@public/images/platform-patent-evaluation/economic-use-violet.webp'
-import patentTradeVioletDarkIcon from '@public/images/platform-patent-evaluation/patent-trade-violet-dark.webp'
-import patentTradeVioletIcon from '@public/images/platform-patent-evaluation/patent-trade-violet.webp'
-import patentedKnowledgeVioletDarkIcon from '@public/images/platform-patent-evaluation/patented-knowledge-violet-dark.webp'
-import patentedKnowledgeVioletIcon from '@public/images/platform-patent-evaluation/patented-knowledge-violet.webp'
+import patentedKnowledgeDarkIcon from '@public/images/platform-patent-evaluation/patented-knowledge-dark.webp'
+import patentTradeDarkIcon from '@public/images/platform-patent-evaluation/patent-trade-dark.webp'
+import economicUseDarkIcon from '@public/images/platform-patent-evaluation/economic-use-dark.webp'
 import kbigxAiAnalysisReportIcon from '@public/images/platform-k-bigx-report/ai-analysis-report.webp'
 import carbonEmissionDiagnosisIcon from '@public/images/platform-carbon-neutrality/emission-diagnosis.webp'
 import carbonReductionPlanIcon from '@public/images/platform-carbon-neutrality/reduction-plan.webp'
 import carbonKeywordSearchIcon from '@public/images/platform-carbon-neutrality/keyword-search.webp'
 import carbonSelfDiagnosisIcon from '@public/images/platform-carbon-neutrality/self-diagnosis.webp'
-import carbonLevelDiagnosisIcon from '@public/images/platform-carbon-neutrality/level-diagnosis.webp'
-import carbonLevelDiagnosisDarkIcon from '@public/images/platform-carbon-neutrality/level-diagnosis-dark.webp'
-import carbonExpertEvaluationIcon from '@public/images/platform-carbon-neutrality/expert-evaluation.webp'
-import carbonExpertEvaluationDarkIcon from '@public/images/platform-carbon-neutrality/expert-evaluation-dark.webp'
-import kbigxApplicantWhiteIcon from '@public/images/platform-k-bigx-report/applicant-white.webp'
+import kbigxApplicantIcon from '@public/images/platform-k-bigx-report/applicant.webp'
 import kbigxCompanyInfoIcon from '@public/images/platform-k-bigx-report/company-info.webp'
 import kbigxIndustryTrendIcon from '@public/images/platform-k-bigx-report/industry-trend.webp'
 import kbigxInsightIcon from '@public/images/platform-k-bigx-report/insight.webp'
@@ -319,38 +317,47 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         ],
     },
     {
-        key: 'patent-evaluation-violet',
+        key: 'evaluation-model',
         category: '서비스 소개',
-        title: '특허평가 정의 아이콘(보라)',
-        description:
-            "특허평가 소개 '재산적 가치가 있는 지식재산' 정의 패널의 세 아이콘입니다. 특허평가 색(보라)으로 그린 파일입니다.",
+        title: '평가모형 아이콘',
+        description: '기술평가 모형 구조도의 모형 아이콘입니다. 다크 파일은 없습니다.',
+        folder: 'public/images/platform-technology-evaluation/',
+        usedIn: 'custom/ktrs-fm-structure-diagram.tsx',
+        size: 'size-15 · 칸 size-30',
+        items: [{file: 'ktrs-fm-icon.webp', label: 'KTRS-FM', src: ktrsFmIcon, className: 'size-15'}],
+    },
+    {
+        key: 'patent-evaluation',
+        category: '서비스 소개',
+        title: '특허평가 관점 아이콘',
+        description: '특허평가 구조도의 세 관점 아이콘입니다. 탄소중립 수준 진단 · 전문평가도 같은 파일을 씁니다.',
         folder: 'public/images/platform-patent-evaluation/',
-        usedIn: 'custom/platform-patent-evaluation.tsx',
-        size: 'size-10.5 · 칸 size-18',
+        usedIn: 'custom/platform-patent-evaluation.tsx · custom/platform-carbon-neutrality.tsx',
+        size: 'size-15',
         items: [
             {
-                file: 'patented-knowledge-violet.webp',
+                file: 'patented-knowledge.webp',
                 label: '특허화된 기술지식',
-                src: patentedKnowledgeVioletIcon,
+                src: patentedKnowledgeIcon,
                 className: 'size-15',
                 tile: 'bg-panel-inset',
-                dark: {file: 'patented-knowledge-violet-dark.webp', src: patentedKnowledgeVioletDarkIcon},
+                dark: {file: 'patented-knowledge-dark.webp', src: patentedKnowledgeDarkIcon},
             },
             {
-                file: 'patent-trade-violet.webp',
+                file: 'patent-trade.webp',
                 label: '특허 매매',
-                src: patentTradeVioletIcon,
+                src: patentTradeIcon,
                 className: 'size-15',
                 tile: 'bg-panel-inset',
-                dark: {file: 'patent-trade-violet-dark.webp', src: patentTradeVioletDarkIcon},
+                dark: {file: 'patent-trade-dark.webp', src: patentTradeDarkIcon},
             },
             {
-                file: 'economic-use-violet.webp',
+                file: 'economic-use.webp',
                 label: '경제적 활용',
-                src: economicUseVioletIcon,
+                src: economicUseIcon,
                 className: 'size-15',
                 tile: 'bg-panel-inset',
-                dark: {file: 'economic-use-violet-dark.webp', src: economicUseVioletDarkIcon},
+                dark: {file: 'economic-use-dark.webp', src: economicUseDarkIcon},
             },
         ],
     },
@@ -358,41 +365,41 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         key: 'k-bigx-feature',
         category: '서비스 소개',
         title: 'K-BIGx 보고서 분석 기능 아이콘',
-        description: 'K-BIGx 소개의 분석 기능 아이콘입니다(K-BIGx 파랑). 옅은 강조 면 칸(56) 안에 28 크기로 놓입니다.',
+        description: 'K-BIGx 소개의 분석 기능 아이콘입니다.',
         folder: 'public/images/platform-k-bigx-report/',
         usedIn: 'custom/platform-k-bigx-report.tsx',
-        size: 'size-7 · 칸 size-14',
+        size: 'size-10 · 칸 size-20',
         items: [
             {
                 file: 'ai-analysis-report.webp',
                 label: 'AI 기반 종합 분석 보고서',
                 src: kbigxAiAnalysisReportIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-subtle',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'ai-analysis-report-dark.webp', src: kbigxAiAnalysisReportDarkIcon},
             },
             {
                 file: 'peer-comparison.webp',
-                label: '기술분야 비교 분석',
+                label: '동종업계 비교 분석',
                 src: kbigxPeerComparisonIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-subtle',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'peer-comparison-dark.webp', src: kbigxPeerComparisonDarkIcon},
             },
             {
                 file: 'industry-trend.webp',
-                label: '기술 동향 정보',
+                label: '산업 동향 정보',
                 src: kbigxIndustryTrendIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-subtle',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'industry-trend-dark.webp', src: kbigxIndustryTrendDarkIcon},
             },
             {
                 file: 'insight.webp',
                 label: '인사이트 제공',
                 src: kbigxInsightIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-subtle',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'insight-dark.webp', src: kbigxInsightDarkIcon},
             },
         ],
@@ -400,26 +407,26 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     {
         key: 'k-bigx-flow',
         category: '서비스 소개',
-        title: 'K-BIGx 분석 구조 아이콘',
-        description:
-            'K-BIGx 보고서 소개 분석 구조 도식의 아이콘입니다(K-BIGx 파랑). 신청기업은 그라데이션 칸 위 흰 아이콘 한 벌이고, 나머지는 라이트 · 다크 파일이 따로입니다.',
+        title: 'K-BIGx 보고서 흐름도 아이콘',
+        description: 'K-BIGx 보고서 흐름도 아이콘입니다.',
         folder: 'public/images/platform-k-bigx-report/',
-        usedIn: 'custom/platform-k-bigx-analysis-diagram.tsx',
-        size: '신청기업 size-6.5 · 정보 칸 size-10(모바일 8.5) · 보고서 size-15(PC 13.5)',
+        usedIn: 'custom/k-bigx-report-flow-diagram.tsx',
+        size: '신청기업 size-8 · 정보 칸 size-10 · 보고서 size-15',
         items: [
             {
-                file: 'applicant-white.webp',
+                file: 'applicant.webp',
                 label: '신청기업',
-                src: kbigxApplicantWhiteIcon,
-                className: 'size-6.5',
-                tile: 'bg-platform-bigx-accent',
+                src: kbigxApplicantIcon,
+                className: 'size-8',
+                tile: 'bg-platform-kbigx-flow-applicant',
+                dark: {file: 'applicant-dark.webp', src: kbigxApplicantDarkIcon},
             },
             {
                 file: 'patent-info.webp',
-                label: '특허(기술)정보',
+                label: '특허정보',
                 src: kbigxPatentInfoIcon,
                 className: 'size-10',
-                tile: 'bg-platform-panel',
+                tile: 'bg-platform-kbigx-source-icon-surface',
                 dark: {file: 'patent-info-dark.webp', src: kbigxPatentInfoDarkIcon},
             },
             {
@@ -427,7 +434,7 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
                 label: '기업정보',
                 src: kbigxCompanyInfoIcon,
                 className: 'size-10',
-                tile: 'bg-platform-panel',
+                tile: 'bg-platform-kbigx-source-icon-surface',
                 dark: {file: 'company-info-dark.webp', src: kbigxCompanyInfoDarkIcon},
             },
             {
@@ -435,7 +442,7 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
                 label: 'LLM',
                 src: kbigxLlmIcon,
                 className: 'size-10',
-                tile: 'bg-platform-panel',
+                tile: 'bg-platform-kbigx-source-icon-surface',
                 dark: {file: 'llm-dark.webp', src: kbigxLlmDarkIcon},
             },
             {
@@ -443,7 +450,7 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
                 label: '보고서',
                 src: kbigxReportIcon,
                 className: 'size-15',
-                tile: 'bg-platform-accent-subtle',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'k-bigx-report-dark.webp', src: kbigxReportDarkIcon},
             },
         ],
@@ -451,60 +458,43 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
     {
         key: 'carbon-feature',
         category: '서비스 소개',
-        title: '탄소중립 주요 기능 아이콘',
-        description:
-            '탄소중립 소개 주요 기능 패널의 아이콘입니다(탄소중립 초록). 옅은 초록 칸(56) 안에 28 크기로 놓입니다. 앞 셋은 선도중소기업확인, 뒤 셋은 개방형 K-택소노미.',
+        title: '탄소중립 분석 기능 아이콘',
+        description: '탄소중립 소개의 분석 기능 아이콘입니다. 수준 진단 · 전문평가는 위 특허평가 파일을 함께 씁니다.',
         folder: 'public/images/platform-carbon-neutrality/',
         usedIn: 'custom/platform-carbon-neutrality.tsx',
-        size: 'size-7 · 칸 size-14',
+        size: 'size-10 · 칸 size-20',
         items: [
             {
                 file: 'emission-diagnosis.webp',
                 label: '배출량 진단',
                 src: carbonEmissionDiagnosisIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'emission-diagnosis-dark.webp', src: carbonEmissionDiagnosisDarkIcon},
             },
             {
                 file: 'reduction-plan.webp',
                 label: '감축계획 수립',
                 src: carbonReductionPlanIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'reduction-plan-dark.webp', src: carbonReductionPlanDarkIcon},
-            },
-            {
-                file: 'level-diagnosis.webp',
-                label: '탄소중립 수준 진단',
-                src: carbonLevelDiagnosisIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
-                dark: {file: 'level-diagnosis-dark.webp', src: carbonLevelDiagnosisDarkIcon},
             },
             {
                 file: 'keyword-search.webp',
                 label: '키워드 검색',
                 src: carbonKeywordSearchIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'keyword-search-dark.webp', src: carbonKeywordSearchDarkIcon},
             },
             {
                 file: 'self-diagnosis.webp',
                 label: '자가진단',
                 src: carbonSelfDiagnosisIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
+                className: 'size-10',
+                tile: 'bg-platform-icon-surface',
                 dark: {file: 'self-diagnosis-dark.webp', src: carbonSelfDiagnosisDarkIcon},
-            },
-            {
-                file: 'expert-evaluation.webp',
-                label: '전문평가',
-                src: carbonExpertEvaluationIcon,
-                className: 'size-7',
-                tile: 'bg-platform-accent-carbon-surface',
-                dark: {file: 'expert-evaluation-dark.webp', src: carbonExpertEvaluationDarkIcon},
             },
         ],
     },

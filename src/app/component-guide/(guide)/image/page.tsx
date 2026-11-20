@@ -43,36 +43,15 @@ import techEvaluation from '@public/images/main-hero/tech-evaluation.webp'
 import patentEvaluation from '@public/images/main-hero/patent-evaluation.webp'
 import serviceIntroConsulting from '@public/images/main-hero/service-intro-consulting.webp'
 import serviceIntroSelfDiagnosis from '@public/images/main-hero/service-intro-self-diagnosis.webp'
-import techCapability from '@public/images/platform-technology-evaluation/tech-capability.webp'
-import techCommercialization from '@public/images/platform-technology-evaluation/tech-commercialization.webp'
-import techModels from '@public/images/platform-technology-evaluation/tech-models.webp'
-import reportKtrsFmGeneral from '@public/images/platform-technology-evaluation/report-ktrs-fm-general.webp'
-import reportKtrsFmDeep from '@public/images/platform-technology-evaluation/report-ktrs-fm-deep.webp'
-import reportTechIndexGeneral from '@public/images/platform-technology-evaluation/report-tech-index-general.webp'
-import reportTechIndexDeep from '@public/images/platform-technology-evaluation/report-tech-index-deep.webp'
-import reportInvestmentGeneral from '@public/images/platform-technology-evaluation/report-investment-general.webp'
-import reportInvestmentDeep from '@public/images/platform-technology-evaluation/report-investment-deep.webp'
-import patentEnvironment from '@public/images/platform-patent-evaluation/patent-environment.webp'
-import patentGrade from '@public/images/platform-patent-evaluation/patent-grade.webp'
-import patentIntrinsic from '@public/images/platform-patent-evaluation/patent-intrinsic.webp'
-import patentReport from '@public/images/platform-patent-evaluation/patent-report.webp'
-import kbigxReportBriefing from '@public/images/platform-k-bigx-report/report-briefing.webp'
-import kbigxReportBriefingDark from '@public/images/platform-k-bigx-report/report-briefing-dark.webp'
-import kbigxReportCompany from '@public/images/platform-k-bigx-report/report-company.webp'
-import kbigxReportCompanyDark from '@public/images/platform-k-bigx-report/report-company-dark.webp'
-import kbigxReportInnovation from '@public/images/platform-k-bigx-report/report-innovation.webp'
-import kbigxReportInnovationDark from '@public/images/platform-k-bigx-report/report-innovation-dark.webp'
-import kbigxReportTechIndex from '@public/images/platform-k-bigx-report/report-tech-index.webp'
-import kbigxReportTechIndexDark from '@public/images/platform-k-bigx-report/report-tech-index-dark.webp'
-import kbigxReportCredit from '@public/images/platform-k-bigx-report/report-credit.webp'
-import kbigxReportCreditDark from '@public/images/platform-k-bigx-report/report-credit-dark.webp'
-import kbigxReportActivity from '@public/images/platform-k-bigx-report/report-activity.webp'
-import kbigxReportActivityDark from '@public/images/platform-k-bigx-report/report-activity-dark.webp'
-import kbigxReportReference from '@public/images/platform-k-bigx-report/report-reference.webp'
-import kbigxReportReferenceDark from '@public/images/platform-k-bigx-report/report-reference-dark.webp'
-import platformData from '@public/images/platform-intro/platform-data.webp'
-import platformExpertise from '@public/images/platform-intro/platform-expertise.webp'
-import platformOpen from '@public/images/platform-intro/platform-open.webp'
+import businessHandshake from '@public/images/platform-technology-evaluation/business-handshake.webp'
+import officeCityView from '@public/images/platform-technology-evaluation/office-city-view.webp'
+import reportChartsDesk from '@public/images/platform-technology-evaluation/report-charts-desk.webp'
+import aiChipCircuit from '@public/images/platform-intro/ai-chip-circuit.webp'
+import aiDatabaseServer from '@public/images/platform-intro/ai-database-server.webp'
+import aiDonutChart from '@public/images/platform-intro/ai-donut-chart.webp'
+import chartReviewMeeting from '@public/images/platform-intro/chart-review-meeting.webp'
+import lightbulbLeaf from '@public/images/platform-intro/lightbulb-leaf.webp'
+import officeBankBuildings from '@public/images/platform-intro/office-bank-buildings.webp'
 
 export const metadata: Metadata = {title: '이미지 (Image)'}
 
@@ -226,13 +205,13 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                 title: '선택 카드',
                 description: '평가모형 선택 등 선택 카드 그림입니다. 경로 · 크기는 화면별 목록 데이터에 있습니다.',
                 folder: 'public/images/option-card/',
-                usedIn: 'content/service/evaluation-model-selection.ts(평가모형 선택) · custom/platform-technology-evaluation.tsx(기술평가 소개 모형 상세 탭 · 비교표 머리 칸) · tech-index-model-form.tsx · evaluation-method-form.tsx · batch-evaluation-form.tsx · custom/platform-k-bigx-report.tsx · custom/platform-carbon-neutrality.tsx',
+                usedIn: 'content/service/evaluation-model-selection.ts(평가모형 선택 · 플랫폼 소개 > 기술평가 카드) · tech-index-model-form.tsx · evaluation-method-form.tsx · batch-evaluation-form.tsx · custom/platform-intro.tsx · custom/platform-k-bigx-report.tsx · custom/platform-carbon-neutrality.tsx',
                 size: '평가모형 선택: 높이 144 자리(예: 225×150) · 그 밖: 148×100 자리(예: 95×92)',
                 grid: 'narrow',
                 items: [
                     {
                         file: 'speed-gauge.webp',
-                        label: '평가모형 선택 · KTRS-FM(플랫폼 소개 > 기술평가 포함)',
+                        label: '평가모형 선택 · KTRS-FM(플랫폼 소개 > 기술평가 포함) · 플랫폼 소개 05',
                         src: speedGauge,
                         className: 'h-20 w-auto',
                     },
@@ -256,7 +235,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                     },
                     {
                         file: 'document-chart-magnifier.webp',
-                        label: '평가진행방식 · 평가검증 하기',
+                        label: '평가진행방식 · 평가검증 하기 · 플랫폼 소개 02',
                         src: documentChartMagnifier,
                         className: 'h-20 w-auto',
                     },
@@ -271,8 +250,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
             {
                 key: 'platform-k-bigx-hero',
                 title: '플랫폼 소개 > K-BIGx 보고서 카드 그림',
-                description:
-                    'K-BIGx 소개 서비스 소개 카드(PlatformFeatureCards) 그림입니다. 세 번째 카드(K-BIGx 차별점)는 option-card/clipboard-check-chart.webp 를 함께 씁니다.',
+                description: 'K-BIGx 소개 히어로 카드 그림입니다.',
                 folder: 'public/images/platform-k-bigx-report/',
                 usedIn: 'custom/platform-k-bigx-report.tsx (기업 /platform/k-bigx-report)',
                 size: '높이 88 · h-22 w-auto',
@@ -286,7 +264,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                     },
                     {
                         file: 'hero-sme-target.webp',
-                        label: '기술기업 대상 (315×264)',
+                        label: '중소·벤처기업 대상 (315×264)',
                         src: kbigxHeroSmeTarget,
                         className: 'h-22 w-auto',
                     },
@@ -295,8 +273,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
             {
                 key: 'platform-carbon-hero',
                 title: '플랫폼 소개 > 탄소중립 카드 그림',
-                description:
-                    '탄소중립 소개 서비스 소개 카드(PlatformFeatureCards) 그림입니다. 선도중소기업확인 두 장 · K-택소노미 두 장이고, 세 번째 카드(차별점)는 option-card/clipboard-check-chart.webp 를 함께 씁니다.',
+                description: '탄소중립 소개 히어로 카드 그림입니다.',
                 folder: 'public/images/platform-carbon-neutrality/',
                 usedIn: 'custom/platform-carbon-neutrality.tsx (기업 /platform/carbon-neutrality)',
                 size: '높이 88 · h-22 w-auto',
@@ -329,194 +306,37 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                 ],
             },
             {
-                key: 'platform-intro-value',
-                title: '플랫폼 소개 핵심 가치 카드',
-                description:
-                    '플랫폼 소개 · 핵심 가치 카드(PlatformFeatureCards) 위 3D 아이콘입니다. 모바일(768 미만)에서는 숨깁니다.',
+                key: 'platform-intro-overview',
+                title: '플랫폼 소개 개요 카드',
+                description: '플랫폼 소개 파랑 카드(CardCarousel) 오른쪽 아래 그림입니다.',
                 folder: 'public/images/platform-intro/',
                 usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
-                size: '88×88 자리 · 원본 256×256 · sizes 88px',
+                size: '100×100 자리 · sizes 100px',
                 grid: 'narrow',
                 items: [
                     {
-                        file: 'platform-expertise.webp',
-                        label: '기술평가 전문성',
-                        src: platformExpertise,
-                        className: 'size-20',
-                    },
-                    {file: 'platform-data.webp', label: '데이터 기반 분석', src: platformData, className: 'size-20'},
-                    {file: 'platform-open.webp', label: '개방형 서비스', src: platformOpen, className: 'size-20'},
-                ],
-            },
-            {
-                key: 'platform-technology-evaluation-features',
-                title: '플랫폼 소개 > 기술평가 핵심 특징 카드',
-                description:
-                    '기술평가 소개 · 핵심 특징 카드(PlatformFeatureCards) 위 3D 아이콘입니다. 모바일(768 미만)에서는 숨깁니다.',
-                folder: 'public/images/platform-technology-evaluation/',
-                usedIn: 'custom/platform-technology-evaluation.tsx (기업 · 기관 /platform/technology-evaluation)',
-                size: '88×88 자리 · 원본 256×256 · sizes 88px',
-                grid: 'narrow',
-                items: [
-                    {file: 'tech-capability.webp', label: '기술역량 분석', src: techCapability, className: 'size-20'},
-                    {
-                        file: 'tech-commercialization.webp',
-                        label: '사업화 가능성 검토',
-                        src: techCommercialization,
-                        className: 'size-20',
-                    },
-                    {file: 'tech-models.webp', label: '목적별 평가모형', src: techModels, className: 'size-20'},
-                ],
-            },
-            {
-                key: 'platform-technology-evaluation-reports',
-                title: '플랫폼 소개 > 기술평가 보고서 미리보기',
-                description:
-                    '평가 결과 섹션 보고서 미리보기(PlatformReportPreview)의 화면 캡처입니다. 모형 × 유형(일반 · 심층) 6장이며, 고정 높이 틀(PC 560 · 그 아래 440) 안에서 세로로 스크롤해 봅니다. 처음 보이는 그림이 뜨면 나머지 5장을 미리 받고, 바꿀 때마다 0.4초 페이드인합니다. 원본 비율은 aspect-ratio 로도 둡니다(지연 로딩 크기 경고 방지). 기업명 · 인명 · 번호는 예시 데이터입니다.',
-                folder: 'public/images/platform-technology-evaluation/',
-                usedIn: 'custom/platform-report-preview.tsx · custom/platform-technology-evaluation.tsx',
-                size: '원본 폭 1200(보고서 2배) · 세로 길이 제각각 · sizes (1024↑) 640px · 100vw',
-                grid: 'wide',
-                items: [
-                    {
-                        file: 'report-ktrs-fm-general.webp',
-                        label: 'KTRS-FM 일반',
-                        src: reportKtrsFmGeneral,
-                        className: 'h-48 w-auto',
-                    },
-                    {
-                        file: 'report-ktrs-fm-deep.webp',
-                        label: 'KTRS-FM 심층',
-                        src: reportKtrsFmDeep,
-                        className: 'h-48 w-auto',
-                    },
-                    {
-                        file: 'report-tech-index-general.webp',
-                        label: 'Tech-Index 일반',
-                        src: reportTechIndexGeneral,
-                        className: 'h-48 w-auto',
-                    },
-                    {
-                        file: 'report-tech-index-deep.webp',
-                        label: 'Tech-Index 심층',
-                        src: reportTechIndexDeep,
-                        className: 'h-48 w-auto',
-                    },
-                    {
-                        file: 'report-investment-general.webp',
-                        label: '투자모형 일반',
-                        src: reportInvestmentGeneral,
-                        className: 'h-48 w-auto',
-                    },
-                    {
-                        file: 'report-investment-deep.webp',
-                        label: '투자모형 심층',
-                        src: reportInvestmentDeep,
-                        className: 'h-48 w-auto',
-                    },
-                ],
-            },
-            {
-                key: 'platform-patent-evaluation-value',
-                title: '플랫폼 소개 > 특허평가 핵심 가치 카드',
-                description:
-                    '특허평가 소개 · 핵심 가치 카드(PlatformFeatureCards) 위 3D 아이콘입니다. 모바일(768 미만)에서는 숨깁니다.',
-                folder: 'public/images/platform-patent-evaluation/',
-                usedIn: 'custom/platform-patent-evaluation.tsx (기업 · 기관 /platform/patent-evaluation)',
-                size: '88×88 자리 · 원본 256×256 · sizes 88px',
-                grid: 'narrow',
-                items: [
-                    {
-                        file: 'patent-intrinsic.webp',
-                        label: '특허 특성 분석',
-                        src: patentIntrinsic,
+                        file: 'ai-donut-chart.webp',
+                        label: '01 어떤 플랫폼인가요',
+                        src: aiDonutChart,
                         className: 'size-20',
                     },
                     {
-                        file: 'patent-environment.webp',
-                        label: '기술환경 분석',
-                        src: patentEnvironment,
+                        file: 'ai-database-server.webp',
+                        label: '03 무엇으로 만들어졌나요',
+                        src: aiDatabaseServer,
                         className: 'size-20',
                     },
-                    {file: 'patent-grade.webp', label: '평가등급 산출', src: patentGrade, className: 'size-20'},
-                ],
-            },
-            {
-                key: 'platform-patent-evaluation-report',
-                title: '플랫폼 소개 > 특허평가 결과 보고서 미리보기',
-                description:
-                    '평가 결과 섹션 보고서 미리보기(PlatformReportFrame)의 5쪽짜리 결과 보고서 캡처입니다. 고정 높이 틀 안에서 세로로 스크롤해 보고, 뜨면 0.4초 페이드인합니다. 번호 · 날짜는 예시 데이터입니다.',
-                folder: 'public/images/platform-patent-evaluation/',
-                usedIn: 'custom/platform-patent-evaluation.tsx',
-                size: '원본 1200×7305 · sizes (1024↑) 640px · 100vw · aspect-ratio 로 비율 고정',
-                grid: 'wide',
-                items: [
                     {
-                        file: 'patent-report.webp',
-                        label: '특허평가 결과 보고서',
-                        src: patentReport,
-                        className: 'h-48 w-auto',
-                    },
-                ],
-            },
-            {
-                key: 'platform-k-bigx-report-preview',
-                title: '플랫폼 소개 > K-BIGx 보고서 미리보기',
-                description:
-                    '보고서 미리보기(PlatformReportViewer)의 항목별 기업혁신성장 보고서 캡처입니다. 라이트 · 다크 파일이 따로이고, 고정 높이 틀(PC 520 · 그 아래 400) 안에서 세로로 스크롤해 봅니다. 기업명 · 인명 · 수치는 예시 데이터입니다.',
-                folder: 'public/images/platform-k-bigx-report/',
-                usedIn: 'custom/platform-k-bigx-report.tsx',
-                size: '원본 폭 1200 · sizes (1024↑) 640px · 100vw · aspect-ratio 로 비율 고정',
-                grid: 'wide',
-                items: [
-                    {
-                        file: 'report-briefing.webp',
-                        label: '진단브리핑',
-                        src: kbigxReportBriefing,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-briefing-dark.webp', src: kbigxReportBriefingDark},
+                        file: 'office-bank-buildings.webp',
+                        label: '04 누가 활용하나요',
+                        src: officeBankBuildings,
+                        className: 'size-20',
                     },
                     {
-                        file: 'report-company.webp',
-                        label: '기업현황',
-                        src: kbigxReportCompany,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-company-dark.webp', src: kbigxReportCompanyDark},
-                    },
-                    {
-                        file: 'report-innovation.webp',
-                        label: '기술혁신정보',
-                        src: kbigxReportInnovation,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-innovation-dark.webp', src: kbigxReportInnovationDark},
-                    },
-                    {
-                        file: 'report-tech-index.webp',
-                        label: 'Tech-Index',
-                        src: kbigxReportTechIndex,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-tech-index-dark.webp', src: kbigxReportTechIndexDark},
-                    },
-                    {
-                        file: 'report-credit.webp',
-                        label: '신용/재무정보',
-                        src: kbigxReportCredit,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-credit-dark.webp', src: kbigxReportCreditDark},
-                    },
-                    {
-                        file: 'report-activity.webp',
-                        label: '활동성정보',
-                        src: kbigxReportActivity,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-activity-dark.webp', src: kbigxReportActivityDark},
-                    },
-                    {
-                        file: 'report-reference.webp',
-                        label: '참고자료',
-                        src: kbigxReportReference,
-                        className: 'h-48 w-auto',
-                        dark: {file: 'report-reference-dark.webp', src: kbigxReportReferenceDark},
+                        file: 'lightbulb-leaf.webp',
+                        label: '06 어떻게 활용하나요',
+                        src: lightbulbLeaf,
+                        className: 'size-20',
                     },
                 ],
             },
@@ -686,6 +506,64 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                         src: serviceIntroSelfDiagnosis,
                         className: 'h-48 w-auto',
                     },
+                ],
+            },
+            {
+                key: 'platform-intro',
+                title: '플랫폼 소개 대표 사진',
+                description: '플랫폼 소개 맨 위 대표 사진입니다.',
+                folder: 'public/images/platform-intro/',
+                usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
+                size: '1200×400 (태블릿 792×264 · 모바일 328×180) · 칸 전체 object-cover · sizes(1200 · 792 · 100vw−32) · preload',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'chart-review-meeting.webp',
+                        label: '차트 보고서 검토',
+                        src: chartReviewMeeting,
+                        className: 'h-auto w-full',
+                    },
+                ],
+            },
+            {
+                key: 'platform-intro-banner',
+                title: '플랫폼 소개 배너 사진',
+                description: '플랫폼 소개 전체 폭 배너 사진입니다.',
+                folder: 'public/images/platform-intro/',
+                usedIn: 'custom/platform-intro.tsx (기업 · 기관 /platform)',
+                size: '화면 전체 폭 × 280 · object-cover 가운데 · sizes(1920 이상 100vw · 그 아래 1920px — 높이에 맞춰 늘 1920 폭으로 그려짐)',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'ai-chip-circuit.webp',
+                        label: '회로망 속 AI 칩',
+                        src: aiChipCircuit,
+                        className: 'h-auto w-full',
+                    },
+                ],
+            },
+            {
+                key: 'platform-technology-evaluation',
+                title: '플랫폼 소개 > 기술평가 항목 사진',
+                description: '기술평가 소개 아코디언 옆 사진입니다. 세 모형이 같은 사진을 씁니다.',
+                folder: 'public/images/platform-technology-evaluation/',
+                usedIn: 'custom/evaluation-model-tabs.tsx (기업 /platform/technology-evaluation)',
+                size: '690×428 (태블릿 792×492 · 모바일 328×204 — 세 폭 같은 비율) · 칸 전체 object-cover · sizes(690 · 792 · 100vw−32)',
+                grid: 'wide',
+                items: [
+                    {
+                        file: 'report-charts-desk.webp',
+                        label: '결과정보',
+                        src: reportChartsDesk,
+                        className: 'h-auto w-full',
+                    },
+                    {
+                        file: 'business-handshake.webp',
+                        label: '기대효과',
+                        src: businessHandshake,
+                        className: 'h-auto w-full',
+                    },
+                    {file: 'office-city-view.webp', label: '활용분야', src: officeCityView, className: 'h-auto w-full'},
                 ],
             },
         ],

@@ -1,0 +1,289 @@
+@reference '../app/globals.css';
+
+/* ─────────────────────────────────────────────────────────────────────────────────────────────
+   플랫폼 소개 · 상단 등장 연출
+   사용처: src/components/custom/platform-intro.tsx(PlatformIntroMotion 이 data-platform-intro 를 바꾼다)
+           — 기업 · 기관 /platform/page.tsx 가 이 파일을 import 한다.
+
+   단계(data-platform-intro):
+     intro  — 화면을 열면 바로 1단계(3초)를 재생하고 끝 모습에서 멈춘다.
+              옛 제목이 왼쪽부터 진하게 채워짐 → 제목이 올라감 → 영문 설명이 올라오며 나타남 → 대표 사진이 아래에서 올라오며 나타남.
+              대표 사진 위 글 · 막과 'K-TOP 플랫폼 개요'는 아직 감춘다.
+     reveal — 처음 스크롤 · 누름 · 포커스가 들어오면 2단계(3초)를 재생한다.
+              옛 제목이 사라짐 → 사진이 제자리로 올라감 · 막이 덮임 → 개요 · 흰 제목 · 소개가 차례로 나타남.
+     done   — 규칙 없음(평소 배치). 2단계가 끝나거나, 동작 줄이기 · 스크롤된 채 연 화면이면 바로 이 단계다.
+   시간 · 비율 · 곡선은 시안 프로토타입 값 그대로다(3초 중 n% 지점). 스프링은 시안의 스프링 식을 linear() 로 옮긴 것이다.
+   거리(시안 1920 기준): 사진 1단계 시작 +438 → 끝 +231 → 2단계 끝 0 · 옛 제목 +140 → 0 · 영문 설명 +49 → 0.
+   ───────────────────────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-platform-intro] {
+        /* 시안 스프링(임계 감쇠) — 빠르게 출발해 부드럽게 멈춘다. */
+        --platform-intro-spring: linear(
+            0,
+            0.1087,
+            0.3077,
+            0.4997,
+            0.6543,
+            0.7682,
+            0.848,
+            0.9019,
+            0.9376,
+            0.9607,
+            0.9754,
+            0.9848,
+            0.9906,
+            0.9942,
+            0.9965,
+            0.9979,
+            0.9987,
+            0.9992,
+            0.9995,
+            0.9997,
+            1
+        );
+        /* 시안 스프링(살짝 넘침) — 개요가 나타날 때. */
+        --platform-intro-spring-soft: linear(
+            0,
+            0.1592,
+            0.4728,
+            0.7711,
+            0.9776,
+            1.082,
+            1.1084,
+            1.0903,
+            1.0561,
+            1.024,
+            1.0019,
+            0.9909,
+            0.9882,
+            0.9903,
+            0.994,
+            0.9975,
+            0.9998,
+            1.001,
+            1.0013,
+            1.001,
+            1
+        );
+        --platform-intro-duration: 3s;
+    }
+
+    /* 1단계 ─────────────────────────────────────────────────────────────── */
+    [data-platform-intro='intro'] .platform-intro-legacy {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    [data-platform-intro='intro'] .platform-intro-title-fill {
+        animation: platform-intro-title-fill var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='intro'] .platform-intro-title {
+        animation: platform-intro-title-rise var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='intro'] .platform-intro-subtitle {
+        animation:
+            platform-intro-subtitle-fade var(--platform-intro-duration) both,
+            platform-intro-subtitle-rise var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='intro'] .platform-intro-hero {
+        animation:
+            platform-intro-hero-fade var(--platform-intro-duration) both,
+            platform-intro-hero-enter var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='intro']
+        :is(
+            .platform-intro-hero-overlay,
+            .platform-intro-hero-title,
+            .platform-intro-hero-description,
+            .platform-intro-overview
+        ) {
+        opacity: 0;
+    }
+
+    /* 2단계 ─────────────────────────────────────────────────────────────── */
+    [data-platform-intro='reveal'] .platform-intro-legacy {
+        animation: platform-intro-legacy-out var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='reveal'] .platform-intro-hero {
+        animation: platform-intro-hero-settle var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='reveal'] .platform-intro-hero-overlay {
+        animation: platform-intro-overlay-in var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='reveal'] .platform-intro-hero-title {
+        animation: platform-intro-hero-title-in var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='reveal'] .platform-intro-hero-description {
+        animation: platform-intro-hero-description-in var(--platform-intro-duration) both;
+    }
+
+    [data-platform-intro='reveal'] .platform-intro-overview {
+        animation: platform-intro-overview-in var(--platform-intro-duration) both;
+    }
+}
+
+/* 옛 제목 · 영문 설명은 연출 중에만 보인다(평소 · 동작 줄이기에서는 감춤). */
+.platform-intro-legacy {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* 1단계 키프레임 */
+@keyframes platform-intro-title-fill {
+    from {
+        clip-path: inset(0 100% 0 0);
+        animation-timing-function: linear;
+    }
+    31.95%,
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes platform-intro-title-rise {
+    from,
+    32.03% {
+        transform: translateY(--spacing(35)); /* 140px */
+        animation-timing-function: var(--platform-intro-spring);
+    }
+    57.06%,
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes platform-intro-subtitle-fade {
+    from,
+    46.24% {
+        opacity: 0;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+    }
+    55.72%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes platform-intro-subtitle-rise {
+    from,
+    46.24% {
+        transform: translateY(--spacing(12.25)); /* 49px */
+        animation-timing-function: var(--platform-intro-spring);
+    }
+    74.7%,
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes platform-intro-hero-fade {
+    from,
+    70.2% {
+        opacity: 0;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+    }
+    88.58%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes platform-intro-hero-enter {
+    from,
+    70.2% {
+        transform: translateY(--spacing(109.5)); /* 438px */
+        animation-timing-function: var(--platform-intro-spring);
+    }
+    94.87%,
+    to {
+        transform: translateY(--spacing(57.75)); /* 231px */
+    }
+}
+
+/* 2단계 키프레임 */
+@keyframes platform-intro-legacy-out {
+    from,
+    0.8% {
+        visibility: visible;
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+    }
+    10.4% {
+        visibility: visible;
+        opacity: 0;
+    }
+    to {
+        visibility: hidden;
+        opacity: 0;
+    }
+}
+
+@keyframes platform-intro-hero-settle {
+    from,
+    0.8% {
+        transform: translateY(--spacing(57.75)); /* 231px */
+        animation-timing-function: var(--platform-intro-spring);
+    }
+    16.73%,
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* 막 — 시안은 0.23초에 한 번에 켜진다. 사진이 올라가는 중에 번쩍이지 않게 그 지점부터 짧게(0.2초) 덮는다. */
+@keyframes platform-intro-overlay-in {
+    from,
+    7.76% {
+        opacity: 0;
+        animation-timing-function: ease-out;
+    }
+    14.43%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes platform-intro-hero-title-in {
+    from,
+    16.73% {
+        opacity: 0;
+        animation-timing-function: ease-out;
+    }
+    44.23%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes platform-intro-hero-description-in {
+    from,
+    44.23% {
+        opacity: 0;
+        animation-timing-function: ease-out;
+    }
+    66.67%,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes platform-intro-overview-in {
+    from,
+    16.73% {
+        opacity: 0;
+        animation-timing-function: var(--platform-intro-spring-soft);
+    }
+    23.59%,
+    to {
+        opacity: 1;
+    }
+}

@@ -31,8 +31,8 @@ const EASINGS = [
         name: 'ease-roll',
         value: 'cubic-bezier(0.22, 1, 0.36, 1)',
         points: [0.22, 1, 0.36, 1],
-        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환',
-        source: 'theme/hero-stats-roller.variants.ts 등',
+        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환, 카드 캐러셀의 카드 줄 밀기 · 면 색 · 흐림 전환(0.5초), ScrollReveal 떠오름',
+        source: 'theme/hero-stats-roller.variants.ts · custom/card-carousel.tsx · custom/scroll-reveal.tsx 등',
     },
 ] as const
 
@@ -87,94 +87,31 @@ const ANIMATIONS = [
         preview: 'enter',
     },
     {
-        name: 'animate-orbit-spin',
-        value: 'orbit-spin 40s linear infinite',
-        usage: '서비스 칸들이 원 둘레를 따라 40초에 한 바퀴 돎(궤도) — 마우스를 올리면 멈추고, 동작 줄이기면 정지',
-        source: 'custom/platform-hub-orbit.tsx',
-        preview: 'orbit',
+        name: 'animate-ambient-drift-a',
+        value: 'ambient-drift-a 14s ease-in-out infinite alternate',
+        usage: '배경 번짐 원이 천천히 떠다님(왼쪽 위 원) — 동작 줄이기면 멈춤',
+        source: 'custom/platform-service-intro.tsx',
+        preview: 'drift',
     },
     {
-        name: 'animate-orbit-counter',
-        value: 'orbit-counter 40s linear infinite',
-        usage: '궤도 위 칸 자신은 같은 속도로 반대로 돌아 글자가 늘 똑바로 보임(orbit-spin 과 짝)',
-        source: 'custom/platform-hub-orbit.tsx',
-        preview: 'orbit',
+        name: 'animate-ambient-drift-b',
+        value: 'ambient-drift-b 18s ease-in-out infinite alternate',
+        usage: '배경 번짐 원이 천천히 떠다님(오른쪽 아래 원 · a 와 다른 경로 · 주기)',
+        source: 'custom/platform-service-intro.tsx',
+        preview: 'drift',
     },
     {
-        name: 'animate-platform-float',
-        value: 'platform-float 6s ease-in-out infinite',
-        usage: '히어로 카드가 6초에 한 번 8px 떠올랐다 내려옴(카드마다 2초씩 엇갈림) — 마우스를 올리면 멈추고, 동작 줄이기면 정지',
-        source: 'custom/platform-hero-card-stack.tsx · custom/platform-patent-grade-card.tsx · custom/platform-service-hero-cards.tsx',
-        preview: 'float',
-    },
-    {
-        name: 'animate-platform-float-tilt',
-        value: 'platform-float-tilt 7s ease-in-out infinite',
-        usage: 'K-BIGx 히어로 보고서 표지가 7초에 한 번 8px 떠오르며 1.2도 기울었다 돌아옴 — 마우스를 올리면 멈추고, 동작 줄이기면 정지',
-        source: 'custom/platform-k-bigx-report-cover.tsx',
-        preview: 'float',
-    },
-    {
-        name: 'animate-platform-gauge',
-        value: 'platform-gauge 1.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.35s both',
-        usage: 'K-BIGx 히어로 반원 게이지 — 값 호가 0 에서 제 길이까지 올라감(한 번). 동작 줄이기면 처음부터 그려짐',
-        source: 'custom/platform-k-bigx-report-cover.tsx',
-        preview: 'draw',
-    },
-    {
-        name: 'animate-platform-radar-spread',
-        value: 'platform-radar-spread 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) var(--platform-spread-delay, 0.35s) both',
-        usage: '특허평가 히어로 방사형 차트 — 평균 · 대상 면이 차트 중심에서 퍼지며 나타남(한 번, 대상은 0.59초 늦게). 동작 줄이기면 처음부터 그려짐',
-        source: 'custom/platform-patent-grade-card.tsx',
-        preview: 'spread',
-    },
-    {
-        name: 'animate-platform-reveal',
-        value: 'platform-reveal 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards',
-        usage: '플랫폼 소개 블록이 화면에 들어오면 20px 아래에서 떠오르며 나타남 — 같이 들어온 요소끼리 0.14초 간격(animation-delay)',
-        source: 'custom/platform-reveal.tsx',
-        preview: 'reveal',
-    },
-    {
-        name: 'animate-platform-skeleton',
-        value: 'platform-skeleton 1.4s ease-in-out infinite',
-        usage: '보고서 미리보기 그림을 불러오는 동안 회색 자리 위로 빛 띠가 지나감 — 0.3초 넘게 걸릴 때만 자리가 나타나고 그림이 뜨면 지움, 동작 줄이기면 정지',
-        source: 'custom/platform-report-preview.tsx',
-        preview: 'skeleton',
-    },
-    {
-        name: 'animate-platform-combine-line',
-        value: 'platform-combine-line 3.2s cubic-bezier(0.45, 0, 0.2, 1) infinite',
-        usage: '투자모형 결합평가 화살표 선이 그려졌다 머물고 사라짐(pathLength 1) — 쌓는 폭(1280 미만)의 곧은 화살표는 화살촉도 이 모션. 동작 줄이기면 정지',
-        source: 'custom/investment-model-structure-diagram.tsx',
-        preview: 'combine',
-    },
-    {
-        name: 'animate-platform-combine-head-left',
-        value: 'platform-combine-head-left 3.2s ease infinite',
-        usage: '위 화살촉이 6px 오른쪽에서 왼쪽 모형 쪽으로 밀려 나타남(combine-line 과 짝)',
-        source: 'custom/investment-model-structure-diagram.tsx',
-        preview: 'combine',
-    },
-    {
-        name: 'animate-platform-combine-head-right',
-        value: 'platform-combine-head-right 3.2s ease infinite',
-        usage: '아래 화살촉이 6px 왼쪽에서 오른쪽 모형 쪽으로 밀려 나타남(combine-line 과 짝)',
-        source: 'custom/investment-model-structure-diagram.tsx',
-        preview: 'combine',
-    },
-    {
-        name: 'animate-platform-combine-core',
-        value: 'platform-combine-core 3.2s ease-in-out infinite',
-        usage: '결합평가 + 원이 주기 시작에 1.12배로 살짝 뜀',
-        source: 'custom/investment-model-structure-diagram.tsx',
-        preview: 'combine',
+        name: 'animate-marquee',
+        value: 'marquee 60s linear infinite',
+        usage: '칩 줄이 왼쪽으로 끊김 없이 계속 흐름(목록 여러 벌을 이어 붙여 -50% 이동 · 가속 없음) — 마우스 · 터치 · 포커스 때 멈추고, 동작 줄이기면 줄바꿈 목록',
+        source: 'custom/chip-marquee.tsx',
+        preview: 'marquee',
     },
     {
         name: 'animate-chart-wipe-right',
         value: 'chart-wipe-right 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
         usage: '가로 막대가 왼쪽 → 오른쪽으로 자람',
-        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx · custom/ratio-stack-bar.tsx',
+        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx · custom/ratio-stack-bar.tsx · custom/ktrs-fm-structure-diagram.tsx',
         preview: 'wipe-right',
     },
     {
@@ -185,17 +122,24 @@ const ANIMATIONS = [
         preview: 'wipe-left',
     },
     {
+        name: 'animate-chart-draw',
+        value: 'chart-draw 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '원 그래프 호 · 연결선이 처음부터 끝까지 그려짐(pathLength={1} · strokeDasharray="1 2" 와 함께)',
+        source: 'custom/*-structure-diagram.tsx · custom/k-bigx-report-flow-diagram.tsx · custom/platform-patent-evaluation.tsx',
+        preview: 'draw',
+    },
+    {
         name: 'animate-chart-label',
         value: 'chart-label 300ms ease-out 600ms both',
-        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남',
-        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx',
+        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남 · 호 · 연결선이 다 그려진 뒤 끝 점 · 화살촉이 나타남',
+        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx · custom/*-structure-diagram.tsx 등',
         preview: 'label',
     },
     {
         name: 'animate-chart-pop',
         value: 'chart-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
         usage: '칸 · 점 표시가 작게 시작해 커짐(조각마다 지연)',
-        source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx',
+        source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx · custom/investment-model-structure-diagram.tsx',
         preview: 'pop',
     },
     {
@@ -353,23 +297,31 @@ const COMPONENT_ROWS = [
         ],
     },
     {
-        key: 'platform-reveal',
+        key: 'scroll-reveal',
         cells: [
-            <code key="c">PlatformReveal</code>,
+            <code key="c">ScrollReveal</code>,
             <ul key="h" className="flex list-disc flex-col gap-1 pl-5">
                 <li>
-                    화면에 들어오면 20px 아래에서 0.8초에 떠오르며 나타납니다(animate-platform-reveal). 같이 들어온
-                    요소끼리 0.14초 간격으로 차례가 납니다.
+                    윗부분이 화면 아래 15% 선을 넘으면 아래에서 떠오르며 나타납니다(0.9초 · ease-roll). 키가 화면보다 큰
+                    덩어리도 나타납니다.
                 </li>
                 <li>한 번만 나타납니다 — 읽는 화면에서 내용이 사라졌다 나타나기를 반복하지 않습니다.</li>
                 <li>
-                    서비스 토글로 숨어 있던 패널이 보이게 되면 그때 나타납니다(탄소중립 서비스 소개 · 주요 기능 · 이용
-                    절차).
+                    안쪽은 <code>group-data-[revealed=true]/reveal:</code> 로 나타나는 순간에 맞춰 움직입니다(예: 막대가
+                    자람 — animate-chart-wipe-right).
+                </li>
+                <li>
+                    <code>hasRise={'{false}'}</code> 면 래퍼는 움직이지 않고 나타나는 시점만 알립니다 — 안쪽 조각이 따로
+                    움직입니다(예: 특허평가 평가절차 단계가 왼쪽에서 0.12초 간격으로 밀려옴).
                 </li>
                 <li>동작 줄이기 설정이면 처음부터 제자리에 보입니다.</li>
             </ul>,
-            <Link key="w" href="/corp/platform" className="text-primary-strong underline underline-offset-4">
-                플랫폼 소개 5화면(custom/platform-reveal.tsx)
+            <Link
+                key="w"
+                href="/corp/platform/technology-evaluation"
+                className="text-primary-strong underline underline-offset-4"
+            >
+                플랫폼 소개 &gt; 기술평가 · 특허평가 · K-BIGx 보고서 · 탄소중립(custom/scroll-reveal.tsx)
             </Link>,
         ],
     },

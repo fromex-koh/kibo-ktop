@@ -932,26 +932,6 @@ const WAVE_JUSTIFIED_ISSUES = [
     },
 ] as const
 
-// WAVE — 고객사 요청 디자인대로 둔 중복 링크(Redundant link) 알림. 플랫폼 소개 > 특허평가 화면은 첫 화면(히어로) 버튼과
-// 맨 아래 마무리 배너 버튼이 같은 문구('특허평가 이용하기') · 같은 주소(특허평가 등급 조회)다. 두 버튼 사이에는 같은 화면 안
-// 이동(#) 링크만 있어, 다른 주소 링크만 늘어놓으면 두 버튼이 잇달아 붙는다. 고객사 요청 디자인의 버튼 배치 그대로라
-// 알림을 없애려고 링크를 끼워 넣지 않는다. 기업 · 기관이 같은 본문을 쓴다.
-const WAVE_REDUNDANT_LINK_SCREEN_ROUTES = [
-    '/corp/platform/patent-evaluation',
-    '/org/platform/patent-evaluation',
-] as const
-const WAVE_REDUNDANT_LINK_ISSUES = [
-    {
-        level: 'warning',
-        message: 'Redundant link (1)',
-        count: 1,
-        screens: 1,
-        owner: '고객사 요청 · 특허평가 소개 첫 화면 · 마무리 배너 [특허평가 이용하기](같은 주소)',
-        verdict:
-            '고객사 요청 디자인의 버튼 배치 그대로 유지한다. 두 링크 모두 문구로 목적을 알 수 있어 KWCAG 2.1 [6.4.3] 적절한 링크 텍스트를 충족한다',
-    },
-] as const
-
 const WAVE_SCREEN_RESULTS = [
     {
         name: '보증추천',
@@ -1619,18 +1599,6 @@ const WAVE_SCREEN_RESULTS = [
         issues: WAVE_JUSTIFIED_ISSUES,
         kinds: [{label: 'Justified text 2건', level: 'warning', target: 'wave-justified'}],
     },
-    {
-        name: '플랫폼 소개 · 특허평가',
-        path: WAVE_REDUNDANT_LINK_SCREEN_ROUTES[0],
-        issues: WAVE_REDUNDANT_LINK_ISSUES,
-        kinds: [{label: 'Redundant link 1건', level: 'warning', target: 'wave-redundant-link'}],
-    },
-    {
-        name: '기관 플랫폼 소개 · 특허평가',
-        path: WAVE_REDUNDANT_LINK_SCREEN_ROUTES[1],
-        issues: WAVE_REDUNDANT_LINK_ISSUES,
-        kinds: [{label: 'Redundant link 1건', level: 'warning', target: 'wave-redundant-link'}],
-    },
 ] as const
 
 const countWaveIssues = (issues: readonly {level: 'error' | 'warning'; count: number}[], level: 'error' | 'warning') =>
@@ -1734,28 +1702,13 @@ const WAVE_SUMMARY_GROUPS = [
             (sum, screen) =>
                 sum +
                 screen.issues.reduce(
-                    (issueSum, issue) => issueSum + (issue.message.startsWith('Justified text') ? issue.count : 0),
+                    (issueSum, issue) => issueSum + (issue.owner.startsWith('고객사 요청') ? issue.count : 0),
                     0,
                 ),
             0,
         ),
-        screens: group.screens.filter((screen) =>
-            screen.issues.some((issue) => issue.message.startsWith('Justified text')),
-        ).length,
-    },
-    redundantLink: {
-        count: group.screens.reduce(
-            (sum, screen) =>
-                sum +
-                screen.issues.reduce(
-                    (issueSum, issue) => issueSum + (issue.message.startsWith('Redundant link') ? issue.count : 0),
-                    0,
-                ),
-            0,
-        ),
-        screens: group.screens.filter((screen) =>
-            screen.issues.some((issue) => issue.message.startsWith('Redundant link')),
-        ).length,
+        screens: group.screens.filter((screen) => screen.issues.some((issue) => issue.owner.startsWith('고객사 요청')))
+            .length,
     },
     selectWarning: {
         count: group.screens.reduce(
@@ -2215,10 +2168,7 @@ const WAVE_NAV_GROUPS: readonly SectionNavGroup[] = [
     },
     {
         label: '고객사 요청',
-        links: [
-            {href: '#wave-justified', label: '[양쪽 정렬] Justified text'},
-            {href: '#wave-redundant-link', label: '[중복 링크] Redundant link'},
-        ],
+        links: [{href: '#wave-justified', label: '[양쪽 정렬] Justified text'}],
     },
 ]
 
@@ -4062,10 +4012,7 @@ const AccessibilityExceptionsPage = () => (
                                                 badge: '예외 검토',
                                                 color: 'success',
                                                 total:
-                                                    group.totals.errors +
-                                                    group.totals.warnings -
-                                                    group.justified.count -
-                                                    group.redundantLink.count,
+                                                    group.totals.errors + group.totals.warnings - group.justified.count,
                                                 reasons: [
                                                     {
                                                         name: 'Radix RadioGroup',
@@ -4101,7 +4048,7 @@ const AccessibilityExceptionsPage = () => (
                                                 label: '고객사 요청',
                                                 badge: '예외 검토',
                                                 color: 'success',
-                                                total: group.justified.count + group.redundantLink.count,
+                                                total: group.justified.count,
                                                 reasons: [
                                                     {
                                                         name: '양쪽 정렬 · Justified text',
@@ -4109,13 +4056,6 @@ const AccessibilityExceptionsPage = () => (
                                                         screens: group.justified.screens,
                                                         note: '기술혁신정보 안내문 · Tech-Index 지수설명',
                                                         href: '#wave-justified',
-                                                    },
-                                                    {
-                                                        name: '중복 링크 · Redundant link',
-                                                        count: group.redundantLink.count,
-                                                        screens: group.redundantLink.screens,
-                                                        note: '특허평가 소개 [특허평가 이용하기] 2개',
-                                                        href: '#wave-redundant-link',
                                                     },
                                                 ],
                                             },
@@ -4685,207 +4625,99 @@ const AccessibilityExceptionsPage = () => (
                         title={cardHeading('고객사 요청')}
                         subtitle={
                             <span className="typo-body-xl-regular">
-                                고객사가 요청한 표현 · 디자인이라 그대로 두는 검사 사례입니다. 요청 범위와 접근성 영향을
-                                함께 기록합니다.
+                                고객사가 요청한 표현이라 그대로 두는 검사 사례입니다. 요청 범위와 접근성 영향을 함께
+                                기록합니다.
                             </span>
                         }
                         action={<Badge color="success">예외 검토</Badge>}
                     >
-                        <div className="divide-subtle-3 flex flex-col divide-y">
-                            <section
-                                aria-labelledby="wave-justified"
-                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                            >
-                                <SectionHeader>
-                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-justified">
-                                        {sectionHeading('양쪽 정렬', 'Justified text')}
-                                    </SectionHeaderTitle>
-                                    <SectionHeaderDescription>
-                                        K-BIGx 웹 보고서 기술혁신정보 탭 안내문 · Tech-Index 탭 지수설명에서 탭마다
-                                        1건씩 나옵니다
-                                    </SectionHeaderDescription>
-                                </SectionHeader>
-                                <IssueTable
-                                    caption="WAVE 가 보고한 Justified text 알림과 건수"
-                                    issues={WAVE_JUSTIFIED_ISSUES}
-                                />
-                                <LibraryDetailAccordion
-                                    rows={[
-                                        {
-                                            term: '한눈에 보기',
-                                            body: (
-                                                <Alert variant="outline" color="info">
-                                                    <Info aria-hidden="true" />
-                                                    <AlertDescription>
-                                                        고객사 요청으로 안내문을 양쪽 정렬한 화면에서 WAVE가 표시한
-                                                        알림(Alert)입니다.{' '}
-                                                        <strong>
-                                                            오류가 아니며, 본 프로젝트 기준인 KWCAG 2.1 검사항목에도
-                                                            해당하지 않습니다.
-                                                        </strong>
-                                                    </AlertDescription>
-                                                </Alert>
-                                            ),
-                                        },
-                                        {
-                                            term: '알림의 뜻',
-                                            body: (
-                                                <p>
-                                                    양쪽 정렬은 단어 사이 간격이 고르지 않아 일부 사용자가 읽기 어려울
-                                                    수 있으니 확인하라는 의미입니다. WCAG 2.1 성공기준 1.4.8 시각적
-                                                    표현(AAA)에서 온 권고입니다.
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '고객사 요청',
-                                            body: (
-                                                <p>
-                                                    고객사 피드백으로 두 단락을 출력물(PDF 템플릿)과 같게 해 달라는
-                                                    요청을 받았습니다. 기술혁신정보 안내문은 왼쪽 정렬이나 임의 줄 나눔
-                                                    없이 좌우로 꽉 차게, Tech-Index 지수설명은 제목을 지우고 문장을
-                                                    줄바꿈 없이 한 문단으로 이어 적게 했습니다. PDF 템플릿의 장 첫머리
-                                                    안내문이 이미 양쪽 정렬이라 웹 보고서도 같게 맞췄습니다.
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '영향과 조치',
-                                            body: (
-                                                <p>
-                                                    <code className="font-mono">break-keep</code>으로 어절 중간에서 줄이
-                                                    끊기지 않고, 마지막 줄은 왼쪽에 붙습니다. 이 두 단락에만 쓰고 표 ·
-                                                    목록 · 입력 안내에는 쓰지 않습니다.{' '}
+                        <section aria-labelledby="wave-justified" className="flex flex-col gap-3">
+                            <SectionHeader>
+                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-justified">
+                                    {sectionHeading('양쪽 정렬', 'Justified text')}
+                                </SectionHeaderTitle>
+                                <SectionHeaderDescription>
+                                    K-BIGx 웹 보고서 기술혁신정보 탭 안내문 · Tech-Index 탭 지수설명에서 탭마다 1건씩
+                                    나옵니다
+                                </SectionHeaderDescription>
+                            </SectionHeader>
+                            <IssueTable
+                                caption="WAVE 가 보고한 Justified text 알림과 건수"
+                                issues={WAVE_JUSTIFIED_ISSUES}
+                            />
+                            <LibraryDetailAccordion
+                                rows={[
+                                    {
+                                        term: '한눈에 보기',
+                                        body: (
+                                            <Alert variant="outline" color="info">
+                                                <Info aria-hidden="true" />
+                                                <AlertDescription>
+                                                    고객사 요청으로 안내문을 양쪽 정렬한 화면에서 WAVE가 표시한
+                                                    알림(Alert)입니다.{' '}
                                                     <strong>
-                                                        고객사 요청이 유지되는 동안 예외 검토 항목으로 관리합니다.
+                                                        오류가 아니며, 본 프로젝트 기준인 KWCAG 2.1 검사항목에도
+                                                        해당하지 않습니다.
                                                     </strong>
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '발생 화면',
-                                            body: (
-                                                <OccurrenceScreensAccordion
-                                                    routes={WAVE_CLIENT_REQUEST_SCREEN_ROUTES}
-                                                />
-                                            ),
-                                        },
-                                        {
-                                            term: '근거',
-                                            body: (
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#text_justified">
-                                                        WAVE Justified text 설명
-                                                    </ReferenceLink>
-                                                    <ReferenceLink href="https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html">
-                                                        WCAG 2.1 1.4.8 Visual Presentation(AAA)
-                                                    </ReferenceLink>
-                                                </div>
-                                            ),
-                                        },
-                                    ]}
-                                />
-                            </section>
-                            <section
-                                aria-labelledby="wave-redundant-link"
-                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                            >
-                                <SectionHeader>
-                                    <SectionHeaderTitle
-                                        className="typo-title-l-bold scroll-mt-24"
-                                        id="wave-redundant-link"
-                                    >
-                                        {sectionHeading('중복 링크', 'Redundant link')}
-                                    </SectionHeaderTitle>
-                                    <SectionHeaderDescription>
-                                        플랫폼 소개 &gt; 특허평가 화면(기업 · 기관)에서 1건씩 나옵니다
-                                    </SectionHeaderDescription>
-                                </SectionHeader>
-                                <IssueTable
-                                    caption="WAVE 가 보고한 Redundant link 알림과 건수"
-                                    issues={WAVE_REDUNDANT_LINK_ISSUES}
-                                />
-                                <LibraryDetailAccordion
-                                    rows={[
-                                        {
-                                            term: '한눈에 보기',
-                                            body: (
-                                                <Alert variant="outline" color="info">
-                                                    <Info aria-hidden="true" />
-                                                    <AlertDescription>
-                                                        고객사 요청 디자인대로 같은 주소 버튼을 두 번 둔 화면에서 WAVE가
-                                                        표시한 알림(Alert)입니다.{' '}
-                                                        <strong>
-                                                            오류가 아니며, 링크 문구로 목적을 알 수 있어 KWCAG 2.1
-                                                            [6.4.3] 적절한 링크 텍스트를 충족합니다.
-                                                        </strong>
-                                                    </AlertDescription>
-                                                </Alert>
-                                            ),
-                                        },
-                                        {
-                                            term: '알림의 뜻',
-                                            body: (
-                                                <p>
-                                                    같은 주소로 가는 링크가 잇달아 나오면 화면 낭독기 · 키보드 사용자가
-                                                    같은 곳을 두 번 지나게 되니 확인하라는 의미입니다. WAVE 는 같은 화면
-                                                    안 이동(#) 링크를 빼고 다른 주소 링크끼리의 순서를 봅니다. 같은 주소
-                                                    링크가 화면에 여러 개 있는 것 자체를 금지하는 기준은 아닙니다.
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '고객사 요청',
-                                            body: (
-                                                <p>
-                                                    고객사가 요청한 디자인에 따라 특허평가 소개 화면의 첫 화면(히어로)과
-                                                    맨 아래 마무리 배너에 같은 [특허평가 이용하기] 버튼(특허평가 등급
-                                                    조회)을 둡니다. 두 버튼 사이에는 섹션 이동 탭 · [KPAS 알아보기] 처럼
-                                                    같은 화면 안으로 이동하는 링크만 있어 WAVE 가 두 버튼을 잇달아 나온
-                                                    링크로 봅니다.
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '영향과 조치',
-                                            body: (
-                                                <p>
-                                                    두 버튼은 화면 맨 위와 맨 아래로 멀리 떨어져 있고, 문구만으로 어디로
-                                                    가는지 알 수 있습니다. 알림을 없애려고 두 버튼 사이에 다른 링크를
-                                                    일부러 끼워 넣거나 한쪽 버튼을 빼면 고객사 요청 디자인과 달라지므로
-                                                    그대로 둡니다.{' '}
-                                                    <strong>
-                                                        고객사 요청 디자인이 유지되는 동안 예외 검토 항목으로
-                                                        관리합니다.
-                                                    </strong>
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '발생 화면',
-                                            body: (
-                                                <OccurrenceScreensAccordion
-                                                    routes={WAVE_REDUNDANT_LINK_SCREEN_ROUTES}
-                                                />
-                                            ),
-                                        },
-                                        {
-                                            term: '근거',
-                                            body: (
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#link_redundant">
-                                                        WAVE Redundant link 설명
-                                                    </ReferenceLink>
-                                                    <ReferenceLink href="https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context.html">
-                                                        WCAG 2.1 2.4.4 Link Purpose (In Context)(A)
-                                                    </ReferenceLink>
-                                                </div>
-                                            ),
-                                        },
-                                    ]}
-                                />
-                            </section>
-                        </div>
+                                                </AlertDescription>
+                                            </Alert>
+                                        ),
+                                    },
+                                    {
+                                        term: '알림의 뜻',
+                                        body: (
+                                            <p>
+                                                양쪽 정렬은 단어 사이 간격이 고르지 않아 일부 사용자가 읽기 어려울 수
+                                                있으니 확인하라는 의미입니다. WCAG 2.1 성공기준 1.4.8 시각적
+                                                표현(AAA)에서 온 권고입니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '고객사 요청',
+                                        body: (
+                                            <p>
+                                                고객사 피드백으로 두 단락을 출력물(PDF 템플릿)과 같게 해 달라는 요청을
+                                                받았습니다. 기술혁신정보 안내문은 왼쪽 정렬이나 임의 줄 나눔 없이 좌우로
+                                                꽉 차게, Tech-Index 지수설명은 제목을 지우고 문장을 줄바꿈 없이 한
+                                                문단으로 이어 적게 했습니다. PDF 템플릿의 장 첫머리 안내문이 이미 양쪽
+                                                정렬이라 웹 보고서도 같게 맞췄습니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '영향과 조치',
+                                        body: (
+                                            <p>
+                                                <code className="font-mono">break-keep</code>으로 어절 중간에서 줄이
+                                                끊기지 않고, 마지막 줄은 왼쪽에 붙습니다. 이 두 단락에만 쓰고 표 · 목록
+                                                · 입력 안내에는 쓰지 않습니다.{' '}
+                                                <strong>
+                                                    고객사 요청이 유지되는 동안 예외 검토 항목으로 관리합니다.
+                                                </strong>
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '발생 화면',
+                                        body: <OccurrenceScreensAccordion routes={WAVE_CLIENT_REQUEST_SCREEN_ROUTES} />,
+                                    },
+                                    {
+                                        term: '근거',
+                                        body: (
+                                            <div className="flex flex-col items-start gap-1">
+                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#text_justified">
+                                                    WAVE Justified text 설명
+                                                </ReferenceLink>
+                                                <ReferenceLink href="https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html">
+                                                    WCAG 2.1 1.4.8 Visual Presentation(AAA)
+                                                </ReferenceLink>
+                                            </div>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </section>
                     </BaseCard>
                 </div>
             </TabsContent>

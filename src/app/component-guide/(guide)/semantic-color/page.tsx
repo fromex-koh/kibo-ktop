@@ -244,6 +244,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'panel-subtle': 'bg-panel-subtle',
     'panel-raised': 'bg-panel-raised',
     'panel-inset': 'bg-panel-inset',
+    'model-icon-surface': 'bg-model-icon-surface',
     'icon-surface-raised': 'bg-icon-surface-raised',
     'service-accent-green': 'bg-service-accent-green',
     'service-hero-green-band': 'bg-service-hero-green-band',
@@ -252,85 +253,28 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'service-hero-navy-band': 'bg-service-hero-navy-band',
     'service-hero-navy-glow-left': 'bg-service-hero-navy-glow-left',
     'service-hero-navy-glow-right': 'bg-service-hero-navy-glow-right',
-    'service-hero-blue-band': 'bg-service-hero-blue-band',
-    'service-hero-blue-glow-left': 'bg-service-hero-blue-glow-left',
-    'service-hero-blue-glow-right': 'bg-service-hero-blue-glow-right',
-    'service-hero-teal-band': 'bg-service-hero-teal-band',
-    'service-hero-teal-glow-left': 'bg-service-hero-teal-glow-left',
-    'service-hero-teal-glow-right': 'bg-service-hero-teal-glow-right',
-    'service-hero-teal-emphasis': 'bg-service-hero-teal-emphasis',
-    'service-tech-fill': 'bg-service-tech-fill',
-    'service-hero-teal-on-emphasis': 'bg-service-hero-teal-on-emphasis',
-    'platform-accent-bright': 'bg-platform-accent-bright',
-    'platform-model-growth': 'bg-platform-model-growth',
-    'platform-model-growth-bright': 'bg-platform-model-growth-bright',
-    'platform-model-growth-foreground': 'bg-platform-model-growth-foreground',
-    'platform-bar-start': 'bg-platform-bar-start',
-    'platform-bar-end': 'bg-platform-bar-end',
-    'skeleton-shine': 'bg-skeleton-shine',
-    'service-hero-violet-band': 'bg-service-hero-violet-band',
-    'service-hero-violet-glow-left': 'bg-service-hero-violet-glow-left',
-    'service-hero-violet-glow-right': 'bg-service-hero-violet-glow-right',
-    'service-hero-violet-emphasis': 'bg-service-hero-violet-emphasis',
-    'service-hero-violet-on-emphasis': 'bg-service-hero-violet-on-emphasis',
-    'service-patent-fill': 'bg-service-patent-fill',
-    'platform-patent-accent': 'bg-platform-patent-accent',
-    'platform-patent-accent-bright': 'bg-platform-patent-accent-bright',
-    'platform-patent-accent-foreground': 'bg-platform-patent-accent-foreground',
-    'service-hero-navy-emphasis': 'bg-service-hero-navy-emphasis',
-    'service-hero-navy-on-emphasis': 'bg-service-hero-navy-on-emphasis',
-    'service-bigx-fill': 'bg-service-bigx-fill',
-    'platform-bigx-accent': 'bg-platform-bigx-accent',
-    'platform-bigx-accent-bright': 'bg-platform-bigx-accent-bright',
-    'platform-bigx-accent-foreground': 'bg-platform-bigx-accent-foreground',
-    'platform-bigx-gauge-track': 'bg-platform-bigx-gauge-track',
-    'service-hero-green-emphasis': 'bg-service-hero-green-emphasis',
-    'service-hero-green-on-emphasis': 'bg-service-hero-green-on-emphasis',
-    'service-carbon-fill': 'bg-service-carbon-fill',
-    'platform-carbon-accent': 'bg-platform-carbon-accent',
-    'platform-carbon-on-accent': 'bg-platform-carbon-on-accent',
-    'platform-radar-line': 'bg-platform-radar-line',
-    'platform-radar-average': 'bg-platform-radar-average',
-    'platform-radar-target': 'bg-platform-radar-target',
-    'platform-radar-badge-start': 'bg-platform-radar-badge-start',
-    'platform-radar-badge-end': 'bg-platform-radar-badge-end',
-    'model-compare-blue': 'bg-model-compare-blue',
-    'model-compare-blue-surface': 'bg-model-compare-blue-surface',
-    'model-compare-mint': 'bg-model-compare-mint',
-    'model-compare-mint-surface': 'bg-model-compare-mint-surface',
-    'model-compare-orange': 'bg-model-compare-orange',
-    'model-compare-orange-surface': 'bg-model-compare-orange-surface',
     'search-glow-start': 'bg-search-glow-start',
     'search-glow-middle': 'bg-search-glow-middle',
     'search-glow-end': 'bg-search-glow-end',
     'service-intro-glow': 'bg-service-intro-glow',
     'service-intro-glow-soft': 'bg-service-intro-glow-soft',
-    'platform-section-band': 'bg-platform-section-band',
-    'platform-step': 'bg-platform-step',
-    'platform-step-foreground': 'bg-platform-step-foreground',
-    'platform-stat-number': 'bg-platform-stat-number',
-    'platform-accent-patent': 'bg-platform-accent-patent',
-    'platform-accent-carbon-surface': 'bg-platform-accent-carbon-surface',
-    'platform-lens': 'bg-platform-lens',
-    'platform-lens-foreground': 'bg-platform-lens-foreground',
-    'platform-lens-art-card': 'bg-platform-lens-art-card',
-    'platform-lens-art-card-line': 'bg-platform-lens-art-card-line',
-    'platform-lens-art-line': 'bg-platform-lens-art-line',
-    'platform-lens-art-icon': 'bg-platform-lens-art-icon',
-    'platform-lens-art-grid': 'bg-platform-lens-art-grid',
-    'platform-lens-art-highlight': 'bg-platform-lens-art-highlight',
-    'platform-lens-art-tech': 'bg-platform-lens-art-tech',
-    'platform-lens-art-patent': 'bg-platform-lens-art-patent',
-    'platform-lens-art-bigx': 'bg-platform-lens-art-bigx',
-    'platform-lens-art-carbon': 'bg-platform-lens-art-carbon',
-    'platform-panel': 'bg-platform-panel',
-    'platform-panel-border': 'bg-platform-panel-border',
-    'platform-panel-inset': 'bg-platform-panel-inset',
-    'platform-hub-line': 'bg-platform-hub-line',
-    'platform-accent': 'bg-platform-accent',
-    'platform-accent-foreground': 'bg-platform-accent-foreground',
-    'platform-accent-subtle': 'bg-platform-accent-subtle',
-    'platform-line': 'bg-platform-line',
+    'service-glass-border': 'bg-service-glass-border',
+    'service-hero-marker': 'bg-service-hero-marker',
+    'procedure-step-number': 'bg-procedure-step-number',
+    'rolling-accordion-surface': 'bg-rolling-accordion-surface',
+    'rolling-accordion-marker': 'bg-rolling-accordion-marker',
+    'platform-connector': 'bg-platform-connector',
+    'platform-icon-surface': 'bg-platform-icon-surface',
+    'platform-kbigx-source-icon-surface': 'bg-platform-kbigx-source-icon-surface',
+    'service-target-band': 'bg-service-target-band',
+    'chip-marquee-surface': 'bg-chip-marquee-surface',
+    'chip-marquee-border': 'bg-chip-marquee-border',
+    'chip-marquee-foreground': 'bg-chip-marquee-foreground',
+    'chip-marquee-hover': 'bg-chip-marquee-hover',
+    'chip-marquee-hover-border': 'bg-chip-marquee-hover-border',
+    'pill-tab-track': 'bg-pill-tab-track',
+    'pill-tab-active': 'bg-pill-tab-active',
+    'pill-tab-active-foreground': 'bg-pill-tab-active-foreground',
     'brand-solid': 'bg-brand-solid',
     'brand-solid-foreground': 'bg-brand-solid-foreground',
     'field-error-foreground': 'bg-field-error-foreground',
@@ -357,6 +301,17 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'main-intro-foreground-subtle': 'bg-main-intro-foreground-subtle',
     'main-intro-accent': 'bg-main-intro-accent',
     'main-intro-border': 'bg-main-intro-border',
+    'platform-banner': 'bg-platform-banner',
+    'platform-banner-foreground': 'bg-platform-banner-foreground',
+    'platform-hero-overlay': 'bg-platform-hero-overlay',
+    'platform-audience': 'bg-platform-audience',
+    'platform-carousel-nav-border': 'bg-platform-carousel-nav-border',
+    'platform-carousel-marker': 'bg-platform-carousel-marker',
+    'platform-kbigx-flow-surface': 'bg-platform-kbigx-flow-surface',
+    'platform-kbigx-flow-board': 'bg-platform-kbigx-flow-board',
+    'platform-kbigx-flow-source-border': 'bg-platform-kbigx-flow-source-border',
+    'platform-kbigx-flow-applicant': 'bg-platform-kbigx-flow-applicant',
+    'platform-kbigx-flow-applicant-foreground': 'bg-platform-kbigx-flow-applicant-foreground',
     'menu-overlay': 'bg-menu-overlay',
     'menu-overlay-foreground': 'bg-menu-overlay-foreground',
     'menu-overlay-foreground-subtle': 'bg-menu-overlay-foreground-subtle',
@@ -530,32 +485,32 @@ const CUSTOM_GROUPS: Group[] = [
         match: (n) => n === 'panel-subtle' || n === 'panel-raised' || n === 'panel-inset',
     },
     {
-        name: 'icon-surface-raised',
-        match: (n) => n === 'icon-surface-raised',
+        name: 'model-icon-surface / icon-surface-raised',
+        match: (n) => n === 'model-icon-surface' || n === 'icon-surface-raised',
     },
     {name: 'service-accent-green', match: (n) => n === 'service-accent-green'},
     {name: 'service-hero-green (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-green-')},
     {name: 'service-hero-navy (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-navy-')},
-    {name: 'service-hero-blue (띠 / 번진 원)', match: (n) => n.startsWith('service-hero-blue-')},
-    {name: 'service-hero-teal (띠 / 번진 원 / 강조 글자)', match: (n) => n.startsWith('service-hero-teal-')},
-    {name: 'service-tech-fill (기술평가 채움색)', match: (n) => n === 'service-tech-fill'},
-    {name: 'platform-model-growth (투자모형 기술사업성장모형 색)', match: (n) => n.startsWith('platform-model-growth')},
-    {name: 'platform-bar (KTRS-FM 회색 막대 그라데이션)', match: (n) => n.startsWith('platform-bar-')},
-    {name: 'skeleton-shine (불러오는 중 빛 띠)', match: (n) => n === 'skeleton-shine'},
-    {name: 'model-compare (모형 비교표 모형 색 / 옅은 면)', match: (n) => n.startsWith('model-compare-')},
-    {
-        name: 'service-hero-violet (특허평가 띠 / 번진 원 / 강조 글자)',
-        match: (n) => n.startsWith('service-hero-violet-'),
-    },
-    {name: 'service-patent-fill (특허평가 채움색)', match: (n) => n === 'service-patent-fill'},
-    {name: 'platform-patent-accent (특허평가 평가 원리 도식)', match: (n) => n.startsWith('platform-patent-accent')},
-    {name: 'platform-radar (특허평가 히어로 방사형 차트)', match: (n) => n.startsWith('platform-radar-')},
-    {name: 'service-bigx-fill (K-BIGx 채움색)', match: (n) => n === 'service-bigx-fill'},
-    {name: 'service-carbon-fill (탄소중립 채움색)', match: (n) => n === 'service-carbon-fill'},
-    {name: 'platform-carbon (탄소중립 아이콘 · 서비스 토글)', match: (n) => n.startsWith('platform-carbon-')},
-    {name: 'platform-bigx (K-BIGx 분석 구조 · 게이지)', match: (n) => n.startsWith('platform-bigx-')},
     {name: 'service-intro-glow (K-BIGx 소개 띠 그림 뒤 원)', match: (n) => n.startsWith('service-intro-glow')},
     {name: 'search-glow (검색 카드 테두리 글로우)', match: (n) => n.startsWith('search-glow-')},
+    {name: 'service-glass-border (소개 히어로 안내 카드 테두리)', match: (n) => n === 'service-glass-border'},
+    {name: 'service-hero-marker (소개 히어로 카드 목록 점)', match: (n) => n === 'service-hero-marker'},
+    {name: 'procedure-step-number (절차 단계 번호 면)', match: (n) => n === 'procedure-step-number'},
+    {name: 'rolling-accordion-surface (자동 롤링 아코디언 판)', match: (n) => n === 'rolling-accordion-surface'},
+    {name: 'rolling-accordion-marker (자동 롤링 아코디언 목록 점)', match: (n) => n === 'rolling-accordion-marker'},
+    {name: 'platform-connector (소개 화면 연결선 · 화살표)', match: (n) => n === 'platform-connector'},
+    {
+        name: 'platform-icon-surface (K-BIGx 소개 아이콘 칸)',
+        match: (n) => n === 'platform-icon-surface' || n === 'platform-kbigx-source-icon-surface',
+    },
+    {
+        name: 'service-target-band / chip-marquee (면 / 테두리 / 글자)',
+        match: (n) => n === 'service-target-band' || n.startsWith('chip-marquee-'),
+    },
+    {
+        name: 'pill-tab (트랙 / 고른 면 / 글자)',
+        match: (n) => n.startsWith('pill-tab-'),
+    },
     {
         name: 'brand-solid / brand-solid-foreground',
         match: (n) => n === 'brand-solid' || n === 'brand-solid-foreground',
@@ -809,14 +764,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'platform-* (플랫폼 소개)': (
         <>
-            플랫폼 소개 화면 블록 전용입니다. platform-panel · -border 는 카드 · 패널 · 질문 탭 · 히어로 궤도 칸의 면 ·
-            테두리(다크 남색 슬레이트), platform-panel-inset 은 패널 안 옅은 칸(질문 답변 줄), platform-section-band 는
-            회색 섹션 띠(라이트 gray.50 · 다크 무채색), platform-line 은 절차 길 · 지표 윗선, platform-hub-line 은
-            히어로 궤도 점선, platform-accent · -foreground · -subtle 은 강조 면(고른 질문 · 패널 막대) · 강조 글자(번호
-            · 칩 · 흐르는 선) · 옅은 칩 면입니다. platform-step · -foreground 는 이용 절차 번호 원, platform-stat-number
-            는 정량 지표 숫자, platform-accent-patent 는 특허평가 아이콘 색, platform-accent-carbon-surface 는 탄소중립
-            아이콘 칸 면, platform-lens · -foreground 는 서비스 카드 호버 렌즈의 반전 면 · 글자, platform-lens-art-* 는
-            렌즈 안 서비스 예시 그림(카드 면 · 선 · 아이콘 · 눈금 · 밝은 점 · 서비스 강조색 4)입니다.
+            플랫폼 소개 화면 전용입니다. platform-banner 는 남색 소개 배너 바탕(사진을 못 불러와도 같은 띠로 보임),
+            -foreground 는 배너 글자, platform-hero-overlay 는 상단 대표 사진 위 어두운 막(60%)이자 사진 칸 바탕(사진을
+            못 불러와도 흰 글자가 읽힘)입니다. platform-audience 는 이용 대상 목록의 이용자 이름,
+            platform-carousel-nav-border 는 개요 카드 [이전] 버튼 테두리, platform-carousel-marker 는 고른 개요 카드의
+            설명 점입니다. platform-kbigx-flow-* 는 K-BIGx 보고서 소개 생성 흐름도의 판(surface 바깥 판 · 점선 묶음,
+            board 안쪽 판, source-border 점선, applicant 신청기업 칸 면 · 글자)입니다.
         </>
     ),
     'menu-overlay (서비스 헤더 전체 메뉴)': (
@@ -892,10 +845,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             기술평가 모형 구조도.
         </>
     ),
-    'icon-surface-raised': (
+    'model-icon-surface / icon-surface-raised': (
         <>
-            그림 아이콘(이미지)이 놓이는 밝은 칸입니다. 그림은 색을 바꿀 수 없어 다크에서도 밝게 두어 그림이 묻히지 않게
-            합니다.
+            그림 아이콘(이미지)이 놓이는 칸입니다. 그림은 색을 바꿀 수 없어 다크에서도 밝은 navy.100 으로 두어 파랑
+            그림이 묻히지 않게 합니다. model-icon-surface 는 라이트도 옅은 남색 칸(기술평가 모형 구조도 머리 · 탄소중립
+            분석 기능)입니다. K-BIGx 소개는 다크 전용 그림이 있어 platform-icon-surface ·
+            platform-kbigx-source-icon-surface 를 씁니다.
         </>
     ),
     'service-accent-green': (
@@ -908,117 +863,18 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>
             플랫폼 소개 &gt; 탄소중립 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는 green.100
             · mint.100 · warning.50 이고, 다크는 짙은 초록 띠(success.900) 위에 왼쪽 mint.900 · 오른쪽 success.800 원이
-            은은하게 번집니다. 제목 강조 낱말 · 절차 번호 원(emphasis)은 라이트 extra.forestgreen · 다크 mintglow, 번호
-            숫자(on-emphasis)는 라이트 흰색 · 다크 gray.900 입니다.
+            은은하게 번집니다.
         </>
     ),
     'service-hero-navy (띠 / 번진 원)': (
         <>
             플랫폼 소개 &gt; K-BIGx 보고서 히어로 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다. 라이트는
             navy.100 · blue.200 · purple.200 이고, 다크는 짙은 남색 띠(navy.800) 위에 왼쪽 blue.900 · 오른쪽 purple.900
-            원이 은은하게 번집니다. 제목 강조 낱말 · 게이지 값 호 · 미리보기 번호(emphasis)는 라이트 extra.royalcobalt ·
-            다크 paleblue, 절차 번호 원 숫자(on-emphasis)는 라이트 흰색 · 다크 gray.900 입니다.
+            원이 은은하게 번집니다.
         </>
     ),
-    'service-hero-blue (띠 / 번진 원)': (
-        <>
-            플랫폼 소개(오픈 플랫폼 소개) 히어로 · 마무리 배너의 띠(band)와 번진 원 두 개(glow-left · glow-right)입니다.
-            라이트는 blue.100 · blue.200 · extra.powder 이고, 다크는 navy.800 띠 위에 blue.800 · blue.900 원이 번집니다.
-        </>
-    ),
-    'service-hero-teal (띠 / 번진 원 / 강조 글자)': (
-        <>
-            플랫폼 소개 &gt; 기술평가 히어로 · 마무리 배너의 청록 띠(band)와 번진 원 두 개(glow-left · glow-right),
-            히어로 영문 한 줄 · 제목 강조 낱말 글자색(emphasis) · 이용 절차 번호 원 위 숫자색(on-emphasis)입니다.
-            라이트는 extra.lagoonmist · lagoonpale · bluemist · 강조 petrol, 다크는 extra.abyssteal 띠 위에 duskteal ·
-            twilightblue 원 · 강조 aqua 입니다(tone=&quot;teal&quot;).
-        </>
-    ),
-    'service-tech-fill (기술평가 채움색)': (
-        <>
-            기술평가 화면의 서비스 채움색 — 보고서 미리보기 &apos;샘플 화면&apos; 배지 · 모형 비교표 머리 줄 바탕(흰
-            글자)입니다. 라이트 · 다크 모두 extra.petrol 이고, 화면 &lt;main&gt; 의 --platform-tone-fill 로 넘깁니다.
-        </>
-    ),
-    'platform-model-growth (투자모형 기술사업성장모형 색)': (
-        <>
-            투자모형 구성도의 기술사업성장모형 카드 색입니다 — 테두리 · 머리 · 연결선(platform-model-growth), 배지 ·
-            평점 그라데이션 밝은 끝(-bright), 머리 · 특화지표 글자(-foreground). 라이트 extra.harborblue · denimblue,
-            다크 blue.800 · blue.300. 밸류업모형 카드는 platform-accent · platform-accent-bright(extra.cornflower) ·
-            platform-accent-foreground 를 씁니다.
-        </>
-    ),
-    'platform-bar (KTRS-FM 회색 막대 그라데이션)': (
-        <>
-            KTRS-FM 구조도 평가 항목수의 회색 막대 그라데이션 양 끝입니다(bg-linear-to-r from-platform-bar-start
-            to-platform-bar-end). 라이트 extra.cloudsteel → shadesteel, 다크는 방향이 뒤집힙니다.
-        </>
-    ),
-    'service-hero-violet (특허평가 띠 / 번진 원 / 강조 글자)': (
-        <>
-            플랫폼 소개 &gt; 특허평가 히어로 · 마무리 배너의 보라 띠(band) · 번진 원(glow-left · glow-right) · 영문 한
-            줄과 제목 강조 낱말(emphasis) · 절차 번호 원 숫자(on-emphasis)입니다(tone=&quot;violet&quot;). 라이트
-            extra.lavendermist · lilacglow · orchidmist · 강조 indigoviolet, 다크 extra.nightviolet · duskviolet ·
-            plumdusk · 강조 paleviolet.
-        </>
-    ),
-    'service-patent-fill (특허평가 채움색)': (
-        <>
-            특허평가 화면 &apos;샘플 화면&apos; 배지 바탕(흰 글자)입니다. 라이트 · 다크 모두
-            extra.indigoviolet(--platform-tone-fill).
-        </>
-    ),
-    'platform-patent-accent (특허평가 평가 원리 도식)': (
-        <>
-            평가 원리 흐름 도식 · 재산적 가치 정의 패널의 진한 끝(platform-patent-accent) · 밝은 끝(-bright) · 강조
-            글자(-foreground) 입니다. 화면 &lt;main&gt; 의 --platform-flow-* 로 넘깁니다. 라이트 extra.indigoviolet ·
-            softviolet, 다크 deepindigo · mutedviolet · 글자 paleviolet.
-        </>
-    ),
-    'service-carbon-fill (탄소중립 채움색)': (
-        <>
-            탄소중립 소개의 서비스 채움색(--platform-tone-fill)입니다 — 주요 기능 · 이용 대상 칸 위 막대. 라이트 · 다크
-            모두 extra.forestgreen.
-        </>
-    ),
-    'platform-carbon (탄소중립 아이콘 · 서비스 토글)': (
-        <>
-            platform-carbon-accent 는 탄소중립 아이콘 · 태그 글자 · 차별점 목록 점 · 서비스 토글의 고른 칸 바탕(라이트
-            extra.carbongreen · 다크 sagemint), platform-carbon-on-accent 는 고른 칸 글자(라이트 흰색 · 다크
-            gray.900)입니다. 아이콘 칸 면은 platform-accent-carbon-surface 를 씁니다.
-        </>
-    ),
-    'service-bigx-fill (K-BIGx 채움색)': (
-        <>
-            K-BIGx 보고서 소개의 서비스 채움색(--platform-tone-fill)입니다 — &apos;샘플 화면&apos; 배지 · 분석 기능 패널
-            위 막대 · 보고서 미리보기 고른 칸 · 기술혁신정보 DB 머리(흰 글자). 라이트 · 다크 모두 extra.royalcobalt.
-        </>
-    ),
-    'platform-bigx (K-BIGx 분석 구조 · 게이지)': (
-        <>
-            분석 구조 도식의 진한 끝(platform-bigx-accent) · 밝은 끝(-bright) · 강조 글자(-foreground)로, 화면
-            &lt;main&gt; 의 --platform-flow-* 로 넘깁니다(라이트 royalcobalt · softcobalt, 다크 brightroyal · cornflower
-            · 글자 paleblue). gauge-track 은 히어로 반원 게이지의 바탕 호입니다(라이트 frostblue · 다크 slatenight).
-        </>
-    ),
-    'platform-radar (특허평가 히어로 방사형 차트)': (
-        <>
-            특허 평가등급 카드의 방사형 차트 — 눈금선(line) · 평균 점선(average) · 대상 면(target) · 기울어진 배지
-            그라데이션(badge-start → badge-end)입니다. 기획 색 그대로 라이트 · 다크 쌍입니다.
-        </>
-    ),
-    'model-compare (모형 비교표 모형 색 / 옅은 면)': (
-        <>
-            기술평가 소개 모형 비교표의 모형 색(blue · mint · orange — 이름 · 목록 점 · 배지 글자 · 평가 신청 링크)과
-            옅은 면(-surface — 머리 칸 · 배지 바탕 · 줄 호버 55%)입니다. 평가모형 카드(model-card-*)보다 면이 옅습니다.
-            라이트 extra.cerulean · pine · umber / bluewhite · mintwhite · peachwhite, 다크 extra.paleblue · seafoam ·
-            apricot / nightblue · nightgreen · nightbrown.
-        </>
-    ),
-    'skeleton-shine (불러오는 중 빛 띠)': (
-        <>
-            보고서 미리보기 그림을 불러오는 동안 회색 자리 위로 지나가는 빛 띠 색입니다. 라이트 흰색 50% · 다크 흰색 5%.
-        </>
+    'service-hero-marker (소개 히어로 카드 목록 점)': (
+        <>소개 화면 히어로 유리 카드의 목록 점입니다. 라이트 gray.500 · 다크 gray.100.</>
     ),
     'service-intro-glow (K-BIGx 소개 띠 그림 뒤 원)': (
         <>
@@ -1033,6 +889,57 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             검색 카드(SelectSearchForm hasGlow) 테두리를 도는 그라데이션 색입니다. start(extra.teal) →
             middle(extra.sapphire) → end(extra.violet) → start 로 이어지고, 라이트 · 다크 값이 같습니다. 손으로 쓰는 CSS
             (styles/select-search-form.css)에서 var(--ds-search-glow-*) 로 씁니다.
+        </>
+    ),
+    'service-glass-border (소개 히어로 안내 카드 테두리)': (
+        <>
+            플랫폼 소개 히어로의 반투명 안내 카드(ServiceGlassCard) 테두리입니다. 라이트는 흰색 90%, 다크는 흰색
+            25%입니다. K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
+        </>
+    ),
+    'procedure-step-number (절차 단계 번호 면)': (
+        <>
+            절차 단계(ProcedureSteps)의 번호 칸 면입니다. 라이트는 gray.500, 다크는 밝은 gray.200 이고 번호 글자는
+            primary-foreground 입니다. K-BIGx 보고서 · 특허평가 · 탄소중립 소개가 함께 씁니다.
+        </>
+    ),
+    'rolling-accordion-marker (자동 롤링 아코디언 목록 점)': (
+        <>자동 롤링 아코디언 본문 목록의 점입니다. 라이트 gray.500 · 다크 gray.100.</>
+    ),
+    'platform-connector (소개 화면 연결선 · 화살표)': (
+        <>
+            절차 단계 화살표와 K-BIGx 구조도의 연결선 · 화살표 · 더하기 색입니다. 라이트 gray.500 · 다크 gray.100 이고,
+            선은 50% 로 씁니다.
+        </>
+    ),
+    'platform-icon-surface (K-BIGx 소개 아이콘 칸)': (
+        <>
+            K-BIGx 소개의 아이콘 칸입니다. 분석 기능 · 보고서 칸은 platform-icon-surface(라이트 navy.100 · 다크
+            navy.700), 구조도의 특허정보 · 기업정보 · LLM 칸은 platform-kbigx-source-icon-surface(라이트 흰색 · 다크
+            gray.800).
+        </>
+    ),
+    'rolling-accordion-surface (자동 롤링 아코디언 판)': (
+        <>
+            자동 롤링 아코디언(RollingAccordion)의 글 판입니다. 라이트는 panel-subtle 과 같은 gray.10, 다크는 페이지
+            바탕과 같은 gray.900 입니다. 기술평가 · K-BIGx 보고서 · 탄소중립 소개가 함께 씁니다.
+        </>
+    ),
+    'service-target-band / chip-marquee (면 / 테두리 / 글자)': (
+        <>
+            탄소중립 &apos;이런 기업에 적합합니다&apos; 띠(service-target-band)와 그 위 칩 마퀴(ChipMarquee)의 칩 면 ·
+            테두리 · 글자 · 마우스를 올린 면(hover)입니다. 라이트는 blue.50 띠 · blue.10 칩 · navy.200 테두리 · navy.600
+            글자 · navy.500 hover 입니다. 다크는 blue.900 띠 위에 navy.800 칩 · navy.500 테두리 · navy.300 글자이고,
+            hover 면은 navy.300 에 짙은 글자(primary-foreground)이며 테두리도 면과 같은 navy.300 이라 보이지
+            않습니다(hover-border — 라이트는 평소 테두리 navy.200 그대로).
+        </>
+    ),
+    'pill-tab (트랙 / 고른 면 / 글자)': (
+        <>
+            알약 전환 탭(theme/pill-tabs.variants.ts)의 트랙(track) · 고른 항목 면(active) ·
+            글자(active-foreground)입니다 — 플랫폼 소개 &gt; 탄소중립의 플랫폼 전환. 라이트는 트랙 green.50 · 고른 면
+            mint.800 · 흰 굵은 글자 입니다. 다크는 짙은 초록 트랙(green.900) 위에 같은 mint.800 고른 면 · gray.10
+            글자입니다.
         </>
     ),
     'brand-solid / brand-solid-foreground': (

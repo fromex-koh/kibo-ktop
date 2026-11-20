@@ -56,6 +56,15 @@ const USAGE_ROWS = [
             '모든 폭',
         ],
     },
+    {
+        key: 'platform',
+        cells: [
+            '플랫폼 소개 > 기술평가(EvaluationModelTabs)',
+            '탭 — 카드가 탭 단추. 처음엔 아무것도 고르지 않은 상태이고, 누르면 아래에 모형 소개가 나타나며 그 위치로 스크롤',
+            'hover · 고른 탭(data-state=active) · 키보드 포커스(focus-visible)',
+            'PC(xl)만 — isArrowDesktopOnly',
+        ],
+    },
 ]
 
 const TONE_COLUMNS = [
