@@ -145,15 +145,6 @@ type EvaluationReportBenchmark = {
     minimum: readonly number[]
 }
 
-/** 동업종 시장규모 — 연도별 국내시장 규모(억원). */
-type EvaluationReportMarketSize = {
-    rowLabel: string
-    /** 제목 옆에 적는 업종코드(예: 58222). */
-    industryCode: string
-    unit: string
-    years: readonly {year: string; value: number}[]
-}
-
 /** 기술사업평가 세부내역 — 대항목 아래 소항목마다 판정이 하나씩 선다. */
 type EvaluationReportDetailGroup = {
     label: string
@@ -185,7 +176,8 @@ type EvaluationReport = {
     engineers: readonly EvaluationReportCount[]
     intellectualProperties: readonly EvaluationReportCount[]
     benchmarks: readonly EvaluationReportBenchmark[]
-    marketSize: EvaluationReportMarketSize
+    /** 3쪽 비교 표(유사업종 · 유사기술) 아래 주석 — 비교대상 기준(기간 · 모형 · 건수). 앞의 '※ ' 는 화면이 붙인다. */
+    comparisonBasis: string
     totalScore: EvaluationReportScore
     detailGroups: readonly EvaluationReportDetailGroup[]
 }
@@ -213,7 +205,6 @@ export type {
     EvaluationReportBenchmarkColumn,
     EvaluationReportCount,
     EvaluationReportDetailGroup,
-    EvaluationReportMarketSize,
     EvaluationReportRow,
     EvaluationReportScore,
     TrlStageGroup,
