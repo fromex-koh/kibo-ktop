@@ -124,8 +124,9 @@ const ConsentRadio = ({
     </RadioGroup>
 )
 
+// 동의서 카드 — 한 줄에 배지 · 제목 · 동의/비동의가 놓여 여백을 좁게 쓴다(inset="compact", md 이상 상하좌우 32px).
 const ConsentCard = ({title, children}: {title: string; children: React.ReactNode}) => (
-    <FormCard title={title}>
+    <FormCard title={title} inset="compact">
         <ConsentList>{children}</ConsentList>
     </FormCard>
 )
@@ -303,6 +304,7 @@ const CustomerConsentAgreement = () => {
                     control="radio"
                     value={REQUIRED_ONLY_SCOPE}
                     onClick={() => requestScope(REQUIRED_ONLY_SCOPE)}
+                    inset="compact"
                     badges={<RequirementBadge requirement="required" />}
                 >
                     필수항목만 동의
@@ -311,6 +313,7 @@ const CustomerConsentAgreement = () => {
                     control="radio"
                     value={ALL_SCOPE}
                     onClick={() => requestScope(ALL_SCOPE)}
+                    inset="compact"
                     badges={
                         <>
                             <RequirementBadge requirement="required" />
@@ -387,6 +390,7 @@ const CustomerConsentAgreement = () => {
                         value="yes"
                         checked={Boolean(confirmations[confirmation.name])}
                         onCheckedChange={(checked) => setConfirmation(confirmation.name, checked)}
+                        inset="compact"
                     >
                         {confirmation.label}
                     </SelectableCard>
@@ -488,6 +492,7 @@ const CustomerConsentNoticeEmail = () => {
         // 필수 표시는 별표가 아니라 동의 항목과 같은 「필수」 배지이고, 위치도 동의 항목처럼 제목 앞이다.
         // 글자처럼 흘려 넣어 제목이 두 줄이 되어도 배지와 첫 줄이 떨어지지 않는다.
         <FormCard
+            inset="compact"
             title={
                 <>
                     <RequirementBadge requirement="required" className="me-2 align-middle" />
