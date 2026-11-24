@@ -390,6 +390,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         layers: ['custom'],
                                     },
                                     {
+                                        label: 'PeerItemBarTable',
+                                        href: '/component-guide/peer-item-bar-table',
+                                        layers: ['custom'],
+                                    },
+                                    {
                                         label: 'OverlayColumnChart',
                                         href: '/component-guide/overlay-column-chart',
                                         layers: ['custom'],
