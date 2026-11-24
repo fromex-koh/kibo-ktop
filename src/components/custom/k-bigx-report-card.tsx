@@ -69,7 +69,7 @@ const KBigxReportCard = ({item, routes, printPath}: KBigxReportCardProps) => {
     const deductionLabel = item.isTicketDeducted ? TICKET_DEDUCTION_BADGE.deducted : TICKET_DEDUCTION_BADGE.notDeducted
 
     return (
-        <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
+        <BaseCard padding="lg">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
                     {/* 기업명 · 이용권 배지: 들어가면 한 줄(배지 세로 가운데), 모자라면 배지가 다음 줄 */}

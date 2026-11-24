@@ -61,7 +61,7 @@ const IndividualEvaluationCard = ({
     isGuaranteeRecommended: boolean
     onGuaranteeCompleted: () => void
 }) => (
-    <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
+    <BaseCard padding="lg">
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
                 {/* 모형명 · 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄(모형명은 말줄임 없이 다 보인다) */}
@@ -100,7 +100,7 @@ const EvaluationRequestCard = ({item, modelLabel}: {item: OrgEvaluationRequestIt
     const status = ORG_EVALUATION_REQUEST_STATUS[item.status]
 
     return (
-        <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
+        <BaseCard padding="lg">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
                     {/* 모형명 · 배지: 들어가면 한 줄, 모자라면 배지가 다음 줄(모형명은 말줄임 없이 다 보인다) */}

@@ -43,7 +43,8 @@ type SubAccountAgreementInfoProps = {
 const SubAccountAgreementInfo = ({agreement, summaries}: SubAccountAgreementInfoProps) => (
     // 시안: 요약 목록과 계정 수 사이 24.
     <div className="flex flex-col gap-6">
-        <SummaryList>
+        {/* 여백 md 이상 상하좌우 32 — 마이페이지 패널과 맞춘다(SummaryList 기본 24). */}
+        <SummaryList className="md:p-8">
             {/* 값이 없으면 "-" 를 채우지 않고 줄 자체를 두지 않는다 — 비협약 기관에는 없는 항목이지
                 아직 안 정해진 값이 아니다. */}
             {agreement.projectName ? <SummaryListItem term="매칭 사업">{agreement.projectName}</SummaryListItem> : null}
