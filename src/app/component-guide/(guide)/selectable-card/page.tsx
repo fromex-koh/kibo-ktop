@@ -220,6 +220,13 @@ const PROPS_ITEMS = [
         '() => void',
     ],
     ['SelectableCard', 'id', '내부 컨트롤의 id. 생략하면 자동으로 만들어집니다.', '자동 생성', 'string'],
+    [
+        'SelectableCard',
+        'inset',
+        '768px 이상 안쪽 여백. default 는 좌우 40 · 상하 24px, compact 는 상하좌우 32px(고객정보활용동의 카드). 768px 미만은 좌우 16 · 상하 24px.',
+        "'default'",
+        "'default' | 'compact'",
+    ],
     ['SelectableCard', 'labelClassName', '라벨에 덧붙일 클래스.', 'undefined', 'string'],
     ['SelectableCard', 'className', '카드에 덧붙일 클래스.', 'undefined', 'string'],
 ] as const

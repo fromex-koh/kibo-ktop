@@ -202,8 +202,16 @@ const MypageShellGuidePage = () => (
                         >
                             FormCard
                         </Link>
-                        와 같은 카드이고, xl 이상의 좌우 안쪽 여백만 40으로 줄였습니다(FormCard 기본 102). 마이페이지
+                        에 <code>inset=&quot;compact&quot;</code> 를 준 카드입니다. 안쪽 여백은 모바일 상하 24 · 좌우
+                        16, md 이상 상하좌우 32px 입니다(FormCard 기본은 xl 에서 상하 40 · 좌우 102). 마이페이지
                         밖에서는 FormCard를 씁니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        다른 마이페이지 패널도 32px 에 맞춥니다. 조회 필터(SearchFilterForm) · 하위계정 요약은 md 이상
+                        상하좌우 32, 결과 카드(평가결과 · K-BIGx 보고서 이력 · 평가검증 신청 · 하위계정)는{' '}
+                        <code>BaseCard padding=&quot;lg&quot;</code> 로 모든 폭에서 32, 문의 카드는 상하 32 · 좌우 24(md
+                        이상 32)입니다. 카드 안 구분선(예: 내 정보의 주소와 마케팅 동의 사이)도 위아래 32px(
+                        <code>mt-8 border-t pt-8</code>)로 둡니다.
                     </p>
                 </div>
                 <MypageFormCard

@@ -99,7 +99,10 @@ const SUBMIT_COLUMNS = [
 ] as const
 
 const COMPOSITION = [
-    {name: 'SearchFilterForm', desc: 'form 컨테이너. 카드 면과 초기화 신호를 맡고, form 속성을 그대로 받습니다.'},
+    {
+        name: 'SearchFilterForm',
+        desc: 'form 컨테이너. 카드 면과 초기화 신호를 맡고, form 속성을 그대로 받습니다. 카드 여백은 사방 모바일 24 · md 이상 32px 입니다(row · stack 같음).',
+    },
     {name: 'SearchFilterFields', desc: '필드를 세로로 묶습니다.'},
     {name: 'SearchFilterActions', desc: '초기화 · 조회 버튼을 오른쪽에 정렬합니다.'},
     {name: 'SearchFilterRow', desc: '필드 2개를 md 이상에서 2열로 나란히 둡니다.'},
@@ -280,7 +283,7 @@ const SearchFilterFormGuidePage = () => (
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>SearchFilterForm</code> 안에 필요한 필드와 초기화 · 조회 버튼을 넣습니다. 필드 값은 필드가
                         관리하므로 사용처는 <code>name</code> 과 기본값만 정합니다. 버튼은 프로젝트 <code>Button</code>{' '}
-                        을 씁니다.
+                        을 씁니다. 카드 여백은 사방 모바일 24 · md 이상 32px 입니다.
                     </p>
                 </div>
                 <SearchFilterFormDemo showResult={false} />

@@ -257,6 +257,11 @@ const ListPatternsGuidePage = () => (
                                 줄로 나열하는 목록은 Separator, 카드로 세우는 목록은 BaseCard 를 씁니다.
                             </li>
                             <li>
+                                <strong className="text-foreground">카드 여백</strong> — 줄 목록 카드(공지사항 · 자료실
+                                · 1:1 문의)와 상세 카드(NoticeDetail · InquiryDetail)는 세로 32px, 가로 24px(md 이상
+                                32px). 평가결과 카드는 <code>BaseCard padding=&quot;lg&quot;</code>(32px).
+                            </li>
+                            <li>
                                 <strong className="text-foreground">빈 상태</strong> — 항목이 없으면{' '}
                                 <Link href="/component-guide/empty-state" className={LINK_CLASS}>
                                     EmptyState

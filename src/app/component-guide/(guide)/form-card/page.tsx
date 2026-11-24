@@ -46,14 +46,15 @@ const USAGE_CODE = `import {FormCard} from '@/components/composite/form-card'
 
 const PADDING_COLUMNS = [
     {key: 'width', header: '화면 폭', align: 'start', rowHeader: true},
-    {key: 'x', header: '좌우 여백', align: 'start'},
-    {key: 'y', header: '상하 여백', align: 'start'},
+    {key: 'x', header: '좌우 여백 (inset="default")', align: 'start'},
+    {key: 'compact', header: '좌우 여백 (inset="compact")', align: 'start'},
+    {key: 'y', header: '상하 여백 (default · compact)', align: 'start'},
 ] as const
 
 const PADDING_ROWS = [
-    {key: 'base', cells: ['768px 미만', '16px', '24px']},
-    {key: 'md', cells: ['768px 이상', '40px', '40px']},
-    {key: 'xl', cells: ['1280px 이상', '102px', '40px']},
+    {key: 'base', cells: ['768px 미만', '16px', '16px', '24px · 24px']},
+    {key: 'md', cells: ['768px 이상', '40px', '32px', '40px · 32px']},
+    {key: 'xl', cells: ['1280px 이상', '102px', '32px', '40px · 32px']},
 ]
 
 const CHOICE_COLUMNS = [
@@ -117,6 +118,13 @@ const PROPS_ITEMS = [
         'true 이면 액션은 제목 줄에만 두고 설명은 그 아래 전체 폭으로 펼칩니다. 설명이 길 때 씁니다.',
         'false',
         'boolean',
+    ],
+    [
+        'FormCard',
+        'inset',
+        "안쪽 여백입니다. 'compact' 는 768px 이상에서 상하좌우 32px 로 고정합니다 — 배지 · 제목 · 컨트롤이 한 줄에 놓이거나 폭이 좁은 카드(고객정보활용동의 · 마이페이지 MypageFormCard)에 씁니다.",
+        "'default'",
+        "'default' | 'compact'",
     ],
     ['FormCard', 'children', '헤더 아래 폼 본문입니다. 필수입니다.', '-', 'ReactNode'],
     ['FormCard', 'className', '카드 바깥 요소에 클래스를 추가합니다.', '-', 'string'],
@@ -212,7 +220,9 @@ const FormCardGuidePage = () => (
                         여백
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        여백은 화면 폭에 따라 자동으로 바뀝니다. 헤더와 본문 사이 간격은 40px 입니다.
+                        여백은 화면 폭에 따라 자동으로 바뀝니다. 한 줄에 내용이 많은 카드는{' '}
+                        <code>inset=&quot;compact&quot;</code> 로 상하좌우 여백을 32px 로 좁힙니다. 헤더와 본문 사이
+                        간격은 40px 입니다.
                     </p>
                 </div>
                 <Table caption="화면 폭별 FormCard 안쪽 여백" columns={PADDING_COLUMNS} rows={PADDING_ROWS} size="md" />

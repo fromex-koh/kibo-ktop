@@ -280,6 +280,13 @@ const ConsentListGuidePage = () => (
                         </DemoSurface>
                     </div>
                     <div className={SUB_BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">카드에 넣을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            동의서 카드는 <code>FormCard inset=&quot;compact&quot;</code> 안에 둡니다. 여백은 md 이상
+                            상하좌우 32px, 모바일 좌우 16px · 상하 24px 입니다.
+                        </p>
+                    </div>
+                    <div className={SUB_BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">폼 제출과 오류 표시</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             항목마다 <code>RadioGroup</code> 에 서로 다른 <code>name</code> 을 주면 선택값(
