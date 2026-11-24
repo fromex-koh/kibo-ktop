@@ -89,8 +89,8 @@ const ResourceList = ({items, pageSize = 10}: ResourceListProps) => {
                 </SectionHeader>
 
                 {visibleItems.length > 0 ? (
-                    /* 카드 세로 여백 32(py-8), 가로 여백은 Card 기본값 24 — 공지사항 목록과 같은 규칙이다. */
-                    <BaseCard className="py-8">
+                    /* 카드 여백: 세로 32 · 가로 24(md 이상 32) — 공지사항 목록과 같다. */
+                    <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                         <ul className="flex flex-col">
                             {visibleItems.map((item, index) => (
                                 <li key={item.id} className="flex flex-col">

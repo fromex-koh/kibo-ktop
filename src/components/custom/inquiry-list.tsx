@@ -87,8 +87,8 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
                 </div>
 
                 {visibleItems.length > 0 ? (
-                    /* 카드 세로 여백 32 · 가로 24, 항목 사이 24 와 구분선 — 공지사항 목록과 같은 값이다(시안). */
-                    <BaseCard className="py-8">
+                    /* 카드 여백: 세로 32 · 가로 24(md 이상 32). 항목 사이 24 + 구분선. */
+                    <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                         <ul className="flex flex-col">
                             {visibleItems.map((item, index) => {
                                 const status = INQUIRY_STATUS[item.status]

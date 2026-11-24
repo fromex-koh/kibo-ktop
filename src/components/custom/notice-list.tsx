@@ -70,10 +70,9 @@ const NoticeList = ({items, pageSize = 10}: NoticeListProps) => {
                     항목이 모자랄 때 페이지네이션이 화면 아래로 밀려 스크롤해야 눌 수 있다. 목록이 줄면
                     페이지네이션도 따라 올라온다(게시판 목록의 일반적인 동작). */}
                 {visibleItems.length > 0 ? (
-                    /* 카드 세로 여백은 32 다(Card 기본 24 를 사용처에서 덮는다). 시안은 위 32·아래 8 로 보이지만
-                       마지막 항목 아래 구분선을 빼면 그 자리(24+선 1+8)가 아래 여백 32 가 되어 위아래가 같아진다.
-                       가로 여백은 Card 기본값 24 로 시안과 같아 건드리지 않는다. */
-                    <BaseCard className="py-8">
+                    /* 카드 여백: 세로 32 · 가로 24(md 이상 32 — 1:1 문의 목록과 같다). 시안은 위 32·아래 8 로 보이지만
+                       마지막 항목 아래 구분선을 빼면 그 자리(24+선 1+8)가 아래 여백 32 가 되어 위아래가 같아진다. */
+                    <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                         <ul className="flex flex-col">
                             {visibleItems.map((item, index) => {
                                 return (
