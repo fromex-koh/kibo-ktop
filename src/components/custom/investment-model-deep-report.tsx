@@ -1,5 +1,5 @@
-import {ComparisonRadarChart, type ComparisonRadarItem} from '@/components/custom/comparison-radar-chart'
 import {PeerColumnChart} from '@/components/custom/peer-column-chart'
+import {PeerItemBarTable} from '@/components/custom/peer-item-bar-table'
 import {PositioningScatterChart} from '@/components/custom/positioning-scatter-chart'
 import {
     ReportDocument,
@@ -12,12 +12,11 @@ import {
     INVESTMENT_MODEL_DEEP_DOCUMENT_TITLE,
     type InvestmentModelDeepReport,
 } from '@/content/service/investment-model-deep-report'
-import type {TechIndexComparison} from '@/content/service/tech-index-deep-report'
 import {cn} from '@/lib/utils'
 
 // 투자모형 심층분석의 기술평가서 두 장(2·3쪽) — 1쪽 '투자용 평가결과' 뒤에 이어 붙는다.
 //
-// 2쪽: 성장·밸류업포지셔닝(산점도) · PEER GROUP(업종) 세부항목비교(레이더 둘) · 재무지표비교(막대)
+// 2쪽: 성장·밸류업포지셔닝(산점도) · PEER GROUP(업종) 세부항목비교(항목별 막대 표) · 재무지표비교(막대)
 // 3쪽: 투자용 기술평가등급 체계(TI1~TI14 표)
 //
 // [프론트엔드 연동] 이 파일은 받은 값을 그리기만 한다 — 값은 화면이 부르는 getInvestmentModelDeepScreen
@@ -26,21 +25,13 @@ import {cn} from '@/lib/utils'
 // 인쇄 버튼은 첫 문서(1쪽)에만 둔다 — 한 번 누르면 세 장이 함께 나간다.
 
 // 구획 제목 줄 오른쪽 범례 — 견본 16 정사각 · 글자 12(시안).
-const Legend = ({
-    items,
-}: {
-    items: readonly {label: string; color: string; shape?: 'square' | 'circle'; isDashed?: boolean}[]
-}) => (
+const Legend = ({items}: {items: readonly {label: string; color: string; shape?: 'square' | 'circle'}[]}) => (
     <ul className="typo-caption-regular text-label-foreground flex gap-6">
         {items.map((item) => (
             <li key={item.label} className="flex items-center gap-2">
                 <span
                     aria-hidden="true"
-                    className={cn(
-                        'size-4 shrink-0',
-                        item.shape === 'circle' && 'rounded-full',
-                        item.isDashed && 'border-navy-300 border border-dashed',
-                    )}
+                    className={cn('size-4 shrink-0', item.shape === 'circle' && 'rounded-full')}
                     style={{backgroundColor: item.color}}
                 />
                 {item.label}
@@ -48,14 +39,6 @@ const Legend = ({
         ))}
     </ul>
 )
-
-const toRadarItems = (axes: readonly TechIndexComparison[]): ComparisonRadarItem[] =>
-    axes.map((axis) => ({
-        id: axis.label,
-        label: axis.label,
-        primaryValue: axis.applicant,
-        comparisonValue: axis.average,
-    }))
 
 const InvestmentModelDeepReportDocuments = ({
     report,
@@ -95,42 +78,16 @@ const InvestmentModelDeepReportDocuments = ({
                     <Legend
                         items={[
                             {label: '신청기업', color: 'var(--ds-primary)'},
-                            {
-                                label: 'PEER 기업군',
-                                color: 'color-mix(in srgb, var(--ds-navy-300) 25%, var(--ds-surface))',
-                                isDashed: true,
-                            },
+                            {label: 'PEER 기업군', color: 'var(--ds-navy-200)'},
                         ]}
                     />
                 }
             >
-                {/* 레이더 둘은 좌우로 나란히 선다(시안) — 왼쪽은 역량, 오른쪽은 사업 축이다. */}
-                <div className="grid grid-cols-2 gap-4">
-                    {report.detailRadars.map((radar) => (
-                        <ComparisonRadarChart
-                            key={radar.id}
-                            animate={false}
-                            ariaLabel={`PEER GROUP 세부항목비교 ${radar.id}`}
-                            data={toRadarItems(radar.axes)}
-                            primaryLabel="신청기업"
-                            comparisonLabel="PEER 기업군"
-                            comparisonAppearance="filled"
-                            comparisonColor="var(--ds-navy-300)"
-                            gridColor="var(--ds-subtle-3)"
-                            gridType="circle"
-                            outerRadius={70}
-                            centerY={104}
-                            ringCount={5}
-                            tickFontSize={12}
-                            tickFontWeight={400}
-                            dotAppearance="hollow"
-                            showLegend={false}
-                            showTooltip={false}
-                            isLoading={isLoading}
-                            className="h-52 gap-0 [&_[data-slot=chart]]:h-52 [&_[data-slot=chart]]:min-h-0 [&_[data-slot=chart]]:max-w-none"
-                        />
-                    ))}
-                </div>
+                <PeerItemBarTable
+                    caption="PEER GROUP(업종) 세부항목비교 — 항목별 신청기업과 PEER 평균"
+                    columns={report.detailItems}
+                    isLoading={isLoading}
+                />
             </ReportSection>
 
             <ReportSection
@@ -150,6 +107,8 @@ const InvestmentModelDeepReportDocuments = ({
                     heightClassName="h-50"
                     isLoading={isLoading}
                 />
+                {/* 비교대상 기준 — 막대 아래 8(구획 안 간격). 기간 · 건수는 데이터가 정한다. */}
+                <p className="typo-caption-bold text-foreground">※ {report.financialComparisonBasis}</p>
             </ReportSection>
         </ReportDocument>
 

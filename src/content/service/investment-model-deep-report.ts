@@ -1,8 +1,8 @@
 import {getEvaluationReportLabel, type EvaluationReportKind} from '@/constants/evaluation-report'
 import {getInvestmentModelReport, type InvestmentModelReport} from '@/content/service/investment-model-report'
 import type {PeerColumnItem} from '@/components/custom/peer-column-chart'
+import type {PeerItemBarColumn} from '@/components/custom/peer-item-bar-table'
 import type {PositioningScatterPoint} from '@/components/custom/positioning-scatter-chart'
-import type {TechIndexComparison} from '@/content/service/tech-index-deep-report'
 
 // 투자모형 심층분석(A4 세 장)의 값.
 // 화면: 기관 /org/mypage/evaluation-history/deep-analysis/investment-model
@@ -25,10 +25,12 @@ type InvestmentModelDeepReport = {
         /** 범례에 적는 표본 수 설명(예: '피어 그룹 중 표본 14개사'). */
         peerLegendLabel: string
     }
-    /** PEER GROUP(업종) 세부항목비교 — 레이더 둘(왼쪽 역량 · 오른쪽 사업). */
-    detailRadars: readonly {id: string; axes: readonly TechIndexComparison[]}[]
+    /** PEER GROUP(업종) 세부항목비교 — 항목 여덟 개(순서 고정)의 신청기업 · PEER 평균 값과 항목별 눈금. */
+    detailItems: readonly PeerItemBarColumn[]
     /** PEER GROUP(업종) 재무지표비교 — 당사와 피어 평균을 견주는 막대 넷. */
     financialComparisons: readonly PeerColumnItem[]
+    /** 재무지표비교 아래 주석 — 비교한 표본의 기간 · 건수(앞의 '※' 는 화면이 붙인다). */
+    financialComparisonBasis: string
     /** 투자용 기술평가등급 체계 — TI1~TI14 의 뜻. */
     gradeDefinitions: readonly InvestmentGradeDefinition[]
 }
@@ -59,40 +61,88 @@ const MOCK_INVESTMENT_MODEL_DEEP_REPORT: Omit<InvestmentModelDeepReport, 'label'
             {id: 'peer-14', x: 58, y: 60},
         ],
     },
-    detailRadars: [
+    // 항목 순서는 고정이다 — 눈금은 항목마다 크기에 맞춰 따로 정한다.
+    detailItems: [
         {
-            id: 'capability',
-            axes: [
-                {label: '동업종 경험수준', applicant: 78, average: 42},
-                {label: '목표시장', applicant: 74, average: 40},
-                {label: '기술우위성', applicant: 82, average: 43},
-                {label: '기술지식수준', applicant: 76, average: 41},
-                {label: '기술(디자인)인력수준', applicant: 70, average: 39},
-                {label: '지식재산권', applicant: 66, average: 38},
-                {label: '고용성장', applicant: 72, average: 40},
-                {label: '경영진', applicant: 75, average: 41},
-            ],
+            id: 'industry-experience',
+            label: '동업종 경험수준',
+            unit: '년',
+            ticks: [0, 10, 20, 30],
+            applicant: 16.3,
+            average: 10.5,
+            fractionDigits: 1,
         },
         {
-            id: 'business',
-            axes: [
-                {label: '생산 및 품질관리', applicant: 80, average: 43},
-                {label: '수익창출역량', applicant: 77, average: 42},
-                {label: '사업모델', applicant: 83, average: 44},
-                {label: '기술사업계획', applicant: 79, average: 42},
-                {label: '투자위험요소', applicant: 68, average: 38},
-                {label: '외부자금 조달', applicant: 64, average: 37},
-                {label: '판매처 확보', applicant: 71, average: 39},
-                {label: '시장경쟁수준', applicant: 74, average: 40},
-            ],
+            id: 'executives',
+            label: '경영진수',
+            unit: '명',
+            ticks: [0, 5, 10],
+            applicant: 4,
+            average: 3.2,
+            fractionDigits: 0,
+        },
+        {
+            id: 'technical-staff',
+            label: '기술인력수',
+            unit: '명',
+            ticks: [0, 20, 40, 60],
+            applicant: 42,
+            average: 25.5,
+            fractionDigits: 0,
+        },
+        {
+            id: 'patents',
+            label: '등록 특허수',
+            unit: '건',
+            ticks: [0, 5, 10, 15],
+            applicant: 6,
+            average: 3.5,
+            fractionDigits: 0,
+        },
+        {
+            id: 'production-quality',
+            label: '생산 및 품질관리',
+            unit: '점',
+            ticks: [0, 50, 100],
+            applicant: 82,
+            average: 61.5,
+            fractionDigits: 1,
+        },
+        {
+            id: 'market-competition',
+            label: '시장경쟁',
+            unit: '점',
+            ticks: [0, 50, 100],
+            applicant: 74,
+            average: 58.3,
+            fractionDigits: 1,
+        },
+        {
+            id: 'external-funding',
+            label: '외부자금',
+            unit: '백만원',
+            ticks: [0, 1000, 2000, 3000],
+            applicant: 1850,
+            average: 1120,
+            fractionDigits: 0,
+        },
+        {
+            id: 'return-on-investment',
+            label: '투자수익률',
+            unit: '%',
+            ticks: [0, 10, 20, 30],
+            applicant: 18.4,
+            average: 12.7,
+            fractionDigits: 1,
         },
     ],
     financialComparisons: [
-        {id: 'return-on-equity', label: '총자본순이익율', value: 63.7, comparisonValue: 37.5, isApplicant: true},
-        {id: 'operating-margin', label: '매출액영업이익률', value: 58.2, comparisonValue: 35.1, isApplicant: true},
+        {id: 'sales', label: '매출액', value: 63.7, comparisonValue: 37.5, isApplicant: true},
+        {id: 'capital', label: '자본금', value: 58.2, comparisonValue: 35.1, isApplicant: true},
         {id: 'net-income-growth', label: '순이익증가율', value: 66.4, comparisonValue: 39.8, isApplicant: true},
-        {id: 'net-margin', label: '매출액순이익률', value: 61.9, comparisonValue: 36.7, isApplicant: true},
+        {id: 'return-on-equity', label: '총자본순이익률', value: 61.9, comparisonValue: 36.7, isApplicant: true},
     ],
+    financialComparisonBasis: '비교대상 기준: ’14~22년까지 기술평가건 (66,686건)',
     gradeDefinitions: [
         {
             grade: 'TI1 (AAA)',
