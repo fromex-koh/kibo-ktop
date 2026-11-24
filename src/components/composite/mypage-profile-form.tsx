@@ -297,8 +297,8 @@ const MarketingConsentField = () => {
     const setAgreed = (isAgreed: boolean) => setValue(MARKETING_CONSENT_FIELD, isAgreed ? MARKETING_CONSENT_AGREED : '')
 
     return (
-        // 구분선 위아래 40 — 카드 안 덩어리 사이 간격과 같다.
-        <div className="border-subtle-3 mt-10 flex items-center gap-6 border-t pt-10">
+        // 구분선 위아래 32 — 마이페이지 카드 여백(32)과 맞춘다.
+        <div className="border-subtle-3 mt-8 flex items-center gap-6 border-t pt-8">
             <div className="flex min-w-0 flex-1 items-start gap-2">
                 {/* 체크박스는 radix 가 <button> 으로 그린다 — 이름은 aria-labelledby 로 글자에 잇는다[5.1.1]. */}
                 <Checkbox
