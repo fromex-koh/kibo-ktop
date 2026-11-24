@@ -175,7 +175,8 @@ const SummaryListGuidePage = () => (
                         기본 사용과 변형
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        흰 카드 박스 안에 행을 쌓습니다. 카드 제목과 버튼이 필요하면 <code>FormCard</code> 본문으로
+                        흰 카드 박스 안에 행을 쌓습니다. 여백을 넓힐 때만 <code>className</code> 으로 덮습니다(예:
+                        하위계정 요약 <code>md:p-8</code>). 카드 제목과 버튼이 필요하면 <code>FormCard</code> 본문으로
                         넣습니다.
                     </p>
                 </div>

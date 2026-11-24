@@ -26,6 +26,8 @@ type SelectableCardBaseProps = {
     labelClassName?: string
     id?: string
     className?: string
+    /** 안쪽 여백(md 이상). default: 좌우 40 · 상하 24px / compact: 상하좌우 32px. */
+    inset?: 'default' | 'compact'
     children: ReactNode
     // 카드 클릭 시 실행한다. 선택값 변경 여부와 관계없이 호출된다(이미 고른 카드를 다시 눌러도).
     onClick?: () => void
@@ -51,7 +53,7 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
 type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProps
 
 const SelectableCard = (props: SelectableCardProps) => {
-    const {disabled, badges, labelClassName, id, className, children, onClick} = props
+    const {disabled, badges, labelClassName, id, className, inset, children, onClick} = props
     const controlRef = useRef<HTMLButtonElement>(null)
 
     const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
@@ -77,6 +79,7 @@ const SelectableCard = (props: SelectableCardProps) => {
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
                 control,
+                inset,
                 className,
             })}
         >

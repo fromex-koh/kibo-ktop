@@ -462,10 +462,10 @@ const SearchFilterForm = ({
                     <BaseCard
                         className={cn(
                             SEARCH_FILTER_SURFACE[surface],
-                            // 좌우 여백 40 은 폼 카드의 값이다(BaseCard 기본 24 보다 넓다 — 시안).
-                            'md:[&_[data-slot=card-content]]:px-10',
-                            // 위아래 여백은 배치마다 다르다(시안) — row 는 40, stack 은 32.
-                            layout === 'row' ? 'md:py-10' : 'md:py-8',
+                            // 좌우 여백: 모바일 24(BaseCard 기본) · md 이상 32.
+                            'md:[&_[data-slot=card-content]]:px-8',
+                            // 위아래 여백: md 이상 32 — 좌우와 같다.
+                            'md:py-8',
                         )}
                     >
                         {/* stack 배치의 세로 간격 16 은 시안(평가결과 조회 조회 카드)의 값이다 —

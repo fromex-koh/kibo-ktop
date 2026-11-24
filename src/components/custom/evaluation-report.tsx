@@ -13,7 +13,6 @@ import {
     ReportPageStyle,
     ReportSection,
     cellShapeClassName,
-    headCellClassName,
     headCellShapeClassName,
     tableClassName,
 } from '@/components/custom/report-document'
@@ -878,70 +877,8 @@ const EvaluationReportView = ({hasTechnicalReport = true, report}: EvaluationRep
                             <BenchmarkBlock key={benchmark.id} benchmark={benchmark} />
                         ))}
 
-                        <ReportSection
-                            title="동업종 시장규모"
-                            aside={
-                                <p className="typo-caption-regular text-label-foreground">
-                                    업종코드({report.marketSize.industryCode}. 단위:{report.marketSize.unit})
-                                </p>
-                            }
-                        >
-                            {/* 글자는 14 다 — 이 쪽에서 가장 큰 표라 시안이 한 단계 키워 두었다.
-                                이 표는 시안에서 칸 사이에 세로줄이 있다 — 가로줄만 있는 다른 표와 달리 border-x 를 더하되,
-                                표 바깥 좌우에는 선이 없어 양 끝(first/last)만 지운다. */}
-                            <table className={tableClassName}>
-                                <caption className="sr-only">동업종 시장규모</caption>
-                                <thead>
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            className={cn(
-                                                headCellShapeClassName,
-                                                'typo-body-l-bold border-x text-center first:border-l-0 last:border-r-0',
-                                            )}
-                                        >
-                                            년도
-                                        </th>
-                                        {report.marketSize.years.map((year) => (
-                                            <th
-                                                key={year.year}
-                                                scope="col"
-                                                className={cn(
-                                                    headCellClassName,
-                                                    'border-x text-center first:border-l-0 last:border-r-0',
-                                                )}
-                                            >
-                                                {year.year}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th
-                                            scope="row"
-                                            className={cn(
-                                                cellShapeClassName,
-                                                'typo-body-l-regular text-label-foreground border-x text-center first:border-l-0 last:border-r-0',
-                                            )}
-                                        >
-                                            {report.marketSize.rowLabel}
-                                        </th>
-                                        {report.marketSize.years.map((year) => (
-                                            <td
-                                                key={year.year}
-                                                className={cn(
-                                                    cellShapeClassName,
-                                                    'typo-body-l-regular text-label-foreground border-x text-center first:border-l-0 last:border-r-0',
-                                                )}
-                                            >
-                                                {numberFormatter.format(year.value)}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ReportSection>
+                        {/* 비교대상 기준 — 두 비교 표 아래 24(문서 구획 간격). 기간 · 건수는 데이터(comparisonBasis)가 정한다. */}
+                        <p className="typo-caption-bold text-foreground">※ {report.comparisonBasis}</p>
                     </ReportDocument>
 
                     {/* 4쪽 — 기술사업평가 세부내역. */}

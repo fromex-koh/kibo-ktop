@@ -81,7 +81,7 @@ const OrgCustomerConsentForm = ({
 
     return (
         <form id={formId} noValidate onSubmit={handleSubmit} className="flex flex-col gap-10">
-            <FormCard>
+            <FormCard inset="compact">
                 {/* 질문과 보기가 한 줄에 놓인다(시안). 좁은 화면에서는 보기를 아래로 내린다. */}
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     {/* 이 카드에는 FormCard title 이 없고 이 물음이 카드의 제목 노릇을 한다 — 크기·굵기도
@@ -132,6 +132,7 @@ const OrgCustomerConsentForm = ({
             </FormCard>
 
             <FormCard
+                inset="compact"
                 title="정보이용동의서 업로드"
                 // 좁은 화면에서는 [동의서 양식 다운로드]가 제목 아래 줄로 내려간다 — 이름이 길어 오른쪽에 두면
                 // 제목 칸이 눌려 "정보이용동의서 / 업로드" 처럼 접힌다.

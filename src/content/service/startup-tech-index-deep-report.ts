@@ -11,8 +11,9 @@ import type {TechIndexReport} from '@/content/service/tech-index-report'
 // 화면 파일(page.tsx)과 그리는 컴포넌트는 고치지 않는다.
 //
 // 1쪽 값은 일반분석과 같은 문서라 startup-tech-index-report.ts 가 관리한다(여기서 가져다 합친다).
-// 문서 모양은 일반 Tech-Index 심층분석과 같고(TechIndexDeepReport), 창업용만 다른 것은 두 가지다 —
-// 세부지표 레이더의 축 이름, 산업 구분 이름(업종 설명이 괄호로 붙는다).
+// 문서 모양은 일반 Tech-Index 심층분석과 같고(TechIndexDeepReport), 창업용만 다른 것은 —
+// 세부지표 레이더의 축 이름, 산업 구분 이름(업종 설명이 괄호로 붙는다),
+// 기업 유형별 비교 항목 — Tech-Index 비교 · 4대 혁신역량 비교 모두 신청기업 · 창업 · 벤처 · 이노비즈 4개(전체기업 · 비창업 없음, 칸 폭은 개수대로 나뉜다).
 
 // ── 목업(API 연결 시 교체) ────────────────────────────────────────────────────────
 // 값은 항목마다 그대로 적는다 — 반복문이나 공용 상수로 줄이면 화면에서 본 숫자를 코드에서 찾기 어렵다.
@@ -62,9 +63,7 @@ const MOCK_STARTUP_TECH_INDEX_DEEP_REPORT: Omit<TechIndexDeepReport, 'label'> = 
     ],
     companyTypeScores: [
         {id: 'applicant', label: '신청기업', value: 63.7, isApplicant: true},
-        {id: 'all', label: '전체기업', value: 37.5},
         {id: 'startup', label: '창업', value: 34.2},
-        {id: 'non-startup', label: '비창업', value: 39.6},
         {id: 'venture', label: '벤처', value: 45.1},
         {id: 'innobiz', label: '이노비즈', value: 43.8},
     ],
@@ -75,7 +74,6 @@ const MOCK_STARTUP_TECH_INDEX_DEEP_REPORT: Omit<TechIndexDeepReport, 'label'> = 
             items: [
                 {id: 'applicant', label: '신청기업', value: 63.7, isApplicant: true},
                 {id: 'startup', label: '창업', value: 35.4},
-                {id: 'non-startup', label: '비창업', value: 40.2},
                 {id: 'venture', label: '벤처', value: 46.8},
                 {id: 'innobiz', label: '이노비즈', value: 44.1},
             ],
@@ -86,7 +84,6 @@ const MOCK_STARTUP_TECH_INDEX_DEEP_REPORT: Omit<TechIndexDeepReport, 'label'> = 
             items: [
                 {id: 'applicant', label: '신청기업', value: 88.2, isApplicant: true},
                 {id: 'startup', label: '창업', value: 38.9},
-                {id: 'non-startup', label: '비창업', value: 42.5},
                 {id: 'venture', label: '벤처', value: 49.3},
                 {id: 'innobiz', label: '이노비즈', value: 47.6},
             ],
@@ -97,7 +94,6 @@ const MOCK_STARTUP_TECH_INDEX_DEEP_REPORT: Omit<TechIndexDeepReport, 'label'> = 
             items: [
                 {id: 'applicant', label: '신청기업', value: 53.4, isApplicant: true},
                 {id: 'startup', label: '창업', value: 32.7},
-                {id: 'non-startup', label: '비창업', value: 36.4},
                 {id: 'venture', label: '벤처', value: 42.9},
                 {id: 'innobiz', label: '이노비즈', value: 41.2},
             ],
@@ -108,7 +104,6 @@ const MOCK_STARTUP_TECH_INDEX_DEEP_REPORT: Omit<TechIndexDeepReport, 'label'> = 
             items: [
                 {id: 'applicant', label: '신청기업', value: 37.1, isApplicant: true},
                 {id: 'startup', label: '창업', value: 29.8},
-                {id: 'non-startup', label: '비창업', value: 33.5},
                 {id: 'venture', label: '벤처', value: 38.7},
                 {id: 'innobiz', label: '이노비즈', value: 36.9},
             ],

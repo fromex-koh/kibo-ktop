@@ -119,18 +119,7 @@ const MOCK_EVALUATION_REPORT: Omit<EvaluationReport, 'label'> = {
             minimum: [3.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         },
     ],
-    marketSize: {
-        rowLabel: '국내시장',
-        industryCode: '58222',
-        unit: '억원',
-        years: [
-            {year: '2020', value: 165948},
-            {year: '2021', value: 192509},
-            {year: '2022', value: 256320},
-            {year: '2023', value: 255131},
-            {year: '2024', value: 2009},
-        ],
-    },
+    comparisonBasis: '비교대상 기준: ’24.12~’26.9월까지 KTRS-FM모형으로 평가한 1,605건',
     totalScore: {label: '기술사업 평점', score: 87.8},
     detailGroups: [
         {

@@ -5,7 +5,7 @@ import {cva} from 'class-variance-authority'
 // 선택 시 Bold 로 바뀌는데, typo-* 는 variant 를 붙일 수 없는 일반 클래스라 카드 루트에서
 // title 슬롯을 내려 찍는다(선택자 특정성이 typo-* 보다 높아 순서와 무관하게 이긴다).
 const selectableCardVariants = cva(
-    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-4 py-6 md:px-10 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
+    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-4 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
     {
         variants: {
             disabled: {
@@ -18,7 +18,13 @@ const selectableCardVariants = cva(
                 radio: '',
                 checkbox: 'has-data-checked:[&_[data-slot=selectable-card-title]]:font-bold',
             },
+            // md 이상 안쪽 여백 — default: 좌우 40 · 상하 24 / compact: 상하좌우 32(동의서 카드와 맞출 때).
+            inset: {
+                default: 'md:px-10',
+                compact: 'md:p-8',
+            },
         },
+        defaultVariants: {inset: 'default'},
     },
 )
 

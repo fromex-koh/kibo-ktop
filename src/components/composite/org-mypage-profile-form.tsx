@@ -125,10 +125,9 @@ const PasswordField = () => {
     )
 }
 
-// 구획 카드 — 카드·제목·안쪽 여백은 기업 마이페이지 내 정보와 같다. 같은 화면의 다른 유형이라
-// 생김새가 달라질 이유가 없다. FormCard 의 xl 기본 여백(102)은 폭 1200 카드에 맞춘 값이라 40 으로 덮는다.
+// 구획 카드 — 기업 마이페이지 내 정보와 같은 카드 · 제목 · 여백(inset="compact", md 이상 상하좌우 32px)을 쓴다.
 const ProfileCard = ({title, children}: {title: string; children: ReactNode}) => (
-    <FormCard title={title} className="[&_[data-slot=card-content]]:xl:px-10 [&_[data-slot=section-header]]:xl:px-10">
+    <FormCard title={title} inset="compact">
         {children}
     </FormCard>
 )

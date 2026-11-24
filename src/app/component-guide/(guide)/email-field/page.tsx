@@ -12,8 +12,10 @@ import EmailFieldFormDemo from './email-field-form-demo'
 
 export const metadata: Metadata = {title: '이메일 입력 (EmailField)'}
 
-const USAGE_CODE = `{/* 필수 칸이면 제목 앞에 「필수」 배지(동의서 항목과 같은 배지)를 두고 EmailField 에 required 를 준다 */}
+const USAGE_CODE = `{/* 필수 칸이면 제목 앞에 「필수」 배지(동의서 항목과 같은 배지)를 두고 EmailField 에 required 를 준다.
+    고객정보활용동의 화면은 동의서 카드와 같이 inset="compact"(md 이상 상하좌우 32px)를 준다. */}
 <FormCard
+  inset="compact"
   title={
     <>
       <Badge variant="outline" color="info" shape="round" className="me-2 align-middle">필수</Badge>

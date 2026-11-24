@@ -23,8 +23,26 @@ type FormCardProps = {
     /** 액션을 제목 줄에만 두고 설명은 그 아래 전체 폭으로 펼친다(제목 | 액션 / 설명). 설명이 여러 줄 목록이라
         오른쪽 액션 칸에 폭을 빼앗기면 좁은 화면에서 한 줄에 몇 글자씩만 들어가는 카드에 켠다. */
     descriptionFullWidth?: boolean
+    /** 안쪽 여백. default: 좌우 16 · 40 · 102px(모바일 · md · xl), 상하 24 · 40px /
+        compact: md 이상 상하좌우 32px(모바일 좌우 16 · 상하 24). 폭이 좁거나 한 줄에 요소가 많은 카드
+        (고객정보활용동의 · 마이페이지)에 쓴다. */
+    inset?: FormCardInset
     children: ReactNode
     className?: string
+}
+
+type FormCardInset = 'default' | 'compact'
+
+// 좌우 안쪽 여백 — 제목 영역과 본문이 같은 값을 쓴다.
+const FORM_CARD_INSET_CLASS: Record<FormCardInset, string> = {
+    default: 'px-4 md:px-10 xl:px-25.5',
+    compact: 'px-4 md:px-8',
+}
+
+// 상하 안쪽 여백 — 카드 면(Card)에 준다.
+const FORM_CARD_INSET_Y_CLASS: Record<FormCardInset, string> = {
+    default: 'py-6 md:py-10',
+    compact: 'py-6 md:py-8',
 }
 
 const FormCard = ({
@@ -34,14 +52,15 @@ const FormCard = ({
     action,
     stackActionOnMobile = false,
     descriptionFullWidth = false,
+    inset = 'default',
     children,
     className,
 }: FormCardProps) => (
-    <Card className={cn('py-6 [--card-spacing:--spacing(10)] md:py-10', className)}>
+    <Card className={cn('[--card-spacing:--spacing(10)]', FORM_CARD_INSET_Y_CLASS[inset], className)}>
         {title || subtitle || action ? (
             <SectionHeader
                 className={cn(
-                    'px-4 md:px-10 xl:px-25.5',
+                    FORM_CARD_INSET_CLASS[inset],
                     // md 미만에서는 2열(제목 | 액션)을 풀어 한 열로 쌓는다.
                     stackActionOnMobile && 'max-md:has-data-[slot=section-header-action]:grid-cols-1',
                 )}
@@ -74,9 +93,9 @@ const FormCard = ({
                 ) : null}
             </SectionHeader>
         ) : null}
-        <CardContent className="px-4 md:px-10 xl:px-25.5">{children}</CardContent>
+        <CardContent className={FORM_CARD_INSET_CLASS[inset]}>{children}</CardContent>
     </Card>
 )
 
 export {FormCard}
-export type {FormCardProps}
+export type {FormCardInset, FormCardProps}

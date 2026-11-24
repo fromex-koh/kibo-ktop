@@ -85,8 +85,8 @@ const NoticeDetail = ({
     return (
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-6">
-                {/* 본문 카드 — 세로 여백 32(py-8), 가로 여백은 Card 기본값 24. 목록 카드와 같은 규칙이다. */}
-                <BaseCard className="py-8">
+                {/* 본문 카드 — 여백은 목록 카드와 같다(세로 32 · 가로 24, md 이상 32). */}
+                <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                     <article className="flex flex-col">
                         <header className="flex flex-col gap-2">
                             {/* 모바일은 목록처럼 분류를 윗줄에 두고 제목과 뱃지를 글 흐름으로 이어 붙인다.
@@ -160,7 +160,7 @@ const NoticeDetail = ({
 
                 {/* 이웃 글 — 첫 글·마지막 글이면 해당 줄이 빠지고, 둘 다 없으면 카드가 통째로 빠진다. */}
                 {hasSiblings ? (
-                    <BaseCard className="py-8">
+                    <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                         <nav aria-label="이웃 글 이동">
                             <ul className="flex flex-col">
                                 {prev != null ? (

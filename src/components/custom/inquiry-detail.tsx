@@ -75,8 +75,8 @@ const InquiryDetail = ({inquiry, listHref}: InquiryDetailProps) => {
 
     return (
         <div className="flex flex-col">
-            {/* 카드 여백 32·24 와 구획 사이 구분선은 목록 카드와 같은 값이다(시안). */}
-            <BaseCard className="py-8">
+            {/* 카드 여백 · 구획 구분선은 목록 카드와 같다(세로 32 · 가로 24, md 이상 32). */}
+            <BaseCard className="py-8 md:[&_[data-slot=card-content]]:px-8">
                 {/* 문의 요약 — 목록의 한 행과 같은 내용이지만 제목을 자르지 않는다.
                     목록은 행 높이를 맞추려고 말줄임하지만, 여기는 이 문의 한 건만 보는 자리라 제목이
                     길면 줄을 늘려 끝까지 보여 준다.

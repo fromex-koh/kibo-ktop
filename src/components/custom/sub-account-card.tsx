@@ -45,7 +45,7 @@ const SubAccountCard = ({item, onMenuSelect}: SubAccountCardProps) => {
     const statusChangeLabel = subAccountStatusChangeLabel(item.status)
 
     return (
-        <BaseCard padding="lg" className="[&_[data-slot=card-content]]:xl:px-10">
+        <BaseCard padding="lg">
             <div className="flex flex-col gap-4">
                 <div className="flex items-start justify-between gap-4">
                     {/* 배지는 이름 앞에 글자처럼 흘려 넣는다 — 칸으로 나누면 이름이 두 줄이 될 때
